@@ -79,7 +79,7 @@ public class GetlistofAllFertTypes extends AsyncTask<String, Void, Void> {
                         dbParams.put(db.KEY_FERT_ID, journeycode.get(j).getId() == null | journeycode.get(j).getId() == 0 ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getId().toString());
                         dbParams.put(db.KEY_FERT_DESCRIPTION, journeycode.get(j).getDescription() == null | journeycode.get(j).getDescription().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getDescription().toString());
                         dbParams.put(db.KEY_FERT_NAME, journeycode.get(j).getName() == null | journeycode.get(j).getName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getName().toString());
-                        db.addData(db.FERT_TYPES, headerParams);
+                        db.addData(db.FERT_TYPES, dbParams);
                     }
                 }
             }
