@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        new GetlistofAllDistrict(MainActivity.this).execute();
 //        new GetListofallMarketPlayers(MainActivity.this).execute();
 //        new GetListofallProductCategories(MainActivity.this).execute();
-        new LoadCustomersAllJourneyPlan(MainActivity.this).execute();
+  //      new LoadCustomersAllJourneyPlan(MainActivity.this).execute();
 //        new GetAllProductBrandByCategory(MainActivity.this).execute();
 //        new GetListofAllBrands(MainActivity.this).execute();
 //        new GetCompanHeldBrandBasicList(MainActivity.this).execute();
