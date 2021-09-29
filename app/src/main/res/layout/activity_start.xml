@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/inc_common_header_colletion"
+        layout="@layout/common_header" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/inc_common_header_colletion"
+        android:fillViewport="true"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/targets"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+                <TextView
+                    android:id="@+id/txt_Status"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/green"
+                    android:padding="@dimen/p20"
+                    android:text="STATUS"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"></TextView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_below="@+id/txt_Status"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <LinearLayout
+                        android:id="@+id/li_status"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="@dimen/p10">
+
+
+                        <TextView
+                            android:id="@+id/txt_checkin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:drawableTop="@mipmap/engrotick"
+                            android:drawablePadding="@dimen/p10"
+                            android:drawableTint="@color/red"
+
+                            android:text="CHECKIN"
+                            android:textSize="16sp"></TextView>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/grey" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+
+                        android:gravity="center"
+                        android:padding="@dimen/p10"
+
+                        >
+
+
+                        <TextView
+                            android:id="@+id/targetTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableTop="@mipmap/engrocross"
+
+                            android:drawablePadding="@dimen/p10"
+                            android:text="NOT AVAILABLE"
+                            android:textSize="16sp"></TextView>
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/objective"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+                <TextView
+                    android:id="@+id/txt_objective"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/green"
+                    android:padding="@dimen/p20"
+                    android:text="OBJECTIVE OF VISIT"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"></TextView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_below="@+id/txt_objective"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <LinearLayout
+                        android:id="@+id/li_objective"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="@dimen/p10">
+
+
+                        <TextView
+                            android:id="@+id/txt_salescall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:drawableTop="@mipmap/engrosalescall"
+                            android:drawablePadding="@dimen/p10"
+                            android:text="SALE CALL"
+                            android:textSize="16sp"></TextView>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/grey" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="@dimen/p10"
+
+                        >
+
+
+                        <TextView
+                            android:id="@+id/txt_ordertaking"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:drawableTop="@mipmap/engroordertaking"
+                            android:drawablePadding="@dimen/p10"
+                            android:drawableTint="@color/red"
+                            android:text="ORDER TAKING"
+                            android:textSize="16sp"></TextView>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey" />
+
+            <LinearLayout
+                android:id="@+id/linear_invetory"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_below="@+id/objective"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <LinearLayout
+                    android:id="@+id/li_objective_inventory"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="@dimen/p10">
+
+
+                    <TextView
+                        android:id="@+id/txt_inventory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@mipmap/engroinventiry"
+                        android:drawablePadding="@dimen/p10"
+                        android:text="INVENTORY"
+                        android:textSize="16sp"></TextView>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/grey" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="@dimen/p10"
+
+                    >
+
+
+                    <TextView
+                        android:id="@+id/txt_market_intelligence"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@mipmap/marketintell"
+                        android:drawablePadding="@dimen/p10"
+                        android:text="MARKET INTELLIGENCE"
+                        android:textSize="16sp"></TextView>
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+
+                android:background="@color/grey" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+
+                android:gravity="center"
+                android:padding="@dimen/p10"
+
+                >
+
+
+                <TextView
+                    android:id="@+id/txt_complain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="@dimen/p5"
+                    android:drawableTop="@mipmap/compainhandling"
+                    android:drawablePadding="@dimen/p10"
+                    android:padding="@dimen/p20"
+                    android:text="COMPLAINT HANDLING"
+                    android:textSize="16sp"></TextView>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:gravity="bottom"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayout1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white">
+
+                    <Button
+                        android:id="@+id/back"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+
+                        android:layout_marginStart="@dimen/p10"
+                        android:layout_marginLeft="@dimen/p10"
+                        android:layout_marginTop="@dimen/p10"
+                        android:layout_marginEnd="@dimen/p10"
+                        android:layout_marginRight="@dimen/p10"
+                        android:layout_marginBottom="@dimen/p10"
+                        android:background="@drawable/eidttext_boader"
+                        android:drawableLeft="@drawable/backwoardresizer"
+                        android:paddingRight="@dimen/p20"
+                        android:text="BACK"
+                        android:textColor="@color/green"
+                        android:textSize="12sp" />
+
+                    <Button
+                        android:id="@+id/btn_next"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginStart="@dimen/p10"
+                        android:layout_marginLeft="@dimen/p10"
+                        android:layout_marginTop="@dimen/p10"
+                        android:layout_marginEnd="@dimen/p10"
+                        android:layout_marginRight="@dimen/p10"
+                        android:layout_marginBottom="@dimen/p10"
+                        android:background="@drawable/eidttext_boader"
+                        android:backgroundTint="@color/green"
+                        android:drawableRight="@drawable/forwardresizer"
+                        android:paddingLeft="@dimen/p20"
+                        android:text="next"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

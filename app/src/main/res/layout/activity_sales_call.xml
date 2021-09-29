@@ -1,0 +1,181 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <include
+        android:id="@+id/inc_common_header_colletion"
+        layout="@layout/common_header" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/inc_common_header_colletion"
+        android:layout_above="@+id/linear_bottom"
+        android:fillViewport="true"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"/>
+            <LinearLayout
+                android:id="@+id/l1"
+                android:layout_width="fill_parent"
+                android:layout_height="60dp"
+                android:layout_below="@+id/listView"
+                android:background="@color/white"
+
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/tv_option"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/p10"
+                    android:layout_weight="1.8"
+                    android:padding="@dimen/p10"
+                    android:text="COMMITMENT RECEIVED"
+                    android:textColor="@color/green"
+                    android:textSize="@dimen/ts16"
+
+
+                    />
+
+                <ImageView
+                    android:id="@+id/img_commitment"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/p50"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:drawableTint="@color/green"
+
+                    android:layout_margin="@dimen/p20"
+
+                    android:layout_weight="0.2"
+                    android:contentDescription="Icon"
+                    android:src="@drawable/ic_baseline_keyboard_arrow_down_24" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_table_recommendations"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/linear_bottom"
+                android:orientation="horizontal">
+
+                <ScrollView
+                    android:id="@+id/layout"
+                    android:layout_height="match_parent"
+                    android:scrollbars="horizontal|vertical"
+                    android:layout_width="match_parent"
+                    android:scrollbarStyle="outsideInset"
+                    android:fillViewport="true">
+                    <HorizontalScrollView
+                        android:id="@+id/horizontalView"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="horizontal|vertical"
+                        android:layout_width="wrap_content"
+                        >
+
+                        <TableLayout
+                            android:id="@+id/displayLinear"
+                            android:layout_width="match_parent"
+                            android:divider="@color/grey"
+                            android:layout_height="match_parent"
+                            android:showDividers="middle"
+                            android:stretchColumns="*">
+
+
+
+                        </TableLayout>
+                    </HorizontalScrollView>
+                </ScrollView>
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:id="@+id/linear_bottom"
+        android:layout_alignParentBottom="true"
+
+        android:orientation="horizontal">
+
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+
+            <Button
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginStart="@dimen/p10"
+                android:layout_marginLeft="@dimen/p10"
+                android:layout_marginTop="@dimen/p10"
+                android:layout_marginEnd="@dimen/p10"
+                android:layout_marginRight="@dimen/p10"
+                android:layout_marginBottom="@dimen/p10"
+                android:background="@drawable/eidttext_boader"
+                android:drawableLeft="@drawable/backwoardresizer"
+                android:paddingRight="@dimen/p20"
+                android:text="BACK"
+                android:textColor="@color/green" />
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/p10"
+                android:layout_marginLeft="@dimen/p10"
+                android:layout_marginTop="@dimen/p10"
+                android:layout_marginEnd="@dimen/p10"
+                android:layout_marginRight="@dimen/p20"
+                android:layout_marginBottom="@dimen/p10"
+                android:layout_toRightOf="@+id/back"
+                android:background="@drawable/eidttext_boader"
+                android:backgroundTint="@color/green"
+                android:drawableRight="@drawable/plusresizer"
+                android:paddingLeft="@dimen/p20"
+                android:paddingRight="@dimen/p10"
+                android:text="MARKET INTEL"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="@dimen/p10"
+                android:paddingLeft="@dimen/p20"
+                android:drawableRight="@drawable/forwardresizer"
+                android:layout_marginLeft="@dimen/p10"
+                android:layout_marginTop="@dimen/p10"
+                android:layout_marginEnd="@dimen/p10"
+                android:layout_marginRight="@dimen/p10"
+                android:layout_marginBottom="@dimen/p10"
+                android:background="@drawable/eidttext_boader"
+                android:backgroundTint="@color/green"
+                android:text="CHECKOUT"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

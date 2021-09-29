@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_gravity="bottom"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <!-- row 1 -->
+
+
+    <!-- row 1 end -->
+
+
+    <!-- row 2 -->
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="3" >
+
+        <!-- col 1 -->
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@color/yellow"
+                android:gravity="center"
+                android:id="@+id/produc_demo"
+                android:layout_marginBottom="@dimen/p4"
+                android:layout_marginRight="@dimen/p4"
+                android:textColor="@color/green"
+                android:text="PRODUCT\nDEMO" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginBottom="@dimen/p4"
+                android:layout_marginRight="@dimen/p4"
+                android:background="@color/yellow"
+                android:gravity="center"
+                android:textColor="@color/green"
+                android:text="REFRESH\nDATA"/>
+        </LinearLayout>
+        <!-- col 1 end -->
+        <!-- col 2 -->
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@color/yellow"
+                android:layout_marginBottom="@dimen/p4"
+                android:layout_marginRight="@dimen/p4"
+                android:gravity="center"
+                android:textColor="@color/green"
+                android:text="POST\nDATA" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@color/yellow"
+                android:layout_marginBottom="@dimen/p4"
+                android:layout_marginRight="@dimen/p4"
+                android:id="@+id/soil_logs"
+                android:gravity="center"
+                android:textColor="@color/green"
+                android:text="SOIL\nSAMPLING\nLOGS"/>
+        </LinearLayout>
+        <!-- col 2 end -->
+        <!-- col 3 -->
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@color/yellow"
+                android:layout_marginBottom="@dimen/p4"
+
+                android:gravity="center"
+                android:textColor="@color/green"
+                android:text="USER\nGUIDE" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginBottom="@dimen/p4"
+                android:id="@+id/logout"
+
+                android:background="@color/yellow"
+                android:gravity="center"
+                android:textColor="@color/green"
+                android:text="LOGOUT"/>
+        </LinearLayout>
+    </LinearLayout>
+    <!-- col 3 end -->
+
+</LinearLayout>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/l1"
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tv_option"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:padding="@dimen/p10"
+                android:gravity="center"
+
+                android:layout_weight="1.8"
+                android:text="SALES POINT"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts18"
+
+
+                />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/p50"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+
+                android:layout_margin="@dimen/p20"
+
+                android:layout_weight="0.2"
+                android:contentDescription="Icon"
+                android:src="@drawable/ic_baseline_cancel_24" />
+        </LinearLayout>
+
+
+        <EditText
+            android:id="@+id/et_Search"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/p30"
+            android:layout_below="@+id/l1"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/p10"
+            android:layout_marginLeft="@dimen/p10"
+            android:layout_marginTop="@dimen/p10"
+            android:layout_marginEnd="@dimen/p10"
+            android:layout_marginRight="@dimen/p10"
+            android:layout_marginBottom="@dimen/p10"
+            android:paddingStart="@dimen/p10"
+
+            android:background="@drawable/eidttext_boader"
+            android:drawableLeft="@drawable/ic_baseline_search_24"
+
+            android:textColor="@color/white"
+            android:paddingLeft="@dimen/p10"></EditText>
+
+        <LinearLayout
+            android:id="@+id/linear_table_recommendations"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_below="@+id/et_Search"
+
+            android:orientation="horizontal">
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/p10"
+                android:layout_marginRight="@dimen/p10"
+                android:layout_height="match_parent"
+                android:layout_below="@id/et_Search"
+                android:scrollbars="vertical"
+                tools:context=".activities.DownloadFarmersDataActivity">
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </LinearLayout>
+
+
+
+
+
+
+    </RelativeLayout>
+</FrameLayout>

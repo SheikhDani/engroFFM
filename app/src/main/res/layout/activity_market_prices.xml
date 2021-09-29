@@ -1,0 +1,345 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <include
+        android:id="@+id/inc_common_header_colletion"
+        layout="@layout/common_header" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linear_divider"
+        android:layout_below="@+id/inc_common_header_colletion"
+        android:fillViewport="true"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/linear_ac_crops"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/green"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:id="@+id/brand"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:background="@color/green"
+                    android:gravity="center_vertical"
+
+                    android:padding="@dimen/p10"
+                    android:text="Brand:"
+                    android:textColor="@color/white"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txt_product"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@+id/brand"
+
+                    android:background="@color/green"
+                    android:gravity="center_vertical"
+
+                    android:padding="@dimen/p10"
+                    android:text="Zinc urea"
+                    android:textColor="@color/white"
+
+                    />
+
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_ac_crops"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txt_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_vertical"
+
+
+
+                    android:padding="@dimen/p20"
+                    android:text="Dated: June30,2021"
+                    android:textColor="@color/green"
+
+                    />
+
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey" />
+
+            <LinearLayout
+                android:id="@+id/linear_invoice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/p10"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+                    android:layout_weight="0.8"
+                    android:gravity="center_vertical"
+                    android:text="Invoice Number:"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txt_invoice_number"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+
+                    android:layout_weight="1.2"
+                    android:gravity="center_vertical"
+                    android:text="1233"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+
+                    />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_invoice_Rate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/p10"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+                    android:layout_weight="0.8"
+                    android:gravity="center_vertical"
+                    android:text="Invoice Rate: "
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txt_invoice_rate"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1.2"
+
+                    android:gravity="center_vertical"
+                    android:text="123123"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+
+                    />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_invoice_quantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/p50"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_invoice_quantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p50"
+                    android:gravity="center_vertical"
+                    android:text="Invoice Quantity: 280"
+                    android:textColor="@color/grey"
+                    android:textSize="12sp"
+
+                    />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_available_quantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_available_quantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p50"
+                    android:gravity="center_vertical"
+                    android:text="Available Quantity: 280"
+                    android:textColor="@color/grey"
+                    android:textSize="12sp"
+
+                    />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_add_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_prod"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <TextView
+                    android:id="@+id/txt_quanity"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+                    android:layout_weight="1.2"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/p5"
+                    android:text="Quantity Sold"
+                    android:textColor="@color/black"
+
+                    />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1.2"
+                    android:gravity="center"
+                    android:padding="@dimen/p5"
+                    android:text="Net Selling Price"
+                    android:textColor="@color/black" />
+
+                <ImageView
+                    android:id="@+id/img_add"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="0.6"
+
+
+
+
+
+                    android:gravity="end"
+
+                    android:src="@drawable/plusgreen" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <View
+
+        android:id="@+id/linear_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/linear_bottom"
+        android:layout_marginBottom="@dimen/p10"
+        android:background="@color/grey" />
+
+    <LinearLayout
+        android:id="@+id/linear_bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+
+        android:orientation="horizontal">
+
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+
+            <Button
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginStart="@dimen/p10"
+                android:layout_marginLeft="@dimen/p10"
+                android:layout_marginTop="@dimen/p10"
+                android:layout_marginEnd="@dimen/p10"
+                android:layout_marginRight="@dimen/p10"
+                android:layout_marginBottom="@dimen/p10"
+                android:background="@drawable/eidttext_boader"
+                android:drawableLeft="@drawable/backwoardresizer"
+                android:paddingRight="@dimen/p20"
+                android:text="BACK"
+                android:textColor="@color/green" />
+
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="@dimen/p10"
+                android:layout_marginLeft="@dimen/p10"
+                android:layout_marginTop="@dimen/p10"
+                android:drawableRight="@drawable/forwardresizer"
+                android:paddingLeft="@dimen/p20"
+                android:layout_marginEnd="@dimen/p10"
+                android:layout_marginRight="@dimen/p10"
+                android:layout_marginBottom="@dimen/p10"
+                android:background="@drawable/eidttext_boader"
+                android:backgroundTint="@color/green"
+                android:text="SAVE"
+                android:textColor="@color/white" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

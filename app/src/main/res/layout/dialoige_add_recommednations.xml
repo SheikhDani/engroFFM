@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/l1"
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tv_option"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="@dimen/p10"
+                android:layout_margin="@dimen/p10"
+                android:layout_weight="1.8"
+                android:text="ADD RECOMMENDATIONS"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts18"
+
+
+                />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/p50"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+
+                android:layout_margin="@dimen/p20"
+
+                android:layout_weight="0.2"
+                android:contentDescription="Icon"
+                android:src="@drawable/ic_baseline_cancel_24" />
+        </LinearLayout>
+
+        <View
+
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/l1"
+
+            android:background="@color/grey" />
+        <LinearLayout
+            android:id="@+id/linear_crop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/l1"
+
+            android:layout_marginTop="@dimen/p20"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/p20"
+
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Crop"
+                android:textColor="@color/black"
+
+                />
+
+
+            <AutoCompleteTextView
+                android:id="@+id/auto_crop"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="@dimen/p20"
+                android:layout_weight="1"
+                android:background="@drawable/eidttext_boader"
+                android:clickable="true"
+                android:cursorVisible="false"
+                android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                android:dropDownHeight="155dp"
+                android:focusable="false"
+                android:gravity="center_horizontal"
+                android:hint="Select Crop"
+                android:inputType="none"
+                android:maxLines="1"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/linear_fert"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linear_crop"
+
+            android:layout_marginTop="@dimen/p20"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/p20"
+
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Fert App type"
+                android:textColor="@color/black"
+
+                />
+
+
+            <AutoCompleteTextView
+                android:id="@+id/auto_fert"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="@dimen/p20"
+                android:layout_weight="1"
+                android:background="@drawable/eidttext_boader"
+                android:clickable="true"
+                android:cursorVisible="false"
+                android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                android:dropDownHeight="155dp"
+                android:focusable="false"
+                android:gravity="center_horizontal"
+                android:hint="Select Type"
+                android:inputType="none"
+                android:maxLines="1"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/linear_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linear_fert"
+
+            android:layout_marginTop="@dimen/p20"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/p20"
+
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Product"
+                android:textColor="@color/black"
+
+                />
+
+
+            <AutoCompleteTextView
+                android:id="@+id/auto_product"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="@dimen/p20"
+                android:layout_weight="1"
+                android:background="@drawable/eidttext_boader"
+                android:clickable="true"
+                android:cursorVisible="false"
+                android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                android:dropDownHeight="155dp"
+                android:focusable="false"
+                android:gravity="center_horizontal"
+                android:hint="Select Product"
+                android:inputType="none"
+                android:maxLines="1"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_acres"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linear_product"
+            android:layout_marginTop="@dimen/p20"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/p20"
+
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="N0. of Acre"
+                android:textColor="@color/black"
+
+                />
+
+            <EditText
+                android:id="@+id/et_acre"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/p20"
+                android:layout_weight="1"
+                android:background="@drawable/eidttext_boader"
+
+                android:gravity="center"
+                android:hint="Number" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_dosage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linear_acres"
+            android:layout_marginTop="@dimen/p20"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/p20"
+
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Dosage Per Acre"
+                android:textColor="@color/black"
+
+                />
+
+            <EditText
+                android:id="@+id/et_firstname"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/p20"
+                android:layout_weight="1"
+                android:background="@drawable/eidttext_boader"
+
+                android:gravity="center"
+                android:hint="Ali" />
+
+        </LinearLayout>
+        <View
+
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/p20"
+            android:id="@+id/divider"
+            android:layout_below="@+id/linear_dosage"
+            android:background="@color/grey" />
+
+
+
+
+        <LinearLayout
+            android:id="@+id/linear_add_sampling"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/p30"
+            android:layout_below="@+id/divider"
+            android:gravity="center"
+            android:orientation="horizontal"
+            >
+
+            <Button
+                android:id="@+id/btn_add_recommendations"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:drawablePadding="@dimen/p5"
+                android:textColor="@color/white"
+                android:drawableTint="@color/white"
+                android:backgroundTint="@color/green"
+                android:padding="@dimen/p10"
+                android:drawableRight="@drawable/addresizer"
+                android:background="@drawable/eidttext_boader"
+                android:text="add"
+
+
+                />
+
+
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+</FrameLayout>

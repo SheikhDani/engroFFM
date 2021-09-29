@@ -1,0 +1,617 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <include
+        android:id="@+id/inc_common_header_colletion"
+        layout="@layout/common_header" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linear_divider"
+        android:layout_below="@+id/inc_common_header_colletion"
+        android:fillViewport="true"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/linear_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_status"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1.2"
+                    android:gravity="center_vertical"
+                    android:text="Plot Details"
+                    android:textColor="@color/green"
+
+                    />
+
+
+
+            </LinearLayout>
+            <View
+                android:id="@+id/divider_plot_details"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+              android:layout_marginTop="@dimen/p20"
+                android:background="@color/grey" />
+
+            <LinearLayout
+                android:id="@+id/linear_acre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_host"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_acre"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Plot/Acre#"
+                    android:textColor="@color/black"
+
+                    />
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/eidttext_boader"
+
+                    android:gravity="center"
+                    android:hint="2" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_block"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_acre"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_block"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Block/Square#"
+                    android:textColor="@color/black"
+
+                    />
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/eidttext_boader"
+                    android:gravity="center"
+                    android:hint="3" />
+
+            </LinearLayout>
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/p20"
+                android:background="@color/grey" />
+
+
+            <LinearLayout
+                android:id="@+id/linear_ac_crops"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_crops"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1.2"
+                    android:gravity="center_vertical"
+                    android:text="Activity on Crops"
+                    android:textColor="@color/green"
+
+                    />
+
+
+
+            </LinearLayout>
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/p20"
+                android:background="@color/grey" />
+            <LinearLayout
+                android:id="@+id/linear_previous_crop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_ac_crops"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_prev_crop"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Previous Crop"
+                    android:textColor="@color/black"
+
+                    />
+
+                <AutoCompleteTextView
+                    android:id="@+id/auto_pre_crop"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+
+                    android:background="@drawable/eidttext_boader"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:dropDownHeight="155dp"
+                    android:focusable="false"
+                    android:gravity="center_horizontal"
+                    android:hint="Wheat"
+                    android:inputType="none"
+                    android:maxLines="1"
+                    android:textAlignment="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_curr_crop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_previous_crop"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_curr_crop"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Current Crop"
+                    android:textColor="@color/black"
+
+                    />
+
+                <AutoCompleteTextView
+                    android:id="@+id/auto_cr_crop"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+
+                    android:background="@drawable/eidttext_boader"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:dropDownHeight="155dp"
+                    android:focusable="false"
+                    android:gravity="center_horizontal"
+                    android:hint="Wheat"
+                    android:inputType="none"
+                    android:maxLines="1"
+                    android:textAlignment="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/linear_curr_crop_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_curr_crop"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_current_crop_2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Current Crop2"
+                    android:textColor="@color/black"
+
+                    />
+
+                <AutoCompleteTextView
+                    android:id="@+id/auto_current_crop_2"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/eidttext_boader"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:dropDownHeight="155dp"
+                    android:focusable="false"
+                    android:gravity="center_horizontal"
+                    android:hint="Rice"
+                    android:inputType="none"
+                    android:maxLines="1"
+                    android:textAlignment="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/linear_depth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_curr_crop_2"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_depth"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Depth"
+                    android:textColor="@color/black"
+
+                    />
+
+
+                <AutoCompleteTextView
+                    android:id="@+id/auto_depth"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/eidttext_boader"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:dropDownHeight="155dp"
+                    android:focusable="false"
+                    android:gravity="center_horizontal"
+                    android:hint="24-36 inches"
+                    android:inputType="none"
+                    android:maxLines="1"
+                    android:textAlignment="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_locatio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_location"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Save Location"
+                    android:textColor="@color/black"
+
+                    />
+
+                <Button
+                    android:id="@+id/btn_lcoation"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="0.8"
+                    android:drawableRight="@drawable/ic_baseline_arrow_downward_24"
+                    android:background="@drawable/eidttext_boader"
+                    android:backgroundTint="@color/colorPrimaryDark"
+                    android:gravity="center"
+                    android:text="GET LOCATION"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_selected_latlng"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_lat_lng"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+                   android:textColor="@color/black"
+                    android:layout_weight="2"
+                    android:gravity="center_vertical"
+                    android:text="Selected Lat,Lng:30.1212111, 72.290220202"
+
+
+                    />
+
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_add_sampling"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/p20"
+                android:gravity="center"
+                android:orientation="horizontal"
+             >
+
+                <Button
+                    android:id="@+id/btn_add_sampling"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                   android:drawablePadding="@dimen/p5"
+                    android:textColor="@color/green"
+                    android:padding="@dimen/p10"
+                    android:drawableTint="@color/green"
+                    android:drawableRight="@drawable/ic_baseline_add_24"
+                    android:background="@drawable/eidttext_boader"
+
+
+                    android:text="ADD SAMPLING"
+
+
+                    />
+
+
+
+            </LinearLayout>
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/p10"
+                android:background="@color/grey" />
+            <LinearLayout
+                android:id="@+id/linear_reference"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/p10"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_reference"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1.2"
+                    android:gravity="center_vertical"
+                    android:text="Reference : maria.zafar-2123123123"
+                    android:textColor="@color/green"
+
+                    />
+
+
+
+            </LinearLayout>
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/p10"
+                android:background="@color/grey" />
+            <LinearLayout
+                android:id="@+id/l1"
+                android:layout_width="fill_parent"
+                android:layout_height="60dp"
+                android:layout_below="@+id/listView"
+                android:background="@color/white"
+
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/tv_option"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/p10"
+                    android:layout_weight="1.8"
+                    android:padding="@dimen/p10"
+                    android:text="Activity on Crop"
+                    android:textColor="@color/green"
+                    android:textSize="@dimen/ts16"
+
+
+                    />
+
+                <ImageView
+                    android:id="@+id/img_commitment"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/p50"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:drawableTint="@color/green"
+
+                    android:layout_margin="@dimen/p20"
+
+                    android:layout_weight="0.2"
+                    android:contentDescription="Icon"
+                    android:src="@drawable/ic_baseline_keyboard_arrow_down_24" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_table_recommendations"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/linear_bottom"
+                android:orientation="horizontal">
+
+                <ScrollView
+                    android:id="@+id/layout"
+                    android:layout_height="match_parent"
+                    android:scrollbars="horizontal|vertical"
+                    android:layout_width="match_parent"
+                    android:scrollbarStyle="outsideInset"
+                    android:fillViewport="true">
+                    <HorizontalScrollView
+                        android:id="@+id/horizontalView"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="horizontal|vertical"
+                        android:layout_width="wrap_content"
+                        >
+
+                        <TableLayout
+                            android:id="@+id/displayLinear"
+                            android:layout_width="match_parent"
+                            android:divider="@color/grey"
+                            android:layout_height="match_parent"
+                            android:showDividers="middle"
+                            android:stretchColumns="*">
+
+
+
+                        </TableLayout>
+                    </HorizontalScrollView>
+                </ScrollView>
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <View
+
+        android:id="@+id/linear_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/linear_bottom"
+        android:layout_marginBottom="@dimen/p10"
+        android:background="@color/grey" />
+
+    <LinearLayout
+        android:id="@+id/linear_bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+
+        android:orientation="horizontal">
+
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+
+
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="@dimen/p10"
+                android:layout_marginLeft="@dimen/p10"
+                android:layout_marginTop="@dimen/p10"
+                android:drawableRight="@drawable/forwardresizer"
+                android:paddingLeft="@dimen/p20"
+                android:layout_marginEnd="@dimen/p10"
+                android:layout_marginRight="@dimen/p10"
+                android:layout_marginBottom="@dimen/p10"
+                android:background="@drawable/eidttext_boader"
+                android:backgroundTint="@color/green"
+                android:text="CHECKOUT"
+                android:textColor="@color/white" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+
+
+</RelativeLayout>

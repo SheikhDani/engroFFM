@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/p60"
+    android:background="@color/white"
+    android:id="@+id/header"
+    android:orientation="horizontal"
+    android:elevation="@dimen/elevation_size">
+
+    <ImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
+        android:paddingLeft="5dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/engrologo"
+
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_dashboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_centerInParent="true"
+        android:gravity="center_vertical"
+        android:text="ENGRO FFM"
+        android:textColor="@color/green"
+        android:textSize="16sp"
+        android:visibility="visible" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_alignParentRight="true"
+        android:id="@+id/ly_badges"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/p5"
+        android:paddingRight="@dimen/p5"
+        android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_drawer"
+        android:layout_width="@dimen/p40"
+        android:layout_height="@dimen/p40"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/p5"
+        android:paddingRight="@dimen/p5"
+        android:src="@drawable/engromenu"
+        android:visibility="visible"
+        app:tint="@color/black" />
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="@dimen/p40"
+        android:layout_height="@dimen/p40"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/p5"
+        android:paddingRight="@dimen/p5"
+        android:src="@drawable/ic_baseline_arrow_forward_24"
+        android:visibility="gone"
+        app:tint="@color/black" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_notification"
+        android:layout_width="@dimen/p40"
+        android:layout_height="@dimen/p40"
+
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/ly_badges"
+
+        android:src="@drawable/engronotification"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/cart_badge"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_toLeftOf="@+id/ly_badges"
+        android:background="@drawable/notificaiton_badge"
+        android:gravity="center"
+
+        android:text="0"
+        android:textColor="@android:color/white"
+        android:textSize="8sp" />
+    <!--<LinearLayout-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!---->
+    <!--android:id="@+id/linearnotification"-->
+    <!--android:orientation="horizontal"-->
+
+
+    <!--</LinearLayout>-->
+
+
+
+
+</RelativeLayout>

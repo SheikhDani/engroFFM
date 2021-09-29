@@ -1,0 +1,109 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   >
+
+    <include
+        android:id="@+id/inc_common_header_colletion"
+        layout="@layout/common_header" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/inc_common_header_colletion"
+        android:layout_above="@+id/linear_bottom"
+        android:fillViewport="true"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <ExpandableListView
+                android:id="@+id/expandableListView"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:divider="@android:color/darker_gray"
+                android:dividerHeight="0.5dp" />
+        </LinearLayout>
+    </ScrollView>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:id="@+id/linear_bottom"
+        android:layout_alignParentBottom="true"
+
+        android:orientation="horizontal">
+
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+
+            <Button
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginStart="@dimen/p10"
+                android:layout_marginLeft="@dimen/p10"
+                android:layout_marginTop="@dimen/p10"
+                android:layout_marginBottom="@dimen/p10"
+
+                android:background="@drawable/eidttext_boader"
+                android:drawableLeft="@drawable/backwoardresizer"
+                android:paddingRight="@dimen/p20"
+                android:text="BACK"
+                android:textColor="@color/green"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btn_prev_snap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_centerInParent="true"
+                android:layout_marginTop="@dimen/p10"
+                android:layout_marginBottom="@dimen/p10"
+                android:background="@drawable/eidttext_boader"
+                android:backgroundTint="@color/green"
+                android:drawableRight="@drawable/forwardresizer"
+                android:paddingLeft="@dimen/p10"
+                android:text="PREVIOUS SNAPSHOT"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btn_proceed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="@dimen/p10"
+                android:layout_marginLeft="@dimen/p10"
+                android:layout_marginTop="@dimen/p10"
+                android:layout_marginEnd="@dimen/p10"
+                android:layout_marginRight="@dimen/p10"
+                android:layout_marginBottom="@dimen/p10"
+                android:background="@drawable/eidttext_boader"
+                android:backgroundTint="@color/green"
+                android:drawableRight="@drawable/forwardresizer"
+                android:paddingLeft="@dimen/p10"
+                android:text="PROCEED"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+
+
+
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

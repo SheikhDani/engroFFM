@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/l1"
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tv_option"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="@dimen/p10"
+                android:layout_margin="@dimen/p10"
+                android:layout_weight="1.8"
+                android:text="ADD COMMITMENT"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts18"
+
+
+                />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/p50"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+
+                android:layout_margin="@dimen/p20"
+
+                android:layout_weight="0.2"
+                android:contentDescription="Icon"
+                android:src="@drawable/ic_baseline_cancel_24" />
+        </LinearLayout>
+
+        <View
+
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/l1"
+
+            android:background="@color/grey" />
+        <LinearLayout
+            android:id="@+id/linear_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/l1"
+            android:layout_marginTop="@dimen/p20"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/txt_product"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/p20"
+
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Product"
+                android:textColor="@color/black"
+
+                />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/p20"
+                android:layout_weight="1"
+                android:background="@drawable/eidttext_boader"
+
+                android:gravity="center"
+                android:hint="500 Bags" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/linear_quantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linear_product"
+            android:layout_marginTop="@dimen/p20"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/txt_quantity"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/p20"
+
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Quantity"
+                android:textColor="@color/black"
+
+                />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/p20"
+                android:layout_weight="1"
+                android:background="@drawable/eidttext_boader"
+
+                android:gravity="center"
+                android:hint="500 Bags" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/linear_timeline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linear_quantity"
+            android:layout_marginTop="@dimen/p20"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/txt_timeline"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/p20"
+
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Timeline"
+                android:textColor="@color/black"
+
+                />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/p20"
+                android:layout_weight="1"
+                android:background="@drawable/eidttext_boader"
+
+                android:gravity="center"
+                android:hint="500 Bags" />
+
+        </LinearLayout>
+
+        <View
+
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/p20"
+            android:id="@+id/divider"
+
+            android:layout_below="@+id/linear_timeline"
+            android:background="@color/grey" />
+
+        <LinearLayout
+            android:id="@+id/linear_confirmaed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider"
+            android:layout_marginTop="@dimen/p10"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <CheckBox
+                android:id="@+id/check_confirm"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/p20"
+
+                android:layout_weight="0.2"
+                android:gravity="center_vertical"
+
+                android:textColor="@color/black"
+
+                />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/p20"
+                android:layout_weight="1.8"
+                android:text="Confirmed"
+
+                android:textSize="20sp"
+
+
+                android:hint="500 Bags" />
+
+        </LinearLayout>
+
+        <View
+
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/p10"
+            android:layout_below="@+id/linear_confirmaed"
+            android:background="@color/grey" />
+
+        <LinearLayout
+            android:id="@+id/linear_add_sampling"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/p30"
+            android:layout_below="@+id/linear_confirmaed"
+            android:gravity="center"
+            android:orientation="horizontal"
+            >
+
+            <Button
+                android:id="@+id/btn_add_sampling"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:drawablePadding="@dimen/p5"
+                android:textColor="@color/white"
+                android:drawableTint="@color/white"
+                android:backgroundTint="@color/green"
+                android:padding="@dimen/p10"
+                android:drawableRight="@drawable/ic_baseline_access_time_24"
+                android:background="@drawable/eidttext_boader"
+                android:text="INSERT"
+
+
+                />
+
+
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+</FrameLayout>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+
+    >
+    <include
+        android:id="@+id/inc_common_header_colletion"
+        layout="@layout/common_header" />
+    <RelativeLayout android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:background="@color/white"
+        android:layout_below="@+id/inc_common_header_colletion"
+        android:id="@+id/rel_field_sales"
+        >
+        <TextView
+            android:id="@+id/txt_sales_plan"
+
+            android:textSize="22sp"
+            android:text="3\nTotal Samples"
+            android:textColor="@color/green"
+            android:padding="@dimen/p20"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"></TextView>
+
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="@dimen/p120"
+            android:layout_height="40dp"
+            android:layout_toRightOf="@+id/txt_sales_plan"
+
+            android:layout_marginTop="@dimen/p30"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.502"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.498" />
+
+
+        <Button
+            android:id="@+id/targetTextView"
+            android:text="+ ANALYSIS"
+            android:background="@drawable/textview_boarder"
+            android:textColor="@color/white"
+            android:layout_margin="@dimen/p10"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_height="@dimen/p30"
+            android:layout_width="@dimen/p100"></Button>
+    </RelativeLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_below="@+id/rel_field_sales"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android" />
+</RelativeLayout>

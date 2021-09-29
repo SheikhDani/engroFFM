@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/l1"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/tv_option"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            android:layout_weight="1.8"
+            android:padding="@dimen/p10"
+            android:text="SELECT COMPANY &amp; DEALER"
+            android:textColor="@color/green"
+            android:textSize="@dimen/ts16"
+
+
+            />
+
+        <ImageView
+            android:id="@+id/img_commitment"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/p40"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/p20"
+
+            android:layout_weight="0.2"
+
+            android:contentDescription="Icon"
+            android:drawableTint="@color/green"
+            android:src="@drawable/ic_baseline_delete_24" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/l1"
+        android:background="@color/grey" />
+
+    <LinearLayout
+        android:id="@+id/linear_company"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider"
+        android:layout_marginTop="@dimen/p10"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/txt_select_company"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/p20"
+
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="Select Company"
+            android:textColor="@color/black"
+
+            />
+
+
+        <EditText
+            android:id="@+id/auto_select_company"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="@dimen/p20"
+            android:layout_weight="1"
+            android:editable="false"
+
+            android:background="@drawable/eidttext_boader"
+            android:clickable="true"
+            android:cursorVisible="false"
+            android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+            android:dropDownHeight="155dp"
+            android:focusable="false"
+            android:gravity="center_horizontal"
+            android:hint="Select Company"
+            android:inputType="none"
+            android:maxLines="1"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linear_mobile_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linear_company"
+        android:layout_marginTop="@dimen/p10"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <TextView
+
+            android:layout_width="0dp"
+            android:id = "@+id/txt_dealer"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/p20"
+
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="Dealer Name"
+            android:textColor="@color/black"
+
+            />
+
+        <EditText
+            android:id="@+id/et_dealer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/p20"
+            android:layout_weight="1"
+            android:background="@drawable/eidttext_boader"
+
+            android:gravity="center"
+          />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

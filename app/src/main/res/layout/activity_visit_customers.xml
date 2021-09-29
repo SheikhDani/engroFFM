@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+
+    >
+    <include
+        android:id="@+id/inc_common_header_colletion"
+        layout="@layout/common_header" />
+
+    <RelativeLayout
+        android:id="@+id/rel_field_sales"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/inc_common_header_colletion"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/txt_sales_plan"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="@dimen/p20"
+            android:layout_marginLeft="@dimen/p20"
+            android:layout_marginTop="@dimen/p20"
+            android:layout_marginEnd="@dimen/p20"
+            android:layout_marginRight="@dimen/p20"
+            android:layout_marginBottom="@dimen/p20"
+            android:gravity="center"
+            android:text="@string/visitcustomer"
+
+            android:textColor="@color/green"
+            android:textStyle="bold"></TextView>
+
+        <EditText
+            android:id="@+id/et_Search"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/p10"
+            android:layout_marginLeft="@dimen/p10"
+            android:layout_marginTop="@dimen/p10"
+            android:layout_marginRight="@dimen/p10"
+            android:layout_marginBottom="@dimen/p10"
+            android:layout_toLeftOf="@+id/img_location"
+
+
+            android:background="@drawable/eidttext_boader"
+            android:drawableRight="@drawable/iconresizer"
+            android:hint="Search"
+            android:paddingLeft="@dimen/p10"
+            android:paddingTop="@dimen/p10"
+            android:paddingRight="@dimen/p10"
+            android:paddingBottom="@dimen/p10"
+
+
+            android:textColor="@color/black"></EditText>
+
+        <ImageView
+            android:id="@+id/img_location"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+
+            android:layout_marginLeft="@dimen/p20"
+            android:layout_marginTop="@dimen/p20"
+
+            android:layout_marginRight="@dimen/p10"
+            android:layout_marginBottom="@dimen/p20"
+
+            android:src="@mipmap/engrolocation"></ImageView>
+    </RelativeLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs_sales_plan"
+        style="@style/MyStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/rel_field_sales"
+        android:background="@color/white"
+        app:tabGravity="fill"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/green" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager_sales_plan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/tabs_sales_plan"
+        android:layout_marginBottom="@dimen/p5"
+
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="@dimen/p100"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:background="@color/white"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:id="@+id/bottom_layout"-->
+<!--        >-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/imageLeft"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="@dimen/p50"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_weight="0.45"-->
+<!--            android:adjustViewBounds="true"-->
+<!--            android:src="@drawable/ic_baseline_face_24" />-->
+
+
+
+<!--        <ImageView-->
+<!--            android:id="@+id/imageRight"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_height="@dimen/p50"-->
+<!--            android:layout_weight="0.45"-->
+<!--            android:adjustViewBounds="true"-->
+<!--            android:src="@drawable/ic_baseline_face_24" />-->
+
+<!--    </LinearLayout>-->
+
+</RelativeLayout>

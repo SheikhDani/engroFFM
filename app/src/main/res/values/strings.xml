@@ -1,0 +1,142 @@
+<resources>
+    <string name="app_name">Engro FFM</string>
+
+    <string name="title_fingerprint">One-touch Sign In</string>
+    <string name="desc_fingerprint">Please place your fingertip on the scanner to verify your identity</string>
+    <string name="note">(Fingerprint sign in makes your app login much faster. Your device should have at least one fingerprint registered in device settings)</string>
+    <string name="title_activity_home">Fingerprint</string>
+    <string name="activity_home_desc">You have successfully logged in with fingerprint authentication</string>
+    <string name="activity_home_note">Close and re-open the app to see the fingerprint auth screen again</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string-array name="Gender_Names">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </string-array>
+<string name="username">Username / Email</string>
+    <string name="passowrd">Password</string>
+    <string name="sales_plan">SALES PLAN</string>
+    <string name="visitcustomer">VIEW CUSTOMERS</string>
+    <string name="login">Login</string>
+    <string name="MODEL">list</string>
+    <string name="position">position</string>
+    <string name="clear_data">Clear Data</string>
+    <string name="ndrm_text">List of NDRMF Projects in Execution Stage</string>
+    <string name="submit">Submit</string>
+    <string name="verify">Verify Activity</string>
+    <string name="uploadimages">Upload Images</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="spinnertitle">Rate</string>
+    <string name="loading">Loading...</string>
+    <string name="remarks">Add your remarks</string>
+    <string name="disable">Disable</string>
+    <string name="required">Required</string>
+    <string name="sync">Sync Data</string>
+    <string name="logout">Logout</string>
+    <string name="verificationdone">Verification Done</string>
+    <string name="verificationnotdone">Verification Not Done</string>
+    <string-array name="spinner_array">
+        <item>More</item>
+        <item>Less</item>
+        <item>Same</item>
+    </string-array>
+
+    <string name="exit_message">Are you sure you want to exit from application?</string>
+    <string name="gps_not_enabled">GPS is not enabled. Please enable it to proceed.</string>
+    <string name="mock_location_enabled">Mock/Fake location is enabled. Please disable it to proceed.</string>
+    <string name="internet_available_msg2">There is no internet connection on the device.But Your Activity is Saved</string>
+    <string name="internet_available_msg">There is no internet connection on the device. Please check the connection and try again.</string>
+    <string name="internet_available_title">No Connection</string>
+    <string name="ok">Ok</string>
+    <string name="invalid_credentials_title">Invalid Credentials</string>
+    <string name="unsynched_data_alert">There are some unposted outlets available in the application. Please make sure to post these outlets and try again.</string>
+    <string name="not_applicable">N/A</string>
+    <string name="invalid_credentials_message">Incorrect username or password. Please try again.</string>
+    <string name = "next">Next</string>
+    <string name="gotosettings">GOTO SETTINGS</string>
+    <string name="needpermission">Need Permissions</string>
+    <string name="permissionmessage">This app needs permission to use this feature. You can grant them in app settings.</string>
+    <string name="cancel">Cancel</string>
+    <string name="message">Message</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="alert">Alert</string>
+    <string name="clear_data_alert">Do you want to clear all application data. This would include all the saved projects and downloaded data.\nOnce deleted this action cannot be undone. Do you want to proceed?</string>
+    <string name="enable">Enable</string>
+    <string name="postdataalert">There is no Outlet Data Available for Sync.</string>
+
+
+    <string-array name="tab_A">
+        <item>Item 1A</item>
+        <item>Item 1B</item>
+        <item>Item 1C</item>
+        <item>Item 1D</item>
+        <item>Item 1E</item>
+        <item>Item 1F</item>
+        <item>Item 1G</item>
+        <item>Item 1H</item>
+        <item>Item 1I</item>
+        <item>Item 1J</item>
+        <item>Item 1K</item>
+        <item>Item 1L</item>
+        <item>Item 1M</item>
+        <item>Item 1N</item>
+        <item>Item 1O</item>
+        <item>Item 1P</item>
+        <item>Item 1Q</item>
+        <item>Item 1R</item>
+        <item>Item 1S</item>
+        <item>Item 1T</item>
+    </string-array>
+
+    <string-array name="tab_B">
+        <item>Item 2A</item>
+        <item>Item 2B</item>
+        <item>Item 2C</item>
+        <item>Item 2D</item>
+        <item>Item 2E</item>
+        <item>Item 2F</item>
+        <item>Item 2G</item>
+        <item>Item 2H</item>
+        <item>Item 2I</item>
+        <item>Item 2J</item>
+        <item>Item 2K</item>
+        <item>Item 2L</item>
+        <item>Item 2M</item>
+        <item>Item 2N</item>
+        <item>Item 2O</item>
+        <item>Item 2P</item>
+        <item>Item 2Q</item>
+        <item>Item 2R</item>
+        <item>Item 2S</item>
+        <item>Item 2T</item>
+    </string-array>
+
+    <string-array name="tab_C">
+        <item>Item 3A</item>
+        <item>Item 3B</item>
+        <item>Item 3C</item>
+        <item>Item 3D</item>
+        <item>Item 3E</item>
+        <item>Item 3F</item>
+        <item>Item 3G</item>
+        <item>Item 3H</item>
+        <item>Item 3I</item>
+        <item>Item 3J</item>
+        <item>Item 3K</item>
+        <item>Item 3L</item>
+        <item>Item 3M</item>
+        <item>Item 3N</item>
+        <item>Item 3O</item>
+        <item>Item 3P</item>
+        <item>Item 3Q</item>
+        <item>Item 3R</item>
+        <item>Item 3S</item>
+        <item>Item 3T</item>
+    </string-array>
+</resources>

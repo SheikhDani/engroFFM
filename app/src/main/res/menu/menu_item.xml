@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/nav_visitcustomer"
+        android:icon="@mipmap/engrovisitcustomers"
+        android:title="VISIT CUSTOMERS" />
+    <item
+        android:id="@+id/nav_visitfarmers"
+        android:icon="@mipmap/engrovisitfarmers"
+        android:title="VISIT FARMERS" />
+    <item
+        android:id="@+id/nav_downlaod_farmersdata"
+        android:icon="@mipmap/downlaodfarmers"
+        android:title="DOWNLOAD FARMERS DATA" />
+    <item
+        android:id="@+id/nav_customerlocation"
+        android:icon="@mipmap/customerlocation"
+        android:title="CUSTOMER'S LOCATION" />
+    <item
+        android:id="@+id/nav_supervisorsnapshot"
+        android:icon="@mipmap/snapshotsueprvisor"
+        android:title="SUPERVISOR SNAPSHOT" />
+    <item
+        android:id="@+id/nav_addnewfarmer"
+        android:icon="@mipmap/addnewfarmer"
+        android:title="ADD NEW FARMER" />
+    <item
+        android:id="@+id/nav_addfarmermeeting"
+        android:icon="@mipmap/addfarmermeeeting"
+        android:title="ADD FARMER MEETING" />
+
+
+</menu>

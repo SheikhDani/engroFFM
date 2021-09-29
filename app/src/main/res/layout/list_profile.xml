@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/l1"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/tv_option"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            android:layout_weight="0.6"
+            android:padding="@dimen/p10"
+            android:text="Profile"
+            android:textColor="@color/green" />
+
+        <Button
+            android:id="@+id/btn_cropping_pattern"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/p30"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/eidttext_boader"
+            android:backgroundTint="@color/green"
+            android:drawableRight="@drawable/ic_baseline_add_24"
+            android:drawableTint="@color/white"
+            android:text="cropping pattern"
+            android:textColor="@color/white" />
+
+        <ImageView
+            android:id="@+id/img_delete"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_weight="0.4"
+            android:contentDescription="Icon"
+            android:drawableTint="@color/green"
+            android:src="@drawable/engrodelete" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/l1"
+        android:background="@color/grey" />
+
+
+    <LinearLayout
+        android:id="@+id/linear_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider"
+        android:layout_marginTop="@dimen/p10"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <TextView
+
+            android:id="@+id/txt_size"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/p20"
+
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="Size(Acre)"
+            android:textColor="@color/black"
+
+            />
+
+        <EditText
+            android:id="@+id/et_size"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/p20"
+            android:layout_weight="1"
+            android:background="@drawable/eidttext_boader"
+            android:gravity="center"
+
+            android:hint="Acres" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_sales_point"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linear_size"
+        android:layout_marginTop="@dimen/p20"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/txt_sales_point"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/p20"
+
+            android:layout_weight="1.2"
+            android:gravity="center_vertical"
+            android:text="Sales Point"
+            android:textColor="@color/black"
+
+            />
+
+        <Button
+            android:id="@+id/btn_sales_point"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="@dimen/p20"
+            android:layout_weight="0.8"
+            android:background="@drawable/eidttext_boader"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:text="SELECT SALES POINT"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_land_mark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linear_sales_point"
+        android:layout_marginTop="@dimen/p20"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/txt_landmarl"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/p20"
+
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="Nearest Landmark"
+            android:textColor="@color/black"
+
+            />
+
+        <EditText
+            android:id="@+id/et_landmark"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/p20"
+            android:layout_weight="1"
+            android:background="@drawable/eidttext_boader"
+            android:gravity="center"
+
+            android:hint="landmark" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_ownership"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linear_land_mark"
+        android:layout_marginTop="@dimen/p10"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/txt_ownership"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/p20"
+
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="Ownership"
+            android:textColor="@color/black"
+
+            />
+
+
+        <AutoCompleteTextView
+            android:id="@+id/auto_owner_ship"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="@dimen/p20"
+            android:layout_weight="1"
+
+            android:background="@drawable/eidttext_boader"
+            android:clickable="true"
+            android:cursorVisible="false"
+            android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+            android:dropDownHeight="155dp"
+            android:focusable="false"
+            android:gravity="center_horizontal"
+            android:hint="Select Ownership"
+            android:inputType="none"
+            android:maxLines="1"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_water_source"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linear_ownership"
+        android:layout_marginTop="@dimen/p10"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/txt_water_Source"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/p20"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="Water Source"
+            android:textColor="@color/black"
+
+            />
+
+
+        <AutoCompleteTextView
+            android:id="@+id/auto_water_soruce"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="@dimen/p20"
+            android:layout_weight="1"
+            android:background="@drawable/eidttext_boader"
+            android:clickable="true"
+            android:cursorVisible="false"
+            android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+            android:dropDownHeight="155dp"
+            android:focusable="false"
+            android:gravity="center_horizontal"
+            android:hint="Water Soruce"
+            android:inputType="none"
+            android:maxLines="1"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_dynamic_cropping_pattern"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linear_water_source"
+
+
+        android:orientation="vertical" />
+
+
+
+
+</RelativeLayout>

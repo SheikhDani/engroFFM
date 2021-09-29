@@ -1,0 +1,176 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <include
+        android:id="@+id/inc_common_header_colletion"
+        layout="@layout/common_header" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/inc_common_header_colletion"
+        android:fillViewport="true"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/linear_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="@dimen/p20"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/txt_date"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/p20"
+
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Date"
+                android:textColor="@color/black"
+
+                />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/p20"
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:text="2020/08/05" />
+
+        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_get_logs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/p20"
+                android:layout_below="@+id/linear_date"
+                android:gravity="center"
+                android:orientation="horizontal"
+                >
+
+                <Button
+                    android:id="@+id/btn_get_logs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:drawablePadding="@dimen/p5"
+                    android:textColor="@color/white"
+                    android:drawableTint="@color/white"
+                    android:backgroundTint="@color/green"
+                    android:padding="@dimen/p10"
+                    android:drawableRight="@drawable/ic_baseline_access_time_24"
+                    android:background="@drawable/eidttext_boader"
+                    android:text="GET LOGS"
+
+
+                    />
+
+
+
+            </LinearLayout>
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/p20"
+                android:id="@+id/divider"
+
+                android:layout_below="@+id/linear_get_logs"
+                android:background="@color/grey" />
+
+            <LinearLayout
+                android:id="@+id/linear_total_sample"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/divider"
+                android:layout_marginTop="@dimen/p10"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="2"
+                 android:padding="@dimen/p10"
+                    android:text="TOTAL SAMPELS  0"
+                    android:textColor="@color/green"
+
+                    android:textSize="20sp"
+
+                    />
+
+            </LinearLayout>
+
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/p10"
+                android:layout_below="@+id/linear_confirmaed"
+                android:background="@color/grey" />
+        </LinearLayout>
+
+    </ScrollView>
+    <View
+
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/p50"
+        android:layout_above="@+id/linear_bottom"
+        android:layout_marginBottom="@dimen/p10"
+        android:layout_height="1dp"
+        android:background="@color/grey" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linear_bottom"
+        android:background="@color/white"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <Button
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginStart="@dimen/p10"
+                android:layout_marginLeft="@dimen/p10"
+                android:layout_marginTop="@dimen/p10"
+                android:layout_marginEnd="@dimen/p10"
+                android:layout_marginRight="@dimen/p10"
+                android:layout_marginBottom="@dimen/p10"
+                android:background="@drawable/eidttext_boader"
+                android:text="BACK"
+                android:textColor="@color/green" />
+
+
+
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/l1"
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tv_option"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="@dimen/p10"
+                android:layout_margin="@dimen/p10"
+                android:layout_weight="1.8"
+                android:text="STOCK SELLING SUMMARY"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts18"
+
+
+                />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/p50"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+
+                android:layout_margin="@dimen/p20"
+
+                android:layout_weight="0.2"
+                android:contentDescription="Icon"
+                android:src="@drawable/ic_baseline_cancel_24" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/linear_comments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/l1"
+
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/txt_comments"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+
+                android:padding="@dimen/p20"
+
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Quantity of Stock Sold and NSP"
+                android:textColor="@color/black"
+
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_table_recommendations"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+
+            android:layout_below="@+id/linear_comments"
+
+            android:orientation="horizontal">
+
+            <ScrollView
+                android:id="@+id/layout"
+                android:layout_height="match_parent"
+                android:scrollbars="horizontal|vertical"
+                android:layout_width="match_parent"
+
+                android:scrollbarStyle="outsideInset"
+                android:fillViewport="true">
+                <HorizontalScrollView
+                    android:id="@+id/horizontalView"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="horizontal|vertical"
+                    android:layout_width="wrap_content"
+                    >
+
+                    <TableLayout
+                        android:id="@+id/displayLinear"
+                        android:layout_width="match_parent"
+                        android:divider="@color/grey"
+                        android:layout_height="match_parent"
+                        android:showDividers="middle"
+                        android:stretchColumns="*">
+
+
+
+                    </TableLayout>
+                </HorizontalScrollView>
+            </ScrollView>
+        </LinearLayout>
+
+
+
+
+        <LinearLayout
+            android:id="@+id/linear_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/p20"
+            android:layout_below="@+id/linear_table_recommendations"
+            android:gravity="center"
+            android:orientation="horizontal"
+            >
+
+            <Button
+                android:id="@+id/btn_procees"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:drawablePadding="@dimen/p5"
+                android:textColor="@color/white"
+                android:drawableTint="@color/white"
+                android:backgroundTint="@color/green"
+                android:padding="@dimen/p10"
+                android:drawableRight="@drawable/ic_baseline_arrow_forward_ios_24"
+                android:background="@drawable/eidttext_boader"
+                android:text="PROCEED"
+
+
+                />
+
+
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+</FrameLayout>
