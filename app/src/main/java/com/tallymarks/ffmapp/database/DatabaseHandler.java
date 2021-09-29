@@ -33,6 +33,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String GENDER = "GENDER";
     public static final String DISTRTICTS = "DESTRICTS";
     public static final String ENGRO_BRANCH = "ENGRO_BRANCH";
+    public static final String PRODUCT_BRANDS = "PRODUCT_BRANDS";
+    public static final String PRODUCT_BRANDS_CATEGORY = "PRODUCT_BRANDS_CATEGORY";
 
 
 
@@ -53,10 +55,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_GENDER_ID = "genderID";
     public static final String KEY_GENDER_NAME = "genderName";
 
+    //Product Brand Category Table Fields
+    public static final String KEY_PRODUCT_BRAND_CATEOGRY_NAME = "productbrandCateogry";
+
+
     //Destricts Table Fields
     public static final String KEY_DISTRICTS_ID = "dictrictID";
     public static final String KEY_DISCTRICTS_NAME = "districtName";
     public static final String KEY_DISCTRICTS_CODE = "dictrictName";
+
+    //Product Product Brand Table Fields
+    public static final String KEY_PRODUCT_BRAND_ID = "brandID";
+    public static final String KEY_PRODUCT_BRAND_DIVISION_CODE = "branddivisionCode";
+    public static final String KEY_PRODUCT_BRAND_COMPANY_HELD = "brandcompanyheld";
+    public static final String KEY_PRODUCT_BRAND_NAME = "brandName";
 
     //Engro Branch Table Fields
     public static final String KEY_ENGRO_BRANCH_ID = "engrbranchID";
@@ -113,6 +125,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_OUTLET_ID + " TEXT,"
                 + KEY_OUTLET_STATUS + " TEXT" + ")";
 
+        String TABLE_PRODUCT_BRAND_CATEGORY = "CREATE TABLE " + PRODUCT_BRANDS_CATEGORY + "("
+                + KEY_PRODUCT_BRAND_CATEOGRY_NAME + " TEXT" + ")";
+
         String TABLE_CROP_LIST = "CREATE TABLE " + CROPS_LIST+ "("
                 + KEY_CROP_ID+ " TEXT,"
                 + KEY_CROP_SHORT_DESCRIPTION+ " TEXT,"
@@ -124,6 +139,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_ENGRO_RAND_NAME+ " TEXT,"
                 + KEY_ENGRO_DIVISION_CODE+ " TEXT,"
                 + KEY_ENGRO_FERT_TYPE + " TEXT" + ")";
+
+        String TABLE_PRODUCT_BRAND = "CREATE TABLE " + PRODUCT_BRANDS+ "("
+                + KEY_PRODUCT_BRAND_ID+ " TEXT,"
+                + KEY_PRODUCT_BRAND_NAME+ " TEXT,"
+                + KEY_PRODUCT_BRAND_CATEOGRY_NAME+ " TEXT,"
+                + KEY_PRODUCT_BRAND_DIVISION_CODE+ " TEXT,"
+                + KEY_PRODUCT_BRAND_COMPANY_HELD + " TEXT" + ")";
 
 
         String TABLE_FERT_TYPES = "CREATE TABLE " + FERT_TYPES+ "("
@@ -161,6 +183,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(TABLE_GENDER);
         db.execSQL(TABLE_DISTRICT);
         db.execSQL(TABLE_ENGRO_BRANCH);
+        db.execSQL(TABLE_PRODUCT_BRAND);
+        db.execSQL(TABLE_PRODUCT_BRAND_CATEGORY);
 
 
 
@@ -178,6 +202,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + GENDER);
         db.execSQL("DROP TABLE IF EXISTS " + DISTRTICTS);
         db.execSQL("DROP TABLE IF EXISTS " + ENGRO_BRANCH);
+        db.execSQL("DROP TABLE IF EXISTS " + PRODUCT_BRANDS);
+        db.execSQL("DROP TABLE IF EXISTS " + PRODUCT_BRANDS_CATEGORY);
         onCreate(db);
 
     }

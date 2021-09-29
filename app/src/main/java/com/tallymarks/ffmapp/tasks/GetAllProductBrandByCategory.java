@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.listofallproductcategories.ListofAllProductCategoriesOutput;
 import com.tallymarks.ffmapp.models.productsbrandbycategory.ProductBrandByCategoryOutput;
@@ -32,10 +33,12 @@ public class GetAllProductBrandByCategory extends AsyncTask<String, Void, Void> 
     String errorMessage = "";
     private Context mContext;
     SharedPrefferenceHelper sHelper;
+    DatabaseHandler db;
     public  GetAllProductBrandByCategory(Context context)
     {
         this.mContext = context;
         this.sHelper = new SharedPrefferenceHelper(mContext);
+        this.db = new DatabaseHandler(mContext);
     }
 
     @Override
@@ -68,11 +71,24 @@ public class GetAllProductBrandByCategory extends AsyncTask<String, Void, Void> 
             Type journeycodeType = new TypeToken<ArrayList<ProductBrandByCategoryOutput>>() {
             }.getType();
             List<ProductBrandByCategoryOutput> journeycode = new Gson().fromJson(response, journeycodeType);
-            //JourneyPlanOutPut journeycode = new Gson().fromJson(response, JourneyPlanOutPut.class);
             if (response != null) {
                 if (journeycode.size() > 0) {
-
+                    HashMap<String, String> map = new HashMap<>();
+                    for (int i = 0; i < journeycode.size(); i++) {
+                        map.put(db.KEY_PRODUCT_BRAND_CATEOGRY_NAME, journeycode.get(i).getCategory()== null || journeycode.get(i).getCategory().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getCategory());
+                        for(int j= 0 ; j<journeycode.get(i).getBrands().size();j++) {
+                            HashMap<String, String> dbParams = new HashMap<>();
+                            dbParams.put(db.KEY_PRODUCT_BRAND_CATEOGRY_NAME, journeycode.get(i).getCategory()== null || journeycode.get(i).getCategory().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getCategory());
+                            dbParams.put(db.KEY_PRODUCT_BRAND_DIVISION_CODE, journeycode.get(i).getBrands().get(j).getDivisionCode() == null | journeycode.get(i).getBrands().get(j).getDivisionCode().equals("")? mContext.getString(R.string.not_applicable) : journeycode.get(i).getBrands().get(j).getDivisionCode().toString());
+                            dbParams.put(db.KEY_PRODUCT_BRAND_ID, journeycode.get(i).getBrands().get(j).getId() == null | journeycode.get(i).getBrands().get(j).getId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getBrands().get(j).getId().toString());
+                            dbParams.put(db.KEY_PRODUCT_BRAND_NAME, journeycode.get(i).getBrands().get(j).getName()== null | journeycode.get(i).getBrands().get(j).getName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getBrands().get(j).getName().toString());
+                            dbParams.put(db.KEY_PRODUCT_BRAND_COMPANY_HELD, journeycode.get(i).getBrands().get(j).getCompanyHeld() == null | journeycode.get(i).getBrands().get(j).getCompanyHeld().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getBrands().get(j).getCompanyHeld().toString());
+                            db.addData(db.PRODUCT_BRANDS, dbParams);
+                        }
+                    }
+                    db.addData(db.PRODUCT_BRANDS_CATEGORY, map);
                 }
+
             }
         } catch (Exception exception) {
             if (response.equals("")) {
