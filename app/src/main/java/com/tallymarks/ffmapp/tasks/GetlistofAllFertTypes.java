@@ -11,8 +11,10 @@ import androidx.annotation.RequiresApi;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.listofallcrops.ListofallCropsOutput;
+import com.tallymarks.ffmapp.models.listofallferttypes.ListofFertTypeOutput;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.Helpers;
 import com.tallymarks.ffmapp.utils.HttpHandler;
@@ -31,10 +33,12 @@ public class GetlistofAllFertTypes extends AsyncTask<String, Void, Void> {
     String errorMessage = "";
     private Context mContext;
     SharedPrefferenceHelper sHelper;
+    DatabaseHandler db;
     public  GetlistofAllFertTypes(Context context)
     {
       this.mContext = context;
        this.sHelper = new SharedPrefferenceHelper(mContext);
+       this.db = new DatabaseHandler(mContext);
     }
 
     @Override
@@ -64,13 +68,19 @@ public class GetlistofAllFertTypes extends AsyncTask<String, Void, Void> {
             response = httpHandler.httpGet(listofAllCrops, headerParams);
             Log.e("list Crops", listofAllCrops);
             Log.e("Response", response);
-            Type journeycodeType = new TypeToken<ArrayList<ListofallCropsOutput>>() {
+            Type journeycodeType = new TypeToken<ArrayList<ListofFertTypeOutput>>() {
             }.getType();
-            List<ListofallCropsOutput> journeycode = new Gson().fromJson(response, journeycodeType);
+            List<ListofFertTypeOutput> journeycode = new Gson().fromJson(response, journeycodeType);
             //JourneyPlanOutPut journeycode = new Gson().fromJson(response, JourneyPlanOutPut.class);
             if (response != null) {
                 if (journeycode.size() > 0) {
-
+                    for (int j = 0; j < journeycode.size(); j++) {
+                        HashMap<String, String> dbParams = new HashMap<>();
+                        dbParams.put(db.KEY_FERT_ID, journeycode.get(j).getId() == null | journeycode.get(j).getId() == 0 ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getId().toString());
+                        dbParams.put(db.KEY_FERT_DESCRIPTION, journeycode.get(j).getDescription() == null | journeycode.get(j).getDescription().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getDescription().toString());
+                        dbParams.put(db.KEY_FERT_NAME, journeycode.get(j).getName() == null | journeycode.get(j).getName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getName().toString());
+                        db.addData(db.FERT_TYPES, headerParams);
+                    }
                 }
             }
         } catch (Exception exception) {
