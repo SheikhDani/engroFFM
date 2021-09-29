@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        new GetlistofAllFertTypes(MainActivity.this).execute();
 //        new GetListofAllCrops(MainActivity.this).execute();
 //
-//        new GetOutletStatus(MainActivity.this).execute();
+       new GetOutletStatus(MainActivity.this).execute();
 //        new LoadCustomersTodayJourneyPlan(MainActivity.this).execute();
 //        new GetAssignedSalesPoint(MainActivity.this).execute();
 //        new GetlistofallGenders(MainActivity.this).execute();

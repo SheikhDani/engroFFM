@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.activities.MainActivity;
+import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.outletstatusesoutput.OutletStatusOutput;
 import com.tallymarks.ffmapp.utils.Constants;
@@ -34,10 +35,12 @@ public class GetOutletStatus extends AsyncTask<String, Void, Void> {
     private String errorMessage = "";
     private SharedPrefferenceHelper sHelper;
     private Context mContext;
+    DatabaseHandler db;
     public GetOutletStatus(Context context)
     {
         this.mContext = context;
         this.sHelper = new SharedPrefferenceHelper(mContext);
+        this.db = new DatabaseHandler(mContext);
     }
 
     @Override
@@ -72,7 +75,12 @@ public class GetOutletStatus extends AsyncTask<String, Void, Void> {
             //JourneyPlanOutPut journeycode = new Gson().fromJson(response, JourneyPlanOutPut.class);
             if (response != null) {
                 if (journeycode.size() > 0) {
-
+                    for (int j = 0; j < journeycode.size(); j++) {
+                        HashMap<String, String> dbParams = new HashMap<>();
+                        dbParams.put(db.KEY_OUTLET_ID, journeycode.get(j).getId() == null | journeycode.get(j).getId() == 0 ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getId().toString());
+                        dbParams.put(db.KEY_OUTLET_STATUS, journeycode.get(j).getStatus() == null | journeycode.get(j).getStatus().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getStatus().toString());
+                        db.addData(db.OUTLET_STATUSES, headerParams);
+                    }
                 }
             }
         } catch (Exception exception) {
