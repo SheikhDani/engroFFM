@@ -33,6 +33,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String GENDER = "GENDER";
     public static final String DISTRTICTS = "DESTRICTS";
     public static final String ENGRO_BRANCH = "ENGRO_BRANCH";
+    public static final String PRODUCT_BRANDS = "PRODUCT_BRANDS";
 
 
 
@@ -57,6 +58,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_DISTRICTS_ID = "dictrictID";
     public static final String KEY_DISCTRICTS_NAME = "districtName";
     public static final String KEY_DISCTRICTS_CODE = "dictrictName";
+
+    //Product Product Brand Table Fields
+    public static final String KEY_PRODUCT_BRAND_ID = "brandID";
+    public static final String KEY_PRODUCT_BRAND_DIVISION_CODE = "branddivisionCode";
+    public static final String KEY_PRODUCT_BRAND_COMPANY_HELD = "brandcompanyheld";
+    public static final String KEY_PRODUCT_BRAND_NAME = "brandName";
 
     //Engro Branch Table Fields
     public static final String KEY_ENGRO_BRANCH_ID = "engrbranchID";
@@ -125,6 +132,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_ENGRO_DIVISION_CODE+ " TEXT,"
                 + KEY_ENGRO_FERT_TYPE + " TEXT" + ")";
 
+        String TABLE_PRODUCT_BRAND = "CREATE TABLE " + PRODUCT_BRANDS+ "("
+                + KEY_PRODUCT_BRAND_ID+ " TEXT,"
+                + KEY_PRODUCT_BRAND_NAME+ " TEXT,"
+                + KEY_PRODUCT_BRAND_DIVISION_CODE+ " TEXT,"
+                + KEY_PRODUCT_BRAND_COMPANY_HELD + " TEXT" + ")";
+
 
         String TABLE_FERT_TYPES = "CREATE TABLE " + FERT_TYPES+ "("
                 + KEY_FERT_ID+ " TEXT,"
@@ -161,6 +174,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(TABLE_GENDER);
         db.execSQL(TABLE_DISTRICT);
         db.execSQL(TABLE_ENGRO_BRANCH);
+        db.execSQL(TABLE_PRODUCT_BRAND);
 
 
 
@@ -178,6 +192,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + GENDER);
         db.execSQL("DROP TABLE IF EXISTS " + DISTRTICTS);
         db.execSQL("DROP TABLE IF EXISTS " + ENGRO_BRANCH);
+        db.execSQL("DROP TABLE IF EXISTS " + PRODUCT_BRANDS);
         onCreate(db);
 
     }
