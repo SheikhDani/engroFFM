@@ -32,6 +32,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String SOIL_DEPTHS = "SOIL_DEPTHS";
     public static final String GENDER = "GENDER";
     public static final String DISTRTICTS = "DESTRICTS";
+    public static final String ENGRO_BRANCH = "ENGRO_BRANCH";
 
 
 
@@ -56,6 +57,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_DISTRICTS_ID = "dictrictID";
     public static final String KEY_DISCTRICTS_NAME = "districtName";
     public static final String KEY_DISCTRICTS_CODE = "dictrictName";
+
+    //Engro Branch Table Fields
+    public static final String KEY_ENGRO_BRANCH_ID = "engrbranchID";
+    public static final String KEY_ENGRO_DIVISION_CODE = "engrodivisionCode";
+    public static final String KEY_ENGRO_RAND_NAME = "engrobrandName";
+    public static final String KEY_ENGRO_FERT_TYPE = "engrofertType";
 
     //CROPS LIST Table Fields
     public static final String KEY_CROP_ID = "cropID";
@@ -112,6 +119,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_CROP_NAME+ " TEXT,"
                 + KEY_CROP_LONG_DESCRIPTION + " TEXT" + ")";
 
+        String TABLE_ENGRO_BRANCH = "CREATE TABLE " + ENGRO_BRANCH+ "("
+                + KEY_ENGRO_BRANCH_ID+ " TEXT,"
+                + KEY_ENGRO_RAND_NAME+ " TEXT,"
+                + KEY_ENGRO_DIVISION_CODE+ " TEXT,"
+                + KEY_ENGRO_FERT_TYPE + " TEXT" + ")";
+
+
         String TABLE_FERT_TYPES = "CREATE TABLE " + FERT_TYPES+ "("
                 + KEY_FERT_ID+ " TEXT,"
                 + KEY_FERT_DESCRIPTION+ " TEXT,"
@@ -146,6 +160,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(TABLE_SOIL_DEPTHS);
         db.execSQL(TABLE_GENDER);
         db.execSQL(TABLE_DISTRICT);
+        db.execSQL(TABLE_ENGRO_BRANCH);
 
 
 
@@ -162,6 +177,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + SOIL_DEPTHS);
         db.execSQL("DROP TABLE IF EXISTS " + GENDER);
         db.execSQL("DROP TABLE IF EXISTS " + DISTRTICTS);
+        db.execSQL("DROP TABLE IF EXISTS " + ENGRO_BRANCH);
         onCreate(db);
 
     }
