@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         requestMultiplePermissions();
         // test();
 //        new GetListofAllDepths(MainActivity.this).execute();
-//        new GetlistofAllFertTypes(MainActivity.this).execute();
+       new GetlistofAllFertTypes(MainActivity.this).execute();
         new GetListofAllCrops(MainActivity.this).execute();
 //
        new GetOutletStatus(MainActivity.this).execute();
@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        new GetListofAllBrands(MainActivity.this).execute();
 //        new GetCompanHeldBrandBasicList(MainActivity.this).execute();
 //        new GetCustomerFarmerHierarchy(MainActivity.this).execute();
-        //      new GetFatmerTodayJourneyPlan(MainActivity.this).execute();
+        //new GetFatmerTodayJourneyPlan(MainActivity.this).execute();
     }
 
     @Override
