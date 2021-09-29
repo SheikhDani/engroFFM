@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // test();
 //        new GetListofAllDepths(MainActivity.this).execute();
 //        new GetlistofAllFertTypes(MainActivity.this).execute();
-//        new GetListofAllCrops(MainActivity.this).execute();
+        new GetListofAllCrops(MainActivity.this).execute();
 //
        new GetOutletStatus(MainActivity.this).execute();
 //        new LoadCustomersTodayJourneyPlan(MainActivity.this).execute();
