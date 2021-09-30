@@ -178,19 +178,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         requestMultiplePermissions();
         // test();
-//        new GetListofAllDepths(MainActivity.this).execute();
-       new GetlistofAllFertTypes(MainActivity.this).execute();
-        new GetListofAllCrops(MainActivity.this).execute();
+    //   new GetListofAllDepths(MainActivity.this).execute();
+  //     new GetlistofAllFertTypes(MainActivity.this).execute();
+ //       new GetListofAllCrops(MainActivity.this).execute();
 //
-       new GetOutletStatus(MainActivity.this).execute();
-//        new LoadCustomersTodayJourneyPlan(MainActivity.this).execute();
+ //      new GetOutletStatus(MainActivity.this).execute();
+        new LoadCustomersTodayJourneyPlan(MainActivity.this).execute();
 //        new GetAssignedSalesPoint(MainActivity.this).execute();
 //        new GetlistofallGenders(MainActivity.this).execute();
 //        new GetlistofAllDistrict(MainActivity.this).execute();
 //        new GetListofallMarketPlayers(MainActivity.this).execute();
 //        new GetListofallProductCategories(MainActivity.this).execute();
   //      new LoadCustomersAllJourneyPlan(MainActivity.this).execute();
-       new GetAllProductBrandByCategory(MainActivity.this).execute();
+     //  new GetAllProductBrandByCategory(MainActivity.this).execute();
 //        new GetListofAllBrands(MainActivity.this).execute();
 //        new GetCompanHeldBrandBasicList(MainActivity.this).execute();
 //        new GetCustomerFarmerHierarchy(MainActivity.this).execute();
