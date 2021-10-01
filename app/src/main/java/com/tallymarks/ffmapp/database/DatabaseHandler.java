@@ -34,6 +34,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String DISTRTICTS = "DESTRICTS";
     public static final String ENGRO_BRANCH = "ENGRO_BRANCH";
     public static final String PRODUCT_BRANDS = "PRODUCT_BRANDS";
+
     public static final String PRODUCT_BRANDS_CATEGORY = "PRODUCT_BRANDS_CATEGORY";
     public static final String TODAY_JOURNEY_PLAN = "TODAY_JOURNEY_PLAN";
     public static final String TODAY_JOURNEY_PLAN_ORDERS = "TODAY_JOURNEY_PLAN_ORDERS";
