@@ -34,10 +34,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String DISTRTICTS = "DESTRICTS";
     public static final String ENGRO_BRANCH = "ENGRO_BRANCH";
     public static final String PRODUCT_BRANDS = "PRODUCT_BRANDS";
-
     public static final String PRODUCT_BRANDS_CATEGORY = "PRODUCT_BRANDS_CATEGORY";
     public static final String TODAY_JOURNEY_PLAN = "TODAY_JOURNEY_PLAN";
     public static final String TODAY_JOURNEY_PLAN_ORDERS = "TODAY_JOURNEY_PLAN_ORDERS";
+    public static final String TODAY_JOURNEY_PLAN_PREVIOUS_STOCK = "TODAY_JOURNEY_PLAN_PREVIOUS_STOCK";
+    public static final String TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT = "TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT";
     public static final String TODAY_JOURNEY_PLAN_ORDERS_INVOICES = "TODAY_JOURNEY_PLAN_ORDERS_INVOICES";
 
 
@@ -117,6 +118,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_TODAY_JOURNEY_ORDER_DATE = "todayOrderDate";
     public static final String KEY_TODAY_JOURNEY_ORDER_BRAND_NAME = "todayOrderBrandName";
     public static final String KEY_TODAY_JOURNEY_ORDER_QUANTITY = "todayOrderQuantity";
+
+    //Today Journey Plan Previous Stock Table Fields
+    public static final String KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_ID = "todayOrderPrevoisStockID";
+    public static final String KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_NAME = "todayOrderPreviousStockname";
+    public static final String KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_QUANTITY = "todayOrderPreviousStockQuanity";
+    public static final String KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_VISIT_DATE = "todayOrderpreviousStockDate";
+    public static final String KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_COMPANYHELD = "todayOrderpreviousStockCompany";
+
+    //Today Journey Plan Previous SNapShot Table Fields
+    public static final String KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY = "todayOrderPrevoisSNapShotCategory";
 
     //Today Journey Plan Orders Invoice Table Fields
     public static final String KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER = "todayOrderInvocieNumber";
@@ -210,21 +221,35 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_TODAY_JOURNEY_CUSTOMER_CODE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE+ " TEXT,"
-                + KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_NAME+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME + " TEXT" + ")";
 
         String TABLE_TODAY_JOURNEY_PLAN_ORDERS= "CREATE TABLE " + TODAY_JOURNEY_PLAN_ORDERS+ "("
                 + KEY_TODAY_JOURNEY_ORDER_DATE+ " TEXT,"
+                + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_BRAND_NAME+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_ID+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_NUMBER+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_QUANTITY + " TEXT" + ")";
 
+        String TABLE_TODAY_JOURNEY_PLAN_PREVIOUS_STOCK= "CREATE TABLE " + TODAY_JOURNEY_PLAN_PREVIOUS_STOCK+ "("
+                + KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_COMPANYHELD+ " TEXT,"
+                + KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY+ " TEXT,"
+                + KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_VISIT_DATE+ " TEXT,"
+                + KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_ID+ " TEXT,"
+                + KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_NAME+ " TEXT,"
+                + KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_QUANTITY+ " TEXT" + ")";
+
+
+        String TABLE_TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT= "CREATE TABLE " + TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT+ "("
+                + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
+                + KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY+ " TEXT" + ")";
+
 
         String TABLE_TODAY_JOURNEY_PLAN_ORDERS_INVOICES= "CREATE TABLE " + TODAY_JOURNEY_PLAN_ORDERS_INVOICES+ "("
                 + KEY_TODAY_JOURNEY_ORDER_INVOCIE_RATE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER+ " TEXT,"
+                + KEY_TODAY_JOURNEY_ORDER_ID+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_DISPATCH_DATE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_DISPATCH_QUANTITY+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_INVOICE_AVAILABLE_QUANITY + " TEXT" + ")";
@@ -245,6 +270,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(TABLE_TODAY_JOURNEY_PLAN);
         db.execSQL(TABLE_TODAY_JOURNEY_PLAN_ORDERS);
         db.execSQL(TABLE_TODAY_JOURNEY_PLAN_ORDERS_INVOICES);
+        db.execSQL(TABLE_TODAY_JOURNEY_PLAN_PREVIOUS_STOCK);
+        db.execSQL(TABLE_TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT);
 
 
 
@@ -267,6 +294,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN);
         db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_ORDERS_INVOICES);
         db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_ORDERS);
+        db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_PREVIOUS_STOCK);
+        db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT);
         onCreate(db);
 
     }

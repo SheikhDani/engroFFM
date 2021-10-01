@@ -108,7 +108,6 @@ public class LoginActivity extends AppCompatActivity {
     }
     private boolean checkForExistingUser() {
         HashMap<String, String> map = new HashMap<>();
-
         map.put(db.KEY_IS_LOGGED_IN, "");
         map.put(db.KEY_USER_EMAIL, "");
         map.put(db.KEY_USER_NAME, "");

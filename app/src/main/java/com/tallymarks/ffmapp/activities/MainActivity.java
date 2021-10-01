@@ -181,21 +181,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkStorageCompanyHeldBrand();
         checkStorageCrops();
         checkStorageFertTypes();
+        checkLoadTodayCustomerJourneyPlan();
 
 
+        //new GetListofAllDepths(MainActivity.this).execute();
+        //new GetOutletStatus(MainActivity.this).execute();
 
-
-        //   new GetListofAllDepths(MainActivity.this).execute();
-//
- //      new GetOutletStatus(MainActivity.this).execute();
-   //     new LoadCustomersTodayJourneyPlan(MainActivity.this).execute();
 //        new GetAssignedSalesPoint(MainActivity.this).execute();
 //        new GetlistofallGenders(MainActivity.this).execute();
 //        new GetlistofAllDistrict(MainActivity.this).execute();
 //        new GetListofallMarketPlayers(MainActivity.this).execute();
 //        new GetListofallProductCategories(MainActivity.this).execute();
-  //      new LoadCustomersAllJourneyPlan(MainActivity.this).execute();
-     //  new GetAllProductBrandByCategory(MainActivity.this).execute();
+        //      new LoadCustomersAllJourneyPlan(MainActivity.this).execute();
+        //  new GetAllProductBrandByCategory(MainActivity.this).execute();
 //        new GetListofAllBrands(MainActivity.this).execute();
 
 //        new GetCustomerFarmerHierarchy(MainActivity.this).execute();
@@ -329,6 +327,28 @@ public void checkStorageCompanyHeldBrand()
             while (cursor.moveToNext());
         } else {
             new GetlistofAllFertTypes(MainActivity.this).execute();
+        }
+
+
+    }
+
+    public void checkLoadTodayCustomerJourneyPlan()
+    {
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+
+
+            }
+            while (cursor.moveToNext());
+        } else {
+            new LoadCustomersTodayJourneyPlan(MainActivity.this).execute();
         }
 
 

@@ -15,7 +15,7 @@ public class ListofFertTypeOutput {
     private String name;
     @SerializedName("description")
     @Expose
-    private Object description;
+    private String description;
 
     public Integer getId() {
         return id;
@@ -33,11 +33,11 @@ public class ListofFertTypeOutput {
         this.name = name;
     }
 
-    public Object getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(Object description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
