@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.companybrandbasiclistoutput.CompanyHeldBrandBasicListOutput;
 import com.tallymarks.ffmapp.models.productsbrandbycategory.ProductBrandByCategoryOutput;
@@ -32,10 +33,12 @@ public class GetCompanHeldBrandBasicList extends AsyncTask<String, Void, Void> {
     String errorMessage = "";
     private Context mContext;
     SharedPrefferenceHelper sHelper;
+    DatabaseHandler db;
     public  GetCompanHeldBrandBasicList (Context context)
     {
         this.mContext = context;
         this.sHelper = new SharedPrefferenceHelper(mContext);
+        this.db = new DatabaseHandler(mContext);
     }
 
     @Override
@@ -71,7 +74,14 @@ public class GetCompanHeldBrandBasicList extends AsyncTask<String, Void, Void> {
             //JourneyPlanOutPut journeycode = new Gson().fromJson(response, JourneyPlanOutPut.class);
             if (response != null) {
                 if (journeycode.size() > 0) {
-
+                    for (int j = 0; j < journeycode.size(); j++) {
+                        HashMap<String, String> dbParams = new HashMap<>();
+                        dbParams.put(db.KEY_ENGRO_BRANCH_ID, journeycode.get(j).getId() == null | journeycode.get(j).getId() == 0 ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getId().toString());
+                        dbParams.put(db.KEY_ENGRO_DIVISION_CODE,journeycode.get(j).getDivisionCode() == null | journeycode.get(j).getDivisionCode().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getDivisionCode().toString());
+                        dbParams.put(db.KEY_ENGRO_RAND_NAME,journeycode.get(j).getBrandName() == null | journeycode.get(j).getBrandName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getBrandName());
+                        dbParams.put(db.KEY_ENGRO_FERT_TYPE,journeycode.get(j).getFertAppType() == null | journeycode.get(j).getFertAppType().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getFertAppType().toString());
+                        db.addData(db.ENGRO_BRANCH, dbParams);
+                    }
                 }
             }
         } catch (Exception exception) {
