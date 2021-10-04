@@ -70,13 +70,14 @@ public class FloorStockAdapter extends BaseExpandableListAdapter {
             image.setImageResource(R.drawable.ic_launcher_foreground);
             image.setVisibility(View.VISIBLE);
             grid.setVisibility(View.VISIBLE);
-          gridadapter = new GridAdapter(c, team.get(groupPos).getPlayers());
+            gridadapter = new GridAdapter(c, team.get(groupPos).getPlayers());
             grid.setAdapter(gridadapter);
             grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
+
 
 
                 }

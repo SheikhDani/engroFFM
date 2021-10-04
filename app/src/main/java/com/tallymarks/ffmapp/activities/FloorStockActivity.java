@@ -1,6 +1,7 @@
 package com.tallymarks.ffmapp.activities;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 
 import android.view.View;
@@ -16,11 +17,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.CustomerSnapShotAdapter;
 import com.tallymarks.ffmapp.adapters.FloorStockAdapter;
+import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.models.CustomerSnapShot;
 import com.tallymarks.ffmapp.models.FloorStockChild;
 import com.tallymarks.ffmapp.models.FloorStockParent;
+import com.tallymarks.ffmapp.models.TodayPlan;
+import com.tallymarks.ffmapp.utils.Constants;
+import com.tallymarks.ffmapp.utils.Helpers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class FloorStockActivity extends AppCompatActivity {
@@ -28,6 +34,9 @@ public class FloorStockActivity extends AppCompatActivity {
     List<FloorStockChild> arraylist = new ArrayList<>();
     ImageView iv_menu, iv_back;
     Button btn_snap, btn_proceed,btn_back;
+    DatabaseHandler db;
+    final ArrayList<FloorStockParent> floorStock= new ArrayList<FloorStockParent>();
+    private int count = 0;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +45,10 @@ public class FloorStockActivity extends AppCompatActivity {
         initView();
 
 
+
+
     }
+
 
     private void initView() {
         tvTopHeader = findViewById(R.id.tv_dashboard);
@@ -44,6 +56,7 @@ public class FloorStockActivity extends AppCompatActivity {
         btn_snap = findViewById(R.id.btn_prev_snap);
         btn_proceed = findViewById(R.id.btn_proceed);
         iv_back = findViewById(R.id.iv_back);
+        db = new DatabaseHandler(FloorStockActivity.this);
         iv_back.setVisibility(View.VISIBLE);
         iv_menu.setVisibility(View.GONE);
         btn_back = findViewById(R.id.back);
@@ -58,8 +71,9 @@ public class FloorStockActivity extends AppCompatActivity {
         tvTopHeader.setVisibility(View.VISIBLE);
         tvTopHeader.setText("FLOOR STOCK");
         ExpandableListView elv = (ExpandableListView) findViewById(R.id.expandableListView);
-        final ArrayList<FloorStockParent> team = getData();
-        FloorStockAdapter adapter = new FloorStockAdapter(this, team, elv);
+        getFloorStockCategoryDataLocally();
+        //getData();
+        FloorStockAdapter adapter = new FloorStockAdapter(this, floorStock, elv);
         elv.setAdapter(adapter);
         btn_snap.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,14 +100,68 @@ public class FloorStockActivity extends AppCompatActivity {
         });
 
     }
+    private void getFloorStockCategoryDataLocally()
+    {
 
-    private ArrayList<FloorStockParent> getData() {
+            String  categoryName="";
+            HashMap<String, String> map = new HashMap<>();
+            map.put(db.KEY_PRODUCT_BRAND_CATEOGRY_NAME, "");
+
+            //map.put(db.KEY_IS_VALID_USER, "");
+            HashMap<String, String> filters = new HashMap<>();
+            Cursor cursor = db.getData(db.PRODUCT_BRANDS_CATEGORY, map, filters);
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                do {
+                    count = 0;
+                    categoryName = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_PRODUCT_BRAND_CATEOGRY_NAME)));
+                    FloorStockParent floor = new FloorStockParent(categoryName);
+                    getFloorStockProductsLocally(categoryName,floor);
+                    floorStock.add(floor);
+
+                }
+                while (cursor.moveToNext());
+
+
+            }
+
+    }
+    private void getFloorStockProductsLocally(String categoryName,FloorStockParent parentFloor)
+    {
+        String  productID="" , productName="" ;
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_PRODUCT_BRAND_NAME, "");
+        map.put(db.KEY_PRODUCT_BRAND_ID, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_PRODUCT_BRAND_CATEOGRY_NAME, categoryName);
+        Cursor cursor = db.getData(db.PRODUCT_BRANDS, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                count++;
+                FloorStockChild floorChild = new FloorStockChild();
+                productName = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_PRODUCT_BRAND_NAME)));
+                productID= cursor.getString(cursor.getColumnIndex(db.KEY_PRODUCT_BRAND_ID));
+                floorChild.setProductname(productName);
+                floorChild.setProductID(productID);
+                if(count==1) {
+                    floorChild.setImageurl("Test");
+                }
+                parentFloor.players.add(floorChild);
+
+            }
+            while (cursor.moveToNext());
+        }
+    }
+
+    private void getData() {
 
 
         FloorStockParent t1 = new FloorStockParent("Urea");
         FloorStockChild e = new FloorStockChild();
         e.setProductname("Zinc Urea");
-        e.setImageurl("hello");
+        e.setImageurl("");
         t1.players.add(e);
         arraylist.add(e);
 
@@ -147,14 +215,18 @@ public class FloorStockActivity extends AppCompatActivity {
         t3.players.add(e62);
         arraylist.add(e62);
 
+   floorStock.add(t1);
+   floorStock.add(t2);
+   floorStock.add(t3);
 
-        ArrayList<FloorStockParent> allTeams = new ArrayList<FloorStockParent>();
-        allTeams.add(t1);
-        allTeams.add(t2);
-        allTeams.add(t3);
+//        ArrayList<FloorStockParent> allTeams = new ArrayList<FloorStockParent>();
+//
+//        allTeams.add(t1);
+//        allTeams.add(t2);
+//        allTeams.add(t3);
 
 
-        return allTeams;
+//        return allTeams;
     }
 
 }

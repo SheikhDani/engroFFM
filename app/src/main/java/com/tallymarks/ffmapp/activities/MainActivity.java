@@ -117,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+
         //expandableListView = findViewById(R.id.expandableListView);
         // prepareMenuData();
         // populateExpandableList();
@@ -179,9 +180,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         requestMultiplePermissions();
         checkStorageCompanyHeldBrand();
-        checkStorageCrops();
+       checkStorageCrops();
         checkStorageFertTypes();
-        checkLoadTodayCustomerJourneyPlan();
+       checkLoadTodayCustomerJourneyPlan();
+      checkProductBrandGrouopByCategory();
 
 
         //new GetListofAllDepths(MainActivity.this).execute();
@@ -193,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        new GetListofallMarketPlayers(MainActivity.this).execute();
 //        new GetListofallProductCategories(MainActivity.this).execute();
         //      new LoadCustomersAllJourneyPlan(MainActivity.this).execute();
-        //  new GetAllProductBrandByCategory(MainActivity.this).execute();
+
 //        new GetListofAllBrands(MainActivity.this).execute();
 
 //        new GetCustomerFarmerHierarchy(MainActivity.this).execute();
@@ -306,12 +308,29 @@ public void checkStorageCompanyHeldBrand()
 
 
     }
+    public void checkProductBrandGrouopByCategory()
+    {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_PRODUCT_BRAND_CATEOGRY_NAME, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        Cursor cursor = db.getData(db.PRODUCT_BRANDS_CATEGORY, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+
+            }
+            while (cursor.moveToNext());
+        } else {
+            new GetAllProductBrandByCategory(MainActivity.this).execute();
+        }
+
+
+    }
     public void checkStorageFertTypes()
     {
 
         HashMap<String, String> map = new HashMap<>();
-
-
         map.put(db.KEY_FERT_ID, "");
         //map.put(db.KEY_IS_VALID_USER, "");
         HashMap<String, String> filters = new HashMap<>();
@@ -362,7 +381,7 @@ public void checkStorageCompanyHeldBrand()
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        MainActivity.this.deleteDatabase("FFMAppDb");
+                        MainActivity.this.deleteDatabase("FFMAppDatabase");
                         sharedPrefferenceHelper.clearPreferenceStore();
                         Toast.makeText(MainActivity.this, "Clear Data Successfully", Toast.LENGTH_SHORT).show();
                         Intent logout = new Intent(MainActivity.this, LoginActivity.class);
@@ -656,4 +675,5 @@ public void checkStorageCompanyHeldBrand()
         alertDialog.show();
 
     }
+
 }

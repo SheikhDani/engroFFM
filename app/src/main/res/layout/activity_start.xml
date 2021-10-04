@@ -48,6 +48,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+
                         android:gravity="center"
                         android:padding="@dimen/p10">
 
@@ -56,10 +57,8 @@
                             android:id="@+id/txt_checkin"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-
                             android:drawableTop="@mipmap/engrotick"
                             android:drawablePadding="@dimen/p10"
-                            android:drawableTint="@color/red"
 
                             android:text="CHECKIN"
                             android:textSize="16sp"></TextView>
@@ -82,7 +81,7 @@
 
 
                         <TextView
-                            android:id="@+id/targetTextView"
+                            android:id="@+id/txt_notavailable"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:drawableTop="@mipmap/engrocross"
@@ -159,7 +158,6 @@
                             android:layout_centerHorizontal="true"
                             android:drawableTop="@mipmap/engroordertaking"
                             android:drawablePadding="@dimen/p10"
-                            android:drawableTint="@color/red"
                             android:text="ORDER TAKING"
                             android:textSize="16sp"></TextView>
                     </LinearLayout>
