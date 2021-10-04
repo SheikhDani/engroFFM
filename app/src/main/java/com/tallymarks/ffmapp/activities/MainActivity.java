@@ -274,8 +274,6 @@ public void checkStorageCompanyHeldBrand()
     if (cursor.getCount() > 0) {
         cursor.moveToFirst();
         do {
-
-
         }
         while (cursor.moveToNext());
     } else {
