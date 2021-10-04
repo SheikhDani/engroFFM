@@ -184,9 +184,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkStorageFertTypes();
        checkLoadTodayCustomerJourneyPlan();
       checkProductBrandGrouopByCategory();
+      checkStorageDepth();
 
 
-        //new GetListofAllDepths(MainActivity.this).execute();
+
         //new GetOutletStatus(MainActivity.this).execute();
 
 //        new GetAssignedSalesPoint(MainActivity.this).execute();
@@ -304,6 +305,28 @@ public void checkStorageCompanyHeldBrand()
             while (cursor.moveToNext());
         } else {
             new GetListofAllCrops(MainActivity.this).execute();
+        }
+
+
+    }
+
+    public void checkStorageDepth()
+    {
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_SOIL_ID, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        Cursor cursor = db.getData(db.SOIL_DEPTHS, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+
+
+            }
+            while (cursor.moveToNext());
+        } else {
+            new GetListofAllDepths(MainActivity.this).execute();
         }
 
 
