@@ -11,7 +11,9 @@ import androidx.annotation.RequiresApi;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
+import com.tallymarks.ffmapp.models.DataModel;
 import com.tallymarks.ffmapp.models.listofallcrops.ListofallCropsOutput;
 import com.tallymarks.ffmapp.models.listofalldepths.ListofAllDepthOutput;
 import com.tallymarks.ffmapp.utils.Constants;
@@ -32,10 +34,12 @@ public class GetListofAllDepths extends AsyncTask<String, Void, Void> {
     String errorMessage = "";
     private Context mContext;
     SharedPrefferenceHelper sHelper;
+    DatabaseHandler db;
     public  GetListofAllDepths (Context context)
     {
         this.mContext = context;
         this.sHelper = new SharedPrefferenceHelper(mContext);
+        this.db = new DatabaseHandler(mContext);
     }
 
     @Override
@@ -71,7 +75,17 @@ public class GetListofAllDepths extends AsyncTask<String, Void, Void> {
             //JourneyPlanOutPut journeycode = new Gson().fromJson(response, JourneyPlanOutPut.class);
             if (response != null) {
                 if (journeycode.size() > 0) {
-
+                    for (int j = 0; j < journeycode.size(); j++) {
+                        HashMap<String, String> dbParams = new HashMap<>();
+                        dbParams.put(db.KEY_SOIL_DEPTH_FROM, journeycode.get(j).getDepthFrom() == null || journeycode.get(j).getDepthFrom()  == 0 ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getDepthFrom().toString());
+                        dbParams.put(db.KEY_SOIL_DEPTH_TO, journeycode.get(j).getDepthTo() == null || journeycode.get(j).getDepthTo()  == 0 ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getDepthTo().toString());
+                        dbParams.put(db.KEY_SOIL_NAME, journeycode.get(j).getName() == null || journeycode.get(j).getName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getName());
+                        dbParams.put(db.KEY_SOIL_ID, journeycode.get(j).getId() == null || journeycode.get(j).getId() == 0 ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getId().toString());
+                        dbParams.put(db.KEY_SOIL_SHORT_DESCRIPTION, journeycode.get(j).getShortDescription() == null || journeycode.get(j).getShortDescription().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getShortDescription().toString());
+                        dbParams.put(db.KEY_SOIL_LONG_DESCRIPTION, journeycode.get(j).getLongDescription() == null || journeycode.get(j).getLongDescription().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getLongDescription().toString());
+                        dbParams.put(db.KEY_SOIL_UNIT, journeycode.get(j).getUnit() == null || journeycode.get(j).getUnit().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getUnit().toString());
+                        db.addData(db.SOIL_DEPTHS, dbParams);
+                    }
                 }
             }
         } catch (Exception exception) {

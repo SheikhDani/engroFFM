@@ -77,8 +77,8 @@ public class GetOutletStatus extends AsyncTask<String, Void, Void> {
                 if (journeycode.size() > 0) {
                     for (int j = 0; j < journeycode.size(); j++) {
                         HashMap<String, String> dbParams = new HashMap<>();
-                        dbParams.put(db.KEY_OUTLET_ID, journeycode.get(j).getId() == null | journeycode.get(j).getId() == 0 ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getId().toString());
-                        dbParams.put(db.KEY_OUTLET_STATUS, journeycode.get(j).getStatus() == null | journeycode.get(j).getStatus().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getStatus().toString());
+                        dbParams.put(db.KEY_OUTLET_ID, journeycode.get(j).getId() == null || journeycode.get(j).getId() == 0 ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getId().toString());
+                        dbParams.put(db.KEY_OUTLET_STATUS, journeycode.get(j).getStatus() == null || journeycode.get(j).getStatus().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getStatus().toString());
                         db.addData(db.OUTLET_STATUSES, dbParams);
                     }
                 }
