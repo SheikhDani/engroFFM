@@ -75,10 +75,10 @@ public class GetListofAllCrops extends AsyncTask<String, Void, Void> {
                 if (journeycode.size() > 0) {
                     for (int j = 0; j < journeycode.size(); j++) {
                         HashMap<String, String> dbParams = new HashMap<>();
-                        dbParams.put(db.KEY_CROP_ID, journeycode.get(j).getId() == null | journeycode.get(j).getId() == 0 ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getId().toString());
-                        dbParams.put(db.KEY_CROP_LONG_DESCRIPTION, journeycode.get(j).getLongDescription() == null | journeycode.get(j).getLongDescription().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getLongDescription().toString());
-                        dbParams.put(db.KEY_CROP_SHORT_DESCRIPTION, journeycode.get(j).getShortDescription() == null | journeycode.get(j).getShortDescription().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getShortDescription().toString());
-                        dbParams.put(db.KEY_CROP_NAME, journeycode.get(j).getName() == null | journeycode.get(j).getName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getName().toString());
+                        dbParams.put(db.KEY_CROP_ID, journeycode.get(j).getId() == null || journeycode.get(j).getId() == 0 ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getId().toString());
+                        dbParams.put(db.KEY_CROP_LONG_DESCRIPTION, journeycode.get(j).getLongDescription() == null || journeycode.get(j).getLongDescription().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getLongDescription().toString());
+                        dbParams.put(db.KEY_CROP_SHORT_DESCRIPTION, journeycode.get(j).getShortDescription() == null || journeycode.get(j).getShortDescription().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getShortDescription().toString());
+                        dbParams.put(db.KEY_CROP_NAME, journeycode.get(j).getName() == null || journeycode.get(j).getName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getName().toString());
                         db.addData(db.CROPS_LIST, dbParams);
                     }
                 }
