@@ -19,9 +19,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private SQLiteDatabase db;
     /*Database Varaiables*/
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 1;
     private static final String TAG = "DBAdapter";
-    private static final String DATABASE_NAME = "FFMAppDb";
+    private static final String DATABASE_NAME = "FFMAppDatabase";
     private Context mContext;
 
     //List of all tables
@@ -40,6 +40,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String TODAY_JOURNEY_PLAN_PREVIOUS_STOCK = "TODAY_JOURNEY_PLAN_PREVIOUS_STOCK";
     public static final String TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT = "TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT";
     public static final String TODAY_JOURNEY_PLAN_ORDERS_INVOICES = "TODAY_JOURNEY_PLAN_ORDERS_INVOICES";
+    public static final String TODAY_JOURNEY_PLAN_START_ACTIVITY= "TODAY_JOURNEY_PLAN_START_ACTIVITY";
 
 
 
@@ -75,6 +76,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_PRODUCT_BRAND_COMPANY_HELD = "brandcompanyheld";
     public static final String KEY_PRODUCT_BRAND_NAME = "brandName";
 
+    //Today Journey Plan Customer Start Activity Table Fields
+    public static final String KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS = "startActivityStatus";
+    public static final String KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_TIME = "startActivityTime";
+    public static final String KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_OBjECTIVE = "startActivityObjective";
+    public static final String KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE = "startActivitylatitude";
+    public static final String KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE = "startActivitylongitude";
+    public static final String KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_OBJECTIVE_STATUS = "startActivityObjectiveStatus";
+
+
     //Engro Branch Table Fields
     public static final String KEY_ENGRO_BRANCH_ID = "engrbranchID";
     public static final String KEY_ENGRO_DIVISION_CODE = "engrodivisionCode";
@@ -108,6 +118,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_NAME = "todayCustomerName";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE = "todayCustomerLatitude";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE = "todayCustomerLongitude";
+    public static final String KEY_TODAY_JOURNEY_IS_VISITED= "isVisitedTodayCustomerJourneyPlan";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID = "todayCustomerDayID";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID = "todayCustoemrJourneyID";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME = "todayCustoemrSalesPointName";
@@ -217,6 +228,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String TABLE_TODAY_JOURNEY_PLAN= "CREATE TABLE " + TODAY_JOURNEY_PLAN+ "("
                 + KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
+                + KEY_TODAY_JOURNEY_IS_VISITED+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_CODE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE+ " TEXT,"
@@ -254,6 +266,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_TODAY_JOURNEY_ORDER_DISPATCH_QUANTITY+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_INVOICE_AVAILABLE_QUANITY + " TEXT" + ")";
 
+        String TABLE_TODAY_JOURNEY_PLAN_START_ACTIVITY= "CREATE TABLE " + TODAY_JOURNEY_PLAN_START_ACTIVITY+ "("
+                + KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS+ " TEXT,"
+                + KEY_TODAY_JOURNEY_CUSTOMER_CODE+ " TEXT,"
+                + KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_OBjECTIVE+ " TEXT,"
+                + KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_OBJECTIVE_STATUS+ " TEXT,"
+                + KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE+ " TEXT,"
+                + KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE+ " TEXT,"
+                + KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_TIME + " TEXT" + ")";
+
 
 
 
@@ -272,6 +293,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(TABLE_TODAY_JOURNEY_PLAN_ORDERS_INVOICES);
         db.execSQL(TABLE_TODAY_JOURNEY_PLAN_PREVIOUS_STOCK);
         db.execSQL(TABLE_TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT);
+        db.execSQL(TABLE_TODAY_JOURNEY_PLAN_START_ACTIVITY);
 
 
 
@@ -296,6 +318,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_ORDERS);
         db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_PREVIOUS_STOCK);
         db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT);
+        db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_START_ACTIVITY);
         onCreate(db);
 
     }

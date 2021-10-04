@@ -46,6 +46,67 @@ public class TodayPlan {
     private String time;
     private String customercode;
     private String salespoint;
+    private String mobilenumber;
+    private String location;
+    private String distance;
+
+    public String getCustomerID() {
+        return customerID;
+    }
+
+    public void setCustomerID(String customerID) {
+        this.customerID = customerID;
+    }
+
+    private String customerID;
+    private String customerDayID;
+
+    public String getCustomerDayID() {
+        return customerDayID;
+    }
+
+    public void setCustomerDayID(String customerDayID) {
+        this.customerDayID = customerDayID;
+    }
+
+    public String getCustomerJourneyPlanID() {
+        return customerJourneyPlanID;
+    }
+
+    public void setCustomerJourneyPlanID(String customerJourneyPlanID) {
+        this.customerJourneyPlanID = customerJourneyPlanID;
+    }
+
+    private String customerJourneyPlanID;
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    private String latitude;
+    private String longitude;
+
+    public String getDistance() {
+        return distance;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
+    }
+
+
 
     public String getMobilenumber() {
         return mobilenumber;
@@ -63,6 +124,5 @@ public class TodayPlan {
         this.location = location;
     }
 
-    private String mobilenumber;
-    private String location;
+
 }
