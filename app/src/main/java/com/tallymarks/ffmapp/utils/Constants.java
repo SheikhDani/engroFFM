@@ -14,16 +14,20 @@ public class Constants {
     public static final String ACCESS_TOKEN= "AccessToken";
     public static final String TOKEN_TYPE= "TokenType";
     public static final String REFERSH_TOKEN= "RefershToken";
-    public static final String Project_ID = "projectid";
-    public static final String Project_NAME = "projectname";
-    public static final String Activity_NAME = "activityname";
-    public static final String Activity_ID = "activityid";
-    public static final String Activity_LAT = "activitylat";
-    public static final String Activity_LNG = "activitylng";
-    public static final String QUARTER_ID = "quarterid";
-    public static final String ACTIVITY_COST_DATA = "activitycostdata";
-    public static final String ACTIVITY_COST_DATA_STATUS = "activitycostdatastatus";
-    public static final String Activity_PROJECT_ID = "activityprojectID";
+    public static final String ACTIVITY_STATUS = "activityStatus";
+    public static final String ACTIVITY_CUSTOMER_CODE= "activityCustomerCode";
+
+    public static final String ACTIVITY_OBJECTIVE = "activityObjective";
+    public static final String ACTIVITY_OBJECTIVE_NAME = "activityObjectiveName";
+    public static final String CUSTOMER_ID= "customerID";
+    public static final String CUSTOMER_CODE = "customerCode";
+    public static final String CUSTOMER_NAME = "customerName";
+    public static final String CUSTOMER_LAT= "customerLat";
+    public static final String CUSTOMER_LNG = "customerLng";
+    public static final String CUSTOMER_DAY_ID = "customerDayID";
+    public static final String CUSTOMER_JOURNEYPLAN_ID= "customerjourneyplanID";
+    public static final String CUSTOMER_SALES_POINT_NAME= "customersalesPointName";
+
 
 
 
