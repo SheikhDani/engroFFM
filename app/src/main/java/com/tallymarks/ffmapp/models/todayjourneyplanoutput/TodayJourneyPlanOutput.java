@@ -45,6 +45,9 @@ public class TodayJourneyPlanOutput {
     @SerializedName("previousStockSnapshot")
     @Expose
     private List<PreviousStockSnapshot> previousStockSnapshot = null;
+    @SerializedName("stockSold")
+    @Expose
+    private List<StockSold> stockSold = null;
     @SerializedName("aggregates")
 
 
@@ -142,6 +145,13 @@ public class TodayJourneyPlanOutput {
 
     public void setPreviousStockSnapshot(List<PreviousStockSnapshot> previousStockSnapshot) {
         this.previousStockSnapshot = previousStockSnapshot;
+    }
+    public List<StockSold> getStockSold() {
+        return stockSold;
+    }
+
+    public void setStockSold(List<StockSold> stockSold) {
+        this.stockSold = stockSold;
     }
 
 

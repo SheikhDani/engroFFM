@@ -63,7 +63,7 @@
 
                     android:layout_weight="0.2"
                     android:contentDescription="Icon"
-                    android:src="@drawable/ic_baseline_keyboard_arrow_down_24" />
+                    android:src="@drawable/plusgreen" />
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/linear_table_recommendations"
@@ -138,7 +138,7 @@
                 android:textColor="@color/green" />
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/btn_market_intelligence"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/p10"

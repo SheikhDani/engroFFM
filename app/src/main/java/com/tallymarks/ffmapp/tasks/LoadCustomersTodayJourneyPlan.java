@@ -130,10 +130,26 @@ public class LoadCustomersTodayJourneyPlan extends AsyncTask<String, Void, Void>
                                 }
                             }
                         }
+                        try {
+                            JSONObject jsonObject = null;
+                            jsonObject = new JSONObject(response);
+                            if (jsonObject.has("stockSold")) {
+                            if (journeycode.get(i).getStockSold().size() > 0) {
+                                for (int n = 0; n < journeycode.get(i).getStockSold().size(); n++) {
+                                    HashMap<String, String> dbParamsSnapShot = new HashMap<>();
+                                    dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_STOCK_INVOICE_NUMBER, journeycode.get(i).getStockSold().get(n).getInvoiceNumber() == null || journeycode.get(i).getStockSold().get(n).getInvoiceNumber().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getStockSold().get(n).getInvoiceNumber().toString());
+                                    dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, journeycode.get(i).getCustomerId() == null || journeycode.get(i).getCustomerId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getCustomerId());
+                                    db.addData(db.TODAY_JOURNEY_PLAN_STOCK, dbParamsSnapShot);
+
+                                }
+                            }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                     }
-
-
-                }
+                    }
             }
         } catch (Exception exception) {
             if (response.equals("")) {

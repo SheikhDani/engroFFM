@@ -20,4 +20,15 @@ public class CustomerSnapShot {
     }
 
     private String productquantity;
+
+    public String getProductid() {
+        return productid;
+    }
+
+    public void setProductid(String productid) {
+        this.productid = productid;
+    }
+
+    private String productid;
+
 }

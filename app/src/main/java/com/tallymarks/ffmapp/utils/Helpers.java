@@ -171,6 +171,15 @@ public class Helpers {
         TimeZone timeZone = TimeZone.getDefault();
         return timeZone.getID();
     }
+    public static String getDatefromMilis(String date)
+    {
+        long num = Long.parseLong(date);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM d, yyyy");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(num);
+        return simpleDateFormat.format(calendar.getTime());
+
+    }
 
     public static String utcToAnyTimeZone(String timeZone, String time, String timeFormat) {
         SimpleDateFormat sourceFormat = new SimpleDateFormat(timeFormat);

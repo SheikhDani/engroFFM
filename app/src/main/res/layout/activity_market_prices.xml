@@ -15,8 +15,13 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/linear_divider"
         android:layout_below="@+id/inc_common_header_colletion"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"
         android:fillViewport="true"
-        android:scrollbars="vertical">
+        android:scrollbars="vertical"
+        android:layout_alignParentLeft="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -76,7 +81,6 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
                     android:gravity="center_vertical"
-
 
 
                     android:padding="@dimen/p20"
@@ -257,9 +261,6 @@
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:layout_weight="0.6"
-
-
-
 
 
                     android:gravity="end"

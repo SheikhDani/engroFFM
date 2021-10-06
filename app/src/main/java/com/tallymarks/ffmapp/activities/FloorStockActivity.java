@@ -18,6 +18,7 @@ import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.CustomerSnapShotAdapter;
 import com.tallymarks.ffmapp.adapters.FloorStockAdapter;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.CustomerSnapShot;
 import com.tallymarks.ffmapp.models.FloorStockChild;
 import com.tallymarks.ffmapp.models.FloorStockParent;
@@ -33,9 +34,11 @@ public class FloorStockActivity extends AppCompatActivity {
     private TextView tvTopHeader;
     List<FloorStockChild> arraylist = new ArrayList<>();
     ImageView iv_menu, iv_back;
-    Button btn_snap, btn_proceed,btn_back;
+    Button btn_snap, btn_proceed, btn_back;
     DatabaseHandler db;
-    final ArrayList<FloorStockParent> floorStock= new ArrayList<FloorStockParent>();
+    SharedPrefferenceHelper sHelper;
+    final ArrayList<FloorStockParent> floorStock = new ArrayList<FloorStockParent>();
+    final ArrayList<FloorStockChild> floorStockChild = new ArrayList<FloorStockChild>();
     private int count = 0;
 
 
@@ -43,8 +46,6 @@ public class FloorStockActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_floor_stock);
         initView();
-
-
 
 
     }
@@ -57,13 +58,14 @@ public class FloorStockActivity extends AppCompatActivity {
         btn_proceed = findViewById(R.id.btn_proceed);
         iv_back = findViewById(R.id.iv_back);
         db = new DatabaseHandler(FloorStockActivity.this);
+        sHelper = new SharedPrefferenceHelper(FloorStockActivity.this);
         iv_back.setVisibility(View.VISIBLE);
         iv_menu.setVisibility(View.GONE);
         btn_back = findViewById(R.id.back);
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(FloorStockActivity.this,StartActivity.class);
+                Intent i = new Intent(FloorStockActivity.this, StartActivity.class);
                 startActivity(i);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
@@ -85,6 +87,11 @@ public class FloorStockActivity extends AppCompatActivity {
         btn_proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (isUnpostedDataExist()) {
+                    updateFloorStock();
+                } else {
+                    addFloorStock();
+                }
                 Intent proceed = new Intent(FloorStockActivity.this, SalesOrderMarketPriceActivity.class);
                 startActivity(proceed);
 
@@ -93,42 +100,42 @@ public class FloorStockActivity extends AppCompatActivity {
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(FloorStockActivity.this,StartActivity.class);
+                Intent i = new Intent(FloorStockActivity.this, StartActivity.class);
                 startActivity(i);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
 
     }
-    private void getFloorStockCategoryDataLocally()
-    {
 
-            String  categoryName="";
-            HashMap<String, String> map = new HashMap<>();
-            map.put(db.KEY_PRODUCT_BRAND_CATEOGRY_NAME, "");
+    private void getFloorStockCategoryDataLocally() {
 
-            //map.put(db.KEY_IS_VALID_USER, "");
-            HashMap<String, String> filters = new HashMap<>();
-            Cursor cursor = db.getData(db.PRODUCT_BRANDS_CATEGORY, map, filters);
-            if (cursor.getCount() > 0) {
-                cursor.moveToFirst();
-                do {
-                    count = 0;
-                    categoryName = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_PRODUCT_BRAND_CATEOGRY_NAME)));
-                    FloorStockParent floor = new FloorStockParent(categoryName);
-                    getFloorStockProductsLocally(categoryName,floor);
-                    floorStock.add(floor);
+        String categoryName = "";
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_PRODUCT_BRAND_CATEOGRY_NAME, "");
 
-                }
-                while (cursor.moveToNext());
-
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        Cursor cursor = db.getData(db.PRODUCT_BRANDS_CATEGORY, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                count = 0;
+                categoryName = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_PRODUCT_BRAND_CATEOGRY_NAME)));
+                FloorStockParent floor = new FloorStockParent(categoryName);
+                getFloorStockProductsLocally(categoryName, floor);
+                floorStock.add(floor);
 
             }
+            while (cursor.moveToNext());
+
+
+        }
 
     }
-    private void getFloorStockProductsLocally(String categoryName,FloorStockParent parentFloor)
-    {
-        String  productID="" , productName="" ;
+
+    private void getFloorStockProductsLocally(String categoryName, FloorStockParent parentFloor) {
+        String productID = "", productName = "";
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_PRODUCT_BRAND_NAME, "");
         map.put(db.KEY_PRODUCT_BRAND_ID, "");
@@ -142,17 +149,89 @@ public class FloorStockActivity extends AppCompatActivity {
                 count++;
                 FloorStockChild floorChild = new FloorStockChild();
                 productName = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_PRODUCT_BRAND_NAME)));
-                productID= cursor.getString(cursor.getColumnIndex(db.KEY_PRODUCT_BRAND_ID));
+                productID = cursor.getString(cursor.getColumnIndex(db.KEY_PRODUCT_BRAND_ID));
                 floorChild.setProductname(productName);
                 floorChild.setProductID(productID);
-                if(count==1) {
+                if (count == 1) {
                     floorChild.setImageurl("Test");
                 }
                 parentFloor.players.add(floorChild);
+                floorStockChild.add(floorChild);
+                //loadFloorStock(parentFloor);
 
             }
             while (cursor.moveToNext());
         }
+    }
+
+    public void loadFloorStock(FloorStockParent parentFloor) {
+        String brandquantity;
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN_FLOOR_STOCK_INPUT, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                FloorStockChild child = new FloorStockChild();
+                brandquantity = cursor.getString(cursor.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS));
+                child.setProductinput(brandquantity);
+                parentFloor.players.add(child);
+
+            }
+            while (cursor.moveToNext());
+        }
+    }
+
+    public void addFloorStock() {
+        for (int i = 0; i < floorStockChild.size(); i++) {
+
+            HashMap<String, String> headerParams = new HashMap<>();
+            headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDID, floorStockChild.get(i).getProductID());
+            headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDNAME, floorStockChild.get(i).getProductname());
+
+            headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY, floorStockChild.get(i).getProductinput());
+
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+            db.addData(db.TODAY_JOURNEY_PLAN_FLOOR_STOCK_INPUT, headerParams);
+        }
+        //sHelper.setString(Constants.SURVEY_ID,String.valueOf(totalscore));
+    }
+
+    public void updateFloorStock() {
+        for (int i = 0; i < floorStockChild.size(); i++) {
+            HashMap<String, String> headerParams = new HashMap<>();
+            headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY, floorStockChild.get(i).getProductinput());
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+            HashMap<String, String> filter = new HashMap<>();
+            filter.put(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDID, floorStockChild.get(i).getProductID());
+            filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+            db.updateData(db.TODAY_JOURNEY_PLAN_FLOOR_STOCK_INPUT, headerParams, filter);
+        }
+
+        //sHelper.setString(Constants.SURVEY_ID,String.valueOf(totalscore));
+
+    }
+
+    private boolean isUnpostedDataExist() {
+
+        boolean flag = false;
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN_FLOOR_STOCK_INPUT, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                flag = true;
+            }
+            while (cursor.moveToNext());
+        } else {
+            flag = false;
+        }
+        return flag;
     }
 
     private void getData() {
@@ -215,9 +294,9 @@ public class FloorStockActivity extends AppCompatActivity {
         t3.players.add(e62);
         arraylist.add(e62);
 
-   floorStock.add(t1);
-   floorStock.add(t2);
-   floorStock.add(t3);
+        floorStock.add(t1);
+        floorStock.add(t2);
+        floorStock.add(t3);
 
 //        ArrayList<FloorStockParent> allTeams = new ArrayList<FloorStockParent>();
 //

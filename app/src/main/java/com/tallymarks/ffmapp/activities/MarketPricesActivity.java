@@ -1,6 +1,9 @@
 package com.tallymarks.ffmapp.activities;
 
+import static com.tallymarks.ffmapp.utils.Helpers.getDatefromMilis;
+
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
@@ -21,20 +24,31 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.MarketPrice;
+import com.tallymarks.ffmapp.models.SalesOrderHeader;
+import com.tallymarks.ffmapp.tasks.GetListofAllDepths;
+import com.tallymarks.ffmapp.utils.Constants;
+import com.tallymarks.ffmapp.utils.Helpers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MarketPricesActivity extends AppCompatActivity {
-    private TextView tvTopHeader,tv_product,tv_invoice;
+    private TextView tvTopHeader, tv_product, tv_invoice, tv_Date, tv_invoice_rate;
+    private TextView tv_invoice_quantity, tv_invoice_avaialle_quantity;
     ImageView iv_menu, iv_back, iv_add, iv_del;
     private List<MarketPrice> arrayList = new ArrayList<MarketPrice>();
     LinearLayout linearLayoutList;
     MarketPrice marketPrice;
-    Button btn_open_summary,btn_save;
+    Button btn_open_summary, btn_save;
+    DatabaseHandler db;
     RecyclerView lv_market;
     Button btn_back;
+    SharedPrefferenceHelper sHelper;
+    private String previousInvoiceNumber = "";
 
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,16 +57,22 @@ public class MarketPricesActivity extends AppCompatActivity {
 
 
     }
-    private void initView()
-    {
+
+    private void initView() {
         tvTopHeader = findViewById(R.id.tv_dashboard);
         tv_invoice = findViewById(R.id.txt_invoice_number);
+        tv_Date = findViewById(R.id.txt_date);
+        tv_invoice_rate = findViewById(R.id.txt_invoice_rate);
+        tv_invoice_quantity = findViewById(R.id.txt_invoice_quantity);
+        tv_invoice_avaialle_quantity = findViewById(R.id.txt_available_quantity);
         tv_product = findViewById(R.id.txt_product);
         btn_back = findViewById(R.id.back);
+        db = new DatabaseHandler(MarketPricesActivity.this);
+        sHelper = new SharedPrefferenceHelper(MarketPricesActivity.this);
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MarketPricesActivity.this,SalesOrderMarketPriceActivity.class);
+                Intent i = new Intent(MarketPricesActivity.this, SalesOrderMarketPriceActivity.class);
                 startActivity(i);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
@@ -90,18 +110,49 @@ public class MarketPricesActivity extends AppCompatActivity {
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MarketPricesActivity.this,SalesOrderMarketPriceActivity.class);
+                Intent i = new Intent(MarketPricesActivity.this, SalesOrderMarketPriceActivity.class);
                 startActivity(i);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
+        getInvoiceDetailLocally();
+        getPreviousInvocieNumber();
     }
-    private void getdata()
-    {
+
+    private void getPreviousInvocieNumber() {
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOURNEY_STOCK_INVOICE_NUMBER, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN_STOCK, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                previousInvoiceNumber = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_STOCK_INVOICE_NUMBER));
+            }
+            while (cursor.moveToNext());
+        }
+
+    }
+
+    private void getInvoiceDetailLocally() {
+        tv_invoice.setText(sHelper.getString(Constants.TODAY_PLAN_INVOICE_NUMBER));
+        tv_product.setText(sHelper.getString(Constants.TODAY_PLAN_INVOICE_PRODUCT_NAME));
+        tv_Date.setText("Dated: " + sHelper.getString(Constants.TODAY_PLAN_INVOICE_ORDER_DATE));
+        tv_invoice_rate.setText(sHelper.getString(Constants.TODAY_PLAN_INVOICE_Rate));
+        tv_invoice_avaialle_quantity.setText("Available Quantity: " + sHelper.getString(Constants.TODAY_PLAN_INVOICE_AVAILABLE_QUANTITY));
+        tv_invoice_quantity.setText("Invoice Quantity: " + sHelper.getString(Constants.TODAY_PLAN_INVOICE_QUANTITY));
+        tv_Date.setText("Dated: " + sHelper.getString(Constants.TODAY_PLAN_INVOICE_ORDER_DATE));
+
+    }
+
+    private void getdata() {
         arrayList.clear();
         String[] quantity = new String[linearLayoutList.getChildCount()];
         String[] nsp = new String[linearLayoutList.getChildCount()];
-        for (int i =0; i< linearLayoutList.getChildCount();i++ ) {
+        for (int i = 0; i < linearLayoutList.getChildCount(); i++) {
             Log.d("Child Count: ", String.valueOf(linearLayoutList.getChildCount()));
             View addView = linearLayoutList.getChildAt(i);
             EditText et_quantity = (EditText) addView.findViewById(R.id.et_quanity);
@@ -110,15 +161,14 @@ public class MarketPricesActivity extends AppCompatActivity {
             nsp[i] = et_netprice.getText().toString();
         }
 
-        for (int i =0; i< linearLayoutList.getChildCount();i++)
-        {
+        for (int i = 0; i < linearLayoutList.getChildCount(); i++) {
 
             marketPrice = new MarketPrice();
             marketPrice.setQuanity(quantity[i]);
             marketPrice.setNetprice(nsp[i]);
             marketPrice.setProduct(tv_product.getText().toString());
             marketPrice.setInvoice(tv_invoice.getText().toString());
-             arrayList.add(marketPrice);
+            arrayList.add(marketPrice);
         }
 
 
@@ -163,7 +213,8 @@ public class MarketPricesActivity extends AppCompatActivity {
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent salescall = new Intent(MarketPricesActivity.this,QualityofSalesCallActivity.class);
+                saveStockSold();
+                Intent salescall = new Intent(MarketPricesActivity.this, QualityofSalesCallActivity.class);
                 startActivity(salescall);
 
             }
@@ -173,10 +224,38 @@ public class MarketPricesActivity extends AppCompatActivity {
         alertDialogBuilder.setCancelable(false);
         alertDialog.show();
     }
-    public void drawRecommendationTable(TableLayout mTableLayout)
-    {
+
+    private void saveStockSold() {
+        for (int i = 0; i < arrayList.size(); i++) {
+            HashMap<String, String> headerParams = new HashMap<>();
+            headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_QUANITYSOLD, arrayList.get(i).getQuanity());
+            headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_NETSELLINGPRICE, arrayList.get(i).getNetprice());
+            headerParams.put(db.KEY_TODAY_JOURNEY_ORDER_NUMBER, sHelper.getString(Constants.TODAY_PLAN_INVOICE_ORDER_NUMBER));
+            headerParams.put(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER, sHelper.getString(Constants.TODAY_PLAN_INVOICE_NUMBER));
+            headerParams.put(db.KEY_TODAY_JOURNEY_ORDER_BRAND_NAME, sHelper.getString(Constants.TODAY_PLAN_INVOICE_PRODUCT_NAME));
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+            if(!previousInvoiceNumber.equals(""))
+            {
+                if(previousInvoiceNumber.equals(sHelper.getString(Constants.TODAY_PLAN_INVOICE_NUMBER)))
+                {
+                    headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_SAMEINVOCIEE, "0");
+                    headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_OLD, "1");
+                }
+            }
+            else
+            {
+                headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_SAMEINVOCIEE, "1");
+                headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_OLD, "0");
+            }
+            db.addData(db.TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD, headerParams);
+        }
+    }
+
+
+
+    public void drawRecommendationTable(TableLayout mTableLayout) {
         mTableLayout.removeAllViews();
-        int cursorIndex=0;
+        int cursorIndex = 0;
         mTableLayout.removeAllViews();
         TableRow row = new TableRow(this);
         row.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -235,7 +314,7 @@ public class MarketPricesActivity extends AppCompatActivity {
         vline.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, 2));
         mTableLayout.addView(vline);
 
-        for(int i=0;i<arrayList.size();i++) {
+        for (int i = 0; i < arrayList.size(); i++) {
             cursorIndex++;
 
             TableRow row2 = new TableRow(this);
@@ -259,8 +338,8 @@ public class MarketPricesActivity extends AppCompatActivity {
 
             quanitity.setTextSize(14);
             //status.setBackgroundResource(R.drawable.table_row);
-            quanitity .setPadding(2, 2, 2, 2);
-            TextView nsp= new TextView(this);
+            quanitity.setPadding(2, 2, 2, 2);
+            TextView nsp = new TextView(this);
             nsp.setText(arrayList.get(i).getNetprice());
             nsp.setGravity(Gravity.CENTER);
             nsp.setTextSize(14);
