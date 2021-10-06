@@ -30,4 +30,24 @@ public class SalesOrderChild implements Serializable {
     String invoiceNumber;
     String invoiceQuantity;
     String  invocieDate;
+
+    public String getInvoiceRate() {
+        return invoiceRate;
+    }
+
+    public void setInvoiceRate(String invoiceRate) {
+        this.invoiceRate = invoiceRate;
+    }
+
+    public String getInvoiceAvailableQuantity() {
+        return invoiceAvailableQuantity;
+    }
+
+    public void setInvoiceAvailableQuantity(String invoiceAvailableQuantity) {
+        this.invoiceAvailableQuantity = invoiceAvailableQuantity;
+    }
+
+    String invoiceRate;
+    String invoiceAvailableQuantity;
+
 }

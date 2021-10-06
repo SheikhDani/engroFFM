@@ -1,6 +1,8 @@
 package com.tallymarks.ffmapp.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 
 import android.view.View;
@@ -10,13 +12,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.CustomerSnapShotAdapter;
+import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.CustomerSnapShot;
 import com.tallymarks.ffmapp.models.CustomerSnapShotParent;
 import com.tallymarks.ffmapp.models.Farmes;
+import com.tallymarks.ffmapp.models.FloorStockChild;
+import com.tallymarks.ffmapp.models.FloorStockParent;
+import com.tallymarks.ffmapp.utils.Constants;
+import com.tallymarks.ffmapp.utils.Helpers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,14 +35,17 @@ public class CustomerSnapShotActivity extends AppCompatActivity {
     private TextView tvTopHeader;
     ImageView iv_menu, iv_back;
     Button btn_back;
+    DatabaseHandler db;
+    final ArrayList<CustomerSnapShotParent> customerStock = new ArrayList<CustomerSnapShotParent>();
+    SharedPrefferenceHelper sHelper;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_snapshot);
-       initView();
+        initView();
     }
-    private void initView()
-    {
+
+    private void initView() {
         tvTopHeader = findViewById(R.id.tv_dashboard);
         iv_menu = findViewById(R.id.iv_drawer);
         iv_back = findViewById(R.id.iv_back);
@@ -41,6 +53,8 @@ public class CustomerSnapShotActivity extends AppCompatActivity {
         iv_back.setVisibility(View.VISIBLE);
         iv_menu.setVisibility(View.GONE);
         tvTopHeader.setVisibility(View.VISIBLE);
+        db = new DatabaseHandler(CustomerSnapShotActivity.this);
+        sHelper = new SharedPrefferenceHelper(CustomerSnapShotActivity.this);
         tvTopHeader.setText("CUSTOMER SNAPSHOT");
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,10 +73,11 @@ public class CustomerSnapShotActivity extends AppCompatActivity {
 
             }
         });
-        ExpandableListView elv=(ExpandableListView) findViewById(R.id.expandableListView);
+        ExpandableListView elv = (ExpandableListView) findViewById(R.id.expandableListView);
+        getCustomerSnapShotLocally();
 
-        final ArrayList<CustomerSnapShotParent> team=getData();
-        CustomerSnapShotAdapter adapter=new CustomerSnapShotAdapter(this, team);
+//        final ArrayList<CustomerSnapShotParent> team=getData();
+        CustomerSnapShotAdapter adapter = new CustomerSnapShotAdapter(this, customerStock);
         elv.setAdapter(adapter);
 
         //SET ONCLICK LISTENER
@@ -71,14 +86,83 @@ public class CustomerSnapShotActivity extends AppCompatActivity {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPos,
                                         int childPos, long id) {
-                CustomerSnapShot e = team.get(groupPos).players.get(childPos);
-                Toast.makeText(CustomerSnapShotActivity.this, ""+e.getProductname(), Toast.LENGTH_SHORT).show();
+                CustomerSnapShot e = customerStock.get(groupPos).players.get(childPos);
+                Toast.makeText(CustomerSnapShotActivity.this, "" + e.getProductname(), Toast.LENGTH_SHORT).show();
 
                 // Toast.makeText(getApplicationContext(), (CharSequence) team.get(groupPos).players.get(childPos), Toast.LENGTH_SHORT).show();
 
                 return false;
             }
         });
+    }
+
+    private void getCustomerSnapShotLocally() {
+
+        String categoryName = "";
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+
+                categoryName = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY)));
+                CustomerSnapShotParent floor = new CustomerSnapShotParent(categoryName);
+                getFloorStockProductsLocally(categoryName, floor);
+                customerStock.add(floor);
+
+            }
+            while (cursor.moveToNext());
+
+
+        } else {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(CustomerSnapShotActivity.this);
+            alertDialogBuilder
+                    .setMessage("There is No Previous SnapShot Available against this Customer")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                    //Toast.makeText(ShopStatusActivity.this, "You are "+totalb+" Km away from the shop ", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                    );
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        }
+
+    }
+
+    private void getFloorStockProductsLocally(String categoryName, CustomerSnapShotParent parentFloor) {
+        String productID = "", productName = "", productQuantity = "";
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_NAME, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_ID, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_QUANTITY, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY, categoryName);
+        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN_PREVIOUS_STOCK, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+
+                CustomerSnapShot customerChild = new CustomerSnapShot();
+                productName = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_NAME)));
+                productID = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_ID));
+                productQuantity = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_QUANTITY));
+                customerChild.setProductname(productName);
+                customerChild.setProductquantity(productQuantity);
+                customerChild.setProductid(productID);
+                parentFloor.players.add(customerChild);
+
+            }
+            while (cursor.moveToNext());
+        }
     }
 
     private ArrayList<CustomerSnapShotParent> getData() {

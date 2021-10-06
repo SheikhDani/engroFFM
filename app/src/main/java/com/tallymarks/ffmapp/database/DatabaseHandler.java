@@ -19,7 +19,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private SQLiteDatabase db;
     /*Database Varaiables*/
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 4;
     private static final String TAG = "DBAdapter";
     private static final String DATABASE_NAME = "FFMAppDatabase";
     private Context mContext;
@@ -37,10 +37,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String PRODUCT_BRANDS_CATEGORY = "PRODUCT_BRANDS_CATEGORY";
     public static final String TODAY_JOURNEY_PLAN = "TODAY_JOURNEY_PLAN";
     public static final String TODAY_JOURNEY_PLAN_ORDERS = "TODAY_JOURNEY_PLAN_ORDERS";
+    public static final String TODAY_JOURNEY_PLAN_STOCK = "TODAY_JOURNEY_PLAN_STOCK";
     public static final String TODAY_JOURNEY_PLAN_PREVIOUS_STOCK = "TODAY_JOURNEY_PLAN_PREVIOUS_STOCK";
     public static final String TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT = "TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT";
     public static final String TODAY_JOURNEY_PLAN_ORDERS_INVOICES = "TODAY_JOURNEY_PLAN_ORDERS_INVOICES";
     public static final String TODAY_JOURNEY_PLAN_START_ACTIVITY= "TODAY_JOURNEY_PLAN_START_ACTIVITY";
+    public static final String TODAY_JOURNEY_PLAN_FLOOR_STOCK_INPUT= "TODAY_JOURNEY_PLAN_FLOOR_STOCK_INPUT";
+    public static final String TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD= "TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD";
 
 
 
@@ -61,8 +64,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_GENDER_ID = "genderID";
     public static final String KEY_GENDER_NAME = "genderName";
 
+    //FloorStock Input Table Fields
+    public static final String KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDID = "floorStockInputBrandID";
+    public static final String KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY = "floorStockInputBrandQuantity";
+    public static final String KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDNAME= "floorStockInputBrandName";
+
+
     //Product Brand Category Table Fields
     public static final String KEY_PRODUCT_BRAND_CATEOGRY_NAME = "productbrandCateogry";
+
+    //MarketPrice Stock Sold Table Fields
+    public static final String KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_QUANITYSOLD = "marketpriceStoclSoldQuanitySold";
+    public static final String KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_NETSELLINGPRICE= "marketpriceStoclSoldNETSellignprice";
+    public static final String KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_SAMEINVOCIEE= "marketpriceStoclSoldsmaeinvoice";
+    public static final String KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_OLD= "marketpriceStoclSoldold";
+
+
 
 
     //Destricts Table Fields
@@ -130,6 +147,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_TODAY_JOURNEY_ORDER_BRAND_NAME = "todayOrderBrandName";
     public static final String KEY_TODAY_JOURNEY_ORDER_QUANTITY = "todayOrderQuantity";
 
+    //Today Journey Plan Stock Table Fields
+    public static final String KEY_TODAY_JOURNEY_STOCK_INVOICE_NUMBER = "todayJourneyStockInvoice";
+
+
     //Today Journey Plan Previous Stock Table Fields
     public static final String KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_ID = "todayOrderPrevoisStockID";
     public static final String KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_NAME = "todayOrderPreviousStockname";
@@ -176,6 +197,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String TABLE_OUTLET_STATUSES = "CREATE TABLE " + OUTLET_STATUSES + "("
                 + KEY_OUTLET_ID + " TEXT,"
                 + KEY_OUTLET_STATUS + " TEXT" + ")";
+
+        String TABLE_TODAY_JORNEY_PAN_FLOOR_STOCK_INPUT= "CREATE TABLE " + TODAY_JOURNEY_PLAN_FLOOR_STOCK_INPUT + "("
+                + KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDID + " TEXT,"
+                + KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDNAME + " TEXT,"
+                + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
+                + KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY + " TEXT" + ")";
 
         String TABLE_PRODUCT_BRAND_CATEGORY = "CREATE TABLE " + PRODUCT_BRANDS_CATEGORY + "("
                 + KEY_PRODUCT_BRAND_CATEOGRY_NAME + " TEXT" + ")";
@@ -244,6 +271,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_TODAY_JOURNEY_ORDER_NUMBER+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_QUANTITY + " TEXT" + ")";
 
+        String TABLE_TODAY_JOURNEY_PLAN_STOCK= "CREATE TABLE " + TODAY_JOURNEY_PLAN_STOCK+ "("
+                + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
+                + KEY_TODAY_JOURNEY_STOCK_INVOICE_NUMBER+ " TEXT" + ")";
+
         String TABLE_TODAY_JOURNEY_PLAN_PREVIOUS_STOCK= "CREATE TABLE " + TODAY_JOURNEY_PLAN_PREVIOUS_STOCK+ "("
                 + KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_COMPANYHELD+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY+ " TEXT,"
@@ -256,6 +287,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String TABLE_TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT= "CREATE TABLE " + TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT+ "("
                 + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY+ " TEXT" + ")";
+
+        String TABLE_TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD= "CREATE TABLE " + TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD+ "("
+                + KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_QUANITYSOLD+ " TEXT,"
+                + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
+                + KEY_TODAY_JOURNEY_ORDER_BRAND_NAME+ " TEXT,"
+                + KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER+ " TEXT,"
+                + KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_SAMEINVOCIEE+ " TEXT,"
+                + KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_OLD+ " TEXT,"
+                + KEY_TODAY_JOURNEY_ORDER_NUMBER+ " TEXT,"
+                + KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_NETSELLINGPRICE+ " TEXT" + ")";
+
 
 
         String TABLE_TODAY_JOURNEY_PLAN_ORDERS_INVOICES= "CREATE TABLE " + TODAY_JOURNEY_PLAN_ORDERS_INVOICES+ "("
@@ -294,6 +336,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(TABLE_TODAY_JOURNEY_PLAN_PREVIOUS_STOCK);
         db.execSQL(TABLE_TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT);
         db.execSQL(TABLE_TODAY_JOURNEY_PLAN_START_ACTIVITY);
+        db.execSQL(TABLE_TODAY_JORNEY_PAN_FLOOR_STOCK_INPUT);
+        db.execSQL(TABLE_TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD);
+        db.execSQL(TABLE_TODAY_JOURNEY_PLAN_STOCK);
 
 
 
@@ -319,6 +364,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_PREVIOUS_STOCK);
         db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT);
         db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_START_ACTIVITY);
+        db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_FLOOR_STOCK_INPUT);
+        db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD);
+        db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_STOCK);
         onCreate(db);
 
     }

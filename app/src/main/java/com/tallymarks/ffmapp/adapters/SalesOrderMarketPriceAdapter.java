@@ -101,7 +101,7 @@ public class SalesOrderMarketPriceAdapter  extends BaseExpandableListAdapter {
         holder.order_no.setText("Sales Order #"+ header.getOrderNo());
         holder.order_quanitiy.setText("Order Quantity: "+ header.getOrderQuantity());
         holder.order_date.setText("Dated: " +header.getOrderDate());
-        holder.order_date.setText("Product: " +header.getOrderProduct());
+        holder.order_product.setText("Product: " +header.getOrderProduct());
         if (isExpanded) {
            holder.img.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24);
         } else {

@@ -1,38 +1,61 @@
 package com.tallymarks.ffmapp.activities;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
+import android.text.Editable;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.SalesCallAdapter;
+import com.tallymarks.ffmapp.adapters.SalesPointAdapter;
+import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.Commitment;
+import com.tallymarks.ffmapp.models.CustomerSnapShot;
 import com.tallymarks.ffmapp.models.DataModel;
 import com.tallymarks.ffmapp.models.Recommendations;
+import com.tallymarks.ffmapp.models.SaelsPoint;
+import com.tallymarks.ffmapp.tasks.GetCompanHeldBrandBasicList;
+import com.tallymarks.ffmapp.utils.Helpers;
+import com.tallymarks.ffmapp.utils.RecyclerTouchListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class QualityofSalesCallActivity extends AppCompatActivity {
     private TextView tvTopHeader;
-    ImageView iv_menu, iv_back;
+    ImageView iv_menu, iv_back, iv_commitment;
     ArrayList<DataModel> dataModels;
     private TableLayout mTableLayout;
     ArrayList<Commitment> arraylist = new ArrayList<Commitment>();
     ListView listView;
     private SalesCallAdapter adapter;
-    Button btn_back;
+    Button btn_back , btn_add_market_intelligence;
+    DatabaseHandler db;
+    SharedPrefferenceHelper sHelper;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +67,11 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
     private void initView() {
         tvTopHeader = findViewById(R.id.tv_dashboard);
         mTableLayout = (TableLayout) findViewById(R.id.displayLinear);
+        db = new DatabaseHandler(QualityofSalesCallActivity.this);
+        sHelper = new SharedPrefferenceHelper(QualityofSalesCallActivity.this);
+        iv_commitment = findViewById(R.id.img_commitment);
         btn_back = findViewById(R.id.back);
+        btn_add_market_intelligence = findViewById(R.id.btn_market_intelligence);
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,6 +80,12 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
                 startActivity(i);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
+            }
+        });
+        btn_add_market_intelligence.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openMarketintelligence();
             }
         });
 
@@ -69,6 +102,12 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
                 Intent i = new Intent(QualityofSalesCallActivity.this, MarketPricesActivity.class);
                 startActivity(i);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            }
+        });
+        iv_commitment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openCommitment();
             }
         });
 
@@ -99,6 +138,141 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void openCommitment() {
+        LayoutInflater li = LayoutInflater.from(QualityofSalesCallActivity.this);
+        View promptsView = li.inflate(R.layout.dialouge_add_commitment, null);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(QualityofSalesCallActivity.this);
+        alertDialogBuilder.setView(promptsView);
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+
+        TextView tv_Date = promptsView.findViewById(R.id.txt_date);
+        EditText et_quantity = promptsView.findViewById(R.id.et_quantity);
+        TextView auto_Product = promptsView.findViewById(R.id.auto_product);
+        auto_Product.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectProductDialouge(auto_Product);
+            }
+        });
+
+
+        Button btnYes = promptsView.findViewById(R.id.btn_add_commitment);
+        // ivClose.setVisibility(View.GONE);
+
+
+        btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Intent salescall = new Intent(FarmVisitActivity.this,QualityofSalesCallActivity.class);
+//                startActivity(salescall);
+
+            }
+
+
+        });
+        alertDialogBuilder.setCancelable(false);
+        alertDialog.show();
+    }
+
+
+    private void openMarketintelligence() {
+        LayoutInflater li = LayoutInflater.from(QualityofSalesCallActivity.this);
+        View promptsView = li.inflate(R.layout.dialouge_market_intelligence, null);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(QualityofSalesCallActivity.this);
+        alertDialogBuilder.setView(promptsView);
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+
+        EditText et_review = promptsView.findViewById(R.id.et_Remarks);
+
+
+
+        Button btnYes = promptsView.findViewById(R.id.btn_add);
+        // ivClose.setVisibility(View.GONE);
+
+
+        btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Intent salescall = new Intent(FarmVisitActivity.this,QualityofSalesCallActivity.class);
+//                startActivity(salescall);
+
+            }
+
+
+        });
+        alertDialogBuilder.setCancelable(true);
+        alertDialog.show();
+    }
+
+    public void selectProductDialouge(TextView autoProduct) {
+        LayoutInflater li = LayoutInflater.from(QualityofSalesCallActivity.this);
+        View promptsView = li.inflate(R.layout.dialouge_sales_point, null);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(QualityofSalesCallActivity.this);
+        alertDialogBuilder.setView(promptsView);
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        final List<SaelsPoint> companyList = new ArrayList<>();
+        final TextView title = promptsView.findViewById(R.id.tv_option);
+        title.setText("Select Company");
+        final RecyclerView recyclerView = promptsView.findViewById(R.id.recyclerView);
+        final SalesPointAdapter mAdapter = new SalesPointAdapter(companyList);
+        // vertical RecyclerView
+        // keep movie_list_row.xml width to `match_parent`
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                SaelsPoint companyname = companyList.get(position);
+                alertDialog.dismiss();
+                autoProduct.setText(companyname.getPoint());
+
+                // Toast.makeText(getApplicationContext(), movie.getPoint() + " is selected!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+        prepareCompanyData(mAdapter, companyList);
+        //ImageView ivClose = promptsView.findViewById(R.id.iv_close);
+
+        alertDialogBuilder.setCancelable(true);
+        alertDialog.show();
+    }
+
+    private void prepareCompanyData(SalesPointAdapter mAdapter, List<SaelsPoint> movieList) {
+        String productName = "", productID = "";
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(db.KEY_ENGRO_BRANCH_ID, "");
+        map.put(db.KEY_ENGRO_RAND_NAME, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        Cursor cursor = db.getData(db.ENGRO_BRANCH, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                SaelsPoint companyname = new SaelsPoint();
+                productName = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_ENGRO_RAND_NAME)));
+                productID = cursor.getString(cursor.getColumnIndex(db.KEY_ENGRO_BRANCH_ID));
+                companyname.setPoint(productName);
+                companyname.setId(productID);
+                movieList.add(companyname);
+            }
+            while (cursor.moveToNext());
+        }
+
+
+        // notify adapter about data set changes
+        // so that it will render the list with new data
+        mAdapter.notifyDataSetChanged();
     }
 
     public void drawRecommendationTable() {

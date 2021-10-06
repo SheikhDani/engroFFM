@@ -28,6 +28,15 @@ public class Constants {
     public static final String CUSTOMER_JOURNEYPLAN_ID= "customerjourneyplanID";
     public static final String CUSTOMER_SALES_POINT_NAME= "customersalesPointName";
 
+    public static final String TODAY_PLAN_INVOICE_NUMBER= "invoiceNumber";
+    public static final String TODAY_PLAN_INVOICE_Rate= "invoiceRate";
+    public static final String TODAY_PLAN_INVOICE_QUANTITY= "invoiceQuantity";
+    public static final String TODAY_PLAN_INVOICE_AVAILABLE_QUANTITY= "invoiceAvailableQuantity";
+    public static final String TODAY_PLAN_INVOICE_ORDER_NUMBER ="invoiceOrderNumber";
+    public static final String TODAY_PLAN_INVOICE_PRODUCT_NAME ="invoiceProductName";
+    public static final String TODAY_PLAN_INVOICE_ORDER_DATE ="invoiceOrderDate";
+
+
 
 
 

@@ -28,7 +28,7 @@
                 android:layout_weight="1.8"
                 android:text="ADD MARKET INTELLIGENCE"
                 android:textColor="@color/black"
-                android:textSize="@dimen/ts18"
+                android:textSize="@dimen/ts16"
 
 
                 />
@@ -54,109 +54,102 @@
             android:layout_below="@+id/l1"
 
             android:background="@color/grey" />
+
+
         <LinearLayout
-            android:id="@+id/linear_comments"
+            android:id="@+id/linear_remarks"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/l1"
+
             android:layout_marginTop="@dimen/p20"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <TextView
-                android:id="@+id/txt_comments"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="@dimen/p20"
-
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="Comments"
-                android:textColor="@color/black"
-
-                />
+          >
 
             <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:id="@+id/et_Remarks"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/p150"
+                android:layout_marginLeft="@dimen/p20"
                 android:layout_marginRight="@dimen/p20"
-                android:layout_weight="1"
-                android:background="@drawable/eidttext_boader"
+                android:background="@drawable/custom_item_layout"
+                android:gravity="top"
+                android:hint="@string/remarks"
+                android:inputType="textVisiblePassword"
+                android:padding="10dp">
 
-                android:gravity="center"
-                android:hint="Add Comment" />
+            </EditText>
 
         </LinearLayout>
 
 
-        <View
-
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/p20"
-            android:id="@+id/divider"
-
-            android:layout_below="@+id/linear_comments"
-            android:background="@color/grey" />
-
         <LinearLayout
-            android:id="@+id/linear_forward"
+            android:id="@+id/linear_confirmed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/divider"
-            android:layout_marginTop="@dimen/p10"
+            android:layout_below="@+id/linear_remarks"
+            android:layout_marginTop="@dimen/p20"
             android:orientation="horizontal"
             android:weightSum="2">
 
+
             <CheckBox
-                android:id="@+id/check_forward"
+                android:id="@+id/checkBox_forward"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
+
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/p20"
                 android:layout_marginLeft="@dimen/p20"
-
                 android:layout_weight="0.2"
-                android:gravity="center_vertical"
 
-                android:textColor="@color/black"
 
-                />
+                android:button="@drawable/custom_checkbox"
+                android:focusable="false"
+                android:focusableInTouchMode="false" />
 
             <TextView
+                android:id="@+id/txtConfirmed"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/p20"
-                android:layout_weight="1.8"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/p5"
+                android:layout_toRightOf="@+id/checkBox"
+
+                android:layout_weight="2"
+                android:paddingTop="@dimen/p2"
                 android:text="Forward to Officer"
+                android:textColor="@color/green"
 
-                android:textSize="20sp"
+                android:textSize="18sp"
 
-
-                android:hint="500 Bags" />
-
+                />
         </LinearLayout>
-
         <View
 
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/p10"
-            android:layout_below="@+id/linear_forward"
+            android:id="@+id/divider"
+            android:layout_below="@+id/linear_confirmed"
             android:background="@color/grey" />
 
+
+
+
         <LinearLayout
-            android:id="@+id/linear_submit"
+            android:id="@+id/linear_add_sampling"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/p30"
-            android:layout_below="@+id/linear_forward"
+            android:layout_below="@+id/divider"
             android:gravity="center"
             android:orientation="horizontal"
             >
 
             <Button
-                android:id="@+id/btn_add_sampling"
+                android:id="@+id/btn_add"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
