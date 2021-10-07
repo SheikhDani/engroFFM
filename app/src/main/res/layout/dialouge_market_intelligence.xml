@@ -95,7 +95,6 @@
             <CheckBox
                 android:id="@+id/checkBox_forward"
                 android:layout_width="0dp"
-
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"

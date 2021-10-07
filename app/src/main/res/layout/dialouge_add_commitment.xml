@@ -167,7 +167,7 @@
             <TextView
                 android:id="@+id/txt_date"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="25dp"
                 android:layout_marginRight="@dimen/p20"
                 android:layout_weight="1"
                 android:background="@drawable/eidttext_boader"
@@ -190,7 +190,7 @@
 
 
             <CheckBox
-                android:id="@+id/checkBox"
+                android:id="@+id/checkBox_confirmed"
                 android:layout_weight="0.2"
 
                 android:layout_width="0dp"

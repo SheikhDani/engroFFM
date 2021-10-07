@@ -1,17 +1,25 @@
 package com.tallymarks.ffmapp.activities;
 
+import android.Manifest;
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.os.Bundle;
 
 import android.text.Editable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -22,6 +30,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -38,10 +47,15 @@ import com.tallymarks.ffmapp.models.DataModel;
 import com.tallymarks.ffmapp.models.Recommendations;
 import com.tallymarks.ffmapp.models.SaelsPoint;
 import com.tallymarks.ffmapp.tasks.GetCompanHeldBrandBasicList;
+import com.tallymarks.ffmapp.utils.Constants;
+import com.tallymarks.ffmapp.utils.DialougeManager;
+import com.tallymarks.ffmapp.utils.GpsTracker;
 import com.tallymarks.ffmapp.utils.Helpers;
 import com.tallymarks.ffmapp.utils.RecyclerTouchListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -53,9 +67,21 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
     ArrayList<Commitment> arraylist = new ArrayList<Commitment>();
     ListView listView;
     private SalesCallAdapter adapter;
-    Button btn_back , btn_add_market_intelligence;
+    Button btn_back, btn_add_market_intelligence;
     DatabaseHandler db;
     SharedPrefferenceHelper sHelper;
+    String targetDate = "";
+    Calendar myCalendar;
+    Button btnCheckout;
+    TextView tv_Date;
+    String checkedCommitement = "No";
+    GpsTracker gps;
+    double checkoutlat;
+    double checkoutlng;
+    String productID;
+    String forward = "0";
+    String checkinlat="";
+    String checkinlng="";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,13 +95,20 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         mTableLayout = (TableLayout) findViewById(R.id.displayLinear);
         db = new DatabaseHandler(QualityofSalesCallActivity.this);
         sHelper = new SharedPrefferenceHelper(QualityofSalesCallActivity.this);
+        btnCheckout = findViewById(R.id.btn_checkout);
+        btnCheckout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                customerSavedConfirmationPopUp();
+            }
+        });
         iv_commitment = findViewById(R.id.img_commitment);
         btn_back = findViewById(R.id.back);
+        myCalendar = Calendar.getInstance();
         btn_add_market_intelligence = findViewById(R.id.btn_market_intelligence);
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent i = new Intent(QualityofSalesCallActivity.this, MarketPricesActivity.class);
                 startActivity(i);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
@@ -85,10 +118,11 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         btn_add_market_intelligence.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 openMarketintelligence();
             }
         });
-
+        loadCurrentLocation();
         iv_menu = findViewById(R.id.iv_drawer);
         iv_back = findViewById(R.id.iv_back);
         iv_back.setVisibility(View.VISIBLE);
@@ -112,18 +146,19 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         });
 
         dataModels = new ArrayList();
-        prepareRecommendationData();
-        drawRecommendationTable();
+        prepareBrandData(dataModels);
 
-        dataModels.add(new DataModel("EFERT Agritrade SSP+Zinc", false));
-        dataModels.add(new DataModel("EFERT Agritrade Zoron", false));
-        dataModels.add(new DataModel("Zarkhez Khas", false));
-        dataModels.add(new DataModel("EFERT Agritrade Powder", true));
-        dataModels.add(new DataModel("EFERT Agritrade Amonium Sulphate", true));
-        dataModels.add(new DataModel("EFERT Agritrade Powder potash", true));
-        dataModels.add(new DataModel("EFERT Agritrade Zingro", true));
-        dataModels.add(new DataModel("Zarkhez Khas(MOP)", false));
-        dataModels.add(new DataModel("EFERT Agritrade Zingro", false));
+
+//        dataModels.add(new DataModel("EFERT Agritrade SSP+Zinc", false));
+//        dataModels.add(new DataModel("EFERT Agritrade Zoron", false));
+//        dataModels.add(new DataModel("Zarkhez Khas", false));
+//        dataModels.add(new DataModel("EFERT Agritrade Powder", true));
+//        dataModels.add(new DataModel("EFERT Agritrade Amonium Sulphate", true));
+//        dataModels.add(new DataModel("EFERT Agritrade Powder potash", true));
+//        dataModels.add(new DataModel("EFERT Agritrade Zingro", true));
+//        dataModels.add(new DataModel("Zarkhez Khas(MOP)", false));
+//        dataModels.add(new DataModel("EFERT Agritrade Zingro", false));
+
         adapter = new SalesCallAdapter(dataModels, getApplicationContext());
 
         listView.setAdapter(adapter);
@@ -140,6 +175,97 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         });
     }
 
+    private void addProductDiscussed() {
+        for (int i = 0; i < dataModels.size(); i++) {
+            if (dataModels.get(i).isChecked()) {
+                HashMap<String, String> headerParams = new HashMap<>();
+                headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED_ID, dataModels.get(i).getId());
+                headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+                db.addData(db.TODAY_JOURNEY_PLAN_FLOOR_STOCK_INPUT, headerParams);
+            }
+        }
+    }
+    private void addMarketIntel(String review , String forward)
+    {
+        HashMap<String, String> headerParams = new HashMap<>();
+        headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTEL_FORWARD, forward);
+        headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTETL_COMMENT, review);
+        db.addData(db.TODAY_JOURNEY_PLAN_MARKET_INTEL,headerParams);
+    }
+    private void addCheckoutLocation(int distance)
+    {
+        long time = System.currentTimeMillis();
+        HashMap<String, String> headerParams = new HashMap<>();
+        headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LATITUDE, String.valueOf(checkoutlat));
+        headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LONGITUDE, String.valueOf(checkoutlng));
+        headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+        headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_TIMESTAMP,String.valueOf(time));
+        headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_DISTANCE,String.valueOf(distance));
+        db.addData(db.TODAY_JOURNEY_PLAN_POST_DATA,headerParams);
+    }
+    private void addCommitment() {
+        for (int i = 0; i < arraylist.size(); i++) {
+
+            HashMap<String, String> headerParams = new HashMap<>();
+            headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_CONFIRMED, arraylist.get(i).getConfirmed());
+            headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_DELIVERY_DATE, arraylist.get(i).getTimeline());
+            headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_QUANITY,arraylist.get(i).getQuantity());
+            headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_RAND_ID,arraylist.get(i).getProductid());
+            db.addData(db.TODAY_JOURNEY_PLAN_COMMITMENT_RECEIVED,headerParams);
+
+    }
+    }
+    public static float getMeterFromLatLong(float lat1, float lng1, float lat2, float lng2){
+        Location loc1 = new Location("");
+        loc1.setLatitude(lat1);
+        loc1.setLongitude(lng1);
+        Location loc2 = new Location("");
+        loc2.setLatitude(lat2);
+        loc2.setLongitude(lng2);
+        float distanceInMeters = loc1.distanceTo(loc2);
+        return distanceInMeters;
+    }
+
+    public void customerSavedConfirmationPopUp() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(QualityofSalesCallActivity.this);
+        alertDialogBuilder
+                .setMessage(QualityofSalesCallActivity.this.getString(R.string.outlet_confirmation))
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        gps = new GpsTracker(QualityofSalesCallActivity.this);
+                        if (gps.canGetLocation()) {
+                            if (ActivityCompat.checkSelfPermission(QualityofSalesCallActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(QualityofSalesCallActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                return;
+                            }
+                            checkoutlat = gps.getLatitude();
+                            checkoutlng = gps.getLongitude();
+                            float distance = getMeterFromLatLong(Float.parseFloat(String.valueOf(checkoutlat)), Float.parseFloat(String.valueOf(checkoutlng)), Float.parseFloat(checkinlat), Float.parseFloat(checkinlng));
+                            float totaldistance = distance / 1000;
+                            int totalb = (int) Math.round(totaldistance);
+                            addProductDiscussed();
+                            addCommitment();
+                            addCheckoutLocation(totalb);
+                            //addMarketIntel();
+                            dialog.cancel();
+                        } else {
+                            DialougeManager.gpsNotEnabledPopup(QualityofSalesCallActivity.this);
+                        }
+
+                    }
+                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }
+        );
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
+    }
+
     private void openCommitment() {
         LayoutInflater li = LayoutInflater.from(QualityofSalesCallActivity.this);
         View promptsView = li.inflate(R.layout.dialouge_add_commitment, null);
@@ -147,15 +273,34 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         alertDialogBuilder.setView(promptsView);
         final AlertDialog alertDialog = alertDialogBuilder.create();
 
-        TextView tv_Date = promptsView.findViewById(R.id.txt_date);
+        tv_Date = promptsView.findViewById(R.id.txt_date);
         EditText et_quantity = promptsView.findViewById(R.id.et_quantity);
+        CheckBox ck_confirmed = promptsView.findViewById(R.id.checkBox_confirmed);
         TextView auto_Product = promptsView.findViewById(R.id.auto_product);
         auto_Product.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectProductDialouge(auto_Product);
+
             }
         });
+        tv_Date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(QualityofSalesCallActivity.this, date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
+                datePickerDialog.show();
+
+            }
+        });
+        if (ck_confirmed.isChecked()) {
+            checkedCommitement = "Yes";
+        } else {
+            checkedCommitement = "No";
+        }
 
 
         Button btnYes = promptsView.findViewById(R.id.btn_add_commitment);
@@ -165,8 +310,9 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent salescall = new Intent(FarmVisitActivity.this,QualityofSalesCallActivity.class);
-//                startActivity(salescall);
+                prepareRecommendationData(auto_Product.getText().toString(), et_quantity.getText().toString(), tv_Date.getText().toString(), checkedCommitement);
+                drawRecommendationTable();
+                alertDialog.dismiss();
 
             }
 
@@ -176,16 +322,59 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            // view.setMinDate(System.currentTimeMillis() - 1000);
+            myCalendar.set(Calendar.YEAR, year);
+            //myCalendar.set(Calendar.MONTH, monthOfYear);
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            String[] monthName = {"January", "February", "March", "April", "May", "June", "July",
+                    "August", "September", "October", "November",
+                    "December"};
+            String month = monthName[myCalendar.get(Calendar.MONTH)];
+            System.out.println("Month name:" + month);
+            String monthString = String.valueOf(month + 1);
+            String dayString = String.valueOf(dayOfMonth);
+            if (monthString.length() == 1) {
+                monthString = "0" + monthString;
+            }
+            if (dayString.length() == 1) {
+                dayString = "0" + dayString;
+            }
+            targetDate = month + " " + dayString + " " + year;
+            tv_Date.setText(targetDate);
+            // Log.e("targetdate", String.valueOf(target_date));
+
+
+        }
+
+
+    };
+
 
     private void openMarketintelligence() {
+
         LayoutInflater li = LayoutInflater.from(QualityofSalesCallActivity.this);
         View promptsView = li.inflate(R.layout.dialouge_market_intelligence, null);
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(QualityofSalesCallActivity.this);
         alertDialogBuilder.setView(promptsView);
         final AlertDialog alertDialog = alertDialogBuilder.create();
 
-        EditText et_review = promptsView.findViewById(R.id.et_Remarks);
 
+        EditText et_review = promptsView.findViewById(R.id.et_Remarks);
+        CheckBox ck_forward = promptsView.findViewById(R.id.checkBox_forward);
+        if(ck_forward.isChecked())
+        {
+            forward = "1";
+        }
+        else
+        {
+            forward="0";
+        }
 
 
         Button btnYes = promptsView.findViewById(R.id.btn_add);
@@ -195,6 +384,8 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                addMarketIntel(et_review.getText().toString(), forward);
+                alertDialog.dismiss();
 //                Intent salescall = new Intent(FarmVisitActivity.this,QualityofSalesCallActivity.class);
 //                startActivity(salescall);
 
@@ -205,6 +396,23 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         alertDialogBuilder.setCancelable(true);
         alertDialog.show();
     }
+      public void loadCurrentLocation() {
+          HashMap<String, String> map = new HashMap<>();
+          map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE, "");
+          map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE, "");
+          HashMap<String, String> filters = new HashMap<>();
+          filters.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+          Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN_START_ACTIVITY, map, filters);
+          if (cursor.getCount() > 0) {
+              cursor.moveToFirst();
+              do {
+                  checkinlat = cursor.getString(cursor.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE));
+                  checkinlng = cursor.getString(cursor.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE));
+
+              }
+              while (cursor.moveToNext());
+          }
+      }
 
     public void selectProductDialouge(TextView autoProduct) {
         LayoutInflater li = LayoutInflater.from(QualityofSalesCallActivity.this);
@@ -231,6 +439,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
                 SaelsPoint companyname = companyList.get(position);
                 alertDialog.dismiss();
                 autoProduct.setText(companyname.getPoint());
+                productID = companyname.getId();
 
                 // Toast.makeText(getApplicationContext(), movie.getPoint() + " is selected!", Toast.LENGTH_SHORT).show();
             }
@@ -273,6 +482,35 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         // notify adapter about data set changes
         // so that it will render the list with new data
         mAdapter.notifyDataSetChanged();
+    }
+
+    private void prepareBrandData(ArrayList<DataModel> dataModels) {
+        String productName = "", productID = "";
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(db.KEY_ENGRO_BRANCH_ID, "");
+        map.put(db.KEY_ENGRO_RAND_NAME, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        Cursor cursor = db.getData(db.ENGRO_BRANCH, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                DataModel model = new DataModel();
+                productName = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_ENGRO_RAND_NAME)));
+                productID = cursor.getString(cursor.getColumnIndex(db.KEY_ENGRO_BRANCH_ID));
+                model.setName(productName);
+                model.setId(productID);
+                model.setChecked(false);
+                dataModels.add(model);
+            }
+            while (cursor.moveToNext());
+        }
+
+
+        // notify adapter about data set changes
+        // so that it will render the list with new data
+
     }
 
     public void drawRecommendationTable() {
@@ -389,12 +627,13 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 
     }
 
-    private void prepareRecommendationData() {
+    private void prepareRecommendationData(String product, String quantity, String time, String confirm) {
         Commitment prod = new Commitment();
-        prod.setProduct("Engr SSP(25)");
-        prod.setQuantity("10");
-        prod.setTimeline("August 4,2021");
-        prod.setConfirmed("Yes");
+        prod.setProduct(product);
+        prod.setQuantity(quantity);
+        prod.setProductid(productID);
+        prod.setTimeline(Helpers.utcToAnyDateFormat(time,"MMM d yyyy","yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
+        prod.setConfirmed(confirm);
         arraylist.add(prod);
 
 

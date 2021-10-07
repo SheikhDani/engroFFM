@@ -33,6 +33,19 @@ public class Commitment {
         this.confirmed = confirmed;
     }
 
-    private String product,quantity,timeline,confirmed;
+    private String product;
+    private String quantity;
+    private String timeline;
+    private String confirmed;
+
+    public String getProductid() {
+        return productid;
+    }
+
+    public void setProductid(String productid) {
+        this.productid = productid;
+    }
+
+    private String productid;
 
 }

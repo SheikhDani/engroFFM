@@ -109,9 +109,9 @@ private String orderNumber, productname,orderDate;
                                         int groupPosition, int childPosition, long id) {
                 SalesOrderHeader header = headerList.get(groupPosition);
                 String invoicenumber = header.getItemList().get(childPosition).getInvoiceNumber();
-                String invociequanity = header.getItemList().get(groupPosition).getInvoiceQuantity();
-                String invocierate = header.getItemList().get(groupPosition).getInvoiceRate();
-                String availableQuantity = header.getItemList().get(groupPosition).getInvoiceRate();
+                String invociequanity = header.getItemList().get(childPosition).getInvoiceQuantity();
+                String invocierate = header.getItemList().get(childPosition).getInvoiceRate();
+                String availableQuantity = header.getItemList().get(childPosition).getInvoiceRate();
                 sHelper.setString(Constants.TODAY_PLAN_INVOICE_NUMBER,invoicenumber);
                 sHelper.setString(Constants.TODAY_PLAN_INVOICE_Rate,invocierate);
                 sHelper.setString(Constants.TODAY_PLAN_INVOICE_QUANTITY,invociequanity);
