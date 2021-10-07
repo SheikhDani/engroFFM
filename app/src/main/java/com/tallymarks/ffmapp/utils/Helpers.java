@@ -149,6 +149,10 @@ public class Helpers {
             }
         });
     }
+    public static String getDatetoUTC(String date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        return dateFormat.format(date);
+    }
 
 
     public static String clean(String data) {

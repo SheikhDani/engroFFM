@@ -19,9 +19,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private SQLiteDatabase db;
     /*Database Varaiables*/
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 1;
     private static final String TAG = "DBAdapter";
-    private static final String DATABASE_NAME = "FFMAppDatabase";
+    private static final String DATABASE_NAME = "FFMApplicationDatabase";
     private Context mContext;
 
     //List of all tables
@@ -44,6 +44,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String TODAY_JOURNEY_PLAN_START_ACTIVITY= "TODAY_JOURNEY_PLAN_START_ACTIVITY";
     public static final String TODAY_JOURNEY_PLAN_FLOOR_STOCK_INPUT= "TODAY_JOURNEY_PLAN_FLOOR_STOCK_INPUT";
     public static final String TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD= "TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD";
+    public static final String TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED = "TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED";
+    public static final String TODAY_JOURNEY_PLAN_MARKET_INTEL = "TODAY_JOURNEY_PLAN_MARKET_INTEL";
+    public static final String TODAY_JOURNEY_PLAN_COMMITMENT_RECEIVED = "TODAY_JOURNEY_PLAN_COMMITMENT_RECEIVED";
+    public static final String TODAY_JOURNEY_PLAN_POST_DATA = "TODAY_JOURNEY_PLAN_POST_DATA";
 
 
 
@@ -86,6 +90,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_DISTRICTS_ID = "dictrictID";
     public static final String KEY_DISCTRICTS_NAME = "districtName";
     public static final String KEY_DISCTRICTS_CODE = "dictrictName";
+
+    //Today Journey PLAN Product Dicussed Table Fields
+    public static final String KEY_CUSTOMER_TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED_ID= "TodayJourneyPlanPorductDicussedID";
+
+    //Today Journey PLAN Commitment Table Fields
+    public static final String KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_RAND_ID= "TodayJourneyPlanCommitmentBrandID";
+    public static final String KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_QUANITY= "TodayJourneyPlanCommitmentQuantity";
+    public static final String KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_DELIVERY_DATE= "TodayJourneyPlanCommitmentDeliverDate";
+    public static final String KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_CONFIRMED= "TodayJourneyPlanCommitmentConfirmed";
+
+    //Today Journey PLAN Market Intel Table Fields
+    public static final String KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTETL_COMMENT= "TodayJourneyPlanMarektintelComment";
+    public static final String KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTEL_FORWARD= "TodayJourneyPlanmarektIntelForward";
+
 
     //Product Product Brand Table Fields
     public static final String KEY_PRODUCT_BRAND_ID = "brandID";
@@ -139,6 +157,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID = "todayCustomerDayID";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID = "todayCustoemrJourneyID";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME = "todayCustoemrSalesPointName";
+
+    //Today Journey Plan Post Data TableFields
+
+    public static final String KEY_TODAY_JOURNEY_CUSTOMER_DISTANCE= "todayCustomerDistance";
+    public static final String KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LATITUDE= "todayCustomerCheckoutLatitude";
+    public static final String KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LONGITUDE= "todayCustomerCheckoutLongitude";
+    public static final String KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_TIMESTAMP =  "todayCustomerCheckoutTime";
+
 
     //Today Journey Plan Orders Table Fields
     public static final String KEY_TODAY_JOURNEY_ORDER_ID = "todayOrderID";
@@ -263,6 +289,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_TODAY_JOURNEY_CUSTOMER_NAME+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME + " TEXT" + ")";
 
+        String TABLE_TODAY_JOURNEY_POST_DATA= "CREATE TABLE " + TODAY_JOURNEY_PLAN_POST_DATA+ "("
+                + KEY_TODAY_JOURNEY_CUSTOMER_DISTANCE+ " TEXT,"
+                + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
+                + KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LATITUDE+ " TEXT,"
+                + KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LONGITUDE+ " TEXT,"
+                + KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_TIMESTAMP+ " TEXT" + ")";
+
         String TABLE_TODAY_JOURNEY_PLAN_ORDERS= "CREATE TABLE " + TODAY_JOURNEY_PLAN_ORDERS+ "("
                 + KEY_TODAY_JOURNEY_ORDER_DATE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
@@ -270,6 +303,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_TODAY_JOURNEY_ORDER_ID+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_NUMBER+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_QUANTITY + " TEXT" + ")";
+
+        String TABLE_TODAY_JOURNEY_PLAN_COMMITMENT_RECEIVED= "CREATE TABLE " + TODAY_JOURNEY_PLAN_COMMITMENT_RECEIVED+ "("
+                + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
+                + KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_QUANITY+ " TEXT,"
+                + KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_CONFIRMED+" TEXT,"
+                +  KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_DELIVERY_DATE+ " TEXT,"
+                +  KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_RAND_ID + " TEXT" + ")";
+
+        String TABLE_TODAY_JOURNEY_PLAN_MARKET_INTEL= "CREATE TABLE " + TODAY_JOURNEY_PLAN_MARKET_INTEL+ "("
+                + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
+                + KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTEL_FORWARD+ " TEXT,"
+                +  KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTETL_COMMENT + " TEXT" + ")";
+
+        String TABLE_TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED= "CREATE TABLE " + TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED+ "("
+                + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
+                +  KEY_CUSTOMER_TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED_ID+ " TEXT" + ")";
 
         String TABLE_TODAY_JOURNEY_PLAN_STOCK= "CREATE TABLE " + TODAY_JOURNEY_PLAN_STOCK+ "("
                 + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
@@ -310,7 +359,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String TABLE_TODAY_JOURNEY_PLAN_START_ACTIVITY= "CREATE TABLE " + TODAY_JOURNEY_PLAN_START_ACTIVITY+ "("
                 + KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS+ " TEXT,"
-                + KEY_TODAY_JOURNEY_CUSTOMER_CODE+ " TEXT,"
+                + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
                 + KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_OBjECTIVE+ " TEXT,"
                 + KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_OBJECTIVE_STATUS+ " TEXT,"
                 + KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE+ " TEXT,"
@@ -339,6 +388,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(TABLE_TODAY_JORNEY_PAN_FLOOR_STOCK_INPUT);
         db.execSQL(TABLE_TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD);
         db.execSQL(TABLE_TODAY_JOURNEY_PLAN_STOCK);
+        db.execSQL(TABLE_TODAY_JOURNEY_PLAN_MARKET_INTEL);
+        db.execSQL(TABLE_TODAY_JOURNEY_PLAN_COMMITMENT_RECEIVED);
+        db.execSQL(TABLE_TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED);
+        db.execSQL(TABLE_TODAY_JOURNEY_POST_DATA);
 
 
 
@@ -364,9 +417,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_PREVIOUS_STOCK);
         db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT);
         db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_START_ACTIVITY);
+        db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED);
+        db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_MARKET_INTEL);
         db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_FLOOR_STOCK_INPUT);
         db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD);
         db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_STOCK);
+        db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_COMMITMENT_RECEIVED);
+        db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_POST_DATA);
         onCreate(db);
 
     }

@@ -158,13 +158,11 @@
                 android:textSize="12sp" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/btn_checkout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginStart="@dimen/p10"
-                android:paddingLeft="@dimen/p20"
-                android:drawableRight="@drawable/forwardresizer"
                 android:layout_marginLeft="@dimen/p10"
                 android:layout_marginTop="@dimen/p10"
                 android:layout_marginEnd="@dimen/p10"
@@ -172,6 +170,8 @@
                 android:layout_marginBottom="@dimen/p10"
                 android:background="@drawable/eidttext_boader"
                 android:backgroundTint="@color/green"
+                android:drawableRight="@drawable/forwardresizer"
+                android:paddingLeft="@dimen/p20"
                 android:text="CHECKOUT"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
