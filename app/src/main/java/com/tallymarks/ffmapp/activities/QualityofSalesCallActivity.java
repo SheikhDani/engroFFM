@@ -181,7 +181,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
                 HashMap<String, String> headerParams = new HashMap<>();
                 headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED_ID, dataModels.get(i).getId());
                 headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
-                db.addData(db.TODAY_JOURNEY_PLAN_FLOOR_STOCK_INPUT, headerParams);
+                db.addData(db.TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED, headerParams);
             }
         }
     }
