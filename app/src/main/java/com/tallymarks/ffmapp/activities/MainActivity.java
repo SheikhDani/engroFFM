@@ -61,6 +61,15 @@ import com.tallymarks.ffmapp.models.assignedsalespoint.AssignedSalesPointOutput;
 import com.tallymarks.ffmapp.models.getallcustomersplanoutput.GetAllCustomersOutput;
 import com.tallymarks.ffmapp.models.listofallcrops.ListofallCropsOutput;
 import com.tallymarks.ffmapp.models.outletstatusesoutput.OutletStatusOutput;
+import com.tallymarks.ffmapp.models.todayjourneyplaninput.Commitment;
+import com.tallymarks.ffmapp.models.todayjourneyplaninput.Invoice;
+import com.tallymarks.ffmapp.models.todayjourneyplaninput.MarketIntel;
+import com.tallymarks.ffmapp.models.todayjourneyplaninput.Order;
+import com.tallymarks.ffmapp.models.todayjourneyplaninput.PreviousStock;
+import com.tallymarks.ffmapp.models.todayjourneyplaninput.PreviousStockSnapshot;
+import com.tallymarks.ffmapp.models.todayjourneyplaninput.StockSnapshot;
+import com.tallymarks.ffmapp.models.todayjourneyplaninput.StockSold__1;
+import com.tallymarks.ffmapp.models.todayjourneyplaninput.TodayCustomerPostInput;
 import com.tallymarks.ffmapp.tasks.GetAllProductBrandByCategory;
 import com.tallymarks.ffmapp.tasks.GetAssignedSalesPoint;
 import com.tallymarks.ffmapp.tasks.GetCompanHeldBrandBasicList;
@@ -87,7 +96,9 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -108,12 +119,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SharedPrefferenceHelper sharedPrefferenceHelper;
     List<MenuModel> headerList = new ArrayList<>();
     HashMap<MenuModel, List<MenuModel>> childList = new HashMap<>();
-    TextView txt_farmer_Demo, txt_soil_logs, txt_logout;
+    TextView txt_farmer_Demo, txt_soil_logs, txt_logout, txt_post_data;
     ImageView headerImage;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
@@ -122,15 +133,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // prepareMenuData();
         // populateExpandableList();
     }
-    private void initView()
 
-    {
+    private void initView() {
         tvTopHeader = findViewById(R.id.tv_dashboard);
         iv_Menu = findViewById(R.id.iv_drawer);
         txt_farmer_Demo = findViewById(R.id.produc_demo);
         txt_soil_logs = findViewById(R.id.soil_logs);
         headerImage = findViewById(R.id.profile_image);
         txt_logout = findViewById(R.id.logout);
+        txt_post_data = findViewById(R.id.txt_post);
         iv_Menu.setVisibility(View.VISIBLE);
         iv_filter = findViewById(R.id.iv_notification);
         iv_filter.setVisibility(View.VISIBLE);
@@ -146,6 +157,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View view) {
                 Intent farmer = new Intent(MainActivity.this, FarmerDemoActivity.class);
                 startActivity(farmer);
+            }
+        });
+        txt_post_data.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new PostSyncCustomer().execute();
             }
         });
         txt_logout.setOnClickListener(new View.OnClickListener() {
@@ -180,12 +197,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         requestMultiplePermissions();
         checkStorageCompanyHeldBrand();
-       checkStorageCrops();
+        checkStorageCrops();
         checkStorageFertTypes();
-       checkLoadTodayCustomerJourneyPlan();
-      checkProductBrandGrouopByCategory();
-      checkStorageDepth();
-
+        checkLoadTodayCustomerJourneyPlan();
+        checkProductBrandGrouopByCategory();
+        checkStorageDepth();
 
 
         //new GetOutletStatus(MainActivity.this).execute();
@@ -264,30 +280,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         return false;
     }
-public void checkStorageCompanyHeldBrand()
-{
 
-    HashMap<String, String> map = new HashMap<>();
+    public void checkStorageCompanyHeldBrand() {
+
+        HashMap<String, String> map = new HashMap<>();
 
 
-    map.put(db.KEY_ENGRO_BRANCH_ID, "");
-    //map.put(db.KEY_IS_VALID_USER, "");
-    HashMap<String, String> filters = new HashMap<>();
-    Cursor cursor = db.getData(db.ENGRO_BRANCH, map, filters);
-    if (cursor.getCount() > 0) {
-        cursor.moveToFirst();
-        do {
+        map.put(db.KEY_ENGRO_BRANCH_ID, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        Cursor cursor = db.getData(db.ENGRO_BRANCH, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+            }
+            while (cursor.moveToNext());
+        } else {
+            new GetCompanHeldBrandBasicList(MainActivity.this).execute();
         }
-        while (cursor.moveToNext());
-    } else {
-        new GetCompanHeldBrandBasicList(MainActivity.this).execute();
+
+
     }
 
-
-}
-
-    public void checkStorageCrops()
-    {
+    public void checkStorageCrops() {
 
         HashMap<String, String> map = new HashMap<>();
 
@@ -310,8 +325,11 @@ public void checkStorageCompanyHeldBrand()
 
     }
 
-    public void checkStorageDepth()
-    {
+    public void postTodayCustomerJourneyPlan() {
+
+    }
+
+    public void checkStorageDepth() {
 
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_SOIL_ID, "");
@@ -331,8 +349,8 @@ public void checkStorageCompanyHeldBrand()
 
 
     }
-    public void checkProductBrandGrouopByCategory()
-    {
+
+    public void checkProductBrandGrouopByCategory() {
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_PRODUCT_BRAND_CATEOGRY_NAME, "");
         //map.put(db.KEY_IS_VALID_USER, "");
@@ -350,8 +368,8 @@ public void checkStorageCompanyHeldBrand()
 
 
     }
-    public void checkStorageFertTypes()
-    {
+
+    public void checkStorageFertTypes() {
 
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_FERT_ID, "");
@@ -372,8 +390,7 @@ public void checkStorageCompanyHeldBrand()
 
     }
 
-    public void checkLoadTodayCustomerJourneyPlan()
-    {
+    public void checkLoadTodayCustomerJourneyPlan() {
 
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
@@ -421,12 +438,6 @@ public void checkStorageCompanyHeldBrand()
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
-
-
-
-
-
-
 
 
     //    private void prepareMenuData() {
@@ -699,4 +710,432 @@ public void checkStorageCompanyHeldBrand()
 
     }
 
+    private class PostSyncCustomer extends AsyncTask<String, Void, Void> {
+
+        String response = null;
+        String status = "";
+        String message = "";
+        ProgressDialog pDialog;
+        String jsonObject = "";
+        private HttpHandler httpHandler;
+        String customerId = "";
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(MainActivity.this);
+            pDialog.setMessage(getResources().getString(R.string.loading));
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        @Override
+        protected Void doInBackground(String... Url) {
+
+            System.out.println("Post Outlet URl" + Constants.POST_TODAY_CUSTOMER_JOURNEY_PLAN);
+            ArrayList<TodayCustomerPostInput> inputCollection = new ArrayList<>();
+            Gson gson = new Gson();
+            HashMap<String, String> headerParams = new HashMap<>();
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CODE, "");
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME, "");
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE, "");
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE, "");
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID, "");
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID, "");
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME, "");
+            HashMap<String, String> filter = new HashMap<>();
+            filter.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Visited");
+            Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN, headerParams, filter);
+            if (cursor2.getCount() > 0) {
+                cursor2.moveToFirst();
+                do {
+                    TodayCustomerPostInput inputParameters = new TodayCustomerPostInput();
+                    inputParameters.setCustomerCode(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_CODE)));
+                    inputParameters.setCustomerId(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_ID)));
+                    inputParameters.setCustomerName("" + Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME))));
+                    inputParameters.setLatitude(Double.parseDouble(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE))));
+                    inputParameters.setLongtitude(Double.parseDouble(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE))));
+                    inputParameters.setJourneyPlanId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID))));
+                    inputParameters.setDayId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID))));
+                    inputParameters.setSalePointName("" + Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME))));
+                    customerId = cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_ID));
+                    LoadOrderforPosting(inputParameters, customerId);
+                    LoadPreviousSnapShotforPosting(inputParameters, customerId);
+                    loadFloorStockforPosting(inputParameters, customerId);
+                    loadStartActviiyResult(inputParameters, customerId);
+                    loadLocationlast(inputParameters, customerId);
+                    loadFloorStockSold(inputParameters, customerId);
+                    loadMarketIntel(inputParameters, customerId);
+                    loadCommitments(inputParameters, customerId);
+                    loadProductDicussed(inputParameters, customerId);
+                    inputCollection.add(inputParameters);
+
+                }
+                while (cursor2.moveToNext());
+                httpHandler = new HttpHandler();
+                HashMap<String, String> headerParams2 = new HashMap<>();
+                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                HashMap<String, String> bodyParams = new HashMap<>();
+                String output = gson.toJson(inputCollection);
+                //output = gson.toJson(inputParameters, SaveWorkInput.class);
+                try {
+                    response = httpHandler.httpPost(Constants.POST_TODAY_CUSTOMER_JOURNEY_PLAN, headerParams2, bodyParams, output);
+                    if (response != null) {
+                        try {
+                            JSONObject jsonObj = new JSONObject(response);
+                            status = String.valueOf(jsonObj.getString("success"));
+                            message = String.valueOf(jsonObj.getString("message"));
+                            if (status.equals("true")) {
+                                // updateOutletStatus();
+                                // updateOutletStatusById(Helpers.clean(JourneyPlanActivity.selectedOutletId));
+                                // Helpers.displayMessage(MainActivity.this, true, message);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void args) {
+            pDialog.dismiss();
+            if (status.equals("true")) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                alertDialogBuilder.setTitle(R.string.alert)
+                        .setMessage("Data Posted Successfully")
+                        .setCancelable(false)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                //new PostSyncOutlet().execute();
+                            }
+                        });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            }
+
+        }
+    }
+
+
+    private void LoadPreviousSnapShotforPosting(TodayCustomerPostInput inputParameters, String customerid) {
+        int position;
+        String categoryname = "";
+        ArrayList<PreviousStockSnapshot> previoussnapshotList = new ArrayList<>();
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                PreviousStockSnapshot previousnapshot = new PreviousStockSnapshot();
+                categoryname = cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY));
+                previousnapshot.setCategory("" + Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY))));
+                previoussnapshotList.add(previousnapshot);
+                position = cursor2.getPosition();
+                previoussnapshotList.get(position).setPreviousStock(loadPreviousStockforPosting(categoryname));
+                inputParameters.setPreviousStockSnapshot(previoussnapshotList);
+            }
+            while (cursor2.moveToNext());
+        }
+    }
+
+    private void LoadOrderforPosting(TodayCustomerPostInput inputParameters, String customerid) {
+        String orderid = "";
+        int position;
+        ArrayList<Order> orders = new ArrayList<>();
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_BRAND_NAME, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_NUMBER, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_ID, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_DATE, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_QUANTITY, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_ORDERS, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                Order order = new Order();
+                orderid = cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_ID));
+                order.setId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_ID))));
+                order.setOrderNumber(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_NUMBER)));
+                order.setOrderDate(Long.parseLong(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_DATE))));
+                order.setOrderQuantity(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_QUANTITY))));
+                order.setBrandName("" + Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_BRAND_NAME))));
+                orders.add(order);
+                position = cursor2.getPosition();
+                orders.get(position).setInvoices(loadInvociesforPosting(orderid));
+                inputParameters.setOrders(orders);
+
+
+            }
+            while (cursor2.moveToNext());
+        }
+    }
+
+    private ArrayList<PreviousStock> loadPreviousStockforPosting(String categoryname) {
+        HashMap<String, String> map = new HashMap<>();
+
+        ArrayList<PreviousStock> stockList = new ArrayList<>();
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_NAME, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_COMPANYHELD, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_VISIT_DATE, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_ID, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_QUANTITY, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY, categoryname);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_PREVIOUS_STOCK, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                PreviousStock stock = new PreviousStock();
+                stock.setCompanyHeld(Boolean.parseBoolean(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_COMPANYHELD))));
+                stock.setId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_ID))));
+                stock.setName("" + Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_NAME))));
+                stock.setQuantity(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_QUANTITY))));
+                stock.setVisitDate(Long.parseLong(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_VISIT_DATE))));
+                stockList.add(stock);
+            }
+            while (cursor2.moveToNext());
+        }
+        return stockList;
+    }
+
+    private ArrayList<Invoice> loadInvociesforPosting(String orderid) {
+        HashMap<String, String> map = new HashMap<>();
+        ArrayList<Invoice> invoiceList = new ArrayList<>();
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_INVOCIE_RATE, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_AVAILABLE_QUANITY, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_DISPATCH_DATE, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_DISPATCH_QUANTITY, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_ORDER_ID, orderid);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_ORDERS_INVOICES, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                Invoice invoice = new Invoice();
+                invoice.setInvoiceNumber(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER)));
+                invoice.setDispatchDate(Long.parseLong(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_DISPATCH_DATE))));
+                invoice.setDispatchQuantity(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_DISPATCH_QUANTITY))));
+                invoice.setAvailableQuantity(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_AVAILABLE_QUANITY))));
+                invoice.setInvoiceRate(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_INVOCIE_RATE)));
+                invoiceList.add(invoice);
+            }
+            while (cursor2.moveToNext());
+        }
+        return invoiceList;
+    }
+
+    private void loadFloorStockforPosting(TodayCustomerPostInput inputParameters, String customerid) {
+        HashMap<String, String> map = new HashMap<>();
+
+        ArrayList<StockSnapshot> floorstockList = new ArrayList<>();
+        map.put(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDID, "");
+        map.put(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_FLOOR_STOCK_INPUT, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                StockSnapshot stock = new StockSnapshot();
+                stock.setBrandId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDID))));
+                Log.e("Quanity", String.valueOf(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY))));
+                if (cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY)) != null && !cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY)).equals("")) {
+                    stock.setQuantity(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY))));
+                } else {
+                    stock.setQuantity(0);
+                }
+                floorstockList.add(stock);
+                inputParameters.setStockSnapshot(floorstockList);
+            }
+            while (cursor2.moveToNext());
+        }
+
+    }
+
+    private void loadFloorStockSold(TodayCustomerPostInput inputParameters, String customerid) {
+        HashMap<String, String> map = new HashMap<>();
+
+        ArrayList<StockSold__1> stocksoldList = new ArrayList<>();
+        map.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_QUANITYSOLD, "");
+        map.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_NETSELLINGPRICE, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_NUMBER, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_BRAND_NAME, "");
+        map.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_SAMEINVOCIEE, "");
+        map.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_OLD, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                StockSold__1 stock = new StockSold__1();
+                stock.setQuantitySold(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_QUANITYSOLD)));
+                stock.setNetSellingPrice(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_NETSELLINGPRICE)));
+                stock.setOrderNumber(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_NUMBER)));
+                stock.setInvoiceNumber(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER)));
+                stock.setProductName("" + Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_BRAND_NAME))));
+                if (cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_SAMEINVOCIEE)).equals("1")) {
+                    stock.setSameInvoice(true);
+                } else {
+                    stock.setSameInvoice(false);
+                }
+                if (cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_OLD)).equals("1")) {
+                    stock.setOld(true);
+                } else {
+                    stock.setOld(false);
+                }
+
+
+                stocksoldList.add(stock);
+                inputParameters.setStockSold(stocksoldList);
+            }
+            while (cursor2.moveToNext());
+        }
+
+    }
+
+    private void loadMarketIntel(TodayCustomerPostInput inputParameters, String customerid) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTEL_FORWARD, "");
+        map.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTETL_COMMENT, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_MARKET_INTEL, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                MarketIntel marketIntel = new MarketIntel();
+                marketIntel.setComments(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTETL_COMMENT)));
+                if (cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTEL_FORWARD)).equals("1")) {
+                    marketIntel.setDoForward(true);
+                } else {
+                    marketIntel.setDoForward(false);
+                }
+
+                inputParameters.setMarketIntel(marketIntel);
+            }
+            while (cursor2.moveToNext());
+        }
+
+    }
+
+    private void loadCommitments(TodayCustomerPostInput inputParameters, String customerid) {
+        HashMap<String, String> map = new HashMap<>();
+
+        ArrayList<Commitment> commitmentList = new ArrayList<>();
+        map.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_CONFIRMED, "");
+        map.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_DELIVERY_DATE, "");
+        map.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_QUANITY, "");
+        map.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_RAND_ID, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_COMMITMENT_RECEIVED, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                Commitment commitment = new Commitment();
+                commitment.setBrandId(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_RAND_ID)));
+                commitment.setQuantity(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_QUANITY)));
+                commitment.setDeliveryDate(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_DELIVERY_DATE)));
+                if (cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_CONFIRMED)).equals("1")) {
+                    commitment.setConfirmed(true);
+                } else {
+                    commitment.setConfirmed(false);
+                }
+                commitmentList.add(commitment);
+                inputParameters.setCommitments(commitmentList);
+            }
+            while (cursor2.moveToNext());
+        }
+
+    }
+
+    private void loadProductDicussed(TodayCustomerPostInput inputParameters, String customerid) {
+        HashMap<String, String> map = new HashMap<>();
+
+        ArrayList<Integer> dicussedList = new ArrayList<>();
+        map.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED_ID, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                dicussedList.add(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED_ID))));
+                inputParameters.setProductsDiscussed(dicussedList);
+            }
+            while (cursor2.moveToNext());
+        }
+
+    }
+
+    private void loadLocationlast(TodayCustomerPostInput inputParameters, String customerid) {
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LATITUDE, "");
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LONGITUDE, "");
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_TIMESTAMP, "");
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_DISTANCE, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_POST_DATA, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                inputParameters.setCheckOutLatitude(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LATITUDE)));
+                inputParameters.setCheckOutLongitude(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LONGITUDE)));
+                inputParameters.setCheckOutTimeStamp(Long.parseLong(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_TIMESTAMP))));
+                inputParameters.setDistance(Double.parseDouble(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_DISTANCE))));
+            }
+            while (cursor2.moveToNext());
+        }
+
+    }
+
+    private void loadStartActviiyResult(TodayCustomerPostInput inputParameters, String customerid) {
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_TIME, "");
+        map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS, "");
+        map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_OBjECTIVE, "");
+        map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE, "");
+        map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_START_ACTIVITY, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                inputParameters.setCheckInLatitude(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE)));
+                inputParameters.setCheckInLongitude(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE)));
+                inputParameters.setCheckInTimeStamp(Long.parseLong(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_TIME))));
+                inputParameters.setStatus(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS))));
+                inputParameters.setVisitObjective("" + Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_OBjECTIVE))));
+                inputParameters.setOutletStatusId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS))));
+
+            }
+            while (cursor2.moveToNext());
+        }
+
+    }
 }

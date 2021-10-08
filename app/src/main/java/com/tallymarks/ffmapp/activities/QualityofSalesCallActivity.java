@@ -234,6 +234,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        int totalb = 0;
                         gps = new GpsTracker(QualityofSalesCallActivity.this);
                         if (gps.canGetLocation()) {
                             if (ActivityCompat.checkSelfPermission(QualityofSalesCallActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(QualityofSalesCallActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -241,14 +242,21 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
                             }
                             checkoutlat = gps.getLatitude();
                             checkoutlng = gps.getLongitude();
+                            if(checkoutlat>0 && checkoutlng>0) {
                             float distance = getMeterFromLatLong(Float.parseFloat(String.valueOf(checkoutlat)), Float.parseFloat(String.valueOf(checkoutlng)), Float.parseFloat(checkinlat), Float.parseFloat(checkinlng));
                             float totaldistance = distance / 1000;
-                            int totalb = (int) Math.round(totaldistance);
+                            totalb = (int) Math.round(totaldistance);
+                            }
+                            totalb = 0;
                             addProductDiscussed();
                             addCommitment();
                             addCheckoutLocation(totalb);
+                            updateOutletStatus("Visited");
+                            Toast.makeText(QualityofSalesCallActivity.this, "Data Saved Successfully", Toast.LENGTH_SHORT).show();
                             //addMarketIntel();
                             dialog.cancel();
+                            Intent shift = new Intent(QualityofSalesCallActivity.this,VisitCustomerActivity.class);
+                            startActivity(shift);
                         } else {
                             DialougeManager.gpsNotEnabledPopup(QualityofSalesCallActivity.this);
                         }
@@ -264,6 +272,13 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
 
+    }
+    private void updateOutletStatus(String status) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put(db.KEY_TODAY_JOURNEY_IS_VISITED, status);
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+        db.updateData(db.TODAY_JOURNEY_PLAN, params, filter);
     }
 
     private void openCommitment() {

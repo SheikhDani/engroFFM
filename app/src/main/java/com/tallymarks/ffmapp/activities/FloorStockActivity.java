@@ -1,9 +1,13 @@
 package com.tallymarks.ffmapp.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -12,8 +16,10 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.CustomerSnapShotAdapter;
 import com.tallymarks.ffmapp.adapters.FloorStockAdapter;
@@ -23,10 +29,16 @@ import com.tallymarks.ffmapp.models.CustomerSnapShot;
 import com.tallymarks.ffmapp.models.FloorStockChild;
 import com.tallymarks.ffmapp.models.FloorStockParent;
 import com.tallymarks.ffmapp.models.TodayPlan;
+import com.tallymarks.ffmapp.models.loginoutput.LoginOutput;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.Helpers;
+import com.tallymarks.ffmapp.utils.HttpHandler;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 
@@ -109,19 +121,21 @@ public class FloorStockActivity extends AppCompatActivity {
     }
 
     private void getFloorStockCategoryDataLocally() {
-
+//ArrayList<String> categoryNameArray = new ArrayList<>();
         String categoryName = "";
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_PRODUCT_BRAND_CATEOGRY_NAME, "");
 
         //map.put(db.KEY_IS_VALID_USER, "");
         HashMap<String, String> filters = new HashMap<>();
+
         Cursor cursor = db.getData(db.PRODUCT_BRANDS_CATEGORY, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             do {
                 count = 0;
                 categoryName = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_PRODUCT_BRAND_CATEOGRY_NAME)));
+                //categoryNameArray.add(categoryName);
                 FloorStockParent floor = new FloorStockParent(categoryName);
                 getFloorStockProductsLocally(categoryName, floor);
                 floorStock.add(floor);
@@ -129,8 +143,13 @@ public class FloorStockActivity extends AppCompatActivity {
             }
             while (cursor.moveToNext());
 
-
         }
+//        for(int i=0 ;i<categoryNameArray.size();i++)
+//        {
+//            getFloorStockProductsLocally(categoryNameArray.get(i), floorStock.get(i));
+//
+//        }
+
 
     }
 
@@ -190,9 +209,7 @@ public class FloorStockActivity extends AppCompatActivity {
             HashMap<String, String> headerParams = new HashMap<>();
             headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDID, floorStockChild.get(i).getProductID());
             headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDNAME, floorStockChild.get(i).getProductname());
-
             headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY, floorStockChild.get(i).getProductinput());
-
             headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
             db.addData(db.TODAY_JOURNEY_PLAN_FLOOR_STOCK_INPUT, headerParams);
         }
@@ -307,5 +324,6 @@ public class FloorStockActivity extends AppCompatActivity {
 
 //        return allTeams;
     }
+
 
 }

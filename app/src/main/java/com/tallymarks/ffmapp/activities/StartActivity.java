@@ -281,7 +281,7 @@ public class StartActivity extends AppCompatActivity {
         headerParams.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_OBJECTIVE_STATUS, shelper.getString(Constants.ACTIVITY_OBJECTIVE));
         headerParams.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS, shelper.getString(Constants.ACTIVITY_STATUS));
         headerParams.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_OBjECTIVE, shelper.getString(Constants.ACTIVITY_OBJECTIVE_NAME));
-        headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CODE, shelper.getString(Constants.CUSTOMER_CODE));
+        headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, shelper.getString(Constants.CUSTOMER_CODE));
         headerParams.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE, String.valueOf(checkinlat));
         headerParams.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE, String.valueOf(checkinlng));
         HashMap<String, String> filter = new HashMap<>();
