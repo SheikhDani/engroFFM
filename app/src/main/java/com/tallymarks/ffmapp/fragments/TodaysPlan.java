@@ -285,54 +285,60 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
         final TodayPlan plan = planList.get(position);
         // Toast.makeText(getContext(), "" + planList.get(position).getTitle(), Toast.LENGTH_SHORT).show();
         if (activity.equals("customers")) {
-            gps = new GpsTracker(getActivity());
-            if (gps.canGetLocation()) {
-                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                currentlat = String.valueOf(gps.getLatitude());
-                currentlng = String.valueOf(gps.getLongitude());
-                float distance = getMeterFromLatLong(Float.parseFloat(currentlat), Float.parseFloat(currentlng), Float.parseFloat(plan.getLatitude()), Float.parseFloat(plan.getLongitude()));
-                float totaldistance = distance / 1000;
-                String radius = "50";
-                int totalmeters = (int) Math.round(distance);
-                int totalb = (int) Math.round(totaldistance);
-                int c = (int) Math.round(distance);
-                boolean isWithinradius = c <= Integer.parseInt(radius) + 50;
-                if (isWithinradius) {
-                    Intent i = new Intent(getActivity(), StartActivity.class);
-                    startActivity(i);
-                } else {
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-                    alertDialogBuilder
-                            .setMessage("You are " + totalb + " Km" + "(" + totalmeters + " Meters" + ")" + " away from the shop. ")
-                            .setCancelable(false)
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    sHelper.setString(Constants.CUSTOMER_ID,plan.getCustomerID());
-                                    sHelper.setString(Constants.CUSTOMER_CODE,plan.getCustomercode());
-                                    sHelper.setString(Constants.CUSTOMER_NAME,plan.getTitle());
-                                    sHelper.setString(Constants.CUSTOMER_LAT,plan.getLatitude());
-                                    sHelper.setString(Constants.CUSTOMER_LNG,plan.getLongitude());
-                                    sHelper.setString(Constants.CUSTOMER_DAY_ID,plan.getCustomerDayID());
-                                    sHelper.setString(Constants.CUSTOMER_JOURNEYPLAN_ID,plan.getCustomerJourneyPlanID());
-                                    sHelper.setString(Constants.CUSTOMER_SALES_POINT_NAME,plan.getSalespoint());
-                                    Intent i = new Intent(getActivity(), StartActivity.class);
-                                    startActivity(i);
-                                    //Toast.makeText(ShopStatusActivity.this, "You are "+totalb+" Km away from the shop ", Toast.LENGTH_SHORT).show();
+            if(planList.get(position).getMemebrship().equals("Not Visited")) {
+                gps = new GpsTracker(getActivity());
+                if (gps.canGetLocation()) {
+                    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    currentlat = String.valueOf(gps.getLatitude());
+                    currentlng = String.valueOf(gps.getLongitude());
+                    float distance = getMeterFromLatLong(Float.parseFloat(currentlat), Float.parseFloat(currentlng), Float.parseFloat(plan.getLatitude()), Float.parseFloat(plan.getLongitude()));
+                    float totaldistance = distance / 1000;
+                    String radius = "50";
+                    int totalmeters = (int) Math.round(distance);
+                    int totalb = (int) Math.round(totaldistance);
+                    int c = (int) Math.round(distance);
+                    boolean isWithinradius = c <= Integer.parseInt(radius) + 50;
+                    if (isWithinradius) {
+                        Intent i = new Intent(getActivity(), StartActivity.class);
+                        startActivity(i);
+                    } else {
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                        alertDialogBuilder
+                                .setMessage("You are " + totalb + " Km" + "(" + totalmeters + " Meters" + ")" + " away from the shop. ")
+                                .setCancelable(false)
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        sHelper.setString(Constants.CUSTOMER_ID, plan.getCustomerID());
+                                        sHelper.setString(Constants.CUSTOMER_CODE, plan.getCustomercode());
+                                        sHelper.setString(Constants.CUSTOMER_NAME, plan.getTitle());
+                                        sHelper.setString(Constants.CUSTOMER_LAT, plan.getLatitude());
+                                        sHelper.setString(Constants.CUSTOMER_LNG, plan.getLongitude());
+                                        sHelper.setString(Constants.CUSTOMER_DAY_ID, plan.getCustomerDayID());
+                                        sHelper.setString(Constants.CUSTOMER_JOURNEYPLAN_ID, plan.getCustomerJourneyPlanID());
+                                        sHelper.setString(Constants.CUSTOMER_SALES_POINT_NAME, plan.getSalespoint());
+                                        Intent i = new Intent(getActivity(), StartActivity.class);
+                                        startActivity(i);
+                                        //Toast.makeText(ShopStatusActivity.this, "You are "+totalb+" Km away from the shop ", Toast.LENGTH_SHORT).show();
+                                    }
+                                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
                                 }
-                            }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            }
-                    );
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-                    alertDialog.show();
+                        );
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+                        alertDialog.show();
 
+                    }
                 }
+            }
+            else
+            {
+                Toast.makeText(getActivity(), "You Already Visited That Customer", Toast.LENGTH_SHORT).show();
             }
         }
         else {

@@ -78,7 +78,7 @@ public class GridAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.card_items, null);
             viewHolder = new ViewHolder();
             viewHolder.txt_product = (TextView) convertView.findViewById(R.id.textView);
-            viewHolder.textView_quanity = (EditText)convertView.findViewById(R.id.txt_quanity);
+            viewHolder.textView_quanity = convertView.findViewById(R.id.txt_quanity);
             convertView.setTag(viewHolder);
 
         }
@@ -92,34 +92,43 @@ public class GridAdapter extends BaseAdapter {
 //        final TextView textView_quanity = (TextView) convertView.findViewById(R.id.txt_quanity);
         viewHolder.txt_product.setText(e.getProductname());
         viewHolder.textView_quanity.setText(e.getProductinput());
-
-       // LoadFloorStock();
-        viewHolder.textView_quanity.addTextChangedListener(new TextWatcher() {
+        viewHolder.textView_quanity.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-                    e.setProductinput(viewHolder.textView_quanity.getText().toString());
-//                if(!e.getProductinput().equals("")) {
-//                    if (isUnpostedDataExist(e.getProductID())) {
-//                        updateFloorStock(e.getProductID(), e.getProductinput());
-//                    } else {
-//                        addFloorStock(position);
-//                    }
-//                }
-
-
+            public void onClick(View view) {
+                openQuanityDialouge(viewHolder.textView_quanity,e);
+                sHelper.setString(Constants.SCROLL_POSITION, String.valueOf(position));
             }
         });
+
+       // LoadFloorStock();
+//        viewHolder.textView_quanity.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//
+//                    e.setProductinput(viewHolder.textView_quanity.getText().toString());
+//                sHelper.setString(Constants.SCROLL_POSITION, String.valueOf(position));
+//               // viewHolder.textView_quanity.requestFocusFromTouch();
+////                if(!e.getProductinput().equals("")) {
+////                    if (isUnpostedDataExist(e.getProductID())) {
+////                        updateFloorStock(e.getProductID(), e.getProductinput());
+////                    } else {
+////                        addFloorStock(position);
+////                    }
+////                }
+//
+//
+//            }
+//        });
 //        viewHolder.textView_quanity.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -141,7 +150,8 @@ public class GridAdapter extends BaseAdapter {
     }
     static class ViewHolder
     {
-        TextView txt_product ,textView_quanity ;
+        TextView txt_product ;
+        TextView textView_quanity;
     }
     public void loadFloorStock(int position,String brandid) {
         String brandquantity;
@@ -232,33 +242,33 @@ public class GridAdapter extends BaseAdapter {
 //    }
 
 
-//    private void openQuanityDialouge(TextView txt,FloorStockChild e) {
-//        LayoutInflater li = LayoutInflater.from(mContext);
-//        View promptsView = li.inflate(R.layout.dialouge_edittetext_input, null);
-//        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
-//        alertDialogBuilder.setView(promptsView);
-//        final AlertDialog alertDialog = alertDialogBuilder.create();
-//        EditText etInput = promptsView.findViewById(R.id.et_input);
-//        //ImageView ivClose = promptsView.findViewById(R.id.iv_close);
-//
-//        Button btnYes = promptsView.findViewById(R.id.btn_add_quanityt);
-//        // ivClose.setVisibility(View.GONE);
-//
-//
-//        btnYes.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                alertDialog.dismiss();
-//                txt.setText(etInput.getText().toString());
-//                e.setProductinput(etInput.getText().toString());
-//
-//
-//            }
-//
-//
-//        });
-//        alertDialogBuilder.setCancelable(true);
-//        alertDialog.show();
-//    }
+    private void openQuanityDialouge(TextView txt,FloorStockChild e) {
+        LayoutInflater li = LayoutInflater.from(mContext);
+        View promptsView = li.inflate(R.layout.dialouge_edittetext_input, null);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+        alertDialogBuilder.setView(promptsView);
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        EditText etInput = promptsView.findViewById(R.id.et_input);
+        //ImageView ivClose = promptsView.findViewById(R.id.iv_close);
+
+        Button btnYes = promptsView.findViewById(R.id.btn_add_quanityt);
+        // ivClose.setVisibility(View.GONE);
+
+
+        btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+                txt.setText(etInput.getText().toString());
+                e.setProductinput(etInput.getText().toString());
+
+
+            }
+
+
+        });
+        alertDialogBuilder.setCancelable(true);
+        alertDialog.show();
+    }
 
 }

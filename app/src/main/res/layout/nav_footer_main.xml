@@ -61,6 +61,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
+                android:id="@+id/txt_post"
                 android:background="@color/yellow"
                 android:layout_marginBottom="@dimen/p4"
                 android:layout_marginRight="@dimen/p4"

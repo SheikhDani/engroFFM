@@ -5,7 +5,7 @@ public class Constants {
     public static String LOGIN_USERNAME = "";
     public static String LOGIN_PASSWORD = "";
     public static String LOGIN_GRANT_TYPE = "password";
-
+    public static final String SCROLL_POSITION = "scrollposition";
     public static final String ENVIRONMENT = "Development";
     public static final String DATE_FORMAT= "dd-MM-yyyy";
     public static final String GMT_TIME_FORMAT= "EE MMM dd HH:mm:ss zz yyy";
@@ -77,6 +77,7 @@ public class Constants {
     public static final String FFM_GET_LIST_OF_CUSTOMERS_FARMER_HIERARCHY=  FFM_BASE_URL + "/global/lookup/getCustomersInFarmerHierarchy";
     public static final String FFM_GET_LIST_OF_GETCOMPANYHELD_BRAND_BASICLIST=  FFM_BASE_URL + "/global/lookup/getCompanyHeldBrandsBasicList";
     public static final String FFM_GET_FARMER_TODAY_JOURNEY_PLAN=  FFM_BASE_URL + "/app/trans/getFarmersTodaysJourneyPlan";
+    public static final String POST_TODAY_CUSTOMER_JOURNEY_PLAN=  FFM_BASE_URL + "/app/trans/checkInJourneyPlan";
 
 
 
