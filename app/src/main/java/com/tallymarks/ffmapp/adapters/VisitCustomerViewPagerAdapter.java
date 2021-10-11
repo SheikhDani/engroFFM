@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.tallymarks.ffmapp.fragments.AllPlans;
 import com.tallymarks.ffmapp.fragments.FuturePlan;
 import com.tallymarks.ffmapp.fragments.PastPlan;
 import com.tallymarks.ffmapp.fragments.TodaysPlan;
@@ -24,9 +25,12 @@ public class VisitCustomerViewPagerAdapter extends FragmentPagerAdapter {
         if (position == 0) {
             fragment = TodaysPlan.newInstance(activity);
         } else if (position == 1) {
-            fragment = new FuturePlan();
+            fragment =  AllPlans.newInstance(activity);
         } else if (position == 2) {
            fragment = new PastPlan();
+        }
+        else if (position == 3) {
+            fragment = new FuturePlan();
         }
 
 
@@ -35,18 +39,22 @@ public class VisitCustomerViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
         String title = null;
         if (position == 0) {
-            title = "TODAY'S PLAN";
+            title = "TODAY PLANS";
+
         } else if (position == 1) {
-            title = "FUTURE PLAN";
+            title = "ALL PLANS";
         } else if (position == 2) {
             title = "PAST PLANS";
+        }
+        else if (position == 3) {
+            title = "FUTURE PLANS";
         }
         return title;
     }
