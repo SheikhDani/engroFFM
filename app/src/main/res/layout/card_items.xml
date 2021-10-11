@@ -29,11 +29,12 @@
                 android:textColor="@android:color/black"
                 android:textStyle="bold" />
 
-            <TextView
+            <EditText
                 android:id="@+id/txt_quanity"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textView"
+                android:inputType="textNoSuggestions"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/p10"
                 android:layout_marginLeft="@dimen/p10"

@@ -50,6 +50,7 @@ public class Constants {
 
     public static final String POST = "POST";
     public static final String CONTENT_TYPE_JSON ="application/json";
+    public static String FLOOR_STOCK_RELOAD_ADAPTER= "FloorStockReloadAdapter";
 
 
 
