@@ -19,7 +19,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private SQLiteDatabase db;
     /*Database Varaiables*/
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static final String TAG = "DBAdapter";
     private static final String DATABASE_NAME = "FFMApplicationDataBasev1";
     private Context mContext;
@@ -76,6 +76,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //Product Brand Category Table Fields
     public static final String KEY_PRODUCT_BRAND_CATEOGRY_NAME = "productbrandCateogry";
+    public static final String KEY_PRODUCT_BRAND_CATEOGRY_IMAGE_TYPE = "productbrandCateogryImageType";
+    public static final String KEY_PRODUCT_BRAND_CATEOGRY_IMAGE_BASE64 = "productbrandCateogryImagebase64";
 
     //MarketPrice Stock Sold Table Fields
     public static final String KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_QUANITYSOLD = "marketpriceStoclSoldQuanitySold";
@@ -154,6 +156,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE = "todayCustomerLatitude";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE = "todayCustomerLongitude";
     public static final String KEY_TODAY_JOURNEY_IS_VISITED= "isVisitedTodayCustomerJourneyPlan";
+    public static final String KEY_TODAY_JOURNEY_IS_POSTED= "isVisitedTodayCustomerJourneyPlanIsPosted";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID = "todayCustomerDayID";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID = "todayCustoemrJourneyID";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME = "todayCustoemrSalesPointName";
@@ -231,6 +234,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY + " TEXT" + ")";
 
         String TABLE_PRODUCT_BRAND_CATEGORY = "CREATE TABLE " + PRODUCT_BRANDS_CATEGORY + "("
+                + KEY_PRODUCT_BRAND_CATEOGRY_IMAGE_TYPE+ " TEXT,"
+                + KEY_PRODUCT_BRAND_CATEOGRY_IMAGE_BASE64+ " TEXT,"
                 + KEY_PRODUCT_BRAND_CATEOGRY_NAME + " TEXT" + ")";
 
         String TABLE_CROP_LIST = "CREATE TABLE " + CROPS_LIST+ "("
@@ -282,6 +287,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
                 + KEY_TODAY_JOURNEY_IS_VISITED+ " TEXT,"
+                + KEY_TODAY_JOURNEY_IS_POSTED+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_CODE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE+ " TEXT,"

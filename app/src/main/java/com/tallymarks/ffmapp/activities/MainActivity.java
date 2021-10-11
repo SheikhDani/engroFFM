@@ -162,7 +162,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         txt_post_data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new PostSyncCustomer().execute();
+                if (isUnpostedDataExist()) {
+                    if(isDataSaved()) {
+                        new PostSyncCustomer().execute();
+                    }
+                    else
+                    {
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                        alertDialogBuilder.setTitle(R.string.alert)
+                                .setMessage(R.string.postdataalert)
+                                .setCancelable(false)
+                                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+                        alertDialog.show();
+                    }
+                } else {
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                    alertDialogBuilder.setTitle(R.string.alert)
+                            .setMessage(R.string.postdataalert)
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+
+
+                }
             }
         });
         txt_logout.setOnClickListener(new View.OnClickListener() {
@@ -195,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 drawer.openDrawer(GravityCompat.END);
             }
         });
-        requestMultiplePermissions();
+       // requestMultiplePermissions();
         checkStorageCompanyHeldBrand();
         checkStorageCrops();
         checkStorageFertTypes();
@@ -325,8 +359,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    public void postTodayCustomerJourneyPlan() {
+    private boolean isUnpostedDataExist() {
 
+        boolean flag = false;
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                flag = true;
+            }
+            while (cursor.moveToNext());
+        } else {
+            flag = false;
+        }
+        return flag;
+    }
+
+    private boolean isDataSaved() {
+
+        boolean flag = false;
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Visited");
+        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                flag = true;
+            }
+            while (cursor.moveToNext());
+        } else {
+            flag = false;
+        }
+        return flag;
     }
 
     public void checkStorageDepth() {
@@ -353,6 +423,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void checkProductBrandGrouopByCategory() {
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_PRODUCT_BRAND_CATEOGRY_NAME, "");
+
         //map.put(db.KEY_IS_VALID_USER, "");
         HashMap<String, String> filters = new HashMap<>();
         Cursor cursor = db.getData(db.PRODUCT_BRANDS_CATEGORY, map, filters);
@@ -789,7 +860,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             status = String.valueOf(jsonObj.getString("success"));
                             message = String.valueOf(jsonObj.getString("message"));
                             if (status.equals("true")) {
-                                // updateOutletStatus();
+                                updateOutletStatus();
                                 // updateOutletStatusById(Helpers.clean(JourneyPlanActivity.selectedOutletId));
                                 // Helpers.displayMessage(MainActivity.this, true, message);
                             }
@@ -829,6 +900,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    private void updateOutletStatus() {
+        HashMap<String, String> params = new HashMap<>();
+        params.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "1");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+        db.updateData(db.TODAY_JOURNEY_PLAN, params, filter);
+    }
 
     private void LoadPreviousSnapShotforPosting(TodayCustomerPostInput inputParameters, String customerid) {
         int position;

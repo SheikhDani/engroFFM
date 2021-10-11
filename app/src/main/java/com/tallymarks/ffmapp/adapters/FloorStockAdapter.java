@@ -1,6 +1,9 @@
 package com.tallymarks.ffmapp.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,6 +22,7 @@ import com.tallymarks.ffmapp.models.CustomerSnapShot;
 import com.tallymarks.ffmapp.models.CustomerSnapShotParent;
 import com.tallymarks.ffmapp.models.FloorStockChild;
 import com.tallymarks.ffmapp.models.FloorStockParent;
+import com.tallymarks.ffmapp.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,9 +72,11 @@ public class FloorStockAdapter extends BaseExpandableListAdapter {
         GridAdapter gridadapter;
 
         if (t.getImageurl() != null && !t.getImageurl().equals("")) {
-            image.setImageResource(R.drawable.ic_launcher_foreground);
+           // image.setImageResource(c.getResources().getDrawable(R.drawable.ic_launcher_foreground));
+            image.setImageBitmap(convertString64ToImage(t.getImageurl()));
             image.setVisibility(View.VISIBLE);
             grid.setVisibility(View.VISIBLE);
+
             gridadapter = new GridAdapter(c, team.get(groupPos).getPlayers());
             grid.setAdapter(gridadapter);
             grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -163,5 +169,11 @@ public class FloorStockAdapter extends BaseExpandableListAdapter {
     public boolean isChildSelectable(int arg0, int arg1) {
         // TODO Auto-generated method stub
         return true;
+    }
+
+
+    private static Bitmap convertString64ToImage(String base64String) {
+        byte[] decodedString = Base64.decode(base64String, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 }

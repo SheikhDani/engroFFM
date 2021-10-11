@@ -69,7 +69,7 @@
     <string name="alert">Alert</string>
     <string name="clear_data_alert">Do you want to clear all application data. This would include all the saved projects and downloaded data.\nOnce deleted this action cannot be undone. Do you want to proceed?</string>
     <string name="enable">Enable</string>
-    <string name="postdataalert">There is no Outlet Data Available for Sync.</string>
+    <string name="postdataalert">There is no Customer Data Available for Posting.</string>
 
 
     <string-array name="tab_A">

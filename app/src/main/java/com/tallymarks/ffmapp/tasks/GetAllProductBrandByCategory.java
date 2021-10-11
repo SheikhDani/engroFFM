@@ -77,6 +77,8 @@ public class GetAllProductBrandByCategory extends AsyncTask<String, Void, Void> 
                     for (int i = 0; i < journeycode.size(); i++) {
                         HashMap<String, String> map = new HashMap<>();
                         map.put(db.KEY_PRODUCT_BRAND_CATEOGRY_NAME, journeycode.get(i).getCategory() == null || journeycode.get(i).getCategory().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getCategory());
+                        map.put(db.KEY_PRODUCT_BRAND_CATEOGRY_IMAGE_TYPE, journeycode.get(i).getEncodedArtWorkExt() == null || journeycode.get(i).getEncodedArtWorkExt().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getEncodedArtWorkExt());
+                        map.put(db.KEY_PRODUCT_BRAND_CATEOGRY_IMAGE_BASE64, journeycode.get(i).getEncodedArtWork() == null || journeycode.get(i).getEncodedArtWork().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getEncodedArtWork());
                             for (int j = 0; j < journeycode.get(i).getBrands().size(); j++) {
                                 HashMap<String, String> dbParams = new HashMap<>();
                                 dbParams.put(db.KEY_PRODUCT_BRAND_CATEOGRY_NAME, journeycode.get(i).getCategory() == null || journeycode.get(i).getCategory().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getCategory());
@@ -87,7 +89,7 @@ public class GetAllProductBrandByCategory extends AsyncTask<String, Void, Void> 
                                 db.addData(db.PRODUCT_BRANDS, dbParams);
 
                         }
-                        db.addData(db.PRODUCT_BRANDS_CATEGORY, map);
+                        db.addData2(db.PRODUCT_BRANDS_CATEGORY, map);
                     }
 
                 }

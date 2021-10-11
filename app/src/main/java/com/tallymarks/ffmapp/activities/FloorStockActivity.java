@@ -104,6 +104,7 @@ public class FloorStockActivity extends AppCompatActivity {
         //getData();
         FloorStockAdapter adapter = new FloorStockAdapter(this, floorStock, elv);
         elv.setAdapter(adapter);
+        Constants.FLOOR_STOCK_RELOAD_ADAPTER = "1";
 
 
         if(sHelper.getString(Constants.SCROLL_POSITION)!=null) {
@@ -148,8 +149,10 @@ public class FloorStockActivity extends AppCompatActivity {
     private void getFloorStockCategoryDataLocally() {
 //ArrayList<String> categoryNameArray = new ArrayList<>();
         String categoryName = "";
+        String categoryImage = "";
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_PRODUCT_BRAND_CATEOGRY_NAME, "");
+        map.put(db.KEY_PRODUCT_BRAND_CATEOGRY_IMAGE_BASE64, "");
 
         //map.put(db.KEY_IS_VALID_USER, "");
         HashMap<String, String> filters = new HashMap<>();
@@ -160,9 +163,10 @@ public class FloorStockActivity extends AppCompatActivity {
             do {
                 count = 0;
                 categoryName = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_PRODUCT_BRAND_CATEOGRY_NAME)));
+                categoryImage= cursor.getString(cursor.getColumnIndex(db.KEY_PRODUCT_BRAND_CATEOGRY_IMAGE_BASE64));
                 //categoryNameArray.add(categoryName);
                 FloorStockParent floor = new FloorStockParent(categoryName);
-                getFloorStockProductsLocally(categoryName, floor);
+                getFloorStockProductsLocally(categoryName, floor,categoryImage);
                 floorStock.add(floor);
 
             }
@@ -178,7 +182,7 @@ public class FloorStockActivity extends AppCompatActivity {
 
     }
 
-    private void getFloorStockProductsLocally(String categoryName, FloorStockParent parentFloor) {
+    private void getFloorStockProductsLocally(String categoryName, FloorStockParent parentFloor,String categoryImage) {
         String productID = "", productName = "";
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_PRODUCT_BRAND_NAME, "");
@@ -197,7 +201,7 @@ public class FloorStockActivity extends AppCompatActivity {
                 floorChild.setProductname(productName);
                 floorChild.setProductID(productID);
                 if (count == 1) {
-                    floorChild.setImageurl("Test");
+                    floorChild.setImageurl(categoryImage);
                 }
                 parentFloor.players.add(floorChild);
                 floorStockChild.add(floorChild);

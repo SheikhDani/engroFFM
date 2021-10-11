@@ -301,6 +301,14 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                     int c = (int) Math.round(distance);
                     boolean isWithinradius = c <= Integer.parseInt(radius) + 50;
                     if (isWithinradius) {
+                        sHelper.setString(Constants.CUSTOMER_ID, plan.getCustomerID());
+                        sHelper.setString(Constants.CUSTOMER_CODE, plan.getCustomercode());
+                        sHelper.setString(Constants.CUSTOMER_NAME, plan.getTitle());
+                        sHelper.setString(Constants.CUSTOMER_LAT, plan.getLatitude());
+                        sHelper.setString(Constants.CUSTOMER_LNG, plan.getLongitude());
+                        sHelper.setString(Constants.CUSTOMER_DAY_ID, plan.getCustomerDayID());
+                        sHelper.setString(Constants.CUSTOMER_JOURNEYPLAN_ID, plan.getCustomerJourneyPlanID());
+                        sHelper.setString(Constants.CUSTOMER_SALES_POINT_NAME, plan.getSalespoint());
                         Intent i = new Intent(getActivity(), StartActivity.class);
                         startActivity(i);
                     } else {
