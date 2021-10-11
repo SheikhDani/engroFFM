@@ -5,7 +5,7 @@ public class Constants {
     public static String LOGIN_USERNAME = "";
     public static String LOGIN_PASSWORD = "";
     public static String LOGIN_GRANT_TYPE = "password";
-
+    public static final String SCROLL_POSITION = "scrollposition";
     public static final String ENVIRONMENT = "Development";
     public static final String DATE_FORMAT= "dd-MM-yyyy";
     public static final String GMT_TIME_FORMAT= "EE MMM dd HH:mm:ss zz yyy";

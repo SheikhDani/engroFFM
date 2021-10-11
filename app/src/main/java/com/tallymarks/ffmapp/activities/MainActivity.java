@@ -421,7 +421,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        MainActivity.this.deleteDatabase("FFMAppDatabase");
+                        MainActivity.this.deleteDatabase("FFMApplicationDataBasev1");
                         sharedPrefferenceHelper.clearPreferenceStore();
                         Toast.makeText(MainActivity.this, "Clear Data Successfully", Toast.LENGTH_SHORT).show();
                         Intent logout = new Intent(MainActivity.this, LoginActivity.class);

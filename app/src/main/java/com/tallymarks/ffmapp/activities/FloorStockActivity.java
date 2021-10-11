@@ -8,12 +8,15 @@ import android.os.Build;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
@@ -52,6 +55,7 @@ public class FloorStockActivity extends AppCompatActivity {
     final ArrayList<FloorStockParent> floorStock = new ArrayList<FloorStockParent>();
     final ArrayList<FloorStockChild> floorStockChild = new ArrayList<FloorStockChild>();
     private int count = 0;
+    ScrollView scroll;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +73,7 @@ public class FloorStockActivity extends AppCompatActivity {
         btn_snap = findViewById(R.id.btn_prev_snap);
         btn_proceed = findViewById(R.id.btn_proceed);
         iv_back = findViewById(R.id.iv_back);
+        scroll = findViewById(R.id.scroll);
         db = new DatabaseHandler(FloorStockActivity.this);
         sHelper = new SharedPrefferenceHelper(FloorStockActivity.this);
         iv_back.setVisibility(View.VISIBLE);
@@ -82,6 +87,16 @@ public class FloorStockActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
+//        scroll.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+//        scroll.setFocusable(true);
+//        scroll.setFocusableInTouchMode(true);
+//        scroll.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                v.requestFocusFromTouch();
+//                return false;
+//            }
+//        });
         tvTopHeader.setVisibility(View.VISIBLE);
         tvTopHeader.setText("FLOOR STOCK");
         ExpandableListView elv = (ExpandableListView) findViewById(R.id.expandableListView);
@@ -89,6 +104,16 @@ public class FloorStockActivity extends AppCompatActivity {
         //getData();
         FloorStockAdapter adapter = new FloorStockAdapter(this, floorStock, elv);
         elv.setAdapter(adapter);
+
+
+        if(sHelper.getString(Constants.SCROLL_POSITION)!=null) {
+            if (sHelper.getString(Constants.SCROLL_POSITION) == "0") {
+
+            } else {
+                String pos = sHelper.getString(Constants.SCROLL_POSITION);
+                elv.setSelection(Integer.parseInt(pos));
+            }
+        }
         btn_snap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
