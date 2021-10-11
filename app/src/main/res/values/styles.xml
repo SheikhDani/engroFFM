@@ -23,8 +23,8 @@
     <style name="MyStyle" parent="Widget.Design.TabLayout">
         <item name="tabIndicatorColor">@color/green</item>
         <item name="tabIndicatorHeight">5dp</item>
-        <item name="tabPaddingStart">1dp</item>
-        <item name="tabPaddingEnd">1dp</item>
+        <item name="tabPaddingStart">10dp</item>
+        <item name="tabPaddingEnd">10dp</item>
     </style>
 
 </resources>

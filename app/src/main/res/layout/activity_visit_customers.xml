@@ -81,7 +81,7 @@
         android:layout_below="@+id/rel_field_sales"
         android:background="@color/white"
         app:tabGravity="fill"
-        app:tabMode="fixed"
+        app:tabMode="auto"
         app:tabSelectedTextColor="@color/green" />
 
     <androidx.viewpager.widget.ViewPager
