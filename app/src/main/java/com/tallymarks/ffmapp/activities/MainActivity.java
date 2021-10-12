@@ -234,6 +234,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkStorageCrops();
         checkStorageFertTypes();
         checkLoadTodayCustomerJourneyPlan();
+        checkLoadAllCustomerJourneyPlan();
         checkProductBrandGrouopByCategory();
         checkStorageDepth();
 
@@ -386,6 +387,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
         HashMap<String, String> filters = new HashMap<>();
         filters.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Visited");
+
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -398,6 +400,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         return flag;
     }
+
 
     public void checkStorageDepth() {
 
@@ -461,12 +464,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    public void checkLoadAllCustomerJourneyPlan() {
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE, "all");
+        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+
+            }
+            while (cursor.moveToNext());
+        } else {
+            new LoadCustomersAllJourneyPlan(MainActivity.this).execute();
+        }
+
+
+    }
+
     public void checkLoadTodayCustomerJourneyPlan() {
 
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
         //map.put(db.KEY_IS_VALID_USER, "");
         HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE, "today");
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();

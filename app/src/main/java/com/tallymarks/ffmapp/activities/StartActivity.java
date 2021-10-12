@@ -44,6 +44,7 @@ public class StartActivity extends AppCompatActivity {
     String objective = "";
     double checkinlat;
     double checkinlng;
+    String journeytype = "";
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +70,17 @@ public class StartActivity extends AppCompatActivity {
         tvInventory = findViewById(R.id.txt_inventory);
         tvMarketignIntelligence = findViewById(R.id.txt_market_intelligence);
         tvComplainhandling = findViewById(R.id.txt_complain);
+        if(shelper!=null)
+        {
+            if(shelper.getString(Constants.PLAN_TYPE).equals("today"))
+            {
+                journeytype = "today";
+            }
+
+            {
+                journeytype = "all";
+            }
+        }
         loadActivity();
 
 
@@ -243,6 +255,13 @@ public class StartActivity extends AppCompatActivity {
         headerParams.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS, shelper.getString(Constants.ACTIVITY_STATUS));
         headerParams.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_OBjECTIVE, shelper.getString(Constants.ACTIVITY_OBJECTIVE_NAME));
         headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, shelper.getString(Constants.CUSTOMER_ID));
+        if(journeytype=="today") {
+            headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, "today");
+        }
+        else
+        {
+            headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, "all");
+        }
         headerParams.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE, String.valueOf(checkinlat));
         headerParams.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE, String.valueOf(checkinlng));
         db.addData(db.TODAY_JOURNEY_PLAN_START_ACTIVITY, headerParams);
@@ -284,6 +303,13 @@ public class StartActivity extends AppCompatActivity {
         headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, shelper.getString(Constants.CUSTOMER_CODE));
         headerParams.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE, String.valueOf(checkinlat));
         headerParams.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE, String.valueOf(checkinlng));
+        if(journeytype=="today") {
+            headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, "today");
+        }
+        else
+        {
+            headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, "all");
+        }
         HashMap<String, String> filter = new HashMap<>();
         filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, shelper.getString(Constants.CUSTOMER_ID));
         db.updateData(db.TODAY_JOURNEY_PLAN_START_ACTIVITY, headerParams, filter);
@@ -295,6 +321,7 @@ public class StartActivity extends AppCompatActivity {
         map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_OBJECTIVE_STATUS, "");
         HashMap<String, String> filters = new HashMap<>();
         filters.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, shelper.getString(Constants.CUSTOMER_ID));
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE, journeytype);
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN_START_ACTIVITY, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -333,6 +360,7 @@ public class StartActivity extends AppCompatActivity {
         map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS, "");
         HashMap<String, String> filters = new HashMap<>();
         filters.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, shelper.getString(Constants.CUSTOMER_ID));
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE, journeytype);
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN_START_ACTIVITY, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();

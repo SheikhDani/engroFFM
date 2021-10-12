@@ -234,6 +234,7 @@ public class MarketPricesActivity extends AppCompatActivity {
             headerParams.put(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER, sHelper.getString(Constants.TODAY_PLAN_INVOICE_NUMBER));
             headerParams.put(db.KEY_TODAY_JOURNEY_ORDER_BRAND_NAME, sHelper.getString(Constants.TODAY_PLAN_INVOICE_PRODUCT_NAME));
             headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+            headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
             if(!previousInvoiceNumber.equals(""))
             {
                 if(previousInvoiceNumber.equals(sHelper.getString(Constants.TODAY_PLAN_INVOICE_NUMBER)))

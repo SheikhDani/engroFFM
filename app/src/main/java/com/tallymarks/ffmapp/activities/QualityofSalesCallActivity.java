@@ -181,6 +181,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
                 HashMap<String, String> headerParams = new HashMap<>();
                 headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED_ID, dataModels.get(i).getId());
                 headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+                headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
                 db.addData(db.TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED, headerParams);
             }
         }
@@ -190,6 +191,8 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         HashMap<String, String> headerParams = new HashMap<>();
         headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTEL_FORWARD, forward);
         headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTETL_COMMENT, review);
+        headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+        headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
         db.addData(db.TODAY_JOURNEY_PLAN_MARKET_INTEL,headerParams);
     }
     private void addCheckoutLocation(int distance)
@@ -199,6 +202,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LATITUDE, String.valueOf(checkoutlat));
         headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LONGITUDE, String.valueOf(checkoutlng));
         headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+        headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
         headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_TIMESTAMP,String.valueOf(time));
         headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_DISTANCE,String.valueOf(distance));
         db.addData(db.TODAY_JOURNEY_PLAN_POST_DATA,headerParams);
@@ -207,6 +211,8 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         for (int i = 0; i < arraylist.size(); i++) {
 
             HashMap<String, String> headerParams = new HashMap<>();
+            headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
             headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_CONFIRMED, arraylist.get(i).getConfirmed());
             headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_DELIVERY_DATE, arraylist.get(i).getTimeline());
             headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_QUANITY,arraylist.get(i).getQuantity());
@@ -278,6 +284,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         params.put(db.KEY_TODAY_JOURNEY_IS_VISITED, status);
         HashMap<String, String> filter = new HashMap<>();
         filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+        filter.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
         db.updateData(db.TODAY_JOURNEY_PLAN, params, filter);
     }
 
@@ -417,6 +424,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
           map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE, "");
           HashMap<String, String> filters = new HashMap<>();
           filters.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+          filters.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
           Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN_START_ACTIVITY, map, filters);
           if (cursor.getCount() > 0) {
               cursor.moveToFirst();

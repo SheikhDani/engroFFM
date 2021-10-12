@@ -21,6 +21,7 @@ public class Constants {
     public static final String ACTIVITY_OBJECTIVE_NAME = "activityObjectiveName";
     public static final String CUSTOMER_ID= "customerID";
     public static final String CUSTOMER_CODE = "customerCode";
+    public static final String PLAN_TYPE= "planType";
     public static final String CUSTOMER_NAME = "customerName";
     public static final String CUSTOMER_LAT= "customerLat";
     public static final String CUSTOMER_LNG = "customerLng";

@@ -130,6 +130,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
         map.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "");
         //map.put(db.KEY_IS_VALID_USER, "");
         HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE, "all");
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -156,7 +157,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                 plan.setCustomerID(customerID);
                 float distance = getMeterFromLatLong(Float.parseFloat(currentlat), Float.parseFloat(currentlng), Float.parseFloat(customerLat), Float.parseFloat(customerLng));
                 float totaldistance = distance / 1000;
-                String radius = "50";
+                String radius = "500";
                 int totalb = (int) Math.round(totaldistance);
                 int c = (int) Math.round(distance);
                 boolean isWithinradius = c <= Integer.parseInt(radius) + 50;
@@ -304,6 +305,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                         sHelper.setString(Constants.CUSTOMER_ID, plan.getCustomerID());
                         sHelper.setString(Constants.CUSTOMER_CODE, plan.getCustomercode());
                         sHelper.setString(Constants.CUSTOMER_NAME, plan.getTitle());
+                        sHelper.setString(Constants.PLAN_TYPE, "today");
                         sHelper.setString(Constants.CUSTOMER_LAT, plan.getLatitude());
                         sHelper.setString(Constants.CUSTOMER_LNG, plan.getLongitude());
                         sHelper.setString(Constants.CUSTOMER_DAY_ID, plan.getCustomerDayID());
@@ -321,6 +323,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                                     public void onClick(DialogInterface dialog, int which) {
                                         sHelper.setString(Constants.CUSTOMER_ID, plan.getCustomerID());
                                         sHelper.setString(Constants.CUSTOMER_CODE, plan.getCustomercode());
+                                        sHelper.setString(Constants.PLAN_TYPE, "today");
                                         sHelper.setString(Constants.CUSTOMER_NAME, plan.getTitle());
                                         sHelper.setString(Constants.CUSTOMER_LAT, plan.getLatitude());
                                         sHelper.setString(Constants.CUSTOMER_LNG, plan.getLongitude());

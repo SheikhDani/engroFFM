@@ -170,6 +170,7 @@ public class GridAdapter extends BaseAdapter {
         HashMap<String, String> filters = new HashMap<>();
         filters.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
         filters.put(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDID,brandid);
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN_FLOOR_STOCK_INPUT, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();

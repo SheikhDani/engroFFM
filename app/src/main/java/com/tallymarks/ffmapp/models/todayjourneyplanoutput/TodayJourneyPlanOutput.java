@@ -35,7 +35,7 @@ public class TodayJourneyPlanOutput {
     private String salePointName;
     @SerializedName("category")
     @Expose
-    private Object category;
+    private String category;
     @SerializedName("locationCode")
     @Expose
     private String locationCode;
@@ -115,11 +115,11 @@ public class TodayJourneyPlanOutput {
         this.salePointName = salePointName;
     }
 
-    public Object getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(Object category) {
+    public void setCategory(String category) {
         this.category = category;
     }
 

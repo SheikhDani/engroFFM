@@ -236,6 +236,7 @@ public class FloorStockActivity extends AppCompatActivity {
         for (int i = 0; i < floorStockChild.size(); i++) {
 
             HashMap<String, String> headerParams = new HashMap<>();
+            headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
             headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDID, floorStockChild.get(i).getProductID());
             headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDNAME, floorStockChild.get(i).getProductname());
             headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY, floorStockChild.get(i).getProductinput());
@@ -248,6 +249,7 @@ public class FloorStockActivity extends AppCompatActivity {
     public void updateFloorStock() {
         for (int i = 0; i < floorStockChild.size(); i++) {
             HashMap<String, String> headerParams = new HashMap<>();
+            headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
             headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY, floorStockChild.get(i).getProductinput());
             headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
             HashMap<String, String> filter = new HashMap<>();
@@ -267,6 +269,7 @@ public class FloorStockActivity extends AppCompatActivity {
         map.put(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY, "");
         HashMap<String, String> filters = new HashMap<>();
         filters.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN_FLOOR_STOCK_INPUT, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
