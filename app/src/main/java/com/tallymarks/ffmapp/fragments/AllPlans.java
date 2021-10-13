@@ -7,9 +7,12 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -47,12 +50,14 @@ public class AllPlans extends Fragment implements ItemClickListener {
     String currentlat;
     String  currentlng;
     SharedPrefferenceHelper sHelper;
+    static EditText et_search_plan;
 
 
-    public static AllPlans newInstance(String activity) {
+    public static AllPlans newInstance(String activity,EditText et) {
         AllPlans fragment = new AllPlans();
         Bundle args = new Bundle();
         args.putString(ARG_TEXT, activity);
+        et_search_plan = et;
         fragment.setArguments(args);
         return fragment;
     }
@@ -89,6 +94,7 @@ public class AllPlans extends Fragment implements ItemClickListener {
             DialougeManager.gpsNotEnabledPopup(getActivity());
         }
         if(activity.equals("customers")) {
+            sHelper.setString(Constants.PLAN_TYPE, "all");
             getAllCustomerJourneyPlan();
         }
         else
@@ -101,6 +107,25 @@ public class AllPlans extends Fragment implements ItemClickListener {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         adapter.setClickListener(this);
+        if(activity.equals("customers")) {
+            et_search_plan.addTextChangedListener(new TextWatcher() {
+
+                @Override
+                public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                    adapter.filter(cs.toString());
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+                    // Toast.makeText(getApplicationContext(),"before text change",Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void afterTextChanged(Editable arg0) {
+                    //Toast.makeText(getApplicationContext(),"after text change",Toast.LENGTH_LONG).show();
+                }
+            });
+        }
 
     }
     private void getAllCustomerJourneyPlan()
@@ -336,7 +361,7 @@ public class AllPlans extends Fragment implements ItemClickListener {
             }
             else
             {
-                Toast.makeText(getActivity(), "You Already Visited That Customer", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "You Already Performed the Activity for that Customer", Toast.LENGTH_SHORT).show();
             }
         }
         else {

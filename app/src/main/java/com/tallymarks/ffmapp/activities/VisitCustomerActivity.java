@@ -3,7 +3,10 @@ package com.tallymarks.ffmapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +22,7 @@ public class VisitCustomerActivity extends AppCompatActivity {
     ViewPager viewPager;
     VisitCustomerViewPagerAdapter viewPagerAdapter;
     private TextView tvTopHeader;
+    EditText et_search;
     ImageView iv_menu,iv_back,iv_location;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +35,7 @@ public class VisitCustomerActivity extends AppCompatActivity {
     {
         iv_menu = findViewById(R.id.iv_drawer);
         iv_back = findViewById(R.id.iv_back);
+        et_search = findViewById(R.id.et_Search);
         iv_back.setVisibility(View.VISIBLE);
         iv_menu.setVisibility(View.GONE);
         iv_location = findViewById(R.id.img_location);
@@ -53,11 +58,12 @@ public class VisitCustomerActivity extends AppCompatActivity {
         });
         tabLayout = (TabLayout) findViewById(R.id.tabs_sales_plan);
         viewPager = (ViewPager) findViewById(R.id.viewPager_sales_plan);
-        viewPagerAdapter = new VisitCustomerViewPagerAdapter(getSupportFragmentManager(),"customers");
+        viewPagerAdapter = new VisitCustomerViewPagerAdapter(getSupportFragmentManager(),"customers",et_search);
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
         tvTopHeader = findViewById(R.id.tv_dashboard);
         tvTopHeader.setVisibility(View.VISIBLE);
         tvTopHeader.setText("VISIT CUSTOMERS");
+
     }
 }

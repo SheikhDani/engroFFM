@@ -76,8 +76,8 @@ public class StartActivity extends AppCompatActivity {
             {
                 journeytype = "today";
             }
-
-            {
+            else
+                {
                 journeytype = "all";
             }
         }
@@ -161,6 +161,9 @@ public class StartActivity extends AppCompatActivity {
                 setTextViewDrawableColor(tvNotAvailable, R.color.red);
                 status = "0";
                 shelper.setString(Constants.ACTIVITY_STATUS, "3");
+                saveCustomerNoAvailale();
+                Intent n = new Intent(StartActivity.this,VisitCustomerActivity.class);
+                startActivity(n);
 
             }
         });
@@ -377,37 +380,39 @@ public class StartActivity extends AppCompatActivity {
                 setTextViewDrawableColor(tvNotAvailable, R.color.red);
                 setTextViewDrawableColor(tvCheckin, R.color.green);
             }
-            if (objectiveLayout.equals("1")) {
-                setTextViewDrawableColor(tvOrderTracking, R.color.green);
-                setTextViewDrawableColor(tvComplainhandling, R.color.green);
-                setTextViewDrawableColor(tvSalesCall, R.color.red);
-                setTextViewDrawableColor(tvInventory, R.color.green);
-                setTextViewDrawableColor(tvMarketignIntelligence, R.color.green);
+            if(objectiveLayout!=null) {
+                if (objectiveLayout.equals("1")) {
+                    setTextViewDrawableColor(tvOrderTracking, R.color.green);
+                    setTextViewDrawableColor(tvComplainhandling, R.color.green);
+                    setTextViewDrawableColor(tvSalesCall, R.color.red);
+                    setTextViewDrawableColor(tvInventory, R.color.green);
+                    setTextViewDrawableColor(tvMarketignIntelligence, R.color.green);
 
-            } else if (objectiveLayout.equals("2")) {
-                setTextViewDrawableColor(tvOrderTracking, R.color.red);
-                setTextViewDrawableColor(tvComplainhandling, R.color.green);
-                setTextViewDrawableColor(tvSalesCall, R.color.green);
-                setTextViewDrawableColor(tvInventory, R.color.green);
-                setTextViewDrawableColor(tvMarketignIntelligence, R.color.green);
-            } else if (objectiveLayout.equals("3")) {
-                setTextViewDrawableColor(tvOrderTracking, R.color.green);
-                setTextViewDrawableColor(tvComplainhandling, R.color.green);
-                setTextViewDrawableColor(tvSalesCall, R.color.green);
-                setTextViewDrawableColor(tvInventory, R.color.red);
-                setTextViewDrawableColor(tvMarketignIntelligence, R.color.green);
-            } else if (objectiveLayout.equals("4")) {
-                setTextViewDrawableColor(tvOrderTracking, R.color.green);
-                setTextViewDrawableColor(tvComplainhandling, R.color.green);
-                setTextViewDrawableColor(tvSalesCall, R.color.green);
-                setTextViewDrawableColor(tvInventory, R.color.green);
-                setTextViewDrawableColor(tvMarketignIntelligence, R.color.red);
-            } else if (objectiveLayout.equals("5")) {
-                setTextViewDrawableColor(tvOrderTracking, R.color.green);
-                setTextViewDrawableColor(tvComplainhandling, R.color.red);
-                setTextViewDrawableColor(tvSalesCall, R.color.green);
-                setTextViewDrawableColor(tvInventory, R.color.green);
-                setTextViewDrawableColor(tvMarketignIntelligence, R.color.green);
+                } else if (objectiveLayout.equals("2")) {
+                    setTextViewDrawableColor(tvOrderTracking, R.color.red);
+                    setTextViewDrawableColor(tvComplainhandling, R.color.green);
+                    setTextViewDrawableColor(tvSalesCall, R.color.green);
+                    setTextViewDrawableColor(tvInventory, R.color.green);
+                    setTextViewDrawableColor(tvMarketignIntelligence, R.color.green);
+                } else if (objectiveLayout.equals("3")) {
+                    setTextViewDrawableColor(tvOrderTracking, R.color.green);
+                    setTextViewDrawableColor(tvComplainhandling, R.color.green);
+                    setTextViewDrawableColor(tvSalesCall, R.color.green);
+                    setTextViewDrawableColor(tvInventory, R.color.red);
+                    setTextViewDrawableColor(tvMarketignIntelligence, R.color.green);
+                } else if (objectiveLayout.equals("4")) {
+                    setTextViewDrawableColor(tvOrderTracking, R.color.green);
+                    setTextViewDrawableColor(tvComplainhandling, R.color.green);
+                    setTextViewDrawableColor(tvSalesCall, R.color.green);
+                    setTextViewDrawableColor(tvInventory, R.color.green);
+                    setTextViewDrawableColor(tvMarketignIntelligence, R.color.red);
+                } else if (objectiveLayout.equals("5")) {
+                    setTextViewDrawableColor(tvOrderTracking, R.color.green);
+                    setTextViewDrawableColor(tvComplainhandling, R.color.red);
+                    setTextViewDrawableColor(tvSalesCall, R.color.green);
+                    setTextViewDrawableColor(tvInventory, R.color.green);
+                    setTextViewDrawableColor(tvMarketignIntelligence, R.color.green);
+                }
             }
         } else {
             setTextViewDrawableColor(tvOrderTracking, R.color.green);
@@ -418,5 +423,47 @@ public class StartActivity extends AppCompatActivity {
             setTextViewDrawableColor(tvCheckin, R.color.green);
             setTextViewDrawableColor(tvNotAvailable, R.color.green);
         }
+    }
+    private void saveCustomerNoAvailale()
+    {
+        HashMap<String, String> headerParams = new HashMap<>();
+        long time = System.currentTimeMillis();
+
+        headerParams.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_TIME, String.valueOf(time));
+        headerParams.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS, shelper.getString(Constants.ACTIVITY_STATUS));
+        headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, shelper.getString(Constants.CUSTOMER_ID));
+        if(journeytype=="today") {
+            headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, "today");
+        }
+        else
+        {
+            headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, "all");
+        }
+        headerParams.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE, String.valueOf(checkinlat));
+        headerParams.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE, String.valueOf(checkinlng));
+        db.addData(db.TODAY_JOURNEY_PLAN_START_ACTIVITY, headerParams);
+        updateOutletStatus("Not Available");
+        addCheckoutLocation();
+        //s
+    }
+    private void updateOutletStatus(String status) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put(db.KEY_TODAY_JOURNEY_IS_VISITED, status);
+        params.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, shelper.getString(Constants.CUSTOMER_ID));
+        filter.put(db.KEY_TODAY_JOURNEY_TYPE, journeytype);
+        db.updateData(db.TODAY_JOURNEY_PLAN, params, filter);
+    }
+    private void addCheckoutLocation()
+    {
+        long time = System.currentTimeMillis();
+        HashMap<String, String> headerParams = new HashMap<>();
+        headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LATITUDE, "");
+        headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LONGITUDE, "");
+        headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, shelper.getString(Constants.CUSTOMER_ID));
+        headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, journeytype);
+        headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_TIMESTAMP,String.valueOf(time));
+        db.addData(db.TODAY_JOURNEY_PLAN_POST_DATA,headerParams);
     }
 }

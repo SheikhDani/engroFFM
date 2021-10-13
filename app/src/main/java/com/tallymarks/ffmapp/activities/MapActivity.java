@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -37,25 +38,33 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterManager;
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
+import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.GpsTracker;
+import com.tallymarks.ffmapp.utils.Helpers;
+import com.tallymarks.ffmapp.utils.User;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MapActivity  extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener{
     private TextView tvTopHeader;
     ImageView iv_menu, iv_back;
     final static int REQUEST_LOCATION = 199;
+    private ClusterManager<User> mClusterManager;
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
     private static final int REQUEST_CODE = 101;
     private GoogleApiClient googleApiClient;
-    String currentlat;
-    String currentlng;
-    Context context;
+     DatabaseHandler db;
     private SupportMapFragment mapFragment;
     SharedPrefferenceHelper sHelper;
     private GpsTracker gpsTracker;
+
     private GoogleMap mMap;
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -83,18 +92,47 @@ public class MapActivity  extends AppCompatActivity implements OnMapReadyCallbac
             }
             mMap.getUiSettings().setScrollGesturesEnabled(true);
             mMap.setMyLocationEnabled(true);
-            currentlat = String.valueOf(gpsTracker.getLatitude());
-            currentlng = String.valueOf(gpsTracker.getLongitude());
-            // mMap.addMarker(new MarkerOptions().position(new LatLng(gpsTracker.getLatitude(),gpsTracker.getLongitude())).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Current Location"));
-            //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), 17.0f));
-
-            LatLng location = new LatLng(Double.parseDouble(currentlat), Double.parseDouble(currentlng));
-            mMap.addMarker(new MarkerOptions().position(location).title("Current Location")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(currentlat), Double.parseDouble(currentlng)), 10));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), 17.0f));
+            mClusterManager = new ClusterManager<>(this, googleMap);
+            googleMap.setOnCameraIdleListener(mClusterManager);
+            googleMap.setOnMarkerClickListener(mClusterManager);
+            googleMap.setOnInfoWindowClickListener(mClusterManager);
+//            currentlat = String.valueOf(gpsTracker.getLatitude());
+//            currentlng = String.valueOf(gpsTracker.getLongitude());
+//            // mMap.addMarker(new MarkerOptions().position(new LatLng(gpsTracker.getLatitude(),gpsTracker.getLongitude())).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Current Location"));
+//            //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), 17.0f));
+//
+//            LatLng location = new LatLng(Double.parseDouble(currentlat), Double.parseDouble(currentlng));
+//            mMap.addMarker(new MarkerOptions().position(location).title("Current Location")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+//            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(currentlat), Double.parseDouble(currentlng)), 10));
 
         } else {
             enableLoc();
             // DialougeManager.gpsNotEnabledPopup(ProjectDetailActivity.this);
+        }
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME, "");
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE, "");
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE,sHelper.getString(Constants.PLAN_TYPE));
+        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                if (cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE)).equals("null") || cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE)).equals("null")) {
+                    LatLng location = new LatLng(0, 0);
+                    mMap.addMarker(new MarkerOptions().position(location).title(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME)))));
+                } else if (cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE)).equals("null") && cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE)).equals("null")) {
+                    LatLng location = new LatLng(0, 0);
+                    mMap.addMarker(new MarkerOptions().position(location).title(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME)))));
+                } else {
+                    mClusterManager.addItem(new User(Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE))),Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE))),Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME))),""));
+                    //  LatLng location = new LatLng(Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_LATITUDE))), Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_LANGITUDE))));
+                    // mMap.addMarker(new MarkerOptions().position(location).title(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_NAME)))));
+                }
+            }
+            while (cursor.moveToNext());
         }
 
 
@@ -111,6 +149,7 @@ public class MapActivity  extends AppCompatActivity implements OnMapReadyCallbac
     {
         sHelper = new SharedPrefferenceHelper(MapActivity.this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        db = new DatabaseHandler(MapActivity.this);
         tvTopHeader = findViewById(R.id.tv_dashboard);
         iv_menu = findViewById(R.id.iv_drawer);
         iv_back = findViewById(R.id.iv_back);

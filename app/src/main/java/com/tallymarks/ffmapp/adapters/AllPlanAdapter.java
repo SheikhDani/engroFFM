@@ -15,13 +15,16 @@ import com.tallymarks.ffmapp.models.PlanPast;
 import com.tallymarks.ffmapp.models.TodayPlan;
 import com.tallymarks.ffmapp.utils.ItemClickListener;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHolder> {
 
     private List<TodayPlan> planList;
 
     private ItemClickListener clickListener;
+    private List<TodayPlan> headerList;
     String from;
 
 
@@ -73,6 +76,8 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
     public AllPlanAdapter(List<TodayPlan> moviesList,String from) {
         this.planList = moviesList;
         this.from = from;
+        this.headerList = new ArrayList<TodayPlan>();
+        this.headerList.addAll(planList);
     }
 
     @Override
@@ -123,5 +128,25 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
     }
     public void setClickListener(ItemClickListener itemClickListener) {
         this.clickListener = itemClickListener;
+    }
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        planList.clear();
+        if (charText.length() == 0) {
+            planList.addAll(headerList);
+        } else {
+
+            ArrayList<TodayPlan> filteredList = new ArrayList<>();
+            for (TodayPlan pl :headerList) {
+
+                if (pl.getTitle().toLowerCase(Locale.getDefault()).contains(charText)) {
+                    planList.add(pl);
+                }
+
+            }
+//            headerList = filteredList;
+        }
+
+        notifyDataSetChanged();
     }
 }

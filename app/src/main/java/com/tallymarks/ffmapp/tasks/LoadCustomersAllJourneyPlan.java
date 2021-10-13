@@ -14,6 +14,7 @@ import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.activities.MainActivity;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
+import com.tallymarks.ffmapp.models.allcsutomeroutput.AllJourneyPlanOutput;
 import com.tallymarks.ffmapp.models.getallcustomersplanoutput.GetAllCustomersOutput;
 import com.tallymarks.ffmapp.models.todayjourneyplanoutput.TodayJourneyPlanOutput;
 import com.tallymarks.ffmapp.utils.Constants;
@@ -70,9 +71,9 @@ public class LoadCustomersAllJourneyPlan extends AsyncTask<String, Void, Void> {
             response = httpHandler.httpGet(journeyPlanUrl, headerParams);
             Log.e("lOGIN Url", journeyPlanUrl);
             Log.e("Response", response);
-            Type journeycodeType = new TypeToken<ArrayList<TodayJourneyPlanOutput>>() {
+            Type journeycodeType = new TypeToken<ArrayList<AllJourneyPlanOutput>>() {
             }.getType();
-            List<TodayJourneyPlanOutput> journeycode = new Gson().fromJson(response, journeycodeType);
+            List<AllJourneyPlanOutput> journeycode = new Gson().fromJson(response, journeycodeType);
             if (response != null) {
                 if (journeycode.size() > 0) {
                     for (int i = 0; i < journeycode.size(); i++) {
@@ -89,30 +90,32 @@ public class LoadCustomersAllJourneyPlan extends AsyncTask<String, Void, Void> {
                         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID, journeycode.get(i).getJourneyPlanId() == null || journeycode.get(i).getJourneyPlanId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getJourneyPlanId().toString());
                         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME, journeycode.get(i).getSalePointName() == null || journeycode.get(i).getSalePointName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getSalePointName());
                         db.addData(db.TODAY_JOURNEY_PLAN, map);
-                        if (journeycode.get(i).getOrders().size() > 0) {
-                            for (int j = 0; j < journeycode.get(i).getOrders().size(); j++) {
-                                HashMap<String, String> dbParams = new HashMap<>();
-                                dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_ID, journeycode.get(i).getOrders().get(j).getId() == null || journeycode.get(i).getOrders().get(j).getId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getId().toString());
-                                dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_BRAND_NAME, journeycode.get(i).getOrders().get(j).getBrandName() == null || journeycode.get(i).getOrders().get(j).getBrandName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getBrandName().toString());
-                                dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_NUMBER, journeycode.get(i).getOrders().get(j).getOrderNumber() == null || journeycode.get(i).getOrders().get(j).getOrderNumber().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getOrderNumber().toString());
-                                dbParams.put(db.KEY_TODAY_JOURNEY_TYPE, "all");
-                                dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_DATE, journeycode.get(i).getOrders().get(j).getOrderDate() == null || journeycode.get(i).getOrders().get(j).getOrderDate().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getOrderDate().toString());
-                                dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_QUANTITY, journeycode.get(i).getOrders().get(j).getOrderQuantity() == null || journeycode.get(i).getOrders().get(j).getOrderQuantity().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getOrderQuantity().toString());
-                                dbParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, journeycode.get(i).getCustomerId() == null || journeycode.get(i).getCustomerId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getCustomerId());
-                                db.addData(db.TODAY_JOURNEY_PLAN_ORDERS, dbParams);
-                                for (int k = 0; k < journeycode.get(i).getOrders().get(j).getInvoices().size(); k++) {
-                                    HashMap<String, String> dbParamsinvoice = new HashMap<>();
-                                    dbParamsinvoice.put(db.KEY_TODAY_JOURNEY_TYPE, "all");
-                                    dbParamsinvoice.put(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER, journeycode.get(i).getOrders().get(j).getInvoices().get(k).getInvoiceNumber() == null || journeycode.get(i).getOrders().get(j).getInvoices().get(k).getInvoiceNumber().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getInvoices().get(k).getInvoiceNumber().toString());
-                                    dbParamsinvoice.put(db.KEY_TODAY_JOURNEY_ORDER_DISPATCH_DATE, journeycode.get(i).getOrders().get(j).getInvoices().get(k).getDispatchDate() == null || journeycode.get(i).getOrders().get(j).getInvoices().get(k).getDispatchDate().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getInvoices().get(k).getDispatchDate().toString());
-                                    dbParamsinvoice.put(db.KEY_TODAY_JOURNEY_ORDER_DISPATCH_QUANTITY, journeycode.get(i).getOrders().get(j).getInvoices().get(k).getDispatchQuantity() == null || journeycode.get(i).getOrders().get(j).getInvoices().get(k).getDispatchQuantity().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getInvoices().get(k).getDispatchQuantity().toString());
-                                    dbParamsinvoice.put(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_AVAILABLE_QUANITY, journeycode.get(i).getOrders().get(j).getInvoices().get(k).getAvailableQuantity() == null || journeycode.get(i).getOrders().get(j).getInvoices().get(k).getAvailableQuantity().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getInvoices().get(k).getAvailableQuantity().toString());
-                                    dbParamsinvoice.put(db.KEY_TODAY_JOURNEY_ORDER_INVOCIE_RATE, journeycode.get(i).getOrders().get(j).getInvoices().get(k).getInvoiceRate() == null || journeycode.get(i).getOrders().get(j).getInvoices().get(k).getInvoiceRate().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getInvoices().get(k).getInvoiceRate().toString());
-                                    dbParamsinvoice.put(db.KEY_TODAY_JOURNEY_ORDER_ID, journeycode.get(i).getOrders().get(j).getId() == null || journeycode.get(i).getOrders().get(j).getId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getId().toString());
-                                    db.addData(db.TODAY_JOURNEY_PLAN_ORDERS_INVOICES, dbParamsinvoice);
+                        if(journeycode.get(i).getOrders()!=null) {
+                            if (journeycode.get(i).getOrders().size() > 0) {
+                                for (int j = 0; j < journeycode.get(i).getOrders().size(); j++) {
+                                    HashMap<String, String> dbParams = new HashMap<>();
+                                    dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_ID, journeycode.get(i).getOrders().get(j).getId() == null || journeycode.get(i).getOrders().get(j).getId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getId().toString());
+                                    dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_BRAND_NAME, journeycode.get(i).getOrders().get(j).getBrandName() == null || journeycode.get(i).getOrders().get(j).getBrandName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getBrandName().toString());
+                                    dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_NUMBER, journeycode.get(i).getOrders().get(j).getOrderNumber() == null || journeycode.get(i).getOrders().get(j).getOrderNumber().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getOrderNumber().toString());
+                                    dbParams.put(db.KEY_TODAY_JOURNEY_TYPE, "all");
+                                    dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_DATE, journeycode.get(i).getOrders().get(j).getOrderDate() == null || journeycode.get(i).getOrders().get(j).getOrderDate().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getOrderDate().toString());
+                                    dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_QUANTITY, journeycode.get(i).getOrders().get(j).getOrderQuantity() == null || journeycode.get(i).getOrders().get(j).getOrderQuantity().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getOrderQuantity().toString());
+                                    dbParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, journeycode.get(i).getCustomerId() == null || journeycode.get(i).getCustomerId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getCustomerId());
+                                    db.addData(db.TODAY_JOURNEY_PLAN_ORDERS, dbParams);
+                                    for (int k = 0; k < journeycode.get(i).getOrders().get(j).getInvoices().size(); k++) {
+                                        HashMap<String, String> dbParamsinvoice = new HashMap<>();
+                                        dbParamsinvoice.put(db.KEY_TODAY_JOURNEY_TYPE, "all");
+                                        dbParamsinvoice.put(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER, journeycode.get(i).getOrders().get(j).getInvoices().get(k).getInvoiceNumber() == null || journeycode.get(i).getOrders().get(j).getInvoices().get(k).getInvoiceNumber().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getInvoices().get(k).getInvoiceNumber().toString());
+                                        dbParamsinvoice.put(db.KEY_TODAY_JOURNEY_ORDER_DISPATCH_DATE, journeycode.get(i).getOrders().get(j).getInvoices().get(k).getDispatchDate() == null || journeycode.get(i).getOrders().get(j).getInvoices().get(k).getDispatchDate().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getInvoices().get(k).getDispatchDate().toString());
+                                        dbParamsinvoice.put(db.KEY_TODAY_JOURNEY_ORDER_DISPATCH_QUANTITY, journeycode.get(i).getOrders().get(j).getInvoices().get(k).getDispatchQuantity() == null || journeycode.get(i).getOrders().get(j).getInvoices().get(k).getDispatchQuantity().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getInvoices().get(k).getDispatchQuantity().toString());
+                                        dbParamsinvoice.put(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_AVAILABLE_QUANITY, journeycode.get(i).getOrders().get(j).getInvoices().get(k).getAvailableQuantity() == null || journeycode.get(i).getOrders().get(j).getInvoices().get(k).getAvailableQuantity().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getInvoices().get(k).getAvailableQuantity().toString());
+                                        dbParamsinvoice.put(db.KEY_TODAY_JOURNEY_ORDER_INVOCIE_RATE, journeycode.get(i).getOrders().get(j).getInvoices().get(k).getInvoiceRate() == null || journeycode.get(i).getOrders().get(j).getInvoices().get(k).getInvoiceRate().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getInvoices().get(k).getInvoiceRate().toString());
+                                        dbParamsinvoice.put(db.KEY_TODAY_JOURNEY_ORDER_ID, journeycode.get(i).getOrders().get(j).getId() == null || journeycode.get(i).getOrders().get(j).getId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getId().toString());
+                                        db.addData(db.TODAY_JOURNEY_PLAN_ORDERS_INVOICES, dbParamsinvoice);
+
+                                    }
 
                                 }
-
                             }
                         }
                         if (journeycode.get(i).getPreviousStockSnapshot().size() > 0) {

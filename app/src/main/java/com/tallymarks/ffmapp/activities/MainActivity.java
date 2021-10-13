@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     HashMap<MenuModel, List<MenuModel>> childList = new HashMap<>();
     TextView txt_farmer_Demo, txt_soil_logs, txt_logout, txt_post_data;
     ImageView headerImage;
+    String statuCustomer="";
 
 
     @Override
@@ -163,9 +164,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 if (isUnpostedDataExist()) {
-                    if(isDataSaved()) {
-                        new PostSyncCustomer().execute();
-                    }
+                    if(isDataSaved() || isDataSavedNotAvailable())
+                        new PostSyncCustomer(statuCustomer).execute();
+
                     else
                     {
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
@@ -387,18 +388,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
         HashMap<String, String> filters = new HashMap<>();
         filters.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Visited");
-
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             do {
                 flag = true;
+             //   statuCustomer = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_IS_VISITED));;
             }
             while (cursor.moveToNext());
-        } else {
+        }
+        else {
             flag = false;
         }
         return flag;
+
+    }
+    private boolean isDataSavedNotAvailable() {
+
+        boolean flag = false;
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Not Available");
+        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                flag = true;
+              //  statuCustomer = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_IS_VISITED));;
+            }
+            while (cursor.moveToNext());
+        }
+        else {
+            flag = false;
+        }
+        return flag;
+
     }
 
 
@@ -815,6 +840,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String jsonObject = "";
         private HttpHandler httpHandler;
         String customerId = "";
+        String visitStatus;
+        PostSyncCustomer(String status)
+        {
+            this.visitStatus = status;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -838,12 +868,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CODE, "");
             headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME, "");
             headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE, "");
+            headerParams.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "");
             headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE, "");
             headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID, "");
             headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID, "");
             headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME, "");
             HashMap<String, String> filter = new HashMap<>();
             filter.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Visited");
+            filter.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Not Available");
             Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN, headerParams, filter);
             if (cursor2.getCount() > 0) {
                 cursor2.moveToFirst();
@@ -858,15 +890,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     inputParameters.setDayId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID))));
                     inputParameters.setSalePointName("" + Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME))));
                     customerId = cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_ID));
-                    LoadOrderforPosting(inputParameters, customerId);
-                    LoadPreviousSnapShotforPosting(inputParameters, customerId);
-                    loadFloorStockforPosting(inputParameters, customerId);
-                    loadStartActviiyResult(inputParameters, customerId);
-                    loadLocationlast(inputParameters, customerId);
-                    loadFloorStockSold(inputParameters, customerId);
-                    loadMarketIntel(inputParameters, customerId);
-                    loadCommitments(inputParameters, customerId);
-                    loadProductDicussed(inputParameters, customerId);
+                    if(Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_IS_VISITED))).equals("Visited"))
+
+                    {
+                        LoadOrderforPosting(inputParameters, customerId);
+                        LoadPreviousSnapShotforPosting(inputParameters, customerId);
+                        loadFloorStockforPosting(inputParameters, customerId);
+                        loadStartActviiyResult(inputParameters, customerId);
+                        loadLocationlast(inputParameters, customerId);
+                        loadFloorStockSold(inputParameters, customerId);
+                        loadMarketIntel(inputParameters, customerId);
+                        loadCommitments(inputParameters, customerId);
+                        loadProductDicussed(inputParameters, customerId);
+                    }
+                    else
+                    {
+                        loadStartActviiyResultforNotAvailable(inputParameters, customerId);
+                        loadLocationlastNotAvaolable(inputParameters, customerId);
+
+                    }
                     inputCollection.add(inputParameters);
 
                 }
@@ -1214,6 +1256,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
     }
+    private void loadLocationlastNotAvaolable(TodayCustomerPostInput inputParameters, String customerid) {
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LATITUDE, "");
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LONGITUDE, "");
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_TIMESTAMP, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_POST_DATA, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                inputParameters.setCheckOutLatitude(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LATITUDE)));
+                inputParameters.setCheckOutLongitude(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LONGITUDE)));
+                inputParameters.setCheckOutTimeStamp(Long.parseLong(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_TIMESTAMP))));
+
+            }
+            while (cursor2.moveToNext());
+        }
+
+    }
 
     private void loadStartActviiyResult(TodayCustomerPostInput inputParameters, String customerid) {
         HashMap<String, String> map = new HashMap<>();
@@ -1234,6 +1297,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 inputParameters.setCheckInTimeStamp(Long.parseLong(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_TIME))));
                 inputParameters.setStatus(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS))));
                 inputParameters.setVisitObjective("" + Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_OBjECTIVE))));
+                inputParameters.setOutletStatusId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS))));
+
+            }
+            while (cursor2.moveToNext());
+        }
+
+    }
+    private void loadStartActviiyResultforNotAvailable(TodayCustomerPostInput inputParameters, String customerid) {
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_TIME, "");
+        map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS, "");
+        map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE, "");
+        map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_START_ACTIVITY, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                inputParameters.setCheckInLatitude(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE)));
+                inputParameters.setCheckInLongitude(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE)));
+                inputParameters.setCheckInTimeStamp(Long.parseLong(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_TIME))));
+                inputParameters.setStatus(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS))));
                 inputParameters.setOutletStatusId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS))));
 
             }

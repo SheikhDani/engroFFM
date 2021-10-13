@@ -282,6 +282,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
     private void updateOutletStatus(String status) {
         HashMap<String, String> params = new HashMap<>();
         params.put(db.KEY_TODAY_JOURNEY_IS_VISITED, status);
+        params.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "0");
         HashMap<String, String> filter = new HashMap<>();
         filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
         filter.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
