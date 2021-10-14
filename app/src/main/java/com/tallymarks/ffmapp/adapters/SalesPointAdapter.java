@@ -12,12 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.models.Farmes;
 import com.tallymarks.ffmapp.models.SaelsPoint;
+import com.tallymarks.ffmapp.models.TodayPlan;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class SalesPointAdapter extends RecyclerView.Adapter< SalesPointAdapter.MyViewHolder> {
 
     private List<SaelsPoint> moviesList;
+    private List<SaelsPoint> headerList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title;
@@ -30,8 +34,10 @@ public class SalesPointAdapter extends RecyclerView.Adapter< SalesPointAdapter.M
     }
 
 
-    public  SalesPointAdapter(List<SaelsPoint> moviesList) {
-        this.moviesList = moviesList;
+    public SalesPointAdapter(List<SaelsPoint> movieList) {
+        this.moviesList = movieList;
+        this.headerList = new ArrayList<SaelsPoint>();
+        this.headerList.addAll(moviesList);
     }
 
     @Override
@@ -48,10 +54,31 @@ public class SalesPointAdapter extends RecyclerView.Adapter< SalesPointAdapter.M
         holder.title.setText(movie.getPoint());
 
 
+
     }
 
     @Override
     public int getItemCount() {
         return moviesList.size();
+    }
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        moviesList.clear();
+        if (charText.length() == 0) {
+            moviesList.addAll(headerList);
+        } else {
+
+            ArrayList<TodayPlan> filteredList = new ArrayList<>();
+            for (SaelsPoint pl :headerList) {
+
+                if (pl.getPoint().toLowerCase(Locale.getDefault()).contains(charText)) {
+                    moviesList.add(pl);
+                }
+
+            }
+//            headerList = filteredList;
+        }
+
+        notifyDataSetChanged();
     }
 }

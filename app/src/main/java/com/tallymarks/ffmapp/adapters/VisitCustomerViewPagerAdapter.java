@@ -2,6 +2,7 @@ package com.tallymarks.ffmapp.adapters;
 
 
 
+import android.content.Context;
 import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
@@ -18,12 +19,14 @@ import com.tallymarks.ffmapp.utils.Constants;
 public class VisitCustomerViewPagerAdapter extends FragmentPagerAdapter {
     String activity;
     EditText et_search;
-    SharedPrefferenceHelper sHelper;
+
+
 
     public VisitCustomerViewPagerAdapter(FragmentManager fm, String activity, EditText et) {
         super(fm);
         this.activity = activity;
         this.et_search = et;
+
 
     }
 
@@ -31,12 +34,13 @@ public class VisitCustomerViewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         Fragment fragment = null;
         if (position == 0) {
-
             fragment = TodaysPlan.newInstance(activity,et_search);
+
         } else if (position == 1) {
             fragment =  AllPlans.newInstance(activity,et_search);
+
         } else if (position == 2) {
-           fragment = new PastPlan();
+            fragment = new PastPlan();
         }
         else if (position == 3) {
             fragment = new FuturePlan();

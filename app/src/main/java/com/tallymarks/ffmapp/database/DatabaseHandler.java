@@ -19,7 +19,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private SQLiteDatabase db;
     /*Database Varaiables*/
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
     private static final String TAG = "DBAdapter";
     private static final String DATABASE_NAME = "FFMApplicationDataBasev1";
     private Context mContext;
@@ -80,6 +80,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_PRODUCT_BRAND_CATEOGRY_IMAGE_BASE64 = "productbrandCateogryImagebase64";
 
     //MarketPrice Stock Sold Table Fields
+    public static final String KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_UNIQUE_ID= "marketpriceStoclSoldQuanitySoldUniqueID";
     public static final String KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_QUANITYSOLD = "marketpriceStoclSoldQuanitySold";
     public static final String KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_NETSELLINGPRICE= "marketpriceStoclSoldNETSellignprice";
     public static final String KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_SAMEINVOCIEE= "marketpriceStoclSoldsmaeinvoice";
@@ -356,6 +357,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String TABLE_TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD= "CREATE TABLE " + TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD+ "("
                 + KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_QUANITYSOLD+ " TEXT,"
+                + KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_UNIQUE_ID+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
                 + KEY_TODAY_JOURNEY_TYPE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_BRAND_NAME+ " TEXT,"

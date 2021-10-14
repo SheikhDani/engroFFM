@@ -11,6 +11,7 @@ import android.location.Location;
 import android.os.Bundle;
 
 import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -282,7 +283,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
     private void updateOutletStatus(String status) {
         HashMap<String, String> params = new HashMap<>();
         params.put(db.KEY_TODAY_JOURNEY_IS_VISITED, status);
-        params.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+        params.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "2");
         HashMap<String, String> filter = new HashMap<>();
         filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
         filter.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
@@ -446,9 +447,19 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         final AlertDialog alertDialog = alertDialogBuilder.create();
         final List<SaelsPoint> companyList = new ArrayList<>();
         final TextView title = promptsView.findViewById(R.id.tv_option);
+        final EditText search = promptsView.findViewById(R.id.et_Search);
+        final ImageView ivClsoe = promptsView.findViewById(R.id.iv_Close);
+        ivClsoe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
         title.setText("Select Company");
         final RecyclerView recyclerView = promptsView.findViewById(R.id.recyclerView);
+        prepareCompanyData(companyList);
         final SalesPointAdapter mAdapter = new SalesPointAdapter(companyList);
+
         // vertical RecyclerView
         // keep movie_list_row.xml width to `match_parent`
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -473,14 +484,34 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 
             }
         }));
-        prepareCompanyData(mAdapter, companyList);
+        search.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                if(search.hasFocus()) {
+                    mAdapter.filter(cs.toString());
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+                // Toast.makeText(getApplicationContext(),"before text change",Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                //Toast.makeText(getApplicationContext(),"after text change",Toast.LENGTH_LONG).show();
+            }
+        });
+
         //ImageView ivClose = promptsView.findViewById(R.id.iv_close);
 
         alertDialogBuilder.setCancelable(true);
         alertDialog.show();
     }
 
-    private void prepareCompanyData(SalesPointAdapter mAdapter, List<SaelsPoint> movieList) {
+    private void prepareCompanyData(List<SaelsPoint> movieList) {
+        movieList.clear();
         String productName = "", productID = "";
         HashMap<String, String> map = new HashMap<>();
 
@@ -505,7 +536,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 
         // notify adapter about data set changes
         // so that it will render the list with new data
-        mAdapter.notifyDataSetChanged();
+       // mAdapter.notifyDataSetChanged();
     }
 
     private void prepareBrandData(ArrayList<DataModel> dataModels) {

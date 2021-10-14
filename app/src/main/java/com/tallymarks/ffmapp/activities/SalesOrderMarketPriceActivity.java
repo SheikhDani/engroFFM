@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -48,6 +49,7 @@ public class SalesOrderMarketPriceActivity extends AppCompatActivity {
     private static final String LIST_STATE = "listState";
     private Parcelable mListState = null;
     private String orderNumber, productname, orderDate;
+    Button btn_procced, btn_back;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +67,23 @@ public class SalesOrderMarketPriceActivity extends AppCompatActivity {
         iv_back.setVisibility(View.VISIBLE);
         iv_menu.setVisibility(View.GONE);
         db = new DatabaseHandler(SalesOrderMarketPriceActivity.this);
+        btn_back = findViewById(R.id.back);
+        btn_procced = findViewById(R.id.btn_proceed);
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(SalesOrderMarketPriceActivity.this, FloorStockActivity.class);
+                startActivity(i);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            }
+        });
+        btn_procced.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent n = new Intent(SalesOrderMarketPriceActivity.this, QualityofSalesCallActivity.class);
+                startActivity(n);
+            }
+        });
         sHelper = new SharedPrefferenceHelper(SalesOrderMarketPriceActivity.this);
         headerList = new ArrayList<SalesOrderHeader>();
         iv_back.setOnClickListener(new View.OnClickListener() {
@@ -156,7 +175,14 @@ public class SalesOrderMarketPriceActivity extends AppCompatActivity {
                 orderquantity = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_QUANTITY));
                 orderNumber = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_NUMBER));
                 orderid = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_ID));
-                orderDate = getDatefromMilis(orderDate);
+                if(sHelper.getString(Constants.PLAN_TYPE).equals("today"))
+                {
+                    orderDate = getDatefromMilis(orderDate);
+                }
+                else
+                {
+                    orderDate = Helpers.utcToAnyDateFormat(orderDate,"yyyy-MM-dd","MMM d, yyyy");
+                }
                 SalesOrderHeader category = createCategory(orderNumber, orderDate, product, orderquantity);
                 LoadSalesOrderInvoicesLocally(orderid);
                 category.setItemList(expandableListGroup);
@@ -205,7 +231,7 @@ public class SalesOrderMarketPriceActivity extends AppCompatActivity {
                 availalequantity = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_AVAILABLE_QUANITY));
                 invoicequantity = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_DISPATCH_QUANTITY));
                 SalesOrderChild grouop1 = new SalesOrderChild();
-                grouop1.setInvocieDate(getDatefromMilis(invoiceDate));
+                grouop1.setInvocieDate(Helpers.utcToAnyDateFormat(invoiceDate,"yyyy-MM-dd","MMM d, yyyy"));
                 grouop1.setInvoiceNumber(invoiceNumber);
                 grouop1.setInvoiceQuantity(invoicequantity);
                 grouop1.setInvoiceRate(invoicerate);

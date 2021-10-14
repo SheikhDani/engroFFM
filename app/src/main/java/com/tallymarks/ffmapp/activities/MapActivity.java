@@ -115,7 +115,7 @@ public class MapActivity  extends AppCompatActivity implements OnMapReadyCallbac
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE, "");
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE, "");
         HashMap<String, String> filters = new HashMap<>();
-        filters.put(db.KEY_TODAY_JOURNEY_TYPE,sHelper.getString(Constants.PLAN_TYPE));
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE,sHelper.getString(Constants.PLAN_TYPE_MAP));
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();

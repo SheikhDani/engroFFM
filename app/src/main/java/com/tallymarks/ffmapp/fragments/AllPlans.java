@@ -112,7 +112,9 @@ public class AllPlans extends Fragment implements ItemClickListener {
 
                 @Override
                 public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                    adapter.filter(cs.toString());
+                    if(et_search_plan.hasFocus()) {
+                        adapter.filter(cs.toString());
+                    }
                 }
 
                 @Override

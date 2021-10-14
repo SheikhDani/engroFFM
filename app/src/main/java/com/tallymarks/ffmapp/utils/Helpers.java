@@ -184,6 +184,25 @@ public class Helpers {
         return simpleDateFormat.format(calendar.getTime());
 
     }
+//    public static String getDatefromDateString(String dateString)
+//    {
+//        if (!dateString.equals("") || !(dateString == null)) {
+//            SimpleDateFormat input = new SimpleDateFormat(inputFormat);
+//            SimpleDateFormat output = new SimpleDateFormat(outputFormat);
+//            Date date = null;
+//            try {
+//                date = input.parse(dateString);
+//                return output.format(date);
+//
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        {
+//            return "";
+//        }
+//
+//    }
 
     public static String utcToAnyTimeZone(String timeZone, String time, String timeFormat) {
         SimpleDateFormat sourceFormat = new SimpleDateFormat(timeFormat);

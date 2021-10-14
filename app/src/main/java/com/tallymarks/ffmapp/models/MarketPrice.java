@@ -5,6 +5,16 @@ public class MarketPrice {
     public String netprice;
     public String invoice;
     public String product;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int id;
     public String getQuanity() {
         return quanity;
     }
