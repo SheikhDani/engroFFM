@@ -79,6 +79,7 @@ public class LoadCustomersTodayJourneyPlan extends AsyncTask<String, Void, Void>
                         HashMap<String, String> map = new HashMap<>();
                         map.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
                         map.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+                        map.put(db.KEY_TODAY_JOURNEY_TYPE, "today");
                         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CODE, journeycode.get(i).getCustomerCode() == null || journeycode.get(i).getCustomerCode().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getCustomerCode());
                         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, journeycode.get(i).getCustomerId() == null || journeycode.get(i).getCustomerId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getCustomerId());
                         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME, journeycode.get(i).getCustomerName() == null || journeycode.get(i).getCustomerName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getCustomerName());
@@ -91,6 +92,7 @@ public class LoadCustomersTodayJourneyPlan extends AsyncTask<String, Void, Void>
                         if (journeycode.get(i).getOrders().size() > 0) {
                             for (int j = 0; j < journeycode.get(i).getOrders().size(); j++) {
                                 HashMap<String, String> dbParams = new HashMap<>();
+                                dbParams.put(db.KEY_TODAY_JOURNEY_TYPE, "today");
                                 dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_ID, journeycode.get(i).getOrders().get(j).getId() == null || journeycode.get(i).getOrders().get(j).getId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getId().toString());
                                 dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_BRAND_NAME, journeycode.get(i).getOrders().get(j).getBrandName() == null || journeycode.get(i).getOrders().get(j).getBrandName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getBrandName().toString());
                                 dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_NUMBER, journeycode.get(i).getOrders().get(j).getOrderNumber() == null || journeycode.get(i).getOrders().get(j).getOrderNumber().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getOrderNumber().toString());
@@ -100,6 +102,7 @@ public class LoadCustomersTodayJourneyPlan extends AsyncTask<String, Void, Void>
                                 db.addData(db.TODAY_JOURNEY_PLAN_ORDERS, dbParams);
                                 for (int k = 0; k < journeycode.get(i).getOrders().get(j).getInvoices().size(); k++) {
                                     HashMap<String, String> dbParamsinvoice = new HashMap<>();
+                                    dbParamsinvoice.put(db.KEY_TODAY_JOURNEY_TYPE, "today");
                                     dbParamsinvoice.put(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER, journeycode.get(i).getOrders().get(j).getInvoices().get(k).getInvoiceNumber() == null || journeycode.get(i).getOrders().get(j).getInvoices().get(k).getInvoiceNumber().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getInvoices().get(k).getInvoiceNumber().toString());
                                     dbParamsinvoice.put(db.KEY_TODAY_JOURNEY_ORDER_DISPATCH_DATE, journeycode.get(i).getOrders().get(j).getInvoices().get(k).getDispatchDate() == null || journeycode.get(i).getOrders().get(j).getInvoices().get(k).getDispatchDate().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getInvoices().get(k).getDispatchDate().toString());
                                     dbParamsinvoice.put(db.KEY_TODAY_JOURNEY_ORDER_DISPATCH_QUANTITY, journeycode.get(i).getOrders().get(j).getInvoices().get(k).getDispatchQuantity() == null || journeycode.get(i).getOrders().get(j).getInvoices().get(k).getDispatchQuantity().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getOrders().get(j).getInvoices().get(k).getDispatchQuantity().toString());
@@ -116,11 +119,13 @@ public class LoadCustomersTodayJourneyPlan extends AsyncTask<String, Void, Void>
                             for (int l = 0; l < journeycode.get(i).getPreviousStockSnapshot().size(); l++) {
 
                                 HashMap<String, String> dbParamsSnapShot = new HashMap<>();
+                                dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_TYPE, "today");
                                 dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY, journeycode.get(i).getPreviousStockSnapshot().get(l).getCategory() == null || journeycode.get(i).getPreviousStockSnapshot().get(l).getCategory().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getPreviousStockSnapshot().get(l).getCategory().toString());
                                 dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, journeycode.get(i).getCustomerId() == null || journeycode.get(i).getCustomerId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getCustomerId());
                                 db.addData(db.TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT, dbParamsSnapShot);
                                 for (int m = 0; m < journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().size(); m++) {
                                     HashMap<String, String> dbParams = new HashMap<>();
+                                    dbParams.put(db.KEY_TODAY_JOURNEY_TYPE, "today");
                                     dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_ID, journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getId() == null || journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getId().toString());
                                     dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_NAME, journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getName() == null || journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getName().toString());
                                     dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_COMPANYHELD, journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getCompanyHeld() == null || journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getCompanyHeld().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getCompanyHeld().toString());
@@ -138,6 +143,7 @@ public class LoadCustomersTodayJourneyPlan extends AsyncTask<String, Void, Void>
                             if (journeycode.get(i).getStockSold().size() > 0) {
                                 for (int n = 0; n < journeycode.get(i).getStockSold().size(); n++) {
                                     HashMap<String, String> dbParamsSnapShot = new HashMap<>();
+                                    dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_TYPE, "today");
                                     dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_STOCK_INVOICE_NUMBER, journeycode.get(i).getStockSold().get(n).getInvoiceNumber() == null || journeycode.get(i).getStockSold().get(n).getInvoiceNumber().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getStockSold().get(n).getInvoiceNumber().toString());
                                     dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, journeycode.get(i).getCustomerId() == null || journeycode.get(i).getCustomerId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getCustomerId());
                                     db.addData(db.TODAY_JOURNEY_PLAN_STOCK, dbParamsSnapShot);

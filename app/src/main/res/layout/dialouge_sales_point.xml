@@ -35,7 +35,7 @@
                 />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/iv_Close"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/p50"
                 android:layout_centerVertical="true"
@@ -54,6 +54,7 @@
             android:layout_width="fill_parent"
             android:layout_height="@dimen/p30"
             android:layout_below="@+id/l1"
+
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/p10"
             android:layout_marginLeft="@dimen/p10"
@@ -61,13 +62,13 @@
             android:layout_marginEnd="@dimen/p10"
             android:layout_marginRight="@dimen/p10"
             android:layout_marginBottom="@dimen/p10"
+            android:background="@drawable/eidttext_boader"
+
+            android:drawableLeft="@drawable/ic_baseline_search_24"
             android:paddingStart="@dimen/p10"
 
-            android:background="@drawable/eidttext_boader"
-            android:drawableLeft="@drawable/ic_baseline_search_24"
-
-            android:textColor="@color/white"
-            android:paddingLeft="@dimen/p10"></EditText>
+            android:paddingLeft="@dimen/p10"
+            android:textColor="@color/black"></EditText>
 
         <LinearLayout
             android:id="@+id/linear_table_recommendations"

@@ -52,7 +52,7 @@ public class VisitFarmerActivity extends AppCompatActivity {
         });
         tabLayout = (TabLayout) findViewById(R.id.tabs_sales_plan);
         viewPager = (ViewPager) findViewById(R.id.viewPager_sales_plan);
-        viewPagerAdapter = new VisitCustomerViewPagerAdapter(getSupportFragmentManager(),"farmers");
+        viewPagerAdapter = new VisitCustomerViewPagerAdapter(getSupportFragmentManager(),"farmers",null);
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
         tvTopHeader = findViewById(R.id.tv_dashboard);

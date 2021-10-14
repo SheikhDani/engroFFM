@@ -11,6 +11,7 @@ import android.location.Location;
 import android.os.Bundle;
 
 import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -181,6 +182,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
                 HashMap<String, String> headerParams = new HashMap<>();
                 headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED_ID, dataModels.get(i).getId());
                 headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+                headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
                 db.addData(db.TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED, headerParams);
             }
         }
@@ -190,6 +192,8 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         HashMap<String, String> headerParams = new HashMap<>();
         headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTEL_FORWARD, forward);
         headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTETL_COMMENT, review);
+        headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+        headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
         db.addData(db.TODAY_JOURNEY_PLAN_MARKET_INTEL,headerParams);
     }
     private void addCheckoutLocation(int distance)
@@ -199,6 +203,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LATITUDE, String.valueOf(checkoutlat));
         headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LONGITUDE, String.valueOf(checkoutlng));
         headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+        headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
         headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_TIMESTAMP,String.valueOf(time));
         headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_DISTANCE,String.valueOf(distance));
         db.addData(db.TODAY_JOURNEY_PLAN_POST_DATA,headerParams);
@@ -207,6 +212,8 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         for (int i = 0; i < arraylist.size(); i++) {
 
             HashMap<String, String> headerParams = new HashMap<>();
+            headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
             headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_CONFIRMED, arraylist.get(i).getConfirmed());
             headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_DELIVERY_DATE, arraylist.get(i).getTimeline());
             headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_QUANITY,arraylist.get(i).getQuantity());
@@ -276,8 +283,10 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
     private void updateOutletStatus(String status) {
         HashMap<String, String> params = new HashMap<>();
         params.put(db.KEY_TODAY_JOURNEY_IS_VISITED, status);
+        params.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "2");
         HashMap<String, String> filter = new HashMap<>();
         filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+        filter.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
         db.updateData(db.TODAY_JOURNEY_PLAN, params, filter);
     }
 
@@ -417,6 +426,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
           map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE, "");
           HashMap<String, String> filters = new HashMap<>();
           filters.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+          filters.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
           Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN_START_ACTIVITY, map, filters);
           if (cursor.getCount() > 0) {
               cursor.moveToFirst();
@@ -437,9 +447,19 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         final AlertDialog alertDialog = alertDialogBuilder.create();
         final List<SaelsPoint> companyList = new ArrayList<>();
         final TextView title = promptsView.findViewById(R.id.tv_option);
+        final EditText search = promptsView.findViewById(R.id.et_Search);
+        final ImageView ivClsoe = promptsView.findViewById(R.id.iv_Close);
+        ivClsoe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
         title.setText("Select Company");
         final RecyclerView recyclerView = promptsView.findViewById(R.id.recyclerView);
+        prepareCompanyData(companyList);
         final SalesPointAdapter mAdapter = new SalesPointAdapter(companyList);
+
         // vertical RecyclerView
         // keep movie_list_row.xml width to `match_parent`
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -464,14 +484,34 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 
             }
         }));
-        prepareCompanyData(mAdapter, companyList);
+        search.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                if(search.hasFocus()) {
+                    mAdapter.filter(cs.toString());
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+                // Toast.makeText(getApplicationContext(),"before text change",Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                //Toast.makeText(getApplicationContext(),"after text change",Toast.LENGTH_LONG).show();
+            }
+        });
+
         //ImageView ivClose = promptsView.findViewById(R.id.iv_close);
 
         alertDialogBuilder.setCancelable(true);
         alertDialog.show();
     }
 
-    private void prepareCompanyData(SalesPointAdapter mAdapter, List<SaelsPoint> movieList) {
+    private void prepareCompanyData(List<SaelsPoint> movieList) {
+        movieList.clear();
         String productName = "", productID = "";
         HashMap<String, String> map = new HashMap<>();
 
@@ -496,7 +536,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 
         // notify adapter about data set changes
         // so that it will render the list with new data
-        mAdapter.notifyDataSetChanged();
+       // mAdapter.notifyDataSetChanged();
     }
 
     private void prepareBrandData(ArrayList<DataModel> dataModels) {

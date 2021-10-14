@@ -104,6 +104,7 @@ public class CustomerSnapShotActivity extends AppCompatActivity {
         //map.put(db.KEY_IS_VALID_USER, "");
         HashMap<String, String> filters = new HashMap<>();
         filters.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -146,6 +147,7 @@ public class CustomerSnapShotActivity extends AppCompatActivity {
         //map.put(db.KEY_IS_VALID_USER, "");
         HashMap<String, String> filters = new HashMap<>();
         filters.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY, categoryName);
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN_PREVIOUS_STOCK, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();

@@ -121,6 +121,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     HashMap<MenuModel, List<MenuModel>> childList = new HashMap<>();
     TextView txt_farmer_Demo, txt_soil_logs, txt_logout, txt_post_data;
     ImageView headerImage;
+    String statuCustomer="";
+    String journeyType;
 
 
     @Override
@@ -162,41 +164,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         txt_post_data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isUnpostedDataExist()) {
-                    if(isDataSaved()) {
-                        new PostSyncCustomer().execute();
-                    }
-                    else
-                    {
-                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                        alertDialogBuilder.setTitle(R.string.alert)
-                                .setMessage(R.string.postdataalert)
-                                .setCancelable(false)
-                                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                        AlertDialog alertDialog = alertDialogBuilder.create();
-                        alertDialog.show();
-                    }
-                } else {
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                    alertDialogBuilder.setTitle(R.string.alert)
-                            .setMessage(R.string.postdataalert)
-                            .setCancelable(false)
-                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-                    alertDialog.show();
-
-
-                }
+                postCustomerData();
             }
         });
         txt_logout.setOnClickListener(new View.OnClickListener() {
@@ -234,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkStorageCrops();
         checkStorageFertTypes();
         checkLoadTodayCustomerJourneyPlan();
+        checkLoadAllCustomerJourneyPlan();
         checkProductBrandGrouopByCategory();
         checkStorageDepth();
 
@@ -365,7 +334,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
         HashMap<String, String> filters = new HashMap<>();
-        filters.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+        filters.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "2");
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -391,13 +360,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             cursor.moveToFirst();
             do {
                 flag = true;
+             //   statuCustomer = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_IS_VISITED));;
             }
             while (cursor.moveToNext());
-        } else {
+        }
+        else {
             flag = false;
         }
         return flag;
+
     }
+    private boolean isDataSavedNotAvailable() {
+
+        boolean flag = false;
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Not Available");
+        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                flag = true;
+              //  statuCustomer = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_IS_VISITED));;
+            }
+            while (cursor.moveToNext());
+        }
+        else {
+            flag = false;
+        }
+        return flag;
+
+    }
+
 
     public void checkStorageDepth() {
 
@@ -461,12 +456,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    public void checkLoadAllCustomerJourneyPlan() {
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE, "all");
+        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+
+            }
+            while (cursor.moveToNext());
+        } else {
+            new LoadCustomersAllJourneyPlan(MainActivity.this).execute();
+        }
+
+
+    }
+
     public void checkLoadTodayCustomerJourneyPlan() {
 
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
         //map.put(db.KEY_IS_VALID_USER, "");
         HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE, "today");
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -481,6 +498,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     }
+    public void postCustomerData()
+    {
+        if (isUnpostedDataExist()) {
+            if(isDataSaved() || isDataSavedNotAvailable())
+                new PostSyncCustomer(statuCustomer).execute();
+
+            else
+            {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                alertDialogBuilder.setTitle(R.string.alert)
+                        .setMessage(R.string.postdataalert)
+                        .setCancelable(false)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            }
+        } else {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+            alertDialogBuilder.setTitle(R.string.alert)
+                    .setMessage(R.string.postdataalert)
+                    .setCancelable(false)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+
+
+        }
+    }
+
 
 
     public void clearDataConfirmationPopUp() {
@@ -790,6 +846,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String jsonObject = "";
         private HttpHandler httpHandler;
         String customerId = "";
+        String visitStatus;
+        PostSyncCustomer(String status)
+        {
+            this.visitStatus = status;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -813,12 +874,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CODE, "");
             headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME, "");
             headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE, "");
+            headerParams.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "");
             headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE, "");
             headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID, "");
             headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID, "");
             headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME, "");
             HashMap<String, String> filter = new HashMap<>();
-            filter.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Visited");
+            filter.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "2");
+
             Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN, headerParams, filter);
             if (cursor2.getCount() > 0) {
                 cursor2.moveToFirst();
@@ -829,19 +892,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     inputParameters.setCustomerName("" + Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME))));
                     inputParameters.setLatitude(Double.parseDouble(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE))));
                     inputParameters.setLongtitude(Double.parseDouble(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE))));
-                    inputParameters.setJourneyPlanId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID))));
-                    inputParameters.setDayId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID))));
+
+                    if(!cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID)).equals("NA")) {
+                        inputParameters.setJourneyPlanId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID))));
+                    }
+                    else
+                    {
+                        inputParameters.setJourneyPlanId(null);
+                    }
+                    if(!cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID)).equals("NA")) {
+                        inputParameters.setDayId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID))));
+                    }
+                    else
+                    {
+                        inputParameters.setDayId(null);
+                    }
                     inputParameters.setSalePointName("" + Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME))));
                     customerId = cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_ID));
-                    LoadOrderforPosting(inputParameters, customerId);
-                    LoadPreviousSnapShotforPosting(inputParameters, customerId);
-                    loadFloorStockforPosting(inputParameters, customerId);
-                    loadStartActviiyResult(inputParameters, customerId);
-                    loadLocationlast(inputParameters, customerId);
-                    loadFloorStockSold(inputParameters, customerId);
-                    loadMarketIntel(inputParameters, customerId);
-                    loadCommitments(inputParameters, customerId);
-                    loadProductDicussed(inputParameters, customerId);
+                    if(Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_IS_VISITED))).equals("Visited"))
+
+                    {
+                        loadStartActviiyResult(inputParameters, customerId);
+                        //LoadOrderforPosting(inputParameters, customerId);
+                       // LoadPreviousSnapShotforPosting(inputParameters, customerId);
+                        loadFloorStockforPosting(inputParameters, customerId);
+                        loadLocationlast(inputParameters, customerId);
+                        loadFloorStockSold(inputParameters, customerId);
+                        loadMarketIntel(inputParameters, customerId);
+                        loadCommitments(inputParameters, customerId);
+                        loadProductDicussed(inputParameters, customerId);
+                    }
+                    else
+                    {
+                        loadStartActviiyResultforNotAvailable(inputParameters, customerId);
+                        loadLocationlastNotAvaolable(inputParameters, customerId);
+
+                    }
                     inputCollection.add(inputParameters);
 
                 }
@@ -851,6 +937,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
                 HashMap<String, String> bodyParams = new HashMap<>();
                 String output = gson.toJson(inputCollection);
+                Log.e("postoutput",String.valueOf(output));
                 //output = gson.toJson(inputParameters, SaveWorkInput.class);
                 try {
                     response = httpHandler.httpPost(Constants.POST_TODAY_CUSTOMER_JOURNEY_PLAN, headerParams2, bodyParams, output);
@@ -904,7 +991,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         HashMap<String, String> params = new HashMap<>();
         params.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "1");
         HashMap<String, String> filter = new HashMap<>();
-        filter.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+        filter.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "2");
         db.updateData(db.TODAY_JOURNEY_PLAN, params, filter);
     }
 
@@ -916,6 +1003,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         map.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY, "");
         HashMap<String, String> filter = new HashMap<>();
         filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        filter.put(db.KEY_TODAY_JOURNEY_TYPE, journeyType);
         Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT, map, filter);
         if (cursor2.getCount() > 0) {
             cursor2.moveToFirst();
@@ -944,6 +1032,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         map.put(db.KEY_TODAY_JOURNEY_ORDER_QUANTITY, "");
         HashMap<String, String> filter = new HashMap<>();
         filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        filter.put(db.KEY_TODAY_JOURNEY_TYPE, journeyType);
+
         Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_ORDERS, map, filter);
         if (cursor2.getCount() > 0) {
             cursor2.moveToFirst();
@@ -952,7 +1042,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 orderid = cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_ID));
                 order.setId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_ID))));
                 order.setOrderNumber(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_NUMBER)));
-                order.setOrderDate(Long.parseLong(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_DATE))));
+                if(journeyType.equals("today")) {
+                    order.setOrderDate(Long.parseLong(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_DATE))));
+                }
+                else
+                {
+                  //  order.setOrderDate(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_DATE)));
+                }
                 order.setOrderQuantity(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_QUANTITY))));
                 order.setBrandName("" + Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_BRAND_NAME))));
                 orders.add(order);
@@ -977,6 +1073,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         map.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_QUANTITY, "");
         HashMap<String, String> filter = new HashMap<>();
         filter.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY, categoryname);
+        filter.put(db.KEY_TODAY_JOURNEY_TYPE, journeyType);
         Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_PREVIOUS_STOCK, map, filter);
         if (cursor2.getCount() > 0) {
             cursor2.moveToFirst();
@@ -1004,13 +1101,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         map.put(db.KEY_TODAY_JOURNEY_ORDER_DISPATCH_QUANTITY, "");
         HashMap<String, String> filter = new HashMap<>();
         filter.put(db.KEY_TODAY_JOURNEY_ORDER_ID, orderid);
+        filter.put(db.KEY_TODAY_JOURNEY_TYPE, journeyType);
         Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_ORDERS_INVOICES, map, filter);
         if (cursor2.getCount() > 0) {
             cursor2.moveToFirst();
             do {
                 Invoice invoice = new Invoice();
                 invoice.setInvoiceNumber(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER)));
-                invoice.setDispatchDate(Long.parseLong(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_DISPATCH_DATE))));
+                if(journeyType.equals("today")) {
+                    invoice.setDispatchDate(Long.parseLong(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_DISPATCH_DATE))));
+                }
+                else
+                {
+
+                 //   invoice.setDispatchDate(oncursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_DISPATCH_DATE))));
+                }
                 invoice.setDispatchQuantity(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_DISPATCH_QUANTITY))));
                 invoice.setAvailableQuantity(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_AVAILABLE_QUANITY))));
                 invoice.setInvoiceRate(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_INVOCIE_RATE)));
@@ -1189,6 +1294,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
     }
+    private void loadLocationlastNotAvaolable(TodayCustomerPostInput inputParameters, String customerid) {
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LATITUDE, "");
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LONGITUDE, "");
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_TIMESTAMP, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_POST_DATA, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                inputParameters.setCheckOutLatitude(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LATITUDE)));
+                inputParameters.setCheckOutLongitude(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LONGITUDE)));
+                inputParameters.setCheckOutTimeStamp(Long.parseLong(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_TIMESTAMP))));
+
+            }
+            while (cursor2.moveToNext());
+        }
+
+    }
 
     private void loadStartActviiyResult(TodayCustomerPostInput inputParameters, String customerid) {
         HashMap<String, String> map = new HashMap<>();
@@ -1198,17 +1324,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_OBjECTIVE, "");
         map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE, "");
         map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE, "");
+        map.put(db.KEY_TODAY_JOURNEY_TYPE, "");
         HashMap<String, String> filter = new HashMap<>();
         filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
         Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_START_ACTIVITY, map, filter);
         if (cursor2.getCount() > 0) {
             cursor2.moveToFirst();
             do {
+                journeyType = cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_TYPE));
                 inputParameters.setCheckInLatitude(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE)));
                 inputParameters.setCheckInLongitude(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE)));
                 inputParameters.setCheckInTimeStamp(Long.parseLong(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_TIME))));
                 inputParameters.setStatus(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS))));
                 inputParameters.setVisitObjective("" + Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_OBjECTIVE))));
+                inputParameters.setOutletStatusId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS))));
+
+            }
+            while (cursor2.moveToNext());
+        }
+
+    }
+    private void loadStartActviiyResultforNotAvailable(TodayCustomerPostInput inputParameters, String customerid) {
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_TIME, "");
+        map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS, "");
+        map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE, "");
+        map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE, "");
+        map.put(db.KEY_TODAY_JOURNEY_TYPE, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_START_ACTIVITY, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                journeyType = cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_TYPE));
+                inputParameters.setCheckInLatitude(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE)));
+                inputParameters.setCheckInLongitude(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE)));
+                inputParameters.setCheckInTimeStamp(Long.parseLong(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_TIME))));
+                inputParameters.setStatus(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS))));
                 inputParameters.setOutletStatusId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS))));
 
             }

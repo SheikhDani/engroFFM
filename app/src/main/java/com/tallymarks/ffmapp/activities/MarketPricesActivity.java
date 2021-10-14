@@ -41,6 +41,7 @@ public class MarketPricesActivity extends AppCompatActivity {
     private TextView tv_invoice_quantity, tv_invoice_avaialle_quantity;
     ImageView iv_menu, iv_back, iv_add, iv_del;
     private List<MarketPrice> arrayList = new ArrayList<MarketPrice>();
+    private List<MarketPrice> arrayList2 = new ArrayList<MarketPrice>();
     LinearLayout linearLayoutList;
     MarketPrice marketPrice;
     Button btn_open_summary, btn_save;
@@ -49,6 +50,7 @@ public class MarketPricesActivity extends AppCompatActivity {
     Button btn_back;
     SharedPrefferenceHelper sHelper;
     private String previousInvoiceNumber = "";
+    String quanity ,netprice;
 
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,6 +119,82 @@ public class MarketPricesActivity extends AppCompatActivity {
         });
         getInvoiceDetailLocally();
         getPreviousInvocieNumber();
+       getStockSoldLocally();
+    }
+
+    private boolean isUnpostedDataExist() {
+        boolean flag = false;
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_QUANITYSOLD, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
+        filters.put(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER, sHelper.getString(Constants.TODAY_PLAN_INVOICE_NUMBER));
+        filters.put(db.KEY_TODAY_JOURNEY_ORDER_NUMBER, sHelper.getString(Constants.TODAY_PLAN_INVOICE_ORDER_NUMBER));
+        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                flag = true;
+            }
+            while (cursor.moveToNext());
+        } else {
+            flag = false;
+        }
+        return flag;
+    }
+
+    private void getStockSoldLocally() {
+        arrayList2.clear();
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_QUANITYSOLD, "");
+        map.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_NETSELLINGPRICE, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_BRAND_NAME, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
+        filters.put(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER, sHelper.getString(Constants.TODAY_PLAN_INVOICE_NUMBER));
+        filters.put(db.KEY_TODAY_JOURNEY_ORDER_NUMBER, sHelper.getString(Constants.TODAY_PLAN_INVOICE_ORDER_NUMBER));
+        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                final View addView = getLayoutInflater().inflate(R.layout.list_market_price, null, false);
+
+                EditText quantity = (EditText) addView.findViewById(R.id.et_quanity);
+                EditText netprice = (EditText) addView.findViewById(R.id.et_net_price);
+                quantity.setText(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_QUANITYSOLD)));
+                netprice.setText(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_NETSELLINGPRICE)));
+
+
+                ImageView imgdel = (ImageView) addView.findViewById(R.id.img_del);
+
+                imgdel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        removeView(addView);
+                    }
+                });
+                linearLayoutList.addView(addView);
+//                MarketPrice m = new MarketPrice();
+//                m.setNetprice(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_NETSELLINGPRICE)));
+//                m.setQuanity(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_QUANITYSOLD)));
+//                arrayList2.add(m);
+//                arrayList.clear();
+//                EditText quantity = (EditText) addView.findViewById(R.id.et_quanity);
+//                EditText netprice = (EditText) addView.findViewById(R.id.et_net_price);
+//
+//
+//                marketPrice = new MarketPrice();
+//                marketPrice.setQuanity(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_QUANITYSOLD)));
+//                marketPrice.setNetprice(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_NETSELLINGPRICE)));
+//                marketPrice.setProduct(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_BRAND_NAME))));
+//                marketPrice.setInvoice(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER)));
+//                arrayList.add(marketPrice);
+            }
+            while (cursor.moveToNext());
+        }
     }
 
     private void getPreviousInvocieNumber() {
@@ -203,6 +281,13 @@ public class MarketPricesActivity extends AppCompatActivity {
         alertDialogBuilder.setView(promptsView);
         final AlertDialog alertDialog = alertDialogBuilder.create();
         final TableLayout mTableLayout = promptsView.findViewById(R.id.displayLinear);
+        final ImageView img_cancel = promptsView.findViewById(R.id.imageView_cancel);
+        img_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
         //ImageView ivClose = promptsView.findViewById(R.id.iv_close);
         getdata();
         drawRecommendationTable(mTableLayout);
@@ -213,8 +298,19 @@ public class MarketPricesActivity extends AppCompatActivity {
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveStockSold();
-                Intent salescall = new Intent(MarketPricesActivity.this, QualityofSalesCallActivity.class);
+//                if (isUnpostedDataExist()) {
+//                    updateStockSold();
+//                } else {
+                HashMap<String, String> filter = new HashMap<>();
+                filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+                filter.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
+                filter.put(db.KEY_TODAY_JOURNEY_ORDER_NUMBER, sHelper.getString(Constants.TODAY_PLAN_INVOICE_ORDER_NUMBER));
+                filter.put(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER, sHelper.getString(Constants.TODAY_PLAN_INVOICE_NUMBER));
+                db.deleteData(db.TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD,filter);
+                    saveStockSold();
+//                }
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                Intent salescall = new Intent(MarketPricesActivity.this, SalesOrderMarketPriceActivity.class);
                 startActivity(salescall);
 
             }
@@ -225,6 +321,44 @@ public class MarketPricesActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    private void updateStockSold() {
+        for (int i = 0; i < arrayList.size(); i++) {
+            HashMap<String, String> headerParams = new HashMap<>();
+            headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_QUANITYSOLD, arrayList.get(i).getQuanity());
+            headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_NETSELLINGPRICE, arrayList.get(i).getNetprice());
+            headerParams.put(db.KEY_TODAY_JOURNEY_ORDER_NUMBER, sHelper.getString(Constants.TODAY_PLAN_INVOICE_ORDER_NUMBER));
+            headerParams.put(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER, sHelper.getString(Constants.TODAY_PLAN_INVOICE_NUMBER));
+            headerParams.put(db.KEY_TODAY_JOURNEY_ORDER_BRAND_NAME, sHelper.getString(Constants.TODAY_PLAN_INVOICE_PRODUCT_NAME));
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+            headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
+            if (!previousInvoiceNumber.equals("")) {
+                if (previousInvoiceNumber.equals(sHelper.getString(Constants.TODAY_PLAN_INVOICE_NUMBER))) {
+                    headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_SAMEINVOCIEE, "0");
+                    headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_OLD, "1");
+                }
+            } else {
+                headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_SAMEINVOCIEE, "1");
+                headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_OLD, "0");
+            }
+            HashMap<String, String> filter = new HashMap<>();
+            filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+            filter.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
+            filter.put(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER, sHelper.getString(Constants.TODAY_PLAN_INVOICE_NUMBER));
+
+            if(i<arrayList2.size())
+            {
+                db.updateData(db.TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD, headerParams, filter);
+            }
+            else
+            {
+                db.addData(db.TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD, headerParams);
+            }
+            }
+//            filter.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_UNIQUE_ID,String.valueOf(i+1));
+//           db.updateData(db.TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD, headerParams, filter);
+        }
+
+
     private void saveStockSold() {
         for (int i = 0; i < arrayList.size(); i++) {
             HashMap<String, String> headerParams = new HashMap<>();
@@ -234,23 +368,19 @@ public class MarketPricesActivity extends AppCompatActivity {
             headerParams.put(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER, sHelper.getString(Constants.TODAY_PLAN_INVOICE_NUMBER));
             headerParams.put(db.KEY_TODAY_JOURNEY_ORDER_BRAND_NAME, sHelper.getString(Constants.TODAY_PLAN_INVOICE_PRODUCT_NAME));
             headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
-            if(!previousInvoiceNumber.equals(""))
-            {
-                if(previousInvoiceNumber.equals(sHelper.getString(Constants.TODAY_PLAN_INVOICE_NUMBER)))
-                {
+            headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
+            if (!previousInvoiceNumber.equals("")) {
+                if (previousInvoiceNumber.equals(sHelper.getString(Constants.TODAY_PLAN_INVOICE_NUMBER))) {
                     headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_SAMEINVOCIEE, "0");
                     headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_OLD, "1");
                 }
-            }
-            else
-            {
+            } else {
                 headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_SAMEINVOCIEE, "1");
                 headerParams.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_OLD, "0");
             }
             db.addData(db.TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD, headerParams);
         }
     }
-
 
 
     public void drawRecommendationTable(TableLayout mTableLayout) {

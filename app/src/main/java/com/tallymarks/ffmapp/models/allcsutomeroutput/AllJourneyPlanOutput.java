@@ -1,13 +1,13 @@
 
-package com.tallymarks.ffmapp.models.todayjourneyplanoutput;
-
-import java.util.List;
+package com.tallymarks.ffmapp.models.allcsutomeroutput;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
 
-public class TodayJourneyPlanOutput {
+
+public class AllJourneyPlanOutput {
 
     @SerializedName("customerId")
     @Expose

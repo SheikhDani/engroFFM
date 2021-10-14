@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -47,7 +48,9 @@ public class SalesOrderMarketPriceActivity extends AppCompatActivity {
     private List<SalesOrderHeader> headerList;
     private static final String LIST_STATE = "listState";
     private Parcelable mListState = null;
-private String orderNumber, productname,orderDate;
+    private String orderNumber, productname, orderDate;
+    Button btn_procced, btn_back;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_salesorder_marketprice);
@@ -64,6 +67,23 @@ private String orderNumber, productname,orderDate;
         iv_back.setVisibility(View.VISIBLE);
         iv_menu.setVisibility(View.GONE);
         db = new DatabaseHandler(SalesOrderMarketPriceActivity.this);
+        btn_back = findViewById(R.id.back);
+        btn_procced = findViewById(R.id.btn_proceed);
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(SalesOrderMarketPriceActivity.this, FloorStockActivity.class);
+                startActivity(i);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            }
+        });
+        btn_procced.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent n = new Intent(SalesOrderMarketPriceActivity.this, QualityofSalesCallActivity.class);
+                startActivity(n);
+            }
+        });
         sHelper = new SharedPrefferenceHelper(SalesOrderMarketPriceActivity.this);
         headerList = new ArrayList<SalesOrderHeader>();
         iv_back.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +95,7 @@ private String orderNumber, productname,orderDate;
             }
         });
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
-       // LoadSalesOrder();
+        // LoadSalesOrder();
         LoadSalesOrderDetailLocally();
         expandableListAdapter = new SalesOrderMarketPriceAdapter(headerList, SalesOrderMarketPriceActivity.this);
         expandableListView.setAdapter(expandableListAdapter);
@@ -112,13 +132,13 @@ private String orderNumber, productname,orderDate;
                 String invociequanity = header.getItemList().get(childPosition).getInvoiceQuantity();
                 String invocierate = header.getItemList().get(childPosition).getInvoiceRate();
                 String availableQuantity = header.getItemList().get(childPosition).getInvoiceRate();
-                sHelper.setString(Constants.TODAY_PLAN_INVOICE_NUMBER,invoicenumber);
-                sHelper.setString(Constants.TODAY_PLAN_INVOICE_Rate,invocierate);
-                sHelper.setString(Constants.TODAY_PLAN_INVOICE_QUANTITY,invociequanity);
-                sHelper.setString(Constants.TODAY_PLAN_INVOICE_ORDER_NUMBER,orderNumber);
-                sHelper.setString(Constants.TODAY_PLAN_INVOICE_ORDER_DATE,orderDate);
-                sHelper.setString(Constants.TODAY_PLAN_INVOICE_PRODUCT_NAME,productname);
-                sHelper.setString(Constants.TODAY_PLAN_INVOICE_AVAILABLE_QUANTITY,availableQuantity);
+                sHelper.setString(Constants.TODAY_PLAN_INVOICE_NUMBER, invoicenumber);
+                sHelper.setString(Constants.TODAY_PLAN_INVOICE_Rate, invocierate);
+                sHelper.setString(Constants.TODAY_PLAN_INVOICE_QUANTITY, invociequanity);
+                sHelper.setString(Constants.TODAY_PLAN_INVOICE_ORDER_NUMBER, orderNumber);
+                sHelper.setString(Constants.TODAY_PLAN_INVOICE_ORDER_DATE, orderDate);
+                sHelper.setString(Constants.TODAY_PLAN_INVOICE_PRODUCT_NAME, productname);
+                sHelper.setString(Constants.TODAY_PLAN_INVOICE_AVAILABLE_QUANTITY, availableQuantity);
                 Intent market = new Intent(SalesOrderMarketPriceActivity.this, MarketPricesActivity.class);
                 startActivity(market);
                 return false;
@@ -135,7 +155,7 @@ private String orderNumber, productname,orderDate;
     }
 
     private void LoadSalesOrderDetailLocally() {
-        String orderNumber = "",orderid = "", orderDate = "", product = "", orderquantity = "";
+        String orderNumber = "", orderid = "", orderDate = "", product = "", orderquantity = "";
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_TODAY_JOURNEY_ORDER_BRAND_NAME, "");
         map.put(db.KEY_TODAY_JOURNEY_ORDER_NUMBER, "");
@@ -145,6 +165,7 @@ private String orderNumber, productname,orderDate;
         //map.put(db.KEY_IS_VALID_USER, "");
         HashMap<String, String> filters = new HashMap<>();
         filters.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN_ORDERS, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -154,17 +175,22 @@ private String orderNumber, productname,orderDate;
                 orderquantity = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_QUANTITY));
                 orderNumber = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_NUMBER));
                 orderid = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_ID));
-                orderDate = getDatefromMilis(orderDate);
-                SalesOrderHeader category = createCategory(orderNumber,orderDate, product, orderquantity);
+                if(sHelper.getString(Constants.PLAN_TYPE).equals("today"))
+                {
+                    orderDate = getDatefromMilis(orderDate);
+                }
+                else
+                {
+                    orderDate = Helpers.utcToAnyDateFormat(orderDate,"yyyy-MM-dd","MMM d, yyyy");
+                }
+                SalesOrderHeader category = createCategory(orderNumber, orderDate, product, orderquantity);
                 LoadSalesOrderInvoicesLocally(orderid);
                 category.setItemList(expandableListGroup);
                 headerList.add(category);
 
             }
             while (cursor.moveToNext());
-        }
-        else
-        {
+        } else {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SalesOrderMarketPriceActivity.this);
             alertDialogBuilder
                     .setMessage("There are no Sales Order Against this Customer")
@@ -183,7 +209,7 @@ private String orderNumber, productname,orderDate;
     }
 
     private void LoadSalesOrderInvoicesLocally(String orderid) {
-        String invoiceNumber = "", invoiceDate = "", invoicequantity = "",invoicerate = "",availalequantity = "";
+        String invoiceNumber = "", invoiceDate = "", invoicequantity = "", invoicerate = "", availalequantity = "";
         HashMap<String, String> map = new HashMap<>();
         expandableListGroup = new ArrayList<>();
         map.put(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER, "");
@@ -194,17 +220,18 @@ private String orderNumber, productname,orderDate;
         //map.put(db.KEY_IS_VALID_USER, "");
         HashMap<String, String> filters = new HashMap<>();
         filters.put(db.KEY_TODAY_JOURNEY_ORDER_ID, orderid);
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN_ORDERS_INVOICES, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             do {
                 invoiceNumber = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER));
                 invoiceDate = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_DISPATCH_DATE));
-                invoicerate= cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_INVOCIE_RATE));
+                invoicerate = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_INVOCIE_RATE));
                 availalequantity = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_AVAILABLE_QUANITY));
                 invoicequantity = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_DISPATCH_QUANTITY));
                 SalesOrderChild grouop1 = new SalesOrderChild();
-                grouop1.setInvocieDate(getDatefromMilis(invoiceDate));
+                grouop1.setInvocieDate(Helpers.utcToAnyDateFormat(invoiceDate,"yyyy-MM-dd","MMM d, yyyy"));
                 grouop1.setInvoiceNumber(invoiceNumber);
                 grouop1.setInvoiceQuantity(invoicequantity);
                 grouop1.setInvoiceRate(invoicerate);

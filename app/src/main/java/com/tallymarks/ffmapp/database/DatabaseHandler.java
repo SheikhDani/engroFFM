@@ -19,7 +19,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private SQLiteDatabase db;
     /*Database Varaiables*/
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 6;
     private static final String TAG = "DBAdapter";
     private static final String DATABASE_NAME = "FFMApplicationDataBasev1";
     private Context mContext;
@@ -80,6 +80,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_PRODUCT_BRAND_CATEOGRY_IMAGE_BASE64 = "productbrandCateogryImagebase64";
 
     //MarketPrice Stock Sold Table Fields
+    public static final String KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_UNIQUE_ID= "marketpriceStoclSoldQuanitySoldUniqueID";
     public static final String KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_QUANITYSOLD = "marketpriceStoclSoldQuanitySold";
     public static final String KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_NETSELLINGPRICE= "marketpriceStoclSoldNETSellignprice";
     public static final String KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_SAMEINVOCIEE= "marketpriceStoclSoldsmaeinvoice";
@@ -156,6 +157,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE = "todayCustomerLatitude";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE = "todayCustomerLongitude";
     public static final String KEY_TODAY_JOURNEY_IS_VISITED= "isVisitedTodayCustomerJourneyPlan";
+    public static final String KEY_TODAY_JOURNEY_TYPE= "journeyPlanType";
     public static final String KEY_TODAY_JOURNEY_IS_POSTED= "isVisitedTodayCustomerJourneyPlanIsPosted";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID = "todayCustomerDayID";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID = "todayCustoemrJourneyID";
@@ -229,6 +231,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String TABLE_TODAY_JORNEY_PAN_FLOOR_STOCK_INPUT= "CREATE TABLE " + TODAY_JOURNEY_PLAN_FLOOR_STOCK_INPUT + "("
                 + KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDID + " TEXT,"
+                + KEY_TODAY_JOURNEY_TYPE + " TEXT,"
                 + KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDNAME + " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
                 + KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY + " TEXT" + ")";
@@ -288,6 +291,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
                 + KEY_TODAY_JOURNEY_IS_VISITED+ " TEXT,"
                 + KEY_TODAY_JOURNEY_IS_POSTED+ " TEXT,"
+                + KEY_TODAY_JOURNEY_TYPE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_CODE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE+ " TEXT,"
@@ -297,6 +301,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String TABLE_TODAY_JOURNEY_POST_DATA= "CREATE TABLE " + TODAY_JOURNEY_PLAN_POST_DATA+ "("
                 + KEY_TODAY_JOURNEY_CUSTOMER_DISTANCE+ " TEXT,"
+                + KEY_TODAY_JOURNEY_TYPE +" TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LATITUDE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LONGITUDE+ " TEXT,"
@@ -305,6 +310,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String TABLE_TODAY_JOURNEY_PLAN_ORDERS= "CREATE TABLE " + TODAY_JOURNEY_PLAN_ORDERS+ "("
                 + KEY_TODAY_JOURNEY_ORDER_DATE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
+                + KEY_TODAY_JOURNEY_TYPE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_BRAND_NAME+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_ID+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_NUMBER+ " TEXT,"
@@ -312,6 +318,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String TABLE_TODAY_JOURNEY_PLAN_COMMITMENT_RECEIVED= "CREATE TABLE " + TODAY_JOURNEY_PLAN_COMMITMENT_RECEIVED+ "("
                 + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
+                + KEY_TODAY_JOURNEY_TYPE+ " TEXT,"
                 + KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_QUANITY+ " TEXT,"
                 + KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_CONFIRMED+" TEXT,"
                 +  KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_DELIVERY_DATE+ " TEXT,"
@@ -319,19 +326,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String TABLE_TODAY_JOURNEY_PLAN_MARKET_INTEL= "CREATE TABLE " + TODAY_JOURNEY_PLAN_MARKET_INTEL+ "("
                 + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
+                + KEY_TODAY_JOURNEY_TYPE +" TEXT,"
                 + KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTEL_FORWARD+ " TEXT,"
                 +  KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTETL_COMMENT + " TEXT" + ")";
 
         String TABLE_TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED= "CREATE TABLE " + TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED+ "("
                 + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
+                + KEY_TODAY_JOURNEY_TYPE +" TEXT,"
                 +  KEY_CUSTOMER_TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED_ID+ " TEXT" + ")";
 
         String TABLE_TODAY_JOURNEY_PLAN_STOCK= "CREATE TABLE " + TODAY_JOURNEY_PLAN_STOCK+ "("
                 + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
+                + KEY_TODAY_JOURNEY_TYPE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_STOCK_INVOICE_NUMBER+ " TEXT" + ")";
 
         String TABLE_TODAY_JOURNEY_PLAN_PREVIOUS_STOCK= "CREATE TABLE " + TODAY_JOURNEY_PLAN_PREVIOUS_STOCK+ "("
                 + KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_COMPANYHELD+ " TEXT,"
+                + KEY_TODAY_JOURNEY_TYPE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_VISIT_DATE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_ID+ " TEXT,"
@@ -341,11 +352,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String TABLE_TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT= "CREATE TABLE " + TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT+ "("
                 + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
+                + KEY_TODAY_JOURNEY_TYPE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY+ " TEXT" + ")";
 
         String TABLE_TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD= "CREATE TABLE " + TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD+ "("
                 + KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_QUANITYSOLD+ " TEXT,"
+                + KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_UNIQUE_ID+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
+                + KEY_TODAY_JOURNEY_TYPE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_BRAND_NAME+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER+ " TEXT,"
                 + KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_SAMEINVOCIEE+ " TEXT,"
@@ -358,6 +372,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String TABLE_TODAY_JOURNEY_PLAN_ORDERS_INVOICES= "CREATE TABLE " + TODAY_JOURNEY_PLAN_ORDERS_INVOICES+ "("
                 + KEY_TODAY_JOURNEY_ORDER_INVOCIE_RATE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER+ " TEXT,"
+                + KEY_TODAY_JOURNEY_TYPE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_ID+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_DISPATCH_DATE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_ORDER_DISPATCH_QUANTITY+ " TEXT,"
@@ -366,6 +381,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String TABLE_TODAY_JOURNEY_PLAN_START_ACTIVITY= "CREATE TABLE " + TODAY_JOURNEY_PLAN_START_ACTIVITY+ "("
                 + KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
+                + KEY_TODAY_JOURNEY_TYPE+ " TEXT,"
                 + KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_OBjECTIVE+ " TEXT,"
                 + KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_OBJECTIVE_STATUS+ " TEXT,"
                 + KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE+ " TEXT,"

@@ -9,9 +9,12 @@ import android.location.Location;
 import android.os.Bundle;
 
 import android.provider.SyncStateContract;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,13 +58,16 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
     String currentlat;
     String  currentlng;
     SharedPrefferenceHelper sHelper;
+    static EditText et_search_plan;
 
 
 
-    public static TodaysPlan newInstance(String activity) {
+
+    public static TodaysPlan newInstance(String activity, EditText et_search) {
         TodaysPlan fragment = new TodaysPlan();
         Bundle args = new Bundle();
         args.putString(ARG_TEXT, activity);
+        et_search_plan = et_search;
         fragment.setArguments(args);
         return fragment;
     }
@@ -98,6 +104,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
             DialougeManager.gpsNotEnabledPopup(getActivity());
         }
         if(activity.equals("customers")) {
+            sHelper.setString(Constants.PLAN_TYPE, "today");
             getTodayCustomerJourneyPlan();
         }
         else
@@ -112,8 +119,28 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         adapter.setClickListener(this);
+        if(activity.equals("customers")) {
+            et_search_plan.addTextChangedListener(new TextWatcher() {
 
+                @Override
+                public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                    if(et_search_plan.hasFocus()) {
+                        adapter.filter(cs.toString());
+                    }
+                }
 
+                @Override
+                public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+                    // Toast.makeText(getApplicationContext(),"before text change",Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void afterTextChanged(Editable arg0) {
+                    //Toast.makeText(getApplicationContext(),"after text change",Toast.LENGTH_LONG).show();
+                }
+            });
+
+        }
     }
     private void getTodayCustomerJourneyPlan()
     {
@@ -130,6 +157,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
         map.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "");
         //map.put(db.KEY_IS_VALID_USER, "");
         HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE, "today");
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -156,7 +184,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                 plan.setCustomerID(customerID);
                 float distance = getMeterFromLatLong(Float.parseFloat(currentlat), Float.parseFloat(currentlng), Float.parseFloat(customerLat), Float.parseFloat(customerLng));
                 float totaldistance = distance / 1000;
-                String radius = "50";
+                String radius = "500";
                 int totalb = (int) Math.round(totaldistance);
                 int c = (int) Math.round(distance);
                 boolean isWithinradius = c <= Integer.parseInt(radius) + 50;
@@ -304,6 +332,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                         sHelper.setString(Constants.CUSTOMER_ID, plan.getCustomerID());
                         sHelper.setString(Constants.CUSTOMER_CODE, plan.getCustomercode());
                         sHelper.setString(Constants.CUSTOMER_NAME, plan.getTitle());
+                        sHelper.setString(Constants.PLAN_TYPE, "today");
                         sHelper.setString(Constants.CUSTOMER_LAT, plan.getLatitude());
                         sHelper.setString(Constants.CUSTOMER_LNG, plan.getLongitude());
                         sHelper.setString(Constants.CUSTOMER_DAY_ID, plan.getCustomerDayID());
@@ -321,6 +350,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                                     public void onClick(DialogInterface dialog, int which) {
                                         sHelper.setString(Constants.CUSTOMER_ID, plan.getCustomerID());
                                         sHelper.setString(Constants.CUSTOMER_CODE, plan.getCustomercode());
+                                        sHelper.setString(Constants.PLAN_TYPE, "today");
                                         sHelper.setString(Constants.CUSTOMER_NAME, plan.getTitle());
                                         sHelper.setString(Constants.CUSTOMER_LAT, plan.getLatitude());
                                         sHelper.setString(Constants.CUSTOMER_LNG, plan.getLongitude());
@@ -346,7 +376,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
             }
             else
             {
-                Toast.makeText(getActivity(), "You Already Visited That Customer", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "You Already performed The Activity for That Customer", Toast.LENGTH_SHORT).show();
             }
         }
         else {
