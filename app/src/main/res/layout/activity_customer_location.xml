@@ -12,7 +12,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/linear_bottom"
         android:layout_below="@+id/inc_common_header_colletion"
         android:fillViewport="true"
         android:scrollbars="vertical">
@@ -50,6 +51,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginRight="@dimen/p10"
                     android:layout_weight="0.2"
+                    android:id="@+id/iv_location"
 
                     android:gravity="center"
                     android:src="@drawable/engro_location"
@@ -82,7 +84,7 @@
                     />
 
                 <EditText
-                    android:id="@+id/et_firstname"
+                    android:id="@+id/et_custoemrcode"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/p20"
@@ -165,25 +167,27 @@
             </LinearLayout>
 
 
-            <View
 
+            <FrameLayout
+                android:id="@+id/frame"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/p20"
+
                 android:layout_below="@+id/linear_confirmaed"
-                android:layout_marginTop="@dimen/p10"
-                android:background="@color/grey" />
+                android:layout_height="match_parent">
+
+                <fragment
+                    android:id="@+id/map"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"></fragment>
+
+            </FrameLayout>
         </LinearLayout>
 
     </ScrollView>
 
-    <View
 
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@+id/linear_bottom"
-        android:layout_marginTop="@dimen/p50"
-        android:layout_marginBottom="@dimen/p10"
-        android:background="@color/grey" />
 
     <LinearLayout
         android:id="@+id/linear_bottom"
@@ -201,7 +205,7 @@
 
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/btn_submit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"

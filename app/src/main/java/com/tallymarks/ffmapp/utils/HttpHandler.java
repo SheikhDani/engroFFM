@@ -62,6 +62,11 @@ public class HttpHandler {
                 InputStream inputStream=new BufferedInputStream(conn.getInputStream());
                 return convertStreamToString(inputStream);
             }
+            else if(conn.getResponseCode()== HttpURLConnection.HTTP_CREATED)
+            {
+                InputStream inputStream=new BufferedInputStream(conn.getInputStream());
+                return convertStreamToString(inputStream);
+            }
             else
             {
                 InputStream inputStream = new BufferedInputStream(conn.getErrorStream());

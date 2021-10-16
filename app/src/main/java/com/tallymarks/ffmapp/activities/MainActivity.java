@@ -842,8 +842,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String response = null;
         String status = "";
         String message = "";
+        String errorMessage = "";
         ProgressDialog pDialog;
-        String jsonObject = "";
         private HttpHandler httpHandler;
         String customerId = "";
         String visitStatus;
@@ -952,7 +952,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 // Helpers.displayMessage(MainActivity.this, true, message);
                             }
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            if (response.equals("")) {
+                                Helpers.displayMessage(MainActivity.this, true, e.getMessage());
+                                //showResponseDialog( mContext.getResources().getString(R.string.alert),exception.getMessage());
+                                //pDialog.dismiss();
+                            } else {
+                                JSONObject json = null;
+                                try {
+                                    json = new JSONObject(response);
+                                    errorMessage = json.getString("message");
+                                    String status = json.getString("success");
+                                    if (status.equals("false")) {
+                                        Helpers.displayMessage(MainActivity.this, true, errorMessage);
+                                    }
+                                } catch (JSONException exception) {
+                                    exception.printStackTrace();
+
+                                }
+                                //Helpers.displayMessage(LoginActivity.this, true, exception.getMessage());
+                            }
                         }
                     }
                 } catch (Exception e) {
