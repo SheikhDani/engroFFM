@@ -1,7 +1,12 @@
 package com.tallymarks.ffmapp.activities;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
@@ -9,17 +14,31 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.CustomerSnapShotAdapter;
 import com.tallymarks.ffmapp.adapters.SuperVisorSnapShotAdapter;
+import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.CustomerSnapShot;
 import com.tallymarks.ffmapp.models.CustomerSnapShotParent;
 import com.tallymarks.ffmapp.models.SuperVisorSnapShotChild;
 import com.tallymarks.ffmapp.models.SupervisorSnapshotParent;
+import com.tallymarks.ffmapp.models.assignedsalespoint.AssignedSalesPointOutput;
+import com.tallymarks.ffmapp.utils.Constants;
+import com.tallymarks.ffmapp.utils.Helpers;
+import com.tallymarks.ffmapp.utils.HttpHandler;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class SuperVisorSnapShotActivity extends AppCompatActivity {
     private TextView tvTopHeader;
@@ -135,4 +154,5 @@ public class SuperVisorSnapShotActivity extends AppCompatActivity {
 
         return allTeams;
     }
+
 }

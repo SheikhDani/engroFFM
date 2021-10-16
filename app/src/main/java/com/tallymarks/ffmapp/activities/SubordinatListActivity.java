@@ -1,21 +1,43 @@
 package com.tallymarks.ffmapp.activities;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.TodayPlanAdapter;
+import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.TodayPlan;
+import com.tallymarks.ffmapp.models.assignedsalespoint.AssignedSalesPointOutput;
+import com.tallymarks.ffmapp.utils.Constants;
+import com.tallymarks.ffmapp.utils.Helpers;
+import com.tallymarks.ffmapp.utils.HttpHandler;
 import com.tallymarks.ffmapp.utils.ItemClickListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class SubordinatListActivity extends AppCompatActivity implements ItemClickListener {
@@ -47,6 +69,12 @@ public class SubordinatListActivity extends AppCompatActivity implements ItemCli
         });
 
         tvTopHeader.setText("Riaz Ul Haq"+ " Customers");
+
+
+
+
+
+
         prepareMovieData();
         TodayPlanAdapter adapter = new TodayPlanAdapter(planList, "subordinate");
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -102,4 +130,5 @@ public class SubordinatListActivity extends AppCompatActivity implements ItemCli
             startActivity(i);
 
     }
+
 }

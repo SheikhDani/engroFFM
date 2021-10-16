@@ -84,7 +84,7 @@
                     />
 
                 <EditText
-                    android:id="@+id/et_firstname"
+                    android:id="@+id/et_custoemrcode"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/p20"
@@ -205,7 +205,7 @@
 
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/btn_submit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
