@@ -14,8 +14,10 @@ import androidx.annotation.NonNull;
 
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.activities.SubordinatListActivity;
+import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.DataModel;
 import com.tallymarks.ffmapp.models.Subordinates;
+import com.tallymarks.ffmapp.utils.Constants;
 
 import java.util.ArrayList;
 
@@ -23,6 +25,7 @@ public class SubOrdinatesAdapter extends ArrayAdapter {
 
     private ArrayList<Subordinates> dataSet;
     Context mContext;
+    SharedPrefferenceHelper sHelper;
 
     // View lookup cache
     private static class ViewHolder {
@@ -35,6 +38,7 @@ public class SubOrdinatesAdapter extends ArrayAdapter {
         super(context, R.layout.list_suboridnates_item, data);
         this.dataSet = data;
         this.mContext = context;
+        this.sHelper = new SharedPrefferenceHelper(mContext);
 
     }
     @Override
@@ -76,8 +80,9 @@ public class SubOrdinatesAdapter extends ArrayAdapter {
         viewHolder.imgForward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sHelper.setString(Constants.SUBORDINATE_NAME,item.getName());
+                sHelper.setString(Constants.SUBORDINATE_ID,item.getSubordianteid());
                 Intent next = new Intent(mContext, SubordinatListActivity.class);
-                next.putExtra("name",item.getName());
                 next.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(next);
             }

@@ -1,8 +1,12 @@
 package com.tallymarks.ffmapp.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -11,13 +15,29 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.adapters.TodayPlanAdapter;
+import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.SoilSamplingCrops;
 import com.tallymarks.ffmapp.models.StockSellingSummary;
+import com.tallymarks.ffmapp.models.TodayPlan;
+import com.tallymarks.ffmapp.models.assignedcustomersofsubordiantes.GetAssignedCustomerSubOrdinatesOutput;
+import com.tallymarks.ffmapp.utils.Constants;
+import com.tallymarks.ffmapp.utils.Helpers;
+import com.tallymarks.ffmapp.utils.HttpHandler;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class StockSellingSummaryActivity extends AppCompatActivity {
     private TextView tvTopHeader;
@@ -25,6 +45,7 @@ public class StockSellingSummaryActivity extends AppCompatActivity {
     ImageView iv_menu, iv_back;
     private TableLayout mTableLayout;
     ArrayList<StockSellingSummary> arraylist = new ArrayList<StockSellingSummary>();
+    SharedPrefferenceHelper sHelper;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +56,7 @@ public class StockSellingSummaryActivity extends AppCompatActivity {
     {
         tvTopHeader = findViewById(R.id.tv_dashboard);
         mTableLayout = (TableLayout) findViewById(R.id.displayLinear);
+        sHelper = new SharedPrefferenceHelper(StockSellingSummaryActivity.this);
         iv_menu = findViewById(R.id.iv_drawer);
         iv_back = findViewById(R.id.iv_back);
         iv_back.setVisibility(View.VISIBLE);
@@ -43,6 +65,7 @@ public class StockSellingSummaryActivity extends AppCompatActivity {
 
         tvTopHeader.setText("STOCK SELLING SUMMARY");
         prepareRecommendationData();
+        new GetlastVisitStockSale().execute();
         drawRecommendationTable();
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -221,5 +244,83 @@ public class StockSellingSummaryActivity extends AppCompatActivity {
         // notify adapter about data set changes
         // so that it will render the list with new data
 
+    }
+    public class GetlastVisitStockSale extends AsyncTask<String, Void, Void> {
+        ProgressDialog pDialog;
+        private HttpHandler httpHandler;
+        String errorMessage = "";
+
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(StockSellingSummaryActivity.this);
+            pDialog.setMessage(getResources().getString(R.string.loading));
+            pDialog.setIndeterminate(false);
+            pDialog.show();
+            pDialog.setCancelable(false);
+
+            //expandableListGroup.clear();
+
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        @Override
+        protected Void doInBackground(String... Url) {
+            String response = "";
+            String getsupervsorsnapshot = Constants.FFM_GET_LAST_VISIT_STOCK_SALE + "?subordinateId=" + sHelper.getString(Constants.SUBORDINATE_ID) ;
+            System.out.println("OUtlet Status URL : " + getsupervsorsnapshot);
+            try {
+                httpHandler = new HttpHandler();
+                HashMap<String, String> headerParams = new HashMap<>();
+                headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                response = httpHandler.httpGet(getsupervsorsnapshot, headerParams);
+                Log.e("Assigned Sales Point", getsupervsorsnapshot);
+                Log.e("Response", response);
+                Type journeycodeType = new TypeToken<ArrayList<GetAssignedCustomerSubOrdinatesOutput>>() {
+                }.getType();
+                List<GetAssignedCustomerSubOrdinatesOutput> journeycode = new Gson().fromJson(response, journeycodeType);
+                //JourneyPlanOutPut journeycode = new Gson().fromJson(response, JourneyPlanOutPut.class);
+                if (response != null) {
+
+                    for (int j = 0; j < journeycode.size(); j++) {
+                        TodayPlan plan4 = new TodayPlan();
+                        plan4.setSalespoint(journeycode.get(j).getSalesPoint() == null || journeycode.get(j).getSalesPoint() .equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getSalesPoint() .toString());
+
+
+                    }
+                }
+            } catch (Exception exception) {
+                if (response.equals("")) {
+                    Helpers.displayMessage(StockSellingSummaryActivity.this, true, exception.getMessage());
+                    //showResponseDialog( mContext.getResources().getString(R.string.alert),exception.getMessage());
+                    //pDialog.dismiss();
+                } else {
+                    JSONObject json = null;
+                    try {
+                        json = new JSONObject(response);
+                        errorMessage = json.getString("message");
+                        String status = json.getString("success");
+                        if (status.equals("false")) {
+                            // Helpers.displayMessage(JourneyPlanActivity.this, true, errorMessage);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+
+                    }
+                    //Helpers.displayMessage(LoginActivity.this, true, exception.getMessage());
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void args) {
+
+            pDialog.dismiss();
+
+        }
     }
 }
