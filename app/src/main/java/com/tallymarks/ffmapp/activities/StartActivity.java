@@ -162,12 +162,18 @@ public class StartActivity extends AppCompatActivity {
                 setTextViewDrawableColor(tvNotAvailable, R.color.red);
                 status = "0";
                 shelper.setString(Constants.ACTIVITY_STATUS, "3");
-                checkinlat = gps.getLatitude();
-                checkinlng = gps.getLongitude();
-                saveCustomerNoAvailale();
-                Intent n = new Intent(StartActivity.this,VisitCustomerActivity.class);
-                startActivity(n);
+                gps = new GpsTracker(StartActivity.this);
+                if (gps.canGetLocation()) {
+                    if (ActivityCompat.checkSelfPermission(StartActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(StartActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    checkinlat = gps.getLatitude();
+                    checkinlng = gps.getLongitude();
+                    saveCustomerNoAvailale();
+                    Intent n = new Intent(StartActivity.this, VisitCustomerActivity.class);
+                    startActivity(n);
 
+                }
             }
         });
         tvOrderTracking.setOnClickListener(new View.OnClickListener() {

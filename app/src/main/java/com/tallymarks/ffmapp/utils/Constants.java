@@ -39,6 +39,11 @@ public class Constants {
     public static final String TODAY_PLAN_INVOICE_PRODUCT_NAME ="invoiceProductName";
     public static final String TODAY_PLAN_INVOICE_ORDER_DATE ="invoiceOrderDate";
 
+    public static final String SUBORDINATE_NAME= "subordianteName";
+    public static final String SUBORDINATE_ID= "subordianteid";
+    public static final String SUBORDINATE_CUSTOMER_ID= "subordiantecustomerid";
+    public static final String SUBORDINATE_CUSTOMER_NAME= "subordiantecustomerName";
+
 
 
 
@@ -84,6 +89,9 @@ public class Constants {
     public static final String POST_TODAY_CUSTOMER_JOURNEY_PLAN=  FFM_BASE_URL + "/app/trans/checkInJourneyPlan";
     public static final String POST_CUSTOMER_CHANGE_LOACTION=  FFM_BASE_URL + "/app/trans/saveCustomerCorrection";
     public static final String FFM_GET_SUPERVISOR_SNAPSHOT=  FFM_BASE_URL + "/global/lookup/listSubordinates";
+    public static final String FFM_GET_ASSIGNED_CUSTOMER_SUPERVISOR=  FFM_BASE_URL + "/global/lookup/getAssignedCustomers";
+    public static final String FFM_GET_PREVIOUS_SNAPSHOT_SUPERVISOR=  FFM_BASE_URL + "/app/trans/getPreviousStockSnapshot";
+    public static final String FFM_GET_LAST_VISIT_STOCK_SALE=  FFM_BASE_URL + "/app/trans/getLastVisitStockSale";
 
 
 

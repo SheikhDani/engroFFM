@@ -111,8 +111,8 @@ public class TodayPlanAdapter extends RecyclerView.Adapter<TodayPlanAdapter.MyVi
         }
         else if(from.equals("subordinate"))
         {
-            holder.customecode.setText(movie.getCustomercode());
-            holder.time.setText(movie.getLocation());
+            holder.customecode.setText("Customer Code :"+movie.getCustomercode());
+            holder.time.setText("Location Code :"+movie.getLocation());
         }
         else
         {
