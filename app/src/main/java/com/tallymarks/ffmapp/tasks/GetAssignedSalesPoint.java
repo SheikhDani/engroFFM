@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.activities.MainActivity;
+import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.assignedsalespoint.AssignedSalesPointOutput;
 import com.tallymarks.ffmapp.utils.Constants;
@@ -32,10 +33,12 @@ public class GetAssignedSalesPoint extends AsyncTask<String, Void, Void> {
     Context mContext;
     String errorMessage = "";
     SharedPrefferenceHelper sHelper;
+    DatabaseHandler db;
     public GetAssignedSalesPoint (Context context)
     {
         this.mContext = context;
         this.sHelper = new SharedPrefferenceHelper(mContext);
+        this.db = new DatabaseHandler(mContext);
     }
 
     @Override
@@ -70,7 +73,16 @@ public class GetAssignedSalesPoint extends AsyncTask<String, Void, Void> {
             //JourneyPlanOutPut journeycode = new Gson().fromJson(response, JourneyPlanOutPut.class);
             if (response != null) {
                 if (journeycode.size() > 0) {
-
+                    for (int j = 0; j < journeycode.size(); j++) {
+                        HashMap<String, String> dbParams = new HashMap<>();
+                        dbParams.put(db.KEY_ASSIGNED_SALESPOINT_CODE, journeycode.get(j).getSalesPointCode() == null || journeycode.get(j).getSalesPointCode().equals("")? mContext.getString(R.string.not_applicable) : journeycode.get(j).getSalesPointCode().toString());
+                        dbParams.put(db.KEY_ASSIGNED_SALESPOINT_ID, journeycode.get(j).getId()== null || journeycode.get(j).getId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getId().toString());
+                        dbParams.put(db.KEY_ASSIGNED_SALESPOINT_HIERARCHY_ID, journeycode.get(j).getHierarchyId() == null || journeycode.get(j).getHierarchyId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getHierarchyId().toString());
+                        dbParams.put(db.KEY_ASSIGNED_SALESPOINT_NAME, journeycode.get(j).getSalesPointName()== null || journeycode.get(j).getSalesPointName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getSalesPointName().toString());
+                        dbParams.put(db.KEY_ASSIGNED_SALESPOINT_TEHSIL_CODE, journeycode.get(j).getTehsilCode() == null || journeycode.get(j).getTehsilCode().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getTehsilCode().toString());
+                        dbParams.put(db.KEY_ASSIGNED_SALESPOINT_TERRIORITY_CODE, journeycode.get(j).getTerritoryCode() == null || journeycode.get(j).getTerritoryCode().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getTerritoryCode().toString());
+                        db.addData(db.ASSIGNED_SALES_POINT, dbParams);
+                    }
                 }
             }
         } catch (Exception exception) {

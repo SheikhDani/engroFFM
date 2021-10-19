@@ -1,10 +1,22 @@
 package com.tallymarks.ffmapp.activities;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 
+import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,29 +26,47 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.FarmersAdapter;
 import com.tallymarks.ffmapp.adapters.SalesPointAdapter;
+import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.models.Farmes;
 import com.tallymarks.ffmapp.models.SaelsPoint;
+import com.tallymarks.ffmapp.utils.GpsTracker;
+import com.tallymarks.ffmapp.utils.Helpers;
 import com.tallymarks.ffmapp.utils.RecyclerTouchListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class AddNewFarmerActivity extends AppCompatActivity {
-    private TextView tvTopHeader;
+    private TextView tvTopHeader, tvSelectedMarket,tvLatLng;
     ImageView iv_menu, iv_back;
     ImageView img_add_serving, img_add_profile;
     LinearLayout linearLayoutList, LinearLayoutList2;
+    EditText et_firstname, et_lastname, et_email, et_mobile, et_landline, et_cnic;
     Button btn_back;
+    AutoCompleteTextView auto_gender;
+    Button btn_creat;
+    TextView txtFirstName, txtMobileNumber;
+    GpsTracker gps;
+    Button btnMarket;
+    DatabaseHandler db;
+    Button btnLocation;
+    String currentlat, currentLng;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +77,64 @@ public class AddNewFarmerActivity extends AppCompatActivity {
 
     private void initView() {
         tvTopHeader = findViewById(R.id.tv_dashboard);
+        tvSelectedMarket = findViewById(R.id.txt_selected_market);
+        auto_gender = findViewById(R.id.auto_gender);
+        tvLatLng = findViewById(R.id.txt_lat_lng);
+        db = new DatabaseHandler(AddNewFarmerActivity.this);
+        et_email = findViewById(R.id.et_email);
+        et_firstname = findViewById(R.id.et_firstname);
+        btnLocation = findViewById(R.id.btn_location);
+        et_lastname = findViewById(R.id.et_lastname);
+        btn_creat = findViewById(R.id.btn_create);
+        et_mobile = findViewById(R.id.et_number);
+        et_landline = findViewById(R.id.et_landline);
+        et_cnic = findViewById(R.id.et_cnic);
+        txtFirstName = findViewById(R.id.txt_first_name);
+        txtMobileNumber = findViewById(R.id.txt_mobile_number);
+        btnMarket = findViewById(R.id.btn_market);
+        final String arraylist[] = {"Male", "Female"};
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_list_item_1, arraylist);
+        auto_gender.setAdapter(arrayAdapter);
+        auto_gender.setCursorVisible(false);
+        auto_gender.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                auto_gender.showDropDown();
+                String selection = arraylist[position];
+                //auto_gender.setText(selection);
+            }
+        });
+        auto_gender.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View arg0) {
+                auto_gender.showDropDown();
+            }
+        });
+        btnLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Intent map = new Intent(AddNewFarmerActivity.this, CustomMap.class);
+//                startActivity(map);
+                gps = new GpsTracker(AddNewFarmerActivity.this);
+                if (gps.canGetLocation()) {
+                    if (ActivityCompat.checkSelfPermission(AddNewFarmerActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(AddNewFarmerActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    currentlat = String.valueOf(gps.getLatitude());
+                    currentLng = String.valueOf(gps.getLongitude());
+                    tvLatLng.setText("Selected Lat, Lng: "+currentlat+","+currentLng);
+
+                }
+                else
+                {
+                    tvLatLng.setText("Selected Lat, Lng: 0.0 , 0.0");
+                }
+            }
+        });
+
+        tvLatLng.setText("Selected Lat, Lng: "+currentlat+","+currentLng);
         img_add_serving = findViewById(R.id.img_add_serving);
         img_add_profile = findViewById(R.id.img_add_profile);
         linearLayoutList = (LinearLayout) findViewById(R.id.linear_layout_dynamic_serving);
@@ -58,6 +146,18 @@ public class AddNewFarmerActivity extends AppCompatActivity {
         iv_menu.setVisibility(View.GONE);
         tvTopHeader.setVisibility(View.VISIBLE);
         tvTopHeader.setText("ADD NEW FARMER");
+        SpannableStringBuilder firstName = setStarToLabel("First Name");
+        SpannableStringBuilder mobileNumber = setStarToLabel("Mobile Number");
+        txtFirstName.setText(firstName);
+        txtMobileNumber.setText(mobileNumber);
+        btnMarket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectMarketDialouge(tvSelectedMarket);
+            }
+        });
+
+
         img_add_serving.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,6 +168,12 @@ public class AddNewFarmerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 addView2();
+            }
+        });
+        btn_creat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                validateInputs();
             }
         });
         iv_back.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +195,19 @@ public class AddNewFarmerActivity extends AppCompatActivity {
 
     }
 
+    @NonNull
+    private SpannableStringBuilder setStarToLabel(String text) {
+        String simple = text;
+        String colored = "*";
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        builder.append(simple);
+        int start = builder.length();
+        builder.append(colored);
+        int end = builder.length();
+        builder.setSpan(new ForegroundColorSpan(Color.RED), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return builder;
+    }
+
     private void addView() {
 
         final View addView = getLayoutInflater().inflate(R.layout.list_serving, null, false);
@@ -100,7 +219,7 @@ public class AddNewFarmerActivity extends AppCompatActivity {
         auto_company.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openSalesPoint("company");
+                openSalesPoint();
             }
         });
 
@@ -157,7 +276,7 @@ public class AddNewFarmerActivity extends AppCompatActivity {
         btn_sales_point.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openSalesPoint("sales");
+                openSalesPoint();
             }
         });
         LinearLayoutList2.addView(addView);
@@ -193,7 +312,7 @@ public class AddNewFarmerActivity extends AppCompatActivity {
         linear.removeView(v);
     }
 
-    public void openSalesPoint(String salespoint) {
+    public void openSalesPoint() {
         LayoutInflater li = LayoutInflater.from(AddNewFarmerActivity.this);
         View promptsView = li.inflate(R.layout.dialouge_sales_point, null);
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddNewFarmerActivity.this);
@@ -201,13 +320,10 @@ public class AddNewFarmerActivity extends AppCompatActivity {
         final AlertDialog alertDialog = alertDialogBuilder.create();
         final List<SaelsPoint> movieList = new ArrayList<>();
         final TextView title = promptsView.findViewById(R.id.tv_option);
-        if (salespoint.equals("sales")) {
-            title.setText("Sales Point");
-        } else {
-            title.setText("Select Company");
-        }
+
+        title.setText("Select Company");
         final RecyclerView recyclerView = promptsView.findViewById(R.id.recyclerView);
-        final SalesPointAdapter mAdapter = new SalesPointAdapter(movieList);
+        final SalesPointAdapter mAdapter = new SalesPointAdapter(movieList, "farmerchild");
         // vertical RecyclerView
         // keep movie_list_row.xml width to `match_parent`
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -228,7 +344,7 @@ public class AddNewFarmerActivity extends AppCompatActivity {
 
             }
         }));
-        prepareMovieData(mAdapter, movieList, salespoint);
+        // prepareMovieData(mAdapter, movieList, salespoint);
         //ImageView ivClose = promptsView.findViewById(R.id.iv_close);
 
         alertDialogBuilder.setCancelable(false);
@@ -273,5 +389,132 @@ public class AddNewFarmerActivity extends AppCompatActivity {
         // so that it will render the list with new data
         mAdapter.notifyDataSetChanged();
     }
+
+    private void validateInputs() {
+        if (!(Helpers.isEmpty(getApplicationContext(), et_firstname))
+                && !(Helpers.isEmpty(getApplicationContext(), et_mobile))) {
+
+        } else {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddNewFarmerActivity.this);
+            alertDialogBuilder
+                    .setMessage(getResources().getString(R.string.field_required_message))
+                    .setCancelable(false)
+                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+
+
+                        }
+                    });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        }
+    }
+
+    private void clearInputs() {
+        et_firstname.setText("");
+        et_email.setText("");
+    }
+
+    public void selectMarketDialouge(TextView tvSelectedMarket) {
+        LayoutInflater li = LayoutInflater.from(AddNewFarmerActivity.this);
+        View promptsView = li.inflate(R.layout.dialouge_sales_point, null);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddNewFarmerActivity.this);
+        alertDialogBuilder.setView(promptsView);
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        final List<SaelsPoint> companyList = new ArrayList<>();
+        final TextView title = promptsView.findViewById(R.id.tv_option);
+        final EditText search = promptsView.findViewById(R.id.et_Search);
+        final ImageView ivClsoe = promptsView.findViewById(R.id.iv_Close);
+        ivClsoe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+        title.setText("SALES");
+        final RecyclerView recyclerView = promptsView.findViewById(R.id.recyclerView);
+        prepareCompanyData(companyList);
+        final SalesPointAdapter mAdapter = new SalesPointAdapter(companyList, "farmer");
+
+        // vertical RecyclerView
+        // keep movie_list_row.xml width to `match_parent`
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                SaelsPoint companyname = companyList.get(position);
+                alertDialog.dismiss();
+                tvSelectedMarket.setText(companyname.getPoint());
+
+                // Toast.makeText(getApplicationContext(), movie.getPoint() + " is selected!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+        search.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                if (search.hasFocus()) {
+                    mAdapter.filter(cs.toString());
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+                // Toast.makeText(getApplicationContext(),"before text change",Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                //Toast.makeText(getApplicationContext(),"after text change",Toast.LENGTH_LONG).show();
+            }
+        });
+
+        //ImageView ivClose = promptsView.findViewById(R.id.iv_close);
+
+        alertDialogBuilder.setCancelable(true);
+        alertDialog.show();
+    }
+
+    private void prepareCompanyData(List<SaelsPoint> movieList) {
+        movieList.clear();
+        String salesPointName = "", SalesPoitnCode = "";
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(db.KEY_ASSIGNED_SALESPOINT_CODE, "");
+        map.put(db.KEY_ASSIGNED_SALESPOINT_NAME, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        Cursor cursor = db.getData(db.ASSIGNED_SALES_POINT, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                SaelsPoint companyname = new SaelsPoint();
+                salesPointName = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_ASSIGNED_SALESPOINT_NAME)));
+                SalesPoitnCode = cursor.getString(cursor.getColumnIndex(db.KEY_ASSIGNED_SALESPOINT_CODE));
+                companyname.setPoint(salesPointName);
+                companyname.setId(SalesPoitnCode);
+                movieList.add(companyname);
+            }
+            while (cursor.moveToNext());
+        }
+
+
+        // notify adapter about data set changes
+        // so that it will render the list with new data
+        // mAdapter.notifyDataSetChanged();
+    }
+
 }
 

@@ -458,7 +458,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         title.setText("Select Company");
         final RecyclerView recyclerView = promptsView.findViewById(R.id.recyclerView);
         prepareCompanyData(companyList);
-        final SalesPointAdapter mAdapter = new SalesPointAdapter(companyList);
+        final SalesPointAdapter mAdapter = new SalesPointAdapter(companyList,"salescall");
 
         // vertical RecyclerView
         // keep movie_list_row.xml width to `match_parent`
