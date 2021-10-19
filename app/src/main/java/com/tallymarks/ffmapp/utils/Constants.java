@@ -44,6 +44,10 @@ public class Constants {
     public static final String SUBORDINATE_CUSTOMER_ID= "subordiantecustomerid";
     public static final String SUBORDINATE_CUSTOMER_NAME= "subordiantecustomerName";
 
+    public static final String CUSTOM_LAT= "customLat";
+    public static final String CUSTOM_LNG= "customLng";
+
+
 
 
 

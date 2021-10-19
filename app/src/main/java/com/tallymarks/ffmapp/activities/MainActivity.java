@@ -205,14 +205,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkLoadAllCustomerJourneyPlan();
         checkProductBrandGrouopByCategory();
         checkStorageDepth();
+        checkMarketPlayers();
+        checkAssignedSalesPoint();
 
 
         //new GetOutletStatus(MainActivity.this).execute();
 
-//        new GetAssignedSalesPoint(MainActivity.this).execute();
+
 //        new GetlistofallGenders(MainActivity.this).execute();
 //        new GetlistofAllDistrict(MainActivity.this).execute();
-//        new GetListofallMarketPlayers(MainActivity.this).execute();
+
 //        new GetListofallProductCategories(MainActivity.this).execute();
         //      new LoadCustomersAllJourneyPlan(MainActivity.this).execute();
 
@@ -410,6 +412,47 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             while (cursor.moveToNext());
         } else {
             new GetListofAllDepths(MainActivity.this).execute();
+        }
+
+
+    }
+
+    public void  checkMarketPlayers() {
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_MARKET_PLAYER_ID, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        Cursor cursor = db.getData(db.MARKET_PLAYERS, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+
+
+            }
+            while (cursor.moveToNext());
+        } else {
+            new GetListofallMarketPlayers(MainActivity.this).execute();
+        }
+
+
+    }
+    public void  checkAssignedSalesPoint() {
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_ASSIGNED_SALESPOINT_CODE, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        Cursor cursor = db.getData(db.ASSIGNED_SALES_POINT, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+
+
+            }
+            while (cursor.moveToNext());
+        } else {
+            new GetAssignedSalesPoint(MainActivity.this).execute();
         }
 
 

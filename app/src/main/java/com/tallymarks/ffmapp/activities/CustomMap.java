@@ -1,25 +1,23 @@
 package com.tallymarks.ffmapp.activities;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -49,10 +47,9 @@ import com.tallymarks.ffmapp.utils.Helpers;
 import com.tallymarks.ffmapp.utils.User;
 
 import java.util.HashMap;
-import java.util.Map;
 
-public class MapActivity  extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener{
+public class CustomMap extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
     private TextView tvTopHeader;
     ImageView iv_menu, iv_back;
     final static int REQUEST_LOCATION = 199;
@@ -61,13 +58,15 @@ public class MapActivity  extends AppCompatActivity implements OnMapReadyCallbac
     FusedLocationProviderClient fusedLocationProviderClient;
     private static final int REQUEST_CODE = 101;
     private GoogleApiClient googleApiClient;
-     DatabaseHandler db;
+    DatabaseHandler db;
     private SupportMapFragment mapFragment;
     SharedPrefferenceHelper sHelper;
     private GpsTracker gpsTracker;
+    private String currentlng = "";
+    private String currentlat = "";
+    private GoogleMap mMap;
     Button btnProceed;
 
-    private GoogleMap mMap;
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
@@ -85,73 +84,47 @@ public class MapActivity  extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        gpsTracker = new GpsTracker(MapActivity.this);
+        gpsTracker = new GpsTracker(CustomMap.this);
 
         mMap = googleMap;
         if (gpsTracker.canGetLocation()) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
+
             }
             mMap.getUiSettings().setScrollGesturesEnabled(true);
-            mMap.setMyLocationEnabled(true);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), 17.0f));
-            mClusterManager = new ClusterManager<>(this, googleMap);
-            googleMap.setOnCameraIdleListener(mClusterManager);
-            googleMap.setOnMarkerClickListener(mClusterManager);
-            googleMap.setOnInfoWindowClickListener(mClusterManager);
-//            currentlat = String.valueOf(gpsTracker.getLatitude());
-//            currentlng = String.valueOf(gpsTracker.getLongitude());
-//            // mMap.addMarker(new MarkerOptions().position(new LatLng(gpsTracker.getLatitude(),gpsTracker.getLongitude())).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Current Location"));
-//            //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), 17.0f));
-//
-//            LatLng location = new LatLng(Double.parseDouble(currentlat), Double.parseDouble(currentlng));
-//            mMap.addMarker(new MarkerOptions().position(location).title("Current Location")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-//            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(currentlat), Double.parseDouble(currentlng)), 10));
+            //  mMap.setMyLocationEnabled(true);
+            //            currentlat = String.valueOf(gpsTracker.getLatitude());
+            currentlng = String.valueOf(gpsTracker.getLongitude());
+            currentlat = String.valueOf(gpsTracker.getLatitude());
+            sHelper.setString(Constants.CUSTOM_LAT, currentlat);
+            sHelper.setString(Constants.CUSTOM_LNG, currentlng);
 
+            // mMap.addMarker(new MarkerOptions().position(new LatLng(gpsTracker.getLatitude(),gpsTracker.getLongitude())).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Current Location"));
+            //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), 17.0f));
+
+            LatLng location = new LatLng(Double.parseDouble(currentlat), Double.parseDouble(currentlng));
+            mMap.addMarker(new MarkerOptions().position(location).title("Current Location")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(currentlat), Double.parseDouble(currentlng)), 10));
         } else {
             enableLoc();
             // DialougeManager.gpsNotEnabledPopup(ProjectDetailActivity.this);
         }
-        HashMap<String, String> map = new HashMap<>();
-        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME, "");
-        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE, "");
-        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE, "");
-        HashMap<String, String> filters = new HashMap<>();
-        filters.put(db.KEY_TODAY_JOURNEY_TYPE,sHelper.getString(Constants.PLAN_TYPE_MAP));
-        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            do {
-                if (cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE)).equals("null") || cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE)).equals("null")) {
-                    LatLng location = new LatLng(0, 0);
-                    mMap.addMarker(new MarkerOptions().position(location).title(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME)))));
-                } else if (cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE)).equals("null") && cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE)).equals("null")) {
-                    LatLng location = new LatLng(0, 0);
-                    mMap.addMarker(new MarkerOptions().position(location).title(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME)))));
-                } else {
-                    mClusterManager.addItem(new User(Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE))),Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE))),Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME))),""));
-                    //  LatLng location = new LatLng(Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_LATITUDE))), Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_LANGITUDE))));
-                    // mMap.addMarker(new MarkerOptions().position(location).title(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_NAME)))));
-                }
-            }
-            while (cursor.moveToNext());
-        }
-
 
     }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         initView();
 
     }
-    private void initView()
-    {
-        sHelper = new SharedPrefferenceHelper(MapActivity.this);
+
+    private void initView() {
+        sHelper = new SharedPrefferenceHelper(CustomMap.this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        db = new DatabaseHandler(MapActivity.this);
+        db = new DatabaseHandler(CustomMap.this);
         btnProceed = findViewById(R.id.btnProceed);
         tvTopHeader = findViewById(R.id.tv_dashboard);
         iv_menu = findViewById(R.id.iv_drawer);
@@ -160,51 +133,34 @@ public class MapActivity  extends AppCompatActivity implements OnMapReadyCallbac
         iv_menu.setVisibility(View.GONE);
         tvTopHeader.setVisibility(View.VISIBLE);
         tvTopHeader.setText("MAP Activity");
-        Intent intent = getIntent();
-        final String name = intent.getExtras().getString("from");
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(name.equals("customer")) {
-                    Intent i = new Intent(MapActivity.this, VisitCustomerActivity.class);
-                    startActivity(i);
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                }
-                else
-                {
-                    Intent i = new Intent(MapActivity.this, VisitFarmerActivity.class);
-                    startActivity(i);
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                }
+
+                Intent i = new Intent(CustomMap.this, AddNewFarmerActivity.class);
+                startActivity(i);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
             }
         });
-
         btnProceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(name.equals("customer")) {
-                    Intent i = new Intent(MapActivity.this, VisitCustomerActivity.class);
-                    startActivity(i);
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                }
-                else
-                {
-                    Intent i = new Intent(MapActivity.this, VisitFarmerActivity.class);
-                    startActivity(i);
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                }
+                Intent i = new Intent(CustomMap.this, AddNewFarmerActivity.class);
+                startActivity(i);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
-
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_LOCATION) {
-            Toast.makeText(MapActivity.this, "Location enabled by user!", Toast.LENGTH_LONG).show();
+            Toast.makeText(CustomMap.this, "Location enabled by user!", Toast.LENGTH_LONG).show();
 //            try {
 //                Thread.sleep(8000);
 //            } catch (InterruptedException e) {
@@ -214,9 +170,10 @@ public class MapActivity  extends AppCompatActivity implements OnMapReadyCallbac
             startActivity(getIntent());
         }
     }
+
     private void enableLoc() {
         if (googleApiClient == null) {
-            googleApiClient = new GoogleApiClient.Builder(MapActivity.this).addApi(LocationServices.API).addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+            googleApiClient = new GoogleApiClient.Builder(CustomMap.this).addApi(LocationServices.API).addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                 @Override
                 public void onConnected(Bundle bundle) {
                 }
@@ -258,7 +215,7 @@ public class MapActivity  extends AppCompatActivity implements OnMapReadyCallbac
                                 // Show the dialog by calling startResolutionForResult(),
                                 // and check the result in onActivityResult().
                                 status.startResolutionForResult(
-                                        MapActivity.this,
+                                        CustomMap.this,
                                         REQUEST_LOCATION);
                             } catch (IntentSender.SendIntentException e) {
                                 // Ignore the error.

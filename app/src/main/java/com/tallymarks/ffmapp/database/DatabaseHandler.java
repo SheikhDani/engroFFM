@@ -19,7 +19,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private SQLiteDatabase db;
     /*Database Varaiables*/
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
     private static final String TAG = "DBAdapter";
     private static final String DATABASE_NAME = "FFMApplicationDataBasev1";
     private Context mContext;
@@ -29,6 +29,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String OUTLET_STATUSES = "OUTLET_STATUS";
     public static final String CROPS_LIST = "CROPS_LIST";
     public static final String FERT_TYPES = "FERT_TYPES";
+    public static final String MARKET_PLAYERS = "MARKET_PLAYERS";
+    public static final String ASSIGNED_SALES_POINT = "ASSIGNED_SALES_POINT";
     public static final String SOIL_DEPTHS = "SOIL_DEPTHS";
     public static final String GENDER = "GENDER";
     public static final String DISTRTICTS = "DESTRICTS";
@@ -48,6 +50,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String TODAY_JOURNEY_PLAN_MARKET_INTEL = "TODAY_JOURNEY_PLAN_MARKET_INTEL";
     public static final String TODAY_JOURNEY_PLAN_COMMITMENT_RECEIVED = "TODAY_JOURNEY_PLAN_COMMITMENT_RECEIVED";
     public static final String TODAY_JOURNEY_PLAN_POST_DATA = "TODAY_JOURNEY_PLAN_POST_DATA";
+    public static final String ADD_NEW_FARMER_POST_DATA = "ADD_NEW_FARMER_POST_DATA";
+    public static final String ADD_NEW_FARMER_LAND_PROFILE= "ADD_NEW_FARMER_LAND_PROFILE";
+    public static final String ADD_NEW_FARMER_LAND_PROFILE_CROPPING_PATTERN= "ADD_NEW_FARMER_LAND_PROFILE_CROPPING_PATTERN";
+    public static final String ADD_NEW_FARMER_SERVING_DEALERS= "ADD_NEW_FARMER_SERVING_DEALERS";
+    public static final String ADD_NEW_FARMER_SERVING_DEALERS_MARKET_PLASYERS= "ADD_NEW_FARMER_SERVING_DEALERS_MARKET_PALYERS";
 
 
 
@@ -135,6 +142,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_CROP_SHORT_DESCRIPTION = "cropshortDesc";
     public static final String KEY_CROP_NAME = "cropName";
 
+    //MARKET PLAYERS Table Fields
+    public static final String KEY_MARKET_PLAYER_ID = "marketPlayerID";
+    public static final String KEY_MARKET_PLAYER_CODE = "marketPlayerCode";
+    public static final String KEY_MARKET_PLAYER_NAME = "marketPlayerName";
+    public static final String KEY_MARKET_PLAYER_DESCRIPTION= "marketPlayerDescription";
+    public static final String KEY_MARKET_PLAYER_COMPANY_HELD = "marketPlayerCompanyHeld";
+    public static final String KEY_MARKET_PLAYER_ENABLED= "marketPlayerEnabled";
+
+    //ASSIGNED SALES POINT Table Fields
+    public static final String KEY_ASSIGNED_SALESPOINT_ID = "assignedSalesPointID";
+    public static final String KEY_ASSIGNED_SALESPOINT_CODE = "assignedSalesPointCode";
+    public static final String KEY_ASSIGNED_SALESPOINT_HIERARCHY_ID = "assignedSalesPointHierarchyID";
+    public static final String KEY_ASSIGNED_SALESPOINT_NAME= "assignedSalesPointName";
+    public static final String KEY_ASSIGNED_SALESPOINT_TERRIORITY_CODE= "assignedSalesPointTeriorityCode";
+    public static final  String KEY_ASSIGNED_SALESPOINT_TEHSIL_CODE= "assignedSalesPointTehsilCode";
+
+
+
+
+
     //FERT TYPES Table Fields
     public static final String KEY_FERT_ID = "fertID";
     public static final String KEY_FERT_NAME = "fertName";
@@ -148,6 +175,52 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_SOIL_UNIT = "soilUnit";
     public static final String KEY_SOIL_DEPTH_TO = "soildepthTO";
     public static final String KEY_SOIL_DEPTH_FROM = "soildepthFROM";
+
+    //Add New Farmer Table Fields
+    public static final String KEY_ADD_FARMER_EMAL = "addFarmerEmail";
+    public static final String KEY_ADD_FARMER_FIRST_NAME = "addFarmerFirstName";
+    public static final String KEY_ADD_FARMER_LAST_NAME = "addFarmerLastName";
+    public static final String KEY_ADD_FARMER_MOBILE_NUMBER = "addFarmerMobileNumber";
+    public static final String KEY_ADD_FARMER_LANDLINE_NUMBER = "addFarmerLandLineNumber";
+    public static final String KEY_ADD_FARMER_CNIC_NUMBER = "addFarmerCnicNumber";
+    public static final String KEY_ADD_FARMER_GENDER_ID = "addFarmerGenderID";
+    public static final String KEY_ADD_FARMER_SALEPOINT_cODE = "addFarmerSalePointCode";
+    public static final String KEY_ADD_FARMER_LAT = "addFarmerLat";
+    public static final String KEY_ADD_FARMER_LNG= "addFarmerLng";
+
+    //Add New Farmer Serving Dealers Table Fields
+    public static final String KEY_ADD_FARMER_SERVING_DEALER_CUSTOMER_CODE= "addFarmerServignDealerCustoemrCode";
+    public static final String KEY_ADD_FARMER_SERVING_DEALER_CUSTOMER_NAME= "addFarmerServingDealerCustomerName";
+
+    //Add New Farmer Serving Dealers Marekt Players Table Fields
+    public static final String KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_ID= "addFarmerServignDealerMarketPlayerID";
+    public static final String KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_CODE= "addFarmerServignDealerMarketPlayerCode";
+    public static final String KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_NAME= "addFarmerServignDealerMarketPlayerName";
+    public static final String KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_DESCRIPTION= "addFarmerServignDealerMarketPlayerDescription";
+    public static final String KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_COMPANY_HELD= "addFarmerServignDealerMarketPlayerCompanyHeld";
+    public static final String KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_ENABLED= "addFarmerServignDealerMarketPlayerEnabled";
+
+
+
+
+    //Add New Farmer Land Profile Table Fields
+    public static final String KEY_ADD_FARMER_LAND_PROFILE_SIZE = "addFarmerLandProfileSize";
+    public static final String KEY_ADD_FARMER_LAND_PROFILE_SALES_POINT_ID = "addFarmerLandProfileSalesPointID";
+    public static final String KEY_ADD_FARMER_LAND_PROFILE_SALES_POINT_NAME = "addFarmerLandProfileSalesPointname";
+    public static final String KEY_ADD_FARMER_LAND_PROFILE_LANDMARKS = "addFarmerLandProfileLandmarks";
+    public static final String KEY_ADD_FARMER_LAND_PROFILE_OWNERSHIP = "addFarmerLandProfileownership";
+    public static final String KEY_ADD_FARMER_LAND_PROFILE_WATERSOURCE = "addFarmerLandProfilewatersource";
+    public static final String KEY_ADD_FARMER_LAND_PROFILE_SALES_POINT_CODE = "addFarmerLandProfileSalesPointCode";
+
+    //Add New Farmer Land Profile Croppping Pattern Table Fields
+    public static final String KEY_ADD_FARMER_LAND_PROFILE_CROPPING_PATTERN_CROP_ID = "addFarmerLandProfileCroppingPatternCropID";
+    public static final String KEY_ADD_FARMER_LAND_PROFILE_CROPPING_PATTERN_LAND_HOLDING = "addFarmerLandProfileCroppingPatternLandHolding";
+
+
+
+
+
+
 
 
     //Today Journey Plan Table Fields
@@ -229,6 +302,47 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_OUTLET_ID + " TEXT,"
                 + KEY_OUTLET_STATUS + " TEXT" + ")";
 
+
+        String TABLE_ADD_NEW_FARMER_POST_DATA = "CREATE TABLE " + ADD_NEW_FARMER_POST_DATA + "("
+                + KEY_ADD_FARMER_FIRST_NAME + " TEXT,"
+                + KEY_ADD_FARMER_LAST_NAME+ " TEXT,"
+                + KEY_ADD_FARMER_EMAL + " TEXT,"
+                + KEY_ADD_FARMER_MOBILE_NUMBER + " TEXT,"
+                + KEY_ADD_FARMER_LANDLINE_NUMBER + " TEXT,"
+                + KEY_ADD_FARMER_CNIC_NUMBER + " TEXT,"
+                + KEY_ADD_FARMER_GENDER_ID+ " TEXT,"
+                + KEY_ADD_FARMER_SALEPOINT_cODE + " TEXT,"
+                + KEY_ADD_FARMER_LAT + " TEXT,"
+                + KEY_ADD_FARMER_LNG + " TEXT" + ")";
+
+        String TABLE_ADD_NEW_FARMER_SERVING_DEALER = "CREATE TABLE " + ADD_NEW_FARMER_SERVING_DEALERS + "("
+                + KEY_ADD_FARMER_SERVING_DEALER_CUSTOMER_CODE + " TEXT,"
+                + KEY_ADD_FARMER_SERVING_DEALER_CUSTOMER_NAME+ " TEXT" + ")";
+
+        String TABLE_ADD_NEW_FARMER_SERVING_DEALER_MARKET_PLAYERS = "CREATE TABLE " + ADD_NEW_FARMER_SERVING_DEALERS_MARKET_PLASYERS + "("
+                + KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_CODE + " TEXT,"
+                + KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_ID + " TEXT,"
+                + KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_NAME + " TEXT,"
+                + KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_DESCRIPTION+ " TEXT,"
+                + KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_COMPANY_HELD + " TEXT,"
+                + KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_ENABLED+ " TEXT" + ")";
+
+        String TABLE_ADD_NEW_FARMER_LAND_PROFILE = "CREATE TABLE " + ADD_NEW_FARMER_LAND_PROFILE + "("
+                + KEY_ADD_FARMER_LAND_PROFILE_LANDMARKS + " TEXT,"
+                + KEY_ADD_FARMER_EMAL+ " TEXT,"
+                + KEY_ADD_FARMER_LAND_PROFILE_OWNERSHIP + " TEXT,"
+                + KEY_ADD_FARMER_LAND_PROFILE_SIZE + " TEXT,"
+                + KEY_ADD_FARMER_LAND_PROFILE_SALES_POINT_ID + " TEXT,"
+                + KEY_ADD_FARMER_LAND_PROFILE_SALES_POINT_NAME + " TEXT,"
+                + KEY_ADD_FARMER_LAND_PROFILE_SALES_POINT_CODE + " TEXT,"
+                +  KEY_ADD_FARMER_LAND_PROFILE_WATERSOURCE + " TEXT" + ")";
+
+        String TABLE_ADD_NEW_FARMER_LAND_PROFILE_CROPPING_PATTERN = "CREATE TABLE " + ADD_NEW_FARMER_LAND_PROFILE_CROPPING_PATTERN + "("
+                + KEY_ADD_FARMER_LAND_PROFILE_CROPPING_PATTERN_CROP_ID + " TEXT,"
+                + KEY_ADD_FARMER_EMAL+ " TEXT,"
+                + KEY_ADD_FARMER_LAND_PROFILE_CROPPING_PATTERN_LAND_HOLDING+ " TEXT" + ")";
+
+
         String TABLE_TODAY_JORNEY_PAN_FLOOR_STOCK_INPUT= "CREATE TABLE " + TODAY_JOURNEY_PLAN_FLOOR_STOCK_INPUT + "("
                 + KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDID + " TEXT,"
                 + KEY_TODAY_JOURNEY_TYPE + " TEXT,"
@@ -246,6 +360,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_CROP_SHORT_DESCRIPTION+ " TEXT,"
                 + KEY_CROP_NAME+ " TEXT,"
                 + KEY_CROP_LONG_DESCRIPTION + " TEXT" + ")";
+
+        String TABLE_MARKET_PLAYERS= "CREATE TABLE " + MARKET_PLAYERS+ "("
+                + KEY_MARKET_PLAYER_CODE+ " TEXT,"
+                + KEY_MARKET_PLAYER_ID+ " TEXT,"
+                + KEY_MARKET_PLAYER_NAME+ " TEXT,"
+                + KEY_MARKET_PLAYER_DESCRIPTION+ " TEXT,"
+                + KEY_MARKET_PLAYER_COMPANY_HELD+ " TEXT,"
+                + KEY_MARKET_PLAYER_ENABLED + " TEXT" + ")";
+
+        String TABLE_ASSIGNED_SALES_POINT= "CREATE TABLE " + ASSIGNED_SALES_POINT+ "("
+                + KEY_ASSIGNED_SALESPOINT_CODE+ " TEXT,"
+                + KEY_ASSIGNED_SALESPOINT_ID+ " TEXT,"
+                + KEY_ASSIGNED_SALESPOINT_HIERARCHY_ID+ " TEXT,"
+                + KEY_ASSIGNED_SALESPOINT_NAME+ " TEXT,"
+                + KEY_ASSIGNED_SALESPOINT_TEHSIL_CODE+ " TEXT,"
+                + KEY_ASSIGNED_SALESPOINT_TERRIORITY_CODE + " TEXT" + ")";
 
         String TABLE_ENGRO_BRANCH = "CREATE TABLE " + ENGRO_BRANCH+ "("
                 + KEY_ENGRO_BRANCH_ID+ " TEXT,"
@@ -414,6 +544,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(TABLE_TODAY_JOURNEY_PLAN_COMMITMENT_RECEIVED);
         db.execSQL(TABLE_TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED);
         db.execSQL(TABLE_TODAY_JOURNEY_POST_DATA);
+        db.execSQL(TABLE_ADD_NEW_FARMER_POST_DATA);
+        db.execSQL(TABLE_ADD_NEW_FARMER_LAND_PROFILE);
+        db.execSQL(TABLE_ADD_NEW_FARMER_SERVING_DEALER);
+        db.execSQL(TABLE_ADD_NEW_FARMER_SERVING_DEALER_MARKET_PLAYERS);
+        db.execSQL(TABLE_ADD_NEW_FARMER_LAND_PROFILE_CROPPING_PATTERN);
+        db.execSQL(TABLE_ASSIGNED_SALES_POINT);
+        db.execSQL(TABLE_MARKET_PLAYERS);
+
+
+
 
 
 
@@ -446,6 +586,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_STOCK);
         db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_COMMITMENT_RECEIVED);
         db.execSQL("DROP TABLE IF EXISTS " + TODAY_JOURNEY_PLAN_POST_DATA);
+        db.execSQL("DROP TABLE IF EXISTS " + ADD_NEW_FARMER_POST_DATA);
+        db.execSQL("DROP TABLE IF EXISTS " + ADD_NEW_FARMER_SERVING_DEALERS_MARKET_PLASYERS);
+        db.execSQL("DROP TABLE IF EXISTS " + ADD_NEW_FARMER_SERVING_DEALERS);
+        db.execSQL("DROP TABLE IF EXISTS " + ADD_NEW_FARMER_LAND_PROFILE_CROPPING_PATTERN);
+        db.execSQL("DROP TABLE IF EXISTS " + ADD_NEW_FARMER_LAND_PROFILE);
+        db.execSQL("DROP TABLE IF EXISTS " + MARKET_PLAYERS);
+        db.execSQL("DROP TABLE IF EXISTS " + ASSIGNED_SALES_POINT);
         onCreate(db);
 
     }
