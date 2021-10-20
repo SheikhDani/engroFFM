@@ -19,7 +19,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private SQLiteDatabase db;
     /*Database Varaiables*/
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 12;
     private static final String TAG = "DBAdapter";
     private static final String DATABASE_NAME = "FFMApplicationDataBasev1";
     private Context mContext;
@@ -187,6 +187,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_ADD_FARMER_SALEPOINT_cODE = "addFarmerSalePointCode";
     public static final String KEY_ADD_FARMER_LAT = "addFarmerLat";
     public static final String KEY_ADD_FARMER_LNG= "addFarmerLng";
+    public static final String KEY_FARMER_IS_POSTED= "isFarmerPosted";
 
     //Add New Farmer Serving Dealers Table Fields
     public static final String KEY_ADD_FARMER_SERVING_DEALER_CUSTOMER_CODE= "addFarmerServignDealerCustoemrCode";
@@ -309,6 +310,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_ADD_FARMER_EMAL + " TEXT,"
                 + KEY_ADD_FARMER_MOBILE_NUMBER + " TEXT,"
                 + KEY_ADD_FARMER_LANDLINE_NUMBER + " TEXT,"
+                + KEY_FARMER_IS_POSTED + " TEXT,"
                 + KEY_ADD_FARMER_CNIC_NUMBER + " TEXT,"
                 + KEY_ADD_FARMER_GENDER_ID+ " TEXT,"
                 + KEY_ADD_FARMER_SALEPOINT_cODE + " TEXT,"
@@ -317,10 +319,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String TABLE_ADD_NEW_FARMER_SERVING_DEALER = "CREATE TABLE " + ADD_NEW_FARMER_SERVING_DEALERS + "("
                 + KEY_ADD_FARMER_SERVING_DEALER_CUSTOMER_CODE + " TEXT,"
+                + KEY_ADD_FARMER_EMAL+ " TEXT,"
+                + KEY_ADD_FARMER_MOBILE_NUMBER + " TEXT,"
                 + KEY_ADD_FARMER_SERVING_DEALER_CUSTOMER_NAME+ " TEXT" + ")";
 
         String TABLE_ADD_NEW_FARMER_SERVING_DEALER_MARKET_PLAYERS = "CREATE TABLE " + ADD_NEW_FARMER_SERVING_DEALERS_MARKET_PLASYERS + "("
                 + KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_CODE + " TEXT,"
+                + KEY_ADD_FARMER_EMAL+ " TEXT,"
+                + KEY_ADD_FARMER_MOBILE_NUMBER + " TEXT,"
+                + KEY_ADD_FARMER_SERVING_DEALER_CUSTOMER_NAME + " TEXT,"
                 + KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_ID + " TEXT,"
                 + KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_NAME + " TEXT,"
                 + KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_DESCRIPTION+ " TEXT,"
@@ -330,16 +337,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String TABLE_ADD_NEW_FARMER_LAND_PROFILE = "CREATE TABLE " + ADD_NEW_FARMER_LAND_PROFILE + "("
                 + KEY_ADD_FARMER_LAND_PROFILE_LANDMARKS + " TEXT,"
                 + KEY_ADD_FARMER_EMAL+ " TEXT,"
+                + KEY_ADD_FARMER_MOBILE_NUMBER + " TEXT,"
                 + KEY_ADD_FARMER_LAND_PROFILE_OWNERSHIP + " TEXT,"
                 + KEY_ADD_FARMER_LAND_PROFILE_SIZE + " TEXT,"
                 + KEY_ADD_FARMER_LAND_PROFILE_SALES_POINT_ID + " TEXT,"
                 + KEY_ADD_FARMER_LAND_PROFILE_SALES_POINT_NAME + " TEXT,"
                 + KEY_ADD_FARMER_LAND_PROFILE_SALES_POINT_CODE + " TEXT,"
-                +  KEY_ADD_FARMER_LAND_PROFILE_WATERSOURCE + " TEXT" + ")";
+                + KEY_ADD_FARMER_LAND_PROFILE_WATERSOURCE + " TEXT" + ")";
 
         String TABLE_ADD_NEW_FARMER_LAND_PROFILE_CROPPING_PATTERN = "CREATE TABLE " + ADD_NEW_FARMER_LAND_PROFILE_CROPPING_PATTERN + "("
                 + KEY_ADD_FARMER_LAND_PROFILE_CROPPING_PATTERN_CROP_ID + " TEXT,"
                 + KEY_ADD_FARMER_EMAL+ " TEXT,"
+                + KEY_ADD_FARMER_MOBILE_NUMBER + " TEXT,"
                 + KEY_ADD_FARMER_LAND_PROFILE_CROPPING_PATTERN_LAND_HOLDING+ " TEXT" + ")";
 
 
