@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
@@ -291,6 +292,37 @@ public class Helpers {
     }
 
     public static boolean isEmpty(Context context, EditText editText)
+    {
+        String input=editText.getText().toString();
+        input=input.trim();
+        if(input.equals(""))
+        {
+            editText.setText("");
+            //editText.setError(context.getResources().getString(R.string.required));
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public static boolean isEmptyTextview(Context context, TextView editText)
+    {
+        String input=editText.getText().toString();
+        input=input.trim();
+        if(input.equals(""))
+        {
+            editText.setText("");
+            editText.setError(context.getResources().getString(R.string.required));
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public static boolean isEmptyAutoTextview(Context context, AutoCompleteTextView editText)
     {
         String input=editText.getText().toString();
         input=input.trim();

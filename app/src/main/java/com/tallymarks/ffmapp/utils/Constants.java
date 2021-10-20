@@ -96,6 +96,7 @@ public class Constants {
     public static final String FFM_GET_ASSIGNED_CUSTOMER_SUPERVISOR=  FFM_BASE_URL + "/global/lookup/getAssignedCustomers";
     public static final String FFM_GET_PREVIOUS_SNAPSHOT_SUPERVISOR=  FFM_BASE_URL + "/app/trans/getPreviousStockSnapshot";
     public static final String FFM_GET_LAST_VISIT_STOCK_SALE=  FFM_BASE_URL + "/app/trans/getLastVisitStockSale";
+    public static final String POST_NEW_FARMER=  FFM_BASE_URL + "/app/trans/createAppFarmer";
 
 
 

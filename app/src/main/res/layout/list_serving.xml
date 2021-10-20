@@ -81,7 +81,7 @@
             android:layout_marginRight="@dimen/p20"
             android:layout_weight="1"
             android:editable="false"
-
+            android:singleLine="true"
             android:background="@drawable/eidttext_boader"
             android:clickable="true"
             android:cursorVisible="false"

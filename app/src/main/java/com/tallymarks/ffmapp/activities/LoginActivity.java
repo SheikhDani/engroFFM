@@ -240,11 +240,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                     }
 
-
-
-
-
-                //Helpers.displayMessage(LoginActivity.this, true, getResources().getString(R.string.invalid_credentials_message));
+                    //Helpers.displayMessage(LoginActivity.this, true, getResources().getString(R.string.invalid_credentials_message));
 
 
                 //  return response.toString();

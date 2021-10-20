@@ -128,8 +128,8 @@
             android:layout_marginRight="@dimen/p20"
             android:layout_weight="1"
             android:hint="Acres"
+            android:inputType="number"
             android:background="@drawable/eidttext_boader"
-
             android:gravity="center"
             />
 
