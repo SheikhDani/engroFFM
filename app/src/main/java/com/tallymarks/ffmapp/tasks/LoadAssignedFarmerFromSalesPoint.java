@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
@@ -138,6 +139,7 @@ public class LoadAssignedFarmerFromSalesPoint extends AsyncTask<String, Void, Vo
     protected void onPostExecute(Void args) {
 
         pDialog.dismiss();
+        Toast.makeText(mContext, "Farmer Downloaded Successfully", Toast.LENGTH_SHORT).show();
 
     }
 

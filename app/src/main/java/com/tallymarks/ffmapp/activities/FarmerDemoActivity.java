@@ -40,13 +40,16 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 public class FarmerDemoActivity extends AppCompatActivity {
     private TextView tvTopHeader, et_date, pending;
-    ImageView iv_menu,iv_back;
+    ImageView iv_menu, iv_back;
     Button btn_back, btn_save;
     DatabaseHandler db;
+    String targetDate = "";
+    Calendar myCalendar;
     MyDatabaseHandler mydb;
     SharedPrefferenceHelper sHelper;
     EditText et_address;
@@ -55,20 +58,24 @@ public class FarmerDemoActivity extends AppCompatActivity {
     ArrayList<String> cropIDArraylist = new ArrayList<>();
     ArrayList<String> mainProductArraylist = new ArrayList<>();
     ArrayList<String> mainProductIDArraylist = new ArrayList<>();
-    AutoCompleteTextView auto_crop,auto_prod,auto_objective;
+    AutoCompleteTextView auto_crop, auto_prod, auto_objective;
     HashMap<String, String> map;
+    int ProductId;
+    int cropId;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_farmer_demo);
         initView();
 
     }
-    private void initView()
-    {
-        auto_crop= findViewById(R.id.auto_crop);
-        auto_prod= findViewById(R.id.auto_prod);
+
+    private void initView() {
+        auto_crop = findViewById(R.id.auto_crop);
+        auto_prod = findViewById(R.id.auto_prod);
         btn_back = findViewById(R.id.back);
         map = new HashMap<>();
+        myCalendar = Calendar.getInstance();
         pending = findViewById(R.id.txt_pending);
         btn_save = findViewById(R.id.button2);
         auto_objective = findViewById(R.id.auto_ojective);
@@ -86,7 +93,7 @@ public class FarmerDemoActivity extends AppCompatActivity {
         getCropfromDatabase();
         getMainProductfromDatabase();
         tvTopHeader.setText("FARMER DEMO");
-        final String arraylist[]={"Zabardast Urea vs Urea","Zarkhez vs DAP","Zarkhez vs MOP","Zarkhez vs NP","Zarkhez vs SOP"};
+        final String arraylist[] = {"Zabardast Urea vs Urea", "Zarkhez vs DAP", "Zarkhez vs MOP", "Zarkhez vs NP", "Zarkhez vs SOP"};
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_list_item_1, arraylist);
 
@@ -218,23 +225,28 @@ public class FarmerDemoActivity extends AppCompatActivity {
                 // saving data
 
 
-                // date
-                if (et_date != null || !et_date.equals(null)){
-                    map.put(mydb.KEY_ACTIVITY_DATE, et_date.getText().toString());
-                }else{
-                    map.put(mydb.KEY_ACTIVITY_DATE, "");
+//                // date
+//                if (et_date != null || !et_date.equals(null)) {
+//                    map.put(mydb.KEY_ACTIVITY_DATE, Helpers.utcToAnyDateFormat(et_date.getText().toString(),"MMM d yyyy","yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
+//                } else {
+//                    map.put(mydb.KEY_ACTIVITY_DATE, "");
+//                }
+//                // address
+//                if (et_address != null || !et_address.equals(null)) {
+//                    map.put(mydb.KEY_ADDRESS, et_address.getText().toString());
+//                } else {
+//                    map.put(mydb.KEY_ADDRESS, "");
+//                }
+//                // status
+//                map.put(mydb.KEY_STATUS, pending.getText().toString());
+//
+//                // adding in table
+//                mydb.addData(mydb.FARMER_DEMO, map);
+                if (Helpers.isNetworkAvailable(FarmerDemoActivity.this)) {
+                    new PostFarmerDemo().execute();
+                } else {
+                    Helpers.noConnectivityPopUp(FarmerDemoActivity.this);
                 }
-                // address
-                if (et_address != null || !et_address.equals(null)){
-                    map.put(mydb.KEY_ADDRESS, et_address.getText().toString());
-                }else{
-                    map.put(mydb.KEY_ADDRESS, "");
-                }
-                // status
-                map.put(mydb.KEY_STATUS, pending.getText().toString());
-
-                // adding in table
-                mydb.addData(mydb.FARMER_DEMO, map);
 
             }
         });
@@ -242,20 +254,51 @@ public class FarmerDemoActivity extends AppCompatActivity {
         et_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // calender class's instance and get current date , month and year from calender
-                final Calendar c = Calendar.getInstance();
-                int mYear = c.get(Calendar.YEAR); // current year
-                int mMonth = c.get(Calendar.MONTH); // current month
-                int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
-                // date picker dialog
-                datePickerDialog = new DatePickerDialog(FarmerDemoActivity.this, myDateListener,mYear,mMonth,mDay);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(FarmerDemoActivity.this, date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
                 datePickerDialog.show();
             }
         });
 
     }
 
-    public void getCropfromDatabase(){
+    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            // view.setMinDate(System.currentTimeMillis() - 1000);
+            myCalendar.set(Calendar.YEAR, year);
+            //myCalendar.set(Calendar.MONTH, monthOfYear);
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            String[] monthName = {"January", "February", "March", "April", "May", "June", "July",
+                    "August", "September", "October", "November",
+                    "December"};
+            String month = monthName[myCalendar.get(Calendar.MONTH)];
+            System.out.println("Month name:" + month);
+            String monthString = String.valueOf(month + 1);
+            String dayString = String.valueOf(dayOfMonth);
+            if (monthString.length() == 1) {
+                monthString = "0" + monthString;
+            }
+            if (dayString.length() == 1) {
+                dayString = "0" + dayString;
+            }
+            targetDate = month + " " + dayString + " " + year;
+            et_date.setText(targetDate);
+            // Log.e("targetdate", String.valueOf(target_date));
+
+
+        }
+
+
+    };
+
+    public void getCropfromDatabase() {
         HashMap<String, String> map = new HashMap<>();
 
         map.put(db.KEY_CROP_ID, "");
@@ -267,6 +310,8 @@ public class FarmerDemoActivity extends AppCompatActivity {
             cursor.moveToFirst();
             do {
                 cropArraylist.add(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_CROP_NAME))));
+
+
                 cropIDArraylist.add(cursor.getString(cursor.getColumnIndex(db.KEY_CROP_ID)));
             }
             while (cursor.moveToNext());
@@ -277,7 +322,8 @@ public class FarmerDemoActivity extends AppCompatActivity {
 //                cropArraylist.set(i, cropArraylist.get(i).replace("%20" , " "));
 //        }
     }
-    public void getMainProductfromDatabase(){
+
+    public void getMainProductfromDatabase() {
         HashMap<String, String> map = new HashMap<>();
 
         map.put(db.KEY_ENGRO_RAND_NAME, "");
@@ -300,49 +346,54 @@ public class FarmerDemoActivity extends AppCompatActivity {
 //        }
     }
 
-    private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int day) {
+    public void ProductfromName(String name) {
+        HashMap<String, String> map = new HashMap<>();
 
-//            String m = "";
-//            if(month+1 >0 && month+1<10){
-//               String myMonth = String.valueOf(month);
-//                m = "0" + myMonth;
-//            }
-//            try {
-//                tvFieldVerificationDate.setText(year + "-"
-//                        + Integer.parseInt(m) + "-" + day);
-//            }catch (Exception e){
-//                e.printStackTrace();
-//            }
+        map.put(db.KEY_ENGRO_RAND_NAME, "");
+        map.put(db.KEY_ENGRO_BRANCH_ID, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_ENGRO_RAND_NAME,name);
+        Cursor cursor = db.getData(db.ENGRO_BRANCH, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+               ProductId = Integer.parseInt(cursor.getString(cursor.getColumnIndex(db.KEY_ENGRO_BRANCH_ID)));
 
-            if ((month+1) <10){
-                String a =  String.format("%02d", month+1);
-
-                et_date.setText(year + "-"
-                        + a + "-" + day);
-
-            }else{
-                et_date.setText(year + "-"
-                        + (month + 1) + "-" + day);
             }
-            String myday = "";
-            for (int i =1; i<=9;i++){
-                if (i == day){
-                    myday = "0" + day;
-                }else{
-                    try{
-                        myday = "" + day;
-                    }catch(Exception e){
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-            String d = year + "" + (month+1) + "" + myday;
-            //String d = "20201105";
+            while (cursor.moveToNext());
         }
-    };
+
+//        for (int i=0;i<mainProductArraylist.size();i++){
+//            mainProductArraylist.get(i).replace("%20" , " ");
+//            mainProductArraylist.set(i, mainProductArraylist.get(i).replace("%20" , " "));
+//        }
+    }
+    public void getCropfromName(String name) {
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(db.KEY_CROP_ID, "");
+        map.put(db.KEY_CROP_NAME, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_CROP_NAME, name);
+        Cursor cursor = db.getData(db.CROPS_LIST, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                cropId = Integer.parseInt(cursor.getString(cursor.getColumnIndex(db.KEY_CROP_ID)));
+
+
+
+            }
+            while (cursor.moveToNext());
+        }
+
+//        for (int i=0;i<cropArraylist.size();i++){
+//            if (cropArraylist.get(i).contains("%20"))
+//                cropArraylist.set(i, cropArraylist.get(i).replace("%20" , " "));
+//        }
+    }
 
     private class PostFarmerDemo extends AsyncTask<String, Void, Void> {
 
@@ -351,14 +402,9 @@ public class FarmerDemoActivity extends AppCompatActivity {
         String message = "";
         String discription = "";
         ProgressDialog pDialog;
-        String jsonObject = "";
+
         private HttpHandler httpHandler;
-        String farmerId = "";
-        String visitStatus;
-        PostFarmerDemo(String status)
-        {
-            this.visitStatus = status;
-        }
+
 
         @Override
         protected void onPreExecute() {
@@ -378,34 +424,44 @@ public class FarmerDemoActivity extends AppCompatActivity {
             System.out.println("Post Outlet URl" + Constants.FFM_POST_FARMER_DEMO);
             ArrayList<CreateProductDemo> farmerDemoCollection = new ArrayList<>();
             Gson gson = new Gson();
-            HashMap<String, String> map = new HashMap<>();
-            map.put(mydb.KEY_ACTIVITY_DATE, "");
-            map.put(mydb.KEY_ADDRESS, "");
-            map.put(mydb.KEY_CROP_ID, "");
-            map.put(mydb.KEY_OBJECTIVE, "");
-            map.put(mydb.KEY_PRODUCT_ID, "");
-            map.put(mydb.KEY_STATUS, "");
+//            HashMap<String, String> map = new HashMap<>();
+//            map.put(mydb.KEY_ACTIVITY_DATE, "");
+//            map.put(mydb.KEY_ADDRESS, "");
+//            map.put(mydb.KEY_CROP_ID, "");
+//            map.put(mydb.KEY_OBJECTIVE, "");
+//            map.put(mydb.KEY_PRODUCT_ID, "");
+//            map.put(mydb.KEY_STATUS, "");
+//
+//            HashMap<String, String> filters = new HashMap<>();
+//            Cursor cursor2 = mydb.getData(mydb.FARMER_DEMO, map, filters);
+//            if (cursor2.getCount() > 0) {
+//                cursor2.moveToFirst();
+//                do {
 
-            HashMap<String, String> filters = new HashMap<>();
-            Cursor cursor2 = mydb.getData(mydb.FARMER_DEMO, map, filters);
-            if (cursor2.getCount() > 0) {
-                cursor2.moveToFirst();
-                do {
+//                    CreateProductDemo createProductDemo = new CreateProductDemo();
+//                    createProductDemo.setActivityDate(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_ACTIVITY_DATE)));
+//                    createProductDemo.setActivityDate(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_ADDRESS)));
+//                    createProductDemo.setActivityDate(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_CROP_ID)));
+//                    createProductDemo.setActivityDate(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_OBJECTIVE)));
+//                    createProductDemo.setActivityDate(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_PRODUCT_ID)));
+//                    createProductDemo.setActivityDate(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_STATUS)));
+//                    farmerDemoCollection.add(createProductDemo);
 
-                    CreateProductDemo createProductDemo = new CreateProductDemo();
-                    createProductDemo.setActivityDate(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_ACTIVITY_DATE)));
-                    createProductDemo.setActivityDate(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_ADDRESS)));
-                    createProductDemo.setActivityDate(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_CROP_ID)));
-                    createProductDemo.setActivityDate(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_OBJECTIVE)));
-                    createProductDemo.setActivityDate(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_PRODUCT_ID)));
-                    createProductDemo.setActivityDate(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_STATUS)));
+//                }
+//                while (cursor2.moveToNext());
+            CreateProductDemo createProductDemo = new CreateProductDemo();
+            String date = et_date.getText().toString();
+            createProductDemo.setActivityDate(Helpers.utcToAnyDateFormat(date,"MMM d yyyy","yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
+            ProductfromName(auto_prod.getText().toString());
+            getCropfromName(auto_crop.getText().toString());
+           createProductDemo.setProductId(ProductId);
+           createProductDemo.setCropId(cropId);
+           createProductDemo.setAddress(et_address.getText().toString());
+            createProductDemo.setObjective(auto_objective.getText().toString());
+            createProductDemo.setStatus(pending.getText().toString());
+            farmerDemoCollection.add(createProductDemo);
 
-
-                    farmerDemoCollection.add(createProductDemo);
-
-                }
-                while (cursor2.moveToNext());
-                httpHandler = new HttpHandler();
+                 httpHandler = new HttpHandler();
                 HashMap<String, String> headerParams2 = new HashMap<>();
                 headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
                 HashMap<String, String> bodyParams = new HashMap<>();
@@ -420,9 +476,6 @@ public class FarmerDemoActivity extends AppCompatActivity {
                             message = String.valueOf(jsonObj.getString("message"));
                             //discription = String.valueOf(jsonObj.getString("description"));
 
-                            Helpers.displayMessage(FarmerDemoActivity.this, true, status);
-                            System.out.println(status + " ---- " + message);
-                            System.out.println(output);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -431,10 +484,10 @@ public class FarmerDemoActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
+
             //Helpers.displayMessage(MainActivity.this, true, "No Data Available");
 
-            mydb.close();
+
             return null;
         }
 
@@ -450,6 +503,11 @@ public class FarmerDemoActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+                                et_address.setText("");
+                                auto_crop.setText("");
+                                auto_objective.setText("");
+                                auto_prod.setText("");
+                                et_date.setText("");
                                 //new PostSyncOutlet().execute();
                             }
                         });

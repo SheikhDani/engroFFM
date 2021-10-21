@@ -441,7 +441,7 @@ public class SoilSamplingActivity extends AppCompatActivity {
                 updateOutletStatus("Visited");
 
                 Toast.makeText(getApplicationContext(), "Farmer Saved" , Toast.LENGTH_SHORT).show();
-                sHelper.clearPreferenceStore();
+                //sHelper.clearPreferenceStore();
 
                 Intent farmvisit = new Intent(SoilSamplingActivity.this, VisitFarmerActivity.class);
                 startActivity(farmvisit);

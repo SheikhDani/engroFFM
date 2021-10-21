@@ -26,18 +26,18 @@
         android:layout_width="fill_parent"
         android:layout_height="@dimen/p30"
         android:layout_below="@+id/txt_farmers"
+        android:paddingLeft="@dimen/p30"
         android:layout_centerVertical="true"
+
         android:layout_marginStart="@dimen/p10"
         android:layout_marginLeft="@dimen/p10"
         android:layout_marginTop="@dimen/p10"
         android:layout_marginEnd="@dimen/p10"
         android:layout_marginRight="@dimen/p10"
         android:layout_marginBottom="@dimen/p10"
-
         android:background="@drawable/eidttext_boader"
         android:drawableRight="@drawable/ic_baseline_search_24"
-
-        android:textColor="@color/white"></EditText>
+        android:textColor="@color/black"></EditText>
 
     <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"

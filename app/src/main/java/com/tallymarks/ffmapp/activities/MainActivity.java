@@ -130,14 +130,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String username = "";
     DatabaseHandler db;
     MyDatabaseHandler mydb;
-    SharedPrefferenceHelper sharedPrefferenceHelper;
     List<MenuModel> headerList = new ArrayList<>();
     HashMap<MenuModel, List<MenuModel>> childList = new HashMap<>();
-    TextView txt_farmer_Demo, txt_soil_logs, txt_logout, txt_post_data;
+    TextView txt_farmer_Demo, txt_soil_logs, txt_logout, txt_post_data, txt_refersh;
     ImageView headerImage;
     String statuCustomer = "";
     String journeyType;
-
 
 
     @Override
@@ -159,6 +157,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         headerImage = findViewById(R.id.profile_image);
         txt_logout = findViewById(R.id.logout);
         txt_post_data = findViewById(R.id.txt_post);
+        txt_refersh = findViewById(R.id.tvRefersh);
+
         iv_Menu.setVisibility(View.VISIBLE);
         iv_filter = findViewById(R.id.iv_notification);
         userName = findViewById(R.id.userName);
@@ -167,10 +167,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tvTopHeader.setVisibility(View.VISIBLE);
         tvTopHeader.setText("DASHBOARD");
         sHelper = new SharedPrefferenceHelper(MainActivity.this);
+        Log.e("token", String.valueOf(sHelper.getString(Constants.ACCESS_TOKEN)));
         gpsTracker = new GpsTracker(MainActivity.this);
         db = new DatabaseHandler(MainActivity.this);
         mydb = new MyDatabaseHandler(MainActivity.this);
-        sharedPrefferenceHelper = new SharedPrefferenceHelper(this);
+
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         txt_farmer_Demo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,13 +183,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         txt_post_data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Helpers.isNetworkAvailable(MainActivity.this)) {
+                if (Helpers.isNetworkAvailable(MainActivity.this)) {
                     postCustomerData();
                     postAddFarmerData();
                     postFarmerData();
-                }
-                else
-                {
+                } else {
                     Helpers.noConnectivityPopUp(MainActivity.this);
                 }
 
@@ -199,6 +198,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View view) {
                 drawer.closeDrawers();
                 clearDataConfirmationPopUp();
+
+            }
+        });
+        txt_refersh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity.this.deleteDatabase("FFMApplicationDataBasev1");
+                MainActivity.this.deleteDatabase("FFMAppDb_Zohaib");
+                loadAllData();
+
 
             }
         });
@@ -224,19 +233,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 drawer.openDrawer(GravityCompat.END);
             }
         });
+
         // requestMultiplePermissions();
         loadLoginData();
-        checkStorageCompanyHeldBrand();
-        checkStorageCrops();
-        checkStorageFertTypes();
-        checkLoadTodayCustomerJourneyPlan();
-        checkLoadAllCustomerJourneyPlan();
-        checkProductBrandGrouopByCategory();
-        checkStorageDepth();
-        checkMarketPlayers();
-        checkAssignedSalesPoint();
-        checkFarmerAllJourneyPlan();
-        checkFarmerTodayJourneyPlan();
+        loadAllData();
 
 
         //new GetOutletStatus(MainActivity.this).execute();
@@ -331,11 +331,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             while (cursor.moveToNext());
         } else {
-            if(Helpers.isNetworkAvailable(MainActivity.this)) {
+            if (Helpers.isNetworkAvailable(MainActivity.this)) {
                 new GetCompanHeldBrandBasicList(MainActivity.this).execute();
-            }
-            else
-            {
+            } else {
                 Helpers.noConnectivityPopUp(MainActivity.this);
             }
 
@@ -361,11 +359,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             while (cursor.moveToNext());
         } else {
-            if(Helpers.isNetworkAvailable(MainActivity.this)) {
+            if (Helpers.isNetworkAvailable(MainActivity.this)) {
                 new GetListofAllCrops(MainActivity.this).execute();
-            }
-            else
-            {
+            } else {
                 Helpers.noConnectivityPopUp(MainActivity.this);
             }
 
@@ -374,6 +370,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    public void loadAllData() {
+        checkStorageCompanyHeldBrand();
+        checkStorageCrops();
+        checkStorageFertTypes();
+        checkLoadTodayCustomerJourneyPlan();
+        checkLoadAllCustomerJourneyPlan();
+        checkProductBrandGrouopByCategory();
+        checkStorageDepth();
+        checkMarketPlayers();
+        checkAssignedSalesPoint();
+        checkFarmerAllJourneyPlan();
+        checkFarmerTodayJourneyPlan();
+    }
 
     public void loadLoginData() {
         HashMap<String, String> map = new HashMap<>();
@@ -492,11 +501,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             while (cursor.moveToNext());
         } else {
-            if(Helpers.isNetworkAvailable(MainActivity.this)) {
+            if (Helpers.isNetworkAvailable(MainActivity.this)) {
                 new GetListofAllDepths(MainActivity.this).execute();
-            }
-            else
-            {
+            } else {
                 Helpers.noConnectivityPopUp(MainActivity.this);
             }
 
@@ -520,11 +527,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             while (cursor.moveToNext());
         } else {
-            if(Helpers.isNetworkAvailable(MainActivity.this)) {
+            if (Helpers.isNetworkAvailable(MainActivity.this)) {
                 new GetListofallMarketPlayers(MainActivity.this).execute();
-            }
-            else
-            {
+            } else {
                 Helpers.noConnectivityPopUp(MainActivity.this);
             }
 
@@ -532,7 +537,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     }
-    public void checkFarmerTodayJourneyPlan(){
+
+    public void checkFarmerTodayJourneyPlan() {
         mydb = new MyDatabaseHandler(MainActivity.this);
         HashMap<String, String> map = new HashMap<>();
         map.put(mydb.KEY_TODAY_JOURNEY_FARMER_ID, "");
@@ -552,6 +558,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
     }
+
     public void checkFarmerAllJourneyPlan() {
 
         mydb = new MyDatabaseHandler(MainActivity.this);
@@ -573,6 +580,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     }
+
     public void checkAssignedSalesPoint() {
 
         HashMap<String, String> map = new HashMap<>();
@@ -588,11 +596,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             while (cursor.moveToNext());
         } else {
-            if(Helpers.isNetworkAvailable(MainActivity.this)) {
+            if (Helpers.isNetworkAvailable(MainActivity.this)) {
                 new GetAssignedSalesPoint(MainActivity.this).execute();
-            }
-            else
-            {
+            } else {
                 Helpers.noConnectivityPopUp(MainActivity.this);
             }
 
@@ -615,11 +621,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             while (cursor.moveToNext());
         } else {
-            if(Helpers.isNetworkAvailable(MainActivity.this)) {
+            if (Helpers.isNetworkAvailable(MainActivity.this)) {
                 new GetAllProductBrandByCategory(MainActivity.this).execute();
-            }
-            else
-            {
+            } else {
                 Helpers.noConnectivityPopUp(MainActivity.this);
             }
 
@@ -643,11 +647,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             while (cursor.moveToNext());
         } else {
-            if(Helpers.isNetworkAvailable(MainActivity.this)) {
+            if (Helpers.isNetworkAvailable(MainActivity.this)) {
                 new GetlistofAllFertTypes(MainActivity.this).execute();
-            }
-            else
-            {
+            } else {
                 Helpers.noConnectivityPopUp(MainActivity.this);
             }
 
@@ -672,11 +674,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             while (cursor.moveToNext());
         } else {
-            if(Helpers.isNetworkAvailable(MainActivity.this)) {
+            if (Helpers.isNetworkAvailable(MainActivity.this)) {
                 new LoadCustomersAllJourneyPlan(MainActivity.this).execute();
-            }
-            else
-            {
+            } else {
                 Helpers.noConnectivityPopUp(MainActivity.this);
             }
 
@@ -684,6 +684,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     }
+
     private boolean isMyDataSavedNotAvailable() {
 
         boolean flag = false;
@@ -699,8 +700,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //  statuCustomer = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_IS_VISITED));;
             }
             while (cursor.moveToNext());
-        }
-        else {
+        } else {
             flag = false;
         }
         return flag;
@@ -727,13 +727,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         return flag;
     }
+
     private boolean isMyUnpostedDataExist() {
 
         boolean flag = false;
         HashMap<String, String> map = new HashMap<>();
         map.put(mydb.KEY_TODAY_JOURNEY_FARMER_ID, "");
         HashMap<String, String> filters = new HashMap<>();
-        filters.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+        filters.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "2");
         Cursor cursor = mydb.getData(mydb.TODAY_FARMER_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -763,11 +764,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             while (cursor.moveToNext());
         } else {
-            if(Helpers.isNetworkAvailable(MainActivity.this)) {
+            if (Helpers.isNetworkAvailable(MainActivity.this)) {
                 new LoadCustomersTodayJourneyPlan(MainActivity.this).execute();
-            }
-            else
-            {
+            } else {
                 Helpers.noConnectivityPopUp(MainActivity.this);
             }
 
@@ -775,6 +774,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     }
+
     public void postFarmerData() {
         if (isMyUnpostedDataExist()) {
             if (isMyDataSaved() || isMyDataSavedNotAvailable())
@@ -841,7 +841,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         dialog.dismiss();
                         MainActivity.this.deleteDatabase("FFMApplicationDataBasev1");
                         MainActivity.this.deleteDatabase("FFMAppDb_Zohaib");
-                        sharedPrefferenceHelper.clearPreferenceStore();
+                        sHelper.clearPreferenceStore();
                         Toast.makeText(MainActivity.this, "Clear Data Successfully", Toast.LENGTH_SHORT).show();
                         Intent logout = new Intent(MainActivity.this, LoginActivity.class);
                         startActivity(logout);
@@ -1173,7 +1173,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME, "");
             HashMap<String, String> filter = new HashMap<>();
             filter.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "2");
-
             Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN, headerParams, filter);
             if (cursor2.getCount() > 0) {
                 cursor2.moveToFirst();
@@ -1373,7 +1372,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             JSONObject jsonObj = new JSONObject(response);
                             status = String.valueOf(jsonObj.getString("success"));
                             message = String.valueOf(jsonObj.getString("message"));
-                            description  = String.valueOf(jsonObj.getString("description"));
+                            description = String.valueOf(jsonObj.getString("description"));
                             if (status.equals("true")) {
                                 updateAddFarmerStatus();
                                 // updateOutletStatusById(Helpers.clean(JourneyPlanActivity.selectedOutletId));
@@ -1428,9 +1427,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         });
                 AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
-            }
-            else
-            {
+            } else {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                 alertDialogBuilder.setTitle(R.string.alert)
                         .setMessage(description)
@@ -1448,6 +1445,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
     }
+
     private class PostSyncFarmer extends AsyncTask<String, Void, Void> {
 
         String response = null;
@@ -1459,8 +1457,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         private HttpHandler httpHandler;
         String farmerId = "";
         String visitStatus;
-        PostSyncFarmer(String status)
-        {
+
+        PostSyncFarmer(String status) {
             this.visitStatus = status;
         }
 
@@ -1480,6 +1478,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             String farmerIdToupdate = "";
             mydb = new MyDatabaseHandler(MainActivity.this);
+
             System.out.println("Post Outlet URl" + Constants.FFM_POST_FARMER_TODAY_JOURNEY_PLAN);
             ArrayList<FarmerCheckIn> inputCollection = new ArrayList<>();
             Gson gson = new Gson();
@@ -1495,7 +1494,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             map.put(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE, "");
             map.put(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE, "");
             HashMap<String, String> filters = new HashMap<>();
-            filters.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED , "2");
+            filters.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "2");
             Cursor cursor2 = mydb.getData(mydb.TODAY_FARMER_JOURNEY_PLAN, map, filters);
             if (cursor2.getCount() > 0) {
                 cursor2.moveToFirst();
@@ -1505,35 +1504,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     farmerCheckIn.setFarmerId(Integer.valueOf(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_ID))));
                     farmerIdToupdate = cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_ID)); // to update status of record
                     farmerId = cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_ID));
-                    if(!cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_DAY_ID)).equals("NA")) {
+                    if (!cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_DAY_ID)).equals("NA")) {
                         farmerCheckIn.setDayId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_DAY_ID))));
-                    }
-                    else
-                    {
+                    } else {
                         farmerCheckIn.setDayId(0);
                     }
 
-                    if(!cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_JOURNEYPLAN_ID)).equals("NA")) {
+                    if (!cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_JOURNEYPLAN_ID)).equals("NA")) {
                         farmerCheckIn.setJourneyPlanId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_JOURNEYPLAN_ID))));
-                    }
-                    else
-                    {
+                    } else {
                         farmerCheckIn.setJourneyPlanId(null);
                     }
 
                     farmerCheckIn.setFarmerName(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_NAME)));
 
-                    if(!cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE)).equals("NA") && !cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE)).equals("null")) {
+                    if (!cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE)).equals("NA") && !cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE)).equals("null")) {
                         farmerCheckIn.setLatitude(Double.parseDouble(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE))));
-                    }
-                    else
-                    {
+                    } else {
                         farmerCheckIn.setLatitude(0.0);
-                    }if(!cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE)).equals("NA") && !cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE)).equals("null")) {
-                        farmerCheckIn.setLongtitude(Double.parseDouble(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE))));
                     }
-                    else
-                    {
+                    if (!cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE)).equals("NA") && !cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE)).equals("null")) {
+                        farmerCheckIn.setLongtitude(Double.parseDouble(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE))));
+                    } else {
                         farmerCheckIn.setLongtitude(0.0);
                     }
 
@@ -1542,20 +1534,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     farmerCheckIn.setSalesPoint(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_SALES_POINT_NAME)));
                     //farmerCheckIn.setDistance(0);
 
-                    if(Helpers.clean(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_IS_VISITED))).equals("Visited"))
-
-                    {
+                    if (Helpers.clean(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_IS_VISITED))).equals("Visited")) {
 
 
                         myloadStartActviiyResult(farmerCheckIn, farmerId);
                         loadLocationlastFarmer(farmerCheckIn, farmerId);
                         loadActivity(farmerCheckIn, farmerId);
-                        loadSampling(farmerCheckIn , farmerId);
-                        loadRecommendations(farmerCheckIn , farmerId);
+                        loadSampling(farmerCheckIn, farmerId);
+                        loadRecommendations(farmerCheckIn, farmerId);
 
-                    }
-                    else
-                    {
+                    } else {
                         myloadStartActviiyResultforNotAvailable(farmerCheckIn, farmerId);
                         myloadLocationlastNotAvaolable(farmerCheckIn, farmerId);
 
@@ -1629,6 +1617,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
     }
+
     private void myloadLocationlastNotAvaolable(FarmerCheckIn farmerCheckIn, String farmerId) {
         HashMap<String, String> map = new HashMap<>();
 
@@ -1651,7 +1640,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private void myloadStartActviiyResultforNotAvailable(FarmerCheckIn thisfarmerCheckIn , String thisfarmerId){
+    private void myloadStartActviiyResultforNotAvailable(FarmerCheckIn thisfarmerCheckIn, String thisfarmerId) {
         HashMap<String, String> mapForActivityResult = new HashMap<>();
         mapForActivityResult.put(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_TIME, "");
         mapForActivityResult.put(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_STATUS, "");
@@ -1660,7 +1649,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapForActivityResult.put(mydb.KEY_PLAN_TYPE, "");
 
         HashMap<String, String> filtersforActivityResult = new HashMap<>();
-        filtersforActivityResult.put(mydb.KEY_TODAY_FARMER_FARMER_ID , thisfarmerId);
+        filtersforActivityResult.put(mydb.KEY_TODAY_FARMER_FARMER_ID, thisfarmerId);
 
         Cursor cursorActivity = mydb.getData(mydb.TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY, mapForActivityResult, filtersforActivityResult);
         if (cursorActivity.getCount() > 0) {
@@ -1677,6 +1666,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             while (cursorActivity.moveToNext());
         }
     }
+
     private void myUpdateOutletStatus() {
         HashMap<String, String> params = new HashMap<>();
         params.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "1");
@@ -1685,6 +1675,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         filter.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "2");
         mydb.updateData(mydb.TODAY_FARMER_JOURNEY_PLAN, params, filter);
     }
+
     private void updateOutletStatus() {
         HashMap<String, String> params = new HashMap<>();
         params.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "1");
@@ -2019,7 +2010,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private void getPlayer(String mobileNumber, ArrayList<ServingDealer> servingList,int position,String customerName) {
+    private void getPlayer(String mobileNumber, ArrayList<ServingDealer> servingList, int position, String customerName) {
         HashMap<String, String> map = new HashMap<>();
 
         map.put(db.KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_ENABLED, "");
@@ -2030,7 +2021,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         map.put(db.KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_NAME, "");
         HashMap<String, String> filter = new HashMap<>();
         filter.put(db.KEY_ADD_FARMER_MOBILE_NUMBER, mobileNumber);
-        filter.put(db.KEY_ADD_FARMER_SERVING_DEALER_CUSTOMER_NAME ,customerName);
+        filter.put(db.KEY_ADD_FARMER_SERVING_DEALER_CUSTOMER_NAME, customerName);
         Cursor cursor2 = db.getData(db.ADD_NEW_FARMER_SERVING_DEALERS_MARKET_PLASYERS, map, filter);
         if (cursor2.getCount() > 0) {
             cursor2.moveToFirst();
@@ -2041,7 +2032,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 player.setCode(cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_CODE)));
                 player.setName(Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_NAME))));
                 player.setDescription(Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_DESCRIPTION))));
-                if(cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_ENABLED)).equals("NA")) {
+                if (cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_ENABLED)).equals("NA")) {
                     player.setEnabled("");
                 }
                 servingList.get(position).setMarketPlayer(player);
@@ -2092,10 +2083,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 ServingDealer serving = new ServingDealer();
                 serving.setCustomerName(Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_SERVING_DEALER_CUSTOMER_NAME))));
                 serving.setCustomerCode(cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_SERVING_DEALER_CUSTOMER_CODE)));
-               customerName = Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_SERVING_DEALER_CUSTOMER_NAME)));
+                customerName = Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_SERVING_DEALER_CUSTOMER_NAME)));
                 servingList.add(serving);
                 position = cursor2.getPosition();
-                getPlayer(mobileNumber, servingList,position,customerName);
+                getPlayer(mobileNumber, servingList, position, customerName);
                 // servingList.get(position).setMarketPlayer(getPlayer(mobileNumber));
                 inputParameters.setServingDealers(servingList);
 
@@ -2140,7 +2131,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             while (cursor2.moveToNext());
         }
     }
-    private void loadRecommendations(FarmerCheckIn thisFarmerCheckIn , String thisFarmerId){
+
+    private void loadRecommendations(FarmerCheckIn thisFarmerCheckIn, String thisFarmerId) {
         // Mapping for recommendation
         //mydb = new MyDatabaseHandler(MainActivity.this);
         HashMap<String, String> mapForRecommendation = new HashMap<>();
@@ -2151,7 +2143,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapForRecommendation.put(mydb.KEY_TODAY_DOSAGE, "");
 
         HashMap<String, String> filtersforRecommendation = new HashMap<>();
-        filtersforRecommendation.put(mydb.KEY_TODAY_FARMMMER_ID , thisFarmerId);
+        filtersforRecommendation.put(mydb.KEY_TODAY_FARMMMER_ID, thisFarmerId);
 
         ArrayList<Recommendation> recommendationList = new ArrayList<>();
 
@@ -2175,7 +2167,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //return recommendationList;
     }
 
-    private void loadSampling(FarmerCheckIn thisFarmerCheckIn , String thisFarmerId){
+    private void loadSampling(FarmerCheckIn thisFarmerCheckIn, String thisFarmerId) {
         // Mapping for sampling
         HashMap<String, String> mapForSampleing = new HashMap<>();
         mapForSampleing.put(mydb.KEY_TODAY_FARMMMER_ID, "");
@@ -2190,7 +2182,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapForSampleing.put(mydb.KEY_TODAY_REFRENCE, "");
 
         HashMap<String, String> filtersforSampling = new HashMap<>();
-        filtersforSampling.put(mydb.KEY_TODAY_FARMMMER_ID , thisFarmerId);
+        filtersforSampling.put(mydb.KEY_TODAY_FARMMMER_ID, thisFarmerId);
         Sampling sampling;
         ArrayList<Sampling> samplingList = new ArrayList<>();
 
@@ -2217,7 +2209,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         thisFarmerCheckIn.setSampling(samplingList);
         //return samplingList;
     }
-    private void loadActivity(FarmerCheckIn thisfarmerCheckIn , String thisfarmerId){
+
+    private void loadActivity(FarmerCheckIn thisfarmerCheckIn, String thisfarmerId) {
         HashMap<String, String> mapForActivity = new HashMap<>();
         mapForActivity.put(mydb.KEY_TODAY_FARMMMER_ID, "");
         mapForActivity.put(mydb.KEY_TODAY_CROPID, "");
@@ -2228,7 +2221,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapForActivity.put(mydb.KEY_TODAY_LONGITUTE, "");
 
         HashMap<String, String> filtersforActivity = new HashMap<>();
-        filtersforActivity.put(mydb.KEY_TODAY_FARMMMER_ID , thisfarmerId);
+        filtersforActivity.put(mydb.KEY_TODAY_FARMMMER_ID, thisfarmerId);
 
         Cursor cursorActivity = mydb.getData(mydb.TODAY_FARMER_ACTIVITY, mapForActivity, filtersforActivity);
         Activity activity = new Activity();
@@ -2250,7 +2243,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //return activity;
     }
-    private void loadLocationlastFarmer(FarmerCheckIn thisfarmerCheckIn , String thisfarmerId) {
+
+    private void loadLocationlastFarmer(FarmerCheckIn thisfarmerCheckIn, String thisfarmerId) {
         HashMap<String, String> map = new HashMap<>();
 
         map.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LATITUDE, "");
@@ -2274,7 +2268,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    private void myloadStartActviiyResult(FarmerCheckIn thisfarmerCheckIn , String thisfarmerId){
+    private void myloadStartActviiyResult(FarmerCheckIn thisfarmerCheckIn, String thisfarmerId) {
         HashMap<String, String> mapForActivityResult = new HashMap<>();
         mapForActivityResult.put(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_TIME, "");
 
@@ -2285,7 +2279,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapForActivityResult.put(mydb.KEY_PLAN_TYPE, "");
 
         HashMap<String, String> filtersforActivityResult = new HashMap<>();
-        filtersforActivityResult.put(mydb.KEY_TODAY_FARMER_FARMER_ID , thisfarmerId);
+        filtersforActivityResult.put(mydb.KEY_TODAY_FARMER_FARMER_ID, thisfarmerId);
 
         Cursor cursorActivity = mydb.getData(mydb.TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY, mapForActivityResult, filtersforActivityResult);
         if (cursorActivity.getCount() > 0) {

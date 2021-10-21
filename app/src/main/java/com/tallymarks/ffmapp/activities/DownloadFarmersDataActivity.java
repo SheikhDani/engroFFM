@@ -57,7 +57,7 @@ public class DownloadFarmersDataActivity extends AppCompatActivity {
         iv_back.setVisibility(View.VISIBLE);
         iv_menu.setVisibility(View.GONE);
 
-        mAdapter = new FarmersAdapter(movieList);
+
 
         recyclerView.setHasFixedSize(true);
         iv_back.setOnClickListener(new View.OnClickListener() {
@@ -90,6 +90,7 @@ public class DownloadFarmersDataActivity extends AppCompatActivity {
             }
         });
 
+        prepareMovieData();
 
         // vertical RecyclerView
         // keep movie_list_row.xml width to `match_parent`
@@ -113,7 +114,7 @@ public class DownloadFarmersDataActivity extends AppCompatActivity {
             }
         }));
 
-        prepareMovieData();
+
     }
     private void prepareMovieData() {
         mydb = new MyDatabaseHandler(DownloadFarmersDataActivity.this);
@@ -179,6 +180,6 @@ public class DownloadFarmersDataActivity extends AppCompatActivity {
 
         // notify adapter about data set changes
         // so that it will render the list with new data
-        mAdapter.notifyDataSetChanged();
+        mAdapter = new FarmersAdapter(movieList);
     }
 }
