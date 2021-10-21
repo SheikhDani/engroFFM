@@ -111,9 +111,9 @@ public class FarmersStartActivity extends AppCompatActivity {
                         && !status.equals("") && status !=null && objective!=null && !objective.equals("")){
                     gps = new GpsTracker(FarmersStartActivity.this);
                     if (gps.canGetLocation()) {
-//                        if (ActivityCompat.checkSelfPermission(FarmersStartActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(FarmersStartActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                            return;
-//                        }
+                        if (ActivityCompat.checkSelfPermission(FarmersStartActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(FarmersStartActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
                         checkinlat = gps.getLatitude();
                         checkinlng = gps.getLongitude();
                         if (isUNpostedDataExsists()) {
@@ -170,11 +170,19 @@ public class FarmersStartActivity extends AppCompatActivity {
                 setTextViewDrawableColor(tvNotAvailable, R.color.red);
                 status = "0";
                 sHelper.setString(Constants.ACTIVITY_STATUS_FARMER, "3");
-                if (checkinlat != 0.0){checkinlat = gps.getLatitude();}
-                if (checkinlng != 0.0){checkinlng = gps.getLongitude();}
-                saveFarmerNoAvailale();
-                Intent n = new Intent(FarmersStartActivity.this,VisitFarmerActivity.class);
-                startActivity(n);
+                gps = new GpsTracker(FarmersStartActivity.this);
+                if (gps.canGetLocation()) {
+                    if (ActivityCompat.checkSelfPermission(FarmersStartActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(FarmersStartActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    checkinlat = gps.getLatitude();
+                    checkinlng = gps.getLongitude();
+                    saveFarmerNoAvailale();
+                    Intent n = new Intent(FarmersStartActivity.this,VisitFarmerActivity.class);
+                    startActivity(n);
+
+                }
+
             }
         });
         txt_salescall.setOnClickListener(new View.OnClickListener() {
@@ -340,8 +348,8 @@ public class FarmersStartActivity extends AppCompatActivity {
     {
         long time = System.currentTimeMillis();
         HashMap<String, String> headerParams = new HashMap<>();
-        headerParams.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LATITUDE, "");
-        headerParams.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LONGITUDE, "");
+        headerParams.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LATITUDE, String.valueOf(checkinlat));
+        headerParams.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LONGITUDE, String.valueOf(checkinlng));
         headerParams.put(mydb.KEY_TODAY_FARMER_ID, sHelper.getString(Constants.S_FARMER_ID));
         headerParams.put(mydb.KEY_PLAN_TYPE, journeytype);
         headerParams.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_TIMESTAMP,String.valueOf(time));

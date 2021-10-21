@@ -374,12 +374,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkStorageCompanyHeldBrand();
         checkStorageCrops();
         checkStorageFertTypes();
-        checkLoadTodayCustomerJourneyPlan();
-        checkLoadAllCustomerJourneyPlan();
         checkProductBrandGrouopByCategory();
         checkStorageDepth();
         checkMarketPlayers();
         checkAssignedSalesPoint();
+        checkLoadTodayCustomerJourneyPlan();
+        checkLoadAllCustomerJourneyPlan();
         checkFarmerAllJourneyPlan();
         checkFarmerTodayJourneyPlan();
     }
@@ -1516,7 +1516,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         farmerCheckIn.setJourneyPlanId(null);
                     }
 
-                    farmerCheckIn.setFarmerName(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_NAME)));
+                    farmerCheckIn.setFarmerName(Helpers.clean(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_NAME))));
 
                     if (!cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE)).equals("NA") && !cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE)).equals("null")) {
                         farmerCheckIn.setLatitude(Double.parseDouble(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE))));
@@ -2200,7 +2200,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 sampling.setBlockNumber(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_BLOCK_NUMBER)));
                 sampling.setLatitude(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_LATITUTE)));
                 sampling.setLongitude(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_LONGITUTE)));
-                sampling.setReference(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_REFRENCE)));
+                sampling.setReference(Helpers.clean(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_REFRENCE))));
                 samplingList.add(sampling);
             }
             while (cursorSampling.moveToNext());
@@ -2286,7 +2286,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             cursorActivity.moveToFirst();
             do {
                 journeyType = cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_PLAN_TYPE));
-                thisfarmerCheckIn.setVisitObjective(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_OBJECTIVE)));
+                thisfarmerCheckIn.setVisitObjective(Helpers.clean(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_OBJECTIVE))));
                 thisfarmerCheckIn.setStatus(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_STATUS))));
                 thisfarmerCheckIn.setOutletStatusId(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_STATUS))));
                 thisfarmerCheckIn.setCheckInTimeStamp(Long.parseLong(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_TIME))));
