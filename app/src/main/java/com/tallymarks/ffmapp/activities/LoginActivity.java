@@ -106,7 +106,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 //startActivity(main);
                 Constants.LOGIN_USERNAME = et_username.getText().toString();
                 Constants.LOGIN_PASSWORD = et_password.getText().toString();
-                new LoginData().execute();
+                if(Helpers.isNetworkAvailable(LoginActivity.this)) {
+                    new LoginData().execute();
+                }
+                else
+                {
+                    Helpers.noConnectivityPopUp(LoginActivity.this);
+                }
             }
         });
         sensorimg.setOnClickListener(new View.OnClickListener() {
@@ -228,7 +234,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(main);
                 }
-                    else {
+                       else {
                         try {
                             JSONObject jsonObj = new JSONObject(response);
                             status = String.valueOf(jsonObj.getString("success"));

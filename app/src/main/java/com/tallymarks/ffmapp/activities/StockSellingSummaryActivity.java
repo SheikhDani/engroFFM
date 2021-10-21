@@ -1,11 +1,14 @@
 package com.tallymarks.ffmapp.activities;
 
+import static com.tallymarks.ffmapp.utils.Helpers.getDatefromMilis;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -27,6 +30,7 @@ import com.tallymarks.ffmapp.models.SoilSamplingCrops;
 import com.tallymarks.ffmapp.models.StockSellingSummary;
 import com.tallymarks.ffmapp.models.TodayPlan;
 import com.tallymarks.ffmapp.models.assignedcustomersofsubordiantes.GetAssignedCustomerSubOrdinatesOutput;
+import com.tallymarks.ffmapp.models.stockseliingsummaroutput.StockSellingSummaryOutput;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.Helpers;
 import com.tallymarks.ffmapp.utils.HttpHandler;
@@ -64,17 +68,30 @@ public class StockSellingSummaryActivity extends AppCompatActivity {
         tvTopHeader.setVisibility(View.VISIBLE);
 
         tvTopHeader.setText("STOCK SELLING SUMMARY");
-        prepareRecommendationData();
-        new GetlastVisitStockSale().execute();
-        drawRecommendationTable();
+      //  prepareRecommendationData();
+
+        if(Helpers.isNetworkAvailable(StockSellingSummaryActivity.this)) {
+            new GetlastVisitStockSale().execute();
+        }
+        else
+        {
+            Helpers.noConnectivityPopUp(StockSellingSummaryActivity.this);
+        }
+
+
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(StockSellingSummaryActivity.this, SuperVisorSnapShotActivity.class);
-                startActivity(i);
+              onBackPressed();
+//                Intent i = new Intent(StockSellingSummaryActivity.this, SuperVisorSnapShotActivity.class);
+//                startActivity(i);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
+    }
+    @Override
+    public void onBackPressed() {
+       super.onBackPressed();
     }
     public void drawRecommendationTable()
     {
@@ -165,14 +182,14 @@ public class StockSellingSummaryActivity extends AppCompatActivity {
 
             TextView orderno = new TextView(this);
             orderno.setText(arraylist.get(i).getOrderno());
-            orderno.setTextSize(12);
+            orderno.setTextSize(10);
             //startDate.setBackgroundResource(R.drawable.table_row);
             orderno.setGravity(Gravity.CENTER);
             orderno.setPadding(2, 2, 2, 2);
             TextView invocie = new TextView(this);
             invocie.setText(arraylist.get(i).getInvocieno());
             invocie.setGravity(Gravity.CENTER);
-            invocie.setTextSize(12);
+            invocie.setTextSize(10);
             //name.setBackgroundResource(R.drawable.table_row);
             invocie.setPadding(2, 2, 2, 2);
 
@@ -180,28 +197,28 @@ public class StockSellingSummaryActivity extends AppCompatActivity {
             products.setText(arraylist.get(i).getProdutcs());
             products.setGravity(Gravity.CENTER);
 
-            products.setTextSize(12);
+            products.setTextSize(10);
             //status.setBackgroundResource(R.drawable.table_row);
             products.setPadding(2, 2, 2, 2);
 
             TextView quanitysold= new TextView(this);
             quanitysold.setText(arraylist.get(i).getQuanitysold());
             quanitysold.setGravity(Gravity.CENTER);
-            quanitysold.setTextSize(12);
+            quanitysold.setTextSize(10);
             //srNo.setBackgroundResource(R.drawable.table_row);
             quanitysold.setPadding(2, 2, 2, 2);
 
             TextView nsp= new TextView(this);
             nsp.setText(arraylist.get(i).getNsp());
             nsp.setGravity(Gravity.CENTER);
-            nsp.setTextSize(12);
+            nsp.setTextSize(10);
             //srNo.setBackgroundResource(R.drawable.table_row);
             nsp.setPadding(2, 2, 2, 2);
 
             TextView visitdate= new TextView(this);
             visitdate.setText(arraylist.get(i).getVisitdate());
             visitdate.setGravity(Gravity.CENTER);
-            visitdate.setTextSize(12);
+            visitdate.setTextSize(10);
             //srNo.setBackgroundResource(R.drawable.table_row);
             visitdate.setPadding(2, 2, 2, 2);
 
@@ -249,6 +266,7 @@ public class StockSellingSummaryActivity extends AppCompatActivity {
         ProgressDialog pDialog;
         private HttpHandler httpHandler;
         String errorMessage = "";
+        String date="";
 
 
 
@@ -278,15 +296,23 @@ public class StockSellingSummaryActivity extends AppCompatActivity {
                 response = httpHandler.httpGet(getsupervsorsnapshot, headerParams);
                 Log.e("Assigned Sales Point", getsupervsorsnapshot);
                 Log.e("Response", response);
-                Type journeycodeType = new TypeToken<ArrayList<GetAssignedCustomerSubOrdinatesOutput>>() {
+                Type journeycodeType = new TypeToken<ArrayList<StockSellingSummaryOutput>>() {
                 }.getType();
-                List<GetAssignedCustomerSubOrdinatesOutput> journeycode = new Gson().fromJson(response, journeycodeType);
+                List<StockSellingSummaryOutput> journeycode = new Gson().fromJson(response, journeycodeType);
                 //JourneyPlanOutPut journeycode = new Gson().fromJson(response, JourneyPlanOutPut.class);
                 if (response != null) {
-
                     for (int j = 0; j < journeycode.size(); j++) {
-                        TodayPlan plan4 = new TodayPlan();
-                        plan4.setSalespoint(journeycode.get(j).getSalesPoint() == null || journeycode.get(j).getSalesPoint() .equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getSalesPoint() .toString());
+                        StockSellingSummary prod = new  StockSellingSummary();
+                        date  = journeycode.get(j).getVisitDate() == null || journeycode.get(j).getVisitDate().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getVisitDate().toString();
+                        prod.setVisitdate(getDatefromMilis(date));
+                        prod.setInvocieno(journeycode.get(j).getInvoiceNumber() == null || journeycode.get(j).getInvoiceNumber().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getInvoiceNumber());
+                        prod.setQuanitysold(journeycode.get(j).getQuantitySold() == null || journeycode.get(j).getQuantitySold().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getQuantitySold().toString());
+                        prod.setOrderno(journeycode.get(j).getOrderNumber() == null || journeycode.get(j).getOrderNumber().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getOrderNumber());
+                        prod.setNsp(journeycode.get(j).getNetSellingPrice() == null || journeycode.get(j).getNetSellingPrice().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getNetSellingPrice().toString());
+                        prod.setProdutcs(journeycode.get(j).getBrandName()== null || journeycode.get(j).getBrandName().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getBrandName());
+                        arraylist.add(prod);
+
+
 
 
                     }
@@ -318,9 +344,8 @@ public class StockSellingSummaryActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void args) {
-
             pDialog.dismiss();
-
+            drawRecommendationTable();
         }
     }
 }

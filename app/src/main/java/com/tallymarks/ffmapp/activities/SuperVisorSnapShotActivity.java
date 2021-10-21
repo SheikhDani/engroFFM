@@ -70,7 +70,6 @@ public class SuperVisorSnapShotActivity extends AppCompatActivity {
         iv_menu.setVisibility(View.GONE);
         tvTopHeader.setVisibility(View.VISIBLE);
         btnSumamry = findViewById(R.id.sales_summary);
-
         tvTopHeader.setTextSize(12);
         tvTopHeader.setText("Stock SnapShot for " + sHelper.getString(Constants.SUBORDINATE_CUSTOMER_NAME));
         btnSumamry.setOnClickListener(new View.OnClickListener() {
@@ -85,14 +84,23 @@ public class SuperVisorSnapShotActivity extends AppCompatActivity {
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(SuperVisorSnapShotActivity.this, SubordinatListActivity.class);
-                startActivity(i);
+                onBackPressed();
+//                Intent i = new Intent(SuperVisorSnapShotActivity.this, SubordinatListActivity.class);
+//                startActivity(i);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
 
         elv = (ExpandableListView) findViewById(R.id.expandableListView);
-        new GetSnapshotforSubOrdiantes().execute();
+
+        if(Helpers.isNetworkAvailable(SuperVisorSnapShotActivity.this)) {
+            new GetSnapshotforSubOrdiantes().execute();
+        }
+        else
+        {
+            Helpers.noConnectivityPopUp(SuperVisorSnapShotActivity.this);
+        }
+
        // final ArrayList<SupervisorSnapshotParent> team = getData();
 
 
@@ -252,6 +260,10 @@ public class SuperVisorSnapShotActivity extends AppCompatActivity {
 
 
         }
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
 }

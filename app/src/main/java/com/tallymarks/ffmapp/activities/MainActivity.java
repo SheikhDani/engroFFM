@@ -115,11 +115,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView tvTopHeader;
     SharedPrefferenceHelper sHelper;
     NavigationView navigationView;
+    TextView userName;
     ImageView iv_Menu, iv_Back;
     ImageView iv_filter;
     final static int REQUEST_LOCATION = 199;
     private GoogleApiClient googleApiClient;
     GpsTracker gpsTracker;
+    String username = "";
     DatabaseHandler db;
     SharedPrefferenceHelper sharedPrefferenceHelper;
     List<MenuModel> headerList = new ArrayList<>();
@@ -151,6 +153,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         txt_post_data = findViewById(R.id.txt_post);
         iv_Menu.setVisibility(View.VISIBLE);
         iv_filter = findViewById(R.id.iv_notification);
+        userName = findViewById(R.id.userName);
+
         iv_filter.setVisibility(View.VISIBLE);
         tvTopHeader.setVisibility(View.VISIBLE);
         tvTopHeader.setText("DASHBOARD");
@@ -169,8 +173,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         txt_post_data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                postCustomerData();
-                postFarmerData();
+                if(Helpers.isNetworkAvailable(MainActivity.this)) {
+                    postCustomerData();
+                    postFarmerData();
+                }
+                else
+                {
+                    Helpers.noConnectivityPopUp(MainActivity.this);
+                }
+
             }
         });
         txt_logout.setOnClickListener(new View.OnClickListener() {
@@ -204,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
         // requestMultiplePermissions();
+        loadLoginData();
         checkStorageCompanyHeldBrand();
         checkStorageCrops();
         checkStorageFertTypes();
@@ -307,7 +319,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             while (cursor.moveToNext());
         } else {
-            new GetCompanHeldBrandBasicList(MainActivity.this).execute();
+            if(Helpers.isNetworkAvailable(MainActivity.this)) {
+                new GetCompanHeldBrandBasicList(MainActivity.this).execute();
+            }
+            else
+            {
+                Helpers.noConnectivityPopUp(MainActivity.this);
+            }
+
         }
 
 
@@ -330,10 +349,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             while (cursor.moveToNext());
         } else {
-            new GetListofAllCrops(MainActivity.this).execute();
+            if(Helpers.isNetworkAvailable(MainActivity.this)) {
+                new GetListofAllCrops(MainActivity.this).execute();
+            }
+            else
+            {
+                Helpers.noConnectivityPopUp(MainActivity.this);
+            }
+
         }
 
 
+    }
+
+
+    public void loadLoginData() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_USER_NAME, "");
+        HashMap<String, String> filters = new HashMap<>();
+        Cursor cursor = db.getData(db.LOGIN, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                username = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_USER_NAME)));
+                while (cursor.moveToNext()) ;
+            }
+            while (cursor.moveToNext());
+            userName.setText(username);
+
+        }
     }
 
     private boolean isUnpostedDataExist() {
@@ -436,7 +480,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             while (cursor.moveToNext());
         } else {
-            new GetListofAllDepths(MainActivity.this).execute();
+            if(Helpers.isNetworkAvailable(MainActivity.this)) {
+                new GetListofAllDepths(MainActivity.this).execute();
+            }
+            else
+            {
+                Helpers.noConnectivityPopUp(MainActivity.this);
+            }
+
         }
 
 
@@ -457,7 +508,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             while (cursor.moveToNext());
         } else {
-            new GetListofallMarketPlayers(MainActivity.this).execute();
+            if(Helpers.isNetworkAvailable(MainActivity.this)) {
+                new GetListofallMarketPlayers(MainActivity.this).execute();
+            }
+            else
+            {
+                Helpers.noConnectivityPopUp(MainActivity.this);
+            }
+
         }
 
 
@@ -478,7 +536,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             while (cursor.moveToNext());
         } else {
-            new GetAssignedSalesPoint(MainActivity.this).execute();
+            if(Helpers.isNetworkAvailable(MainActivity.this)) {
+                new GetAssignedSalesPoint(MainActivity.this).execute();
+            }
+            else
+            {
+                Helpers.noConnectivityPopUp(MainActivity.this);
+            }
+
         }
 
 
@@ -498,7 +563,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             while (cursor.moveToNext());
         } else {
-            new GetAllProductBrandByCategory(MainActivity.this).execute();
+            if(Helpers.isNetworkAvailable(MainActivity.this)) {
+                new GetAllProductBrandByCategory(MainActivity.this).execute();
+            }
+            else
+            {
+                Helpers.noConnectivityPopUp(MainActivity.this);
+            }
+
         }
 
 
@@ -519,7 +591,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             while (cursor.moveToNext());
         } else {
-            new GetlistofAllFertTypes(MainActivity.this).execute();
+            if(Helpers.isNetworkAvailable(MainActivity.this)) {
+                new GetlistofAllFertTypes(MainActivity.this).execute();
+            }
+            else
+            {
+                Helpers.noConnectivityPopUp(MainActivity.this);
+            }
+
+
         }
 
 
@@ -540,7 +620,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             while (cursor.moveToNext());
         } else {
-            new LoadCustomersAllJourneyPlan(MainActivity.this).execute();
+            if(Helpers.isNetworkAvailable(MainActivity.this)) {
+                new LoadCustomersAllJourneyPlan(MainActivity.this).execute();
+            }
+            else
+            {
+                Helpers.noConnectivityPopUp(MainActivity.this);
+            }
+
         }
 
 
@@ -562,7 +649,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             while (cursor.moveToNext());
         } else {
-            new LoadCustomersTodayJourneyPlan(MainActivity.this).execute();
+            if(Helpers.isNetworkAvailable(MainActivity.this)) {
+                new LoadCustomersTodayJourneyPlan(MainActivity.this).execute();
+            }
+            else
+            {
+                Helpers.noConnectivityPopUp(MainActivity.this);
+            }
+
         }
 
 
