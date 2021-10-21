@@ -386,13 +386,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void loadLoginData() {
         HashMap<String, String> map = new HashMap<>();
-        map.put(db.KEY_USER_NAME, "");
+        map.put(db.KEY_NAME, "");
         HashMap<String, String> filters = new HashMap<>();
         Cursor cursor = db.getData(db.LOGIN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             do {
-                username = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_USER_NAME)));
+                username = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_NAME)));
                 while (cursor.moveToNext()) ;
             }
             while (cursor.moveToNext());
