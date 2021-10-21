@@ -138,8 +138,15 @@ public class SubOrdinatesActivity extends AppCompatActivity {
 
         Log.e("toweek", String.valueOf(toweek));
         Log.e("toyear", String.valueOf(toyear));
+        if(Helpers.isNetworkAvailable(SubOrdinatesActivity.this)) {
+            new GetSueprVisorSnapShot(fromweek, toweek, fromyear, toyear).execute();
+        }
+        else
+        {
+            Helpers.noConnectivityPopUp(SubOrdinatesActivity.this);
+        }
 
-        new GetSueprVisorSnapShot(fromweek, toweek, fromyear, toyear).execute();
+
 
 
     }

@@ -60,6 +60,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center_horizontal"
                                 android:paddingTop="@dimen/p30"
+                                android:id="@+id/userName"
                                 android:text="Danish Arif "
                                 android:textColor="@color/black"
                                 android:textSize="26sp" />
@@ -96,7 +97,7 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginBottom="-40dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/da" />
+                            android:src="@drawable/engrologo" />
                     </RelativeLayout>
 
 

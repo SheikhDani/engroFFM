@@ -74,8 +74,9 @@ public class SubordinatListActivity extends AppCompatActivity implements ItemCli
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(SubordinatListActivity.this, SubOrdinatesActivity.class);
-                startActivity(i);
+                onBackPressed();
+//                Intent i = new Intent(SubordinatListActivity.this, SubOrdinatesActivity.class);
+//                startActivity(i);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
@@ -101,7 +102,14 @@ public class SubordinatListActivity extends AppCompatActivity implements ItemCli
 
         tvTopHeader.setText(sHelper.getString(Constants.SUBORDINATE_NAME)+ " Customers");
         // prepareMovieData();
-        new GetAssignedCustomerforSubOrdiantes().execute();
+        if(Helpers.isNetworkAvailable(SubordinatListActivity.this)) {
+            new GetAssignedCustomerforSubOrdiantes().execute();
+        }
+        else
+        {
+            Helpers.noConnectivityPopUp(SubordinatListActivity.this);
+        }
+
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(SubordinatListActivity.this);
@@ -241,5 +249,9 @@ public class SubordinatListActivity extends AppCompatActivity implements ItemCli
             adapter.setClickListener(SubordinatListActivity.this);
 
         }
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

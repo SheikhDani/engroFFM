@@ -120,7 +120,14 @@ public class CustomerLocationActivity extends AppCompatActivity implements OnMap
                 } else if (currentlat == null || currentlat.equals("") || currentlng == null || currentlng.equals("")) {
                     Toast.makeText(CustomerLocationActivity.this, "Please Check your Location is Enabled Correctly", Toast.LENGTH_SHORT).show();
                 } else {
-                    new ChangeCustomerLocation(et_customercode.getText().toString()).execute();
+                    if(Helpers.isNetworkAvailable(CustomerLocationActivity.this)) {
+                        new ChangeCustomerLocation(et_customercode.getText().toString()).execute();
+                    }
+                    else
+                    {
+                        Helpers.noConnectivityPopUp(CustomerLocationActivity.this);
+                    }
+
                 }
             }
         });
