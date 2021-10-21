@@ -12,7 +12,9 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollview"
+        android:layout_above="@+id/linear_bottom"
         android:layout_below="@+id/inc_common_header_colletion"
         android:fillViewport="true"
         android:scrollbars="vertical">
@@ -52,7 +54,8 @@
                 android:layout_weight="1"
                 android:textColor="@color/black"
                 android:gravity="center"
-                android:text="2020/08/05" />
+                android:id="@+id/tvDate"
+                android:hint="Please Enter Date" />
 
         </LinearLayout>
             <LinearLayout
@@ -112,6 +115,7 @@
                     android:layout_marginRight="@dimen/p20"
                     android:layout_weight="2"
                  android:padding="@dimen/p10"
+                    android:id="@+id/txt_total_sample"
                     android:text="TOTAL SAMPELS  0"
                     android:textColor="@color/green"
 
@@ -126,19 +130,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/p10"
+                android:id="@+id/linear_lines"
                 android:layout_below="@+id/linear_confirmaed"
                 android:background="@color/grey" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
         </LinearLayout>
 
     </ScrollView>
-    <View
 
-        android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/p50"
-        android:layout_above="@+id/linear_bottom"
-        android:layout_marginBottom="@dimen/p10"
-        android:layout_height="1dp"
-        android:background="@color/grey" />
 
     <LinearLayout
         android:layout_width="fill_parent"

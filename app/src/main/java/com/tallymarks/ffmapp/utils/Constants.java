@@ -134,6 +134,7 @@ public class Constants {
     public static final String FFM_POST_FARMER_DEMO=  FFM_BASE_URL + "/app/trans/createProductDemo";
     public static final String FFM_GET_ALL_FARMERS=  FFM_BASE_URL + "/global/lookup/getAssignedSalesPoints";
     public static final String FFM_GET_ASSIGNED_FARMERS=  FFM_BASE_URL + "/global/lookup/getAssignedFarmersForCheckIn";
+    public static final String FFM_GET_SOIL_SAMPLING_LOGS=  FFM_BASE_URL + "/global/lookup/listSoilSampleLogs";
 
 
 
