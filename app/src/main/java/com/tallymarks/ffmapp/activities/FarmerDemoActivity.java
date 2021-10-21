@@ -5,10 +5,14 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -62,6 +67,7 @@ public class FarmerDemoActivity extends AppCompatActivity {
     HashMap<String, String> map;
     int ProductId;
     int cropId;
+    TextView tvCrop , tvProduct , tvDate , tvAddress, tvObjective;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +85,12 @@ public class FarmerDemoActivity extends AppCompatActivity {
         pending = findViewById(R.id.txt_pending);
         btn_save = findViewById(R.id.button2);
         auto_objective = findViewById(R.id.auto_ojective);
+        tvAddress = findViewById(R.id.txt_address);
+        tvObjective = findViewById(R.id.txt_objective);
+        tvDate = findViewById(R.id.txt_date);
+        tvProduct = findViewById(R.id.txt_prod);
+        tvCrop = findViewById(R.id.txt_crop);
+
         tvTopHeader = findViewById(R.id.tv_dashboard);
         et_date = findViewById(R.id.et_date);
         et_address = findViewById(R.id.et_address);
@@ -90,6 +102,17 @@ public class FarmerDemoActivity extends AppCompatActivity {
         sHelper = new SharedPrefferenceHelper(FarmerDemoActivity.this);
         db = new DatabaseHandler(FarmerDemoActivity.this);
         mydb = new MyDatabaseHandler(FarmerDemoActivity.this);
+
+        SpannableStringBuilder activityDate = setStarToLabel("Activity Date");
+        SpannableStringBuilder crop = setStarToLabel("Crop");
+        SpannableStringBuilder product = setStarToLabel("Product");
+        SpannableStringBuilder address = setStarToLabel("Address");
+        SpannableStringBuilder objective = setStarToLabel("Objective of Demo");
+        tvCrop.setText(crop);
+        tvDate.setText(activityDate);
+        tvProduct.setText(product);
+        tvAddress.setText(address);
+        tvObjective.setText(objective);
         getCropfromDatabase();
         getMainProductfromDatabase();
         tvTopHeader.setText("FARMER DEMO");
@@ -242,11 +265,7 @@ public class FarmerDemoActivity extends AppCompatActivity {
 //
 //                // adding in table
 //                mydb.addData(mydb.FARMER_DEMO, map);
-                if (Helpers.isNetworkAvailable(FarmerDemoActivity.this)) {
-                    new PostFarmerDemo().execute();
-                } else {
-                    Helpers.noConnectivityPopUp(FarmerDemoActivity.this);
-                }
+              validateInputs();
 
             }
         });
@@ -321,6 +340,41 @@ public class FarmerDemoActivity extends AppCompatActivity {
 //            if (cropArraylist.get(i).contains("%20"))
 //                cropArraylist.set(i, cropArraylist.get(i).replace("%20" , " "));
 //        }
+    }
+    private void validateInputs() {
+        if (    auto_prod!=null
+                && et_address!=null
+                && auto_objective!=null
+                && auto_crop!=null
+                && !(Helpers.isEmptyTextview(getApplicationContext(),  et_date))
+                && !(Helpers.isEmpty(getApplicationContext(), et_address))
+                && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_crop))
+                && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_objective))
+                && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_prod))
+
+        ) {
+            if (Helpers.isNetworkAvailable(FarmerDemoActivity.this)) {
+                new PostFarmerDemo().execute();
+            } else {
+                Helpers.noConnectivityPopUp(FarmerDemoActivity.this);
+            }
+
+        } else {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmerDemoActivity.this);
+            alertDialogBuilder
+                    .setMessage(getResources().getString(R.string.field_required_message))
+                    .setCancelable(false)
+                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+
+
+                        }
+                    });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        }
     }
 
     public void getMainProductfromDatabase() {
@@ -516,6 +570,18 @@ public class FarmerDemoActivity extends AppCompatActivity {
             }
 
         }
+    }
+    @NonNull
+    private SpannableStringBuilder setStarToLabel(String text) {
+        String simple = text;
+        String colored = "*";
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        builder.append(simple);
+        int start = builder.length();
+        builder.append(colored);
+        int end = builder.length();
+        builder.setSpan(new ForegroundColorSpan(Color.RED), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return builder;
     }
 
 }

@@ -2180,12 +2180,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapForSampleing.put(mydb.KEY_TODAY_LATITUTE, "");
         mapForSampleing.put(mydb.KEY_TODAY_LONGITUTE, "");
         mapForSampleing.put(mydb.KEY_TODAY_REFRENCE, "");
-
         HashMap<String, String> filtersforSampling = new HashMap<>();
         filtersforSampling.put(mydb.KEY_TODAY_FARMMMER_ID, thisFarmerId);
         Sampling sampling;
         ArrayList<Sampling> samplingList = new ArrayList<>();
-
         Cursor cursorSampling = mydb.getData(mydb.TODAY_FARMER_SAMPLING, mapForSampleing, filtersforSampling);
         if (cursorSampling.getCount() > 0) {
             cursorSampling.moveToFirst();
