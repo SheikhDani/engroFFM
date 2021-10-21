@@ -52,7 +52,7 @@
                 android:id="@+id/divider_plot_details"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-              android:layout_marginTop="@dimen/p20"
+                android:layout_marginTop="@dimen/p20"
                 android:background="@color/grey" />
 
             <LinearLayout
@@ -79,12 +79,13 @@
                     />
 
                 <EditText
+                    android:id="@+id/acres"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/p20"
                     android:layout_weight="1"
                     android:background="@drawable/eidttext_boader"
-
+                    android:inputType="number"
                     android:gravity="center"
                     android:hint="2" />
 
@@ -113,12 +114,14 @@
                     />
 
                 <EditText
+                    android:id="@+id/blocks"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/p20"
                     android:layout_weight="1"
                     android:background="@drawable/eidttext_boader"
                     android:gravity="center"
+                    android:inputType="number"
                     android:hint="3" />
 
             </LinearLayout>
@@ -406,10 +409,10 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="@dimen/p20"
-                   android:textColor="@color/black"
+                    android:textColor="@color/black"
                     android:layout_weight="2"
                     android:gravity="center_vertical"
-                    android:text="Selected Lat,Lng:30.1212111, 72.290220202"
+                    android:text="Selected Lat,Lng:"
 
 
                     />
@@ -424,14 +427,14 @@
                 android:layout_marginTop="@dimen/p20"
                 android:gravity="center"
                 android:orientation="horizontal"
-             >
+                >
 
                 <Button
                     android:id="@+id/btn_add_sampling"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
-                   android:drawablePadding="@dimen/p5"
+                    android:drawablePadding="@dimen/p5"
                     android:textColor="@color/green"
                     android:padding="@dimen/p10"
                     android:drawableTint="@color/green"

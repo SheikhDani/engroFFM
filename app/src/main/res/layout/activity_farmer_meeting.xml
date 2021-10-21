@@ -81,7 +81,8 @@
 
                     />
 
-                <EditText
+                <TextView
+                    android:id="@+id/tv_date_meeting"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/p20"
@@ -116,7 +117,8 @@
 
                     />
 
-                <EditText
+                <AutoCompleteTextView
+                    android:id="@+id/auto_crop_list"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/p20"
@@ -151,7 +153,8 @@
 
                     />
 
-                <EditText
+                <AutoCompleteTextView
+                    android:id="@+id/auto_product_list"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/p20"
@@ -186,7 +189,7 @@
 
                     />
 
-                <Button
+                <TextView
                     android:id="@+id/btn_dealers"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
@@ -224,22 +227,16 @@
                     />
 
 
-                <AutoCompleteTextView
+                <EditText
                     android:id="@+id/attendance"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:layout_marginRight="@dimen/p20"
                     android:layout_weight="1"
-
                     android:background="@drawable/eidttext_boader"
-                    android:clickable="true"
-                    android:cursorVisible="false"
-                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
-                    android:dropDownHeight="155dp"
-                    android:focusable="false"
                     android:gravity="center_horizontal"
                     android:hint="Employees"
-                    android:inputType="none"
+                    android:inputType="number"
                     android:maxLines="1"
                     android:textAlignment="center"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -273,6 +270,7 @@
                     />
 
                 <EditText
+                    android:id="@+id/chiefGuest"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/p20"
@@ -307,23 +305,17 @@
                     />
 
 
-                <AutoCompleteTextView
+                <EditText
                     android:id="@+id/farmers"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:layout_marginRight="@dimen/p20"
-
                     android:layout_weight="1"
                     android:background="@drawable/eidttext_boader"
-                    android:clickable="true"
                     android:cursorVisible="false"
-                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
-                    android:dropDownHeight="155dp"
-                    android:focusable="false"
                     android:gravity="center_horizontal"
-                    android:inputType="none"
-                    android:maxLines="1"
                     android:textAlignment="center"
+                    android:hint="Count"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -355,12 +347,13 @@
                     />
 
                 <EditText
+                    android:id="@+id/targetCustomers"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/p20"
                     android:layout_weight="1"
                     android:background="@drawable/eidttext_boader"
-
+                    android:hint="Count"
                     android:gravity="center" />
 
             </LinearLayout>
@@ -389,12 +382,13 @@
                     />
 
                 <EditText
+                    android:id="@+id/expenses"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/p20"
                     android:layout_weight="1"
                     android:background="@drawable/eidttext_boader"
-
+                    android:hint="Amount"
                     android:gravity="center" />
 
             </LinearLayout>
@@ -430,7 +424,7 @@
                     android:background="@drawable/eidttext_boader"
                     android:backgroundTint="@color/colorPrimaryDark"
                     android:gravity="center"
-                    android:text="SELECT DEALERS"
+                    android:text="ATTACHMENTS"
                     android:textColor="@color/white" />
 
             </LinearLayout>

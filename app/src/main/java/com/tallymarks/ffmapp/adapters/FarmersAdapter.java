@@ -1,22 +1,29 @@
 package com.tallymarks.ffmapp.adapters;
 
 
+import android.icu.text.UnicodeSetSpanner;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.models.Farmes;
+import com.tallymarks.ffmapp.models.TodayPlan;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class FarmersAdapter extends RecyclerView.Adapter<FarmersAdapter.MyViewHolder> {
 
     private List<Farmes> moviesList;
+    private List<Farmes> headerList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, status;
@@ -33,6 +40,8 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmersAdapter.MyViewHo
 
     public FarmersAdapter(List<Farmes> moviesList) {
         this.moviesList = moviesList;
+        this.headerList = new ArrayList<Farmes>();
+        this.headerList.addAll(moviesList);
     }
 
     @Override
@@ -40,6 +49,13 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmersAdapter.MyViewHo
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.farmers_list_item, parent, false);
 
+        Button button = itemView.findViewById(R.id.forward_img);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(parent.getContext(), "Clicked position: ", Toast.LENGTH_SHORT).show();
+            }
+        });
         return new MyViewHolder(itemView);
     }
 
@@ -54,5 +70,26 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmersAdapter.MyViewHo
     @Override
     public int getItemCount() {
         return moviesList.size();
+    }
+
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        moviesList.clear();
+        if (charText.length() == 0) {
+            moviesList.addAll(headerList);
+        } else {
+
+            ArrayList<Farmes> filteredList = new ArrayList<>();
+            for (Farmes pl :headerList) {
+
+                if (pl.getTitle().toLowerCase(Locale.getDefault()).contains(charText)) {
+                    moviesList.add(pl);
+                }
+
+            }
+//            headerList = filteredList;
+        }
+
+        notifyDataSetChanged();
     }
 }

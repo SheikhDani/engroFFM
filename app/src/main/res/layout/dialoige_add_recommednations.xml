@@ -80,7 +80,7 @@
 
 
             <AutoCompleteTextView
-                android:id="@+id/auto_crop"
+                android:id="@+id/auto_crop_recom"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_marginRight="@dimen/p20"
@@ -176,7 +176,7 @@
 
 
             <AutoCompleteTextView
-                android:id="@+id/auto_product"
+                android:id="@+id/auto_product_recomm"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_marginRight="@dimen/p20"
@@ -228,8 +228,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/p20"
                 android:layout_weight="1"
+                android:inputType="number"
                 android:background="@drawable/eidttext_boader"
-
                 android:gravity="center"
                 android:hint="Number" />
 
@@ -259,15 +259,15 @@
                 />
 
             <EditText
-                android:id="@+id/et_firstname"
+                android:id="@+id/et_dosePerAcre"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/p20"
                 android:layout_weight="1"
                 android:background="@drawable/eidttext_boader"
-
                 android:gravity="center"
-                android:hint="Ali" />
+                android:inputType="number"
+                android:hint="Number" />
 
         </LinearLayout>
         <View
