@@ -81,7 +81,7 @@ public class SoilSamplingActivity extends AppCompatActivity {
         Bundle data = getIntent().getExtras();
         if (data != null)
         {
-            planType = data.getString(Constants.PLAN_TYPE);
+            planType = data.getString(Constants.PLAN_TYPE_FARMER);
 
         }
         tvTopHeader = findViewById(R.id.tv_dashboard);
@@ -456,7 +456,7 @@ public class SoilSamplingActivity extends AppCompatActivity {
             params.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "2");
             HashMap<String, String> filter = new HashMap<>();
             filter.put(mydb.KEY_TODAY_JOURNEY_FARMER_ID, sHelper.getString(Constants.S_FARMER_ID));
-            filter.put(mydb.KEY_PLAN_TYPE, sHelper.getString(Constants.PLAN_TYPE));
+            filter.put(mydb.KEY_PLAN_TYPE, sHelper.getString(Constants.PLAN_TYPE_FARMER));
             mydb.updateData(mydb.TODAY_FARMER_JOURNEY_PLAN, params, filter);
             mydb.close();
     }

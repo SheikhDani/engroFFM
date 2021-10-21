@@ -68,7 +68,7 @@ public class FarmVisitActivity extends AppCompatActivity {
         Bundle data = getIntent().getExtras();
         if (data != null)
         {
-            planType = data.getString(Constants.PLAN_TYPE);
+            planType = data.getString(Constants.PLAN_TYPE_FARMER);
 
         }
         tvTopHeader = findViewById(R.id.tv_dashboard);
@@ -322,7 +322,7 @@ public class FarmVisitActivity extends AppCompatActivity {
 
                 Intent soil = new Intent(FarmVisitActivity.this, SoilSamplingActivity.class);
                 Bundle data = new Bundle();
-                data.putString(Constants.PLAN_TYPE,planType);
+                data.putString(Constants.PLAN_TYPE_FARMER,planType);
                 soil.putExtras(data);
                 startActivity(soil);
             }

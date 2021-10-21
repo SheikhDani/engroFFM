@@ -103,8 +103,15 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
         }
         holder.salespoint.setText("Sales Point: "+movie.getSalespoint());
         if(from.equals("farmers")) {
-            holder.customecode.setText(movie.getMobilenumber());
             holder.time.setText(movie.getLocation());
+            holder.customecode.setText(movie.getMobilenumber());
+            if (movie.getMemebrship().equals("Visited")) {
+                holder.member.setBackgroundColor(Color.parseColor("#159356"));
+                holder.member.setText(movie.getMemebrship());
+            } else {
+                holder.member.setBackgroundColor(Color.GRAY);
+                holder.member.setText(movie.getMemebrship());
+            }
         }
         else if(from.equals("subordinate"))
         {

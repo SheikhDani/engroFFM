@@ -42,6 +42,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.GpsTracker;
@@ -62,10 +63,12 @@ public class MapActivity  extends AppCompatActivity implements OnMapReadyCallbac
     private static final int REQUEST_CODE = 101;
     private GoogleApiClient googleApiClient;
      DatabaseHandler db;
+    MyDatabaseHandler mydb;
     private SupportMapFragment mapFragment;
     SharedPrefferenceHelper sHelper;
     private GpsTracker gpsTracker;
     Button btnProceed;
+    String from ;
 
     private GoogleMap mMap;
     @Override
@@ -112,30 +115,68 @@ public class MapActivity  extends AppCompatActivity implements OnMapReadyCallbac
             enableLoc();
             // DialougeManager.gpsNotEnabledPopup(ProjectDetailActivity.this);
         }
-        HashMap<String, String> map = new HashMap<>();
-        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME, "");
-        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE, "");
-        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE, "");
-        HashMap<String, String> filters = new HashMap<>();
-        filters.put(db.KEY_TODAY_JOURNEY_TYPE,sHelper.getString(Constants.PLAN_TYPE_MAP));
-        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            do {
-                if (cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE)).equals("null") || cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE)).equals("null")) {
-                    LatLng location = new LatLng(0, 0);
-                    mMap.addMarker(new MarkerOptions().position(location).title(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME)))));
-                } else if (cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE)).equals("null") && cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE)).equals("null")) {
-                    LatLng location = new LatLng(0, 0);
-                    mMap.addMarker(new MarkerOptions().position(location).title(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME)))));
-                } else {
-                    mClusterManager.addItem(new User(Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE))),Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE))),Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME))),""));
-                    //  LatLng location = new LatLng(Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_LATITUDE))), Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_LANGITUDE))));
-                    // mMap.addMarker(new MarkerOptions().position(location).title(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_NAME)))));
+
+        if(from.equals("customer")) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME, "");
+            map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE, "");
+            map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE, "");
+            HashMap<String, String> filters = new HashMap<>();
+            filters.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE_MAP));
+            Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                do {
+                    if (cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE)).equals("null") || cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE)).equals("null")) {
+                        LatLng location = new LatLng(0, 0);
+                        mMap.addMarker(new MarkerOptions().position(location).title(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME)))));
+                    } else if (cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE)).equals("null") && cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE)).equals("null")) {
+                        LatLng location = new LatLng(0, 0);
+                        mMap.addMarker(new MarkerOptions().position(location).title(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME)))));
+                    } else {
+                        mClusterManager.addItem(new User(Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE))), Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE))), Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME))), ""));
+                        //  LatLng location = new LatLng(Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_LATITUDE))), Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_LANGITUDE))));
+                        // mMap.addMarker(new MarkerOptions().position(location).title(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_NAME)))));
+                    }
                 }
+                while (cursor.moveToNext());
             }
-            while (cursor.moveToNext());
         }
+        else {
+
+            HashMap<String, String> mapFarmer = new HashMap<>();
+            mapFarmer.put(mydb.KEY_TODAY_JOURNEY_FARMER_NAME, "");
+            mapFarmer.put(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE, "");
+            mapFarmer.put(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE, "");
+            mapFarmer.put(mydb.KEY_TODAY_JOURNEY_FARMER_SALES_POINT_NAME, "");
+            HashMap<String, String> farmerfilters = new HashMap<>();
+            farmerfilters.put(mydb.KEY_PLAN_TYPE, sHelper.getString(Constants.PLAN_TYPE_MAP_FARMER));
+            Cursor cursorfarmer = mydb.getData(mydb.TODAY_FARMER_JOURNEY_PLAN, mapFarmer, farmerfilters);
+            if (cursorfarmer.getCount() > 0) {
+                cursorfarmer.moveToFirst();
+                do {
+                    if (cursorfarmer.getString(cursorfarmer.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE)).equals("null") || cursorfarmer.getString(cursorfarmer.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE)).equals("null")) {
+                        LatLng location = new LatLng(0, 0);
+                        mMap.addMarker(new MarkerOptions().position(location).title(Helpers.clean(cursorfarmer.getString(cursorfarmer.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_SALES_POINT_NAME)))));
+                    } else if (cursorfarmer.getString(cursorfarmer.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE)).equals("null") && cursorfarmer.getString(cursorfarmer.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE)).equals("null")) {
+                        LatLng location = new LatLng(0, 0);
+                        mMap.addMarker(new MarkerOptions().position(location).title(Helpers.clean(cursorfarmer.getString(cursorfarmer.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_NAME)))));
+                    } else {
+                        if (cursorfarmer.getString(cursorfarmer.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE)).equals("NA") && cursorfarmer.getString(cursorfarmer.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE)).equals("NA")) {
+                            mClusterManager.addItem(new User(0.0, 0.0, Helpers.clean(cursorfarmer.getString(cursorfarmer.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_NAME))), ""));
+
+                        } else {
+                            mClusterManager.addItem(new User(Double.parseDouble(cursorfarmer.getString(cursorfarmer.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE))), Double.parseDouble(cursorfarmer.getString(cursorfarmer.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE))), Helpers.clean(cursorfarmer.getString(cursorfarmer.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_NAME))), ""));
+
+                        }
+                        //  LatLng location = new LatLng(Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_LATITUDE))), Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_LANGITUDE))));
+                        // mMap.addMarker(new MarkerOptions().position(location).title(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_NAME)))));
+                    }
+                }
+                while (cursorfarmer.moveToNext());
+            }
+        }
+
 
 
     }
@@ -147,11 +188,13 @@ public class MapActivity  extends AppCompatActivity implements OnMapReadyCallbac
         initView();
 
     }
+
     private void initView()
     {
         sHelper = new SharedPrefferenceHelper(MapActivity.this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         db = new DatabaseHandler(MapActivity.this);
+        mydb = new MyDatabaseHandler(MapActivity.this);
         btnProceed = findViewById(R.id.btnProceed);
         tvTopHeader = findViewById(R.id.tv_dashboard);
         iv_menu = findViewById(R.id.iv_drawer);
@@ -161,11 +204,11 @@ public class MapActivity  extends AppCompatActivity implements OnMapReadyCallbac
         tvTopHeader.setVisibility(View.VISIBLE);
         tvTopHeader.setText("MAP Activity");
         Intent intent = getIntent();
-        final String name = intent.getExtras().getString("from");
+       from = intent.getExtras().getString("from");
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(name.equals("customer")) {
+                if(from.equals("customer")) {
                     Intent i = new Intent(MapActivity.this, VisitCustomerActivity.class);
                     startActivity(i);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
@@ -182,7 +225,7 @@ public class MapActivity  extends AppCompatActivity implements OnMapReadyCallbac
         btnProceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(name.equals("customer")) {
+                if(from.equals("customer")) {
                     Intent i = new Intent(MapActivity.this, VisitCustomerActivity.class);
                     startActivity(i);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);

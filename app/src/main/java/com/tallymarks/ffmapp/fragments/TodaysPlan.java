@@ -33,6 +33,7 @@ import com.tallymarks.ffmapp.adapters.DealersAdapter;
 import com.tallymarks.ffmapp.adapters.FarmersAdapter;
 import com.tallymarks.ffmapp.adapters.TodayPlanAdapter;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.Farmes;
 import com.tallymarks.ffmapp.models.TodayPlan;
@@ -59,6 +60,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
     String  currentlng;
     SharedPrefferenceHelper sHelper;
     static EditText et_search_plan;
+    MyDatabaseHandler mydb;
 
 
 
@@ -89,6 +91,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
 
         }
         db = new DatabaseHandler(getActivity());
+        mydb = new MyDatabaseHandler(getActivity());
         sHelper = new SharedPrefferenceHelper(getActivity());
         planList.clear();
         gps = new GpsTracker(getActivity());
@@ -120,6 +123,29 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
         recyclerView.setAdapter(adapter);
         adapter.setClickListener(this);
         if(activity.equals("customers")) {
+            et_search_plan.addTextChangedListener(new TextWatcher() {
+
+                @Override
+                public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                    if(et_search_plan.hasFocus()) {
+                        adapter.filter(cs.toString());
+                    }
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+                    // Toast.makeText(getApplicationContext(),"before text change",Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void afterTextChanged(Editable arg0) {
+                    //Toast.makeText(getApplicationContext(),"after text change",Toast.LENGTH_LONG).show();
+                }
+            });
+
+        }
+        else
+        {
             et_search_plan.addTextChangedListener(new TextWatcher() {
 
                 @Override
@@ -203,105 +229,58 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
     }
 
     private void prepareMovieData(String activity) {
-        if (activity.equals("customers")) {
-            com.tallymarks.ffmapp.models.TodayPlan plan = new com.tallymarks.ffmapp.models.TodayPlan();
-            plan.setCustomercode("Customer Code: 8134560");
-            plan.setMemebrship("Visited");
-            plan.setSalespoint("Sales Point: Kot Ghulam Muhammad");
-            plan.setTime("9:00 AM");
-            plan.setTitle("Aqib Ali");
-            planList.add(plan);
+        planList.clear();
+        HashMap<String, String> map = new HashMap<>();
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_ID, "");
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_SALES_POINT_NAME, "");
+        map.put(mydb.KEY_TODAY_FARMER_MOBILE_NO, "");
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_JOURNEYPLAN_ID, "");
+        map.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "");
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_NAME, "");
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE, "");
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE, "");
 
-            com.tallymarks.ffmapp.models.TodayPlan plan2 = new com.tallymarks.ffmapp.models.TodayPlan();
-            plan2.setCustomercode("Customer Code: 8134560");
-            plan2.setMemebrship("Not Visited");
-            plan2.setSalespoint("Sales Point: Kot Ghulam Muhammad");
-            plan2.setTime("9:00 AM");
-            plan2.setTitle("786 Fertilizer");
-            planList.add(plan2);
+        //map.put(mydb.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(mydb.KEY_PLAN_TYPE, "TODAY");
+        Cursor cursor = mydb.getData(mydb.TODAY_FARMER_JOURNEY_PLAN, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                com.tallymarks.ffmapp.models.TodayPlan plan = new com.tallymarks.ffmapp.models.TodayPlan();
 
-            com.tallymarks.ffmapp.models.TodayPlan plan3 = new com.tallymarks.ffmapp.models.TodayPlan();
-            plan3.setCustomercode("Customer code: 8134560");
-            plan3.setMemebrship("Not Visited");
-            plan3.setSalespoint("Sales Point: Kot Ghulam Muhammad");
-            plan3.setTime("9:00 AM");
-            plan3.setTitle("Aamir Behzad");
-            planList.add(plan3);
+                //if(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_JOURNEY_IS_POSTED)) == "1"){
+//                        plan.setSalespoint(cursor.getString(cursor.getColumnIndex(KEY_TODAY_JOURNEY_FARMER_SALES_POINT_NAME)));
+//                        plan.setTitle(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_ID)));
+//                        plan.setLocation("Lahore");
+//                        plan.setMemebrship("Visited");
+//                        plan.setFatherName("AAMMR");
+//                        plan.setMobilenumber(cursor.getString(cursor.getColumnIndex(KEY_TODAY_FARMER_MOBILE_NO)));
+//                        plan.setCustomercode(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_JOURNEYPLAN_ID)));
+//                        planList.add(plan);
 
-            com.tallymarks.ffmapp.models.TodayPlan plan4 = new com.tallymarks.ffmapp.models.TodayPlan();
-            plan4.setCustomercode("Customer Code: 8134560");
-            plan4.setMemebrship("Visited");
-            plan4.setSalespoint("Sales Point: Kot Ghulam Muhammad");
-            plan4.setTime("9:00 AM");
-            plan4.setTitle("Aamir Shafiq and Brothers");
-            planList.add(plan4);
-
-            com.tallymarks.ffmapp.models.TodayPlan plan5 = new com.tallymarks.ffmapp.models.TodayPlan();
-            plan5.setCustomercode("Customer Code: 8134560");
-            plan5.setMemebrship("Not Visited");
-            plan5.setSalespoint("Sales Point: Kot Ghulam Muhammad");
-            plan5.setTime("9:00 AM");
-            plan5.setTitle("illahi Bukhsh");
-            planList.add(plan5);
-
-            com.tallymarks.ffmapp.models.TodayPlan plan6 = new com.tallymarks.ffmapp.models.TodayPlan();
-            plan6.setCustomercode("Customer Code: 8134560");
-            plan6.setMemebrship("Visited");
-            plan6.setSalespoint("Sales Point: Kot Ghulam Muhammad");
-            plan6.setTime("9:00 AM");
-            plan6.setTitle("Abid Hussain &  Brothers");
-            planList.add(plan6);
-
-            com.tallymarks.ffmapp.models.TodayPlan plan7 = new com.tallymarks.ffmapp.models.TodayPlan();
-            plan7.setCustomercode("Customer Code: 8134560");
-            plan7.setMemebrship("Not Visited");
-            plan7.setSalespoint("Sales Point: Kot Ghulam Muhammad");
-            plan7.setTime("9:00 AM");
-            plan7.setTitle("Abid Hussain &  Brothers");
-            planList.add(plan7);
-            com.tallymarks.ffmapp.models.TodayPlan plan8 = new com.tallymarks.ffmapp.models.TodayPlan();
-            plan8.setCustomercode("Customer Code: 8134560");
-            plan8.setMemebrship("Visited");
-            plan8.setSalespoint("Sales Point: Kot Ghulam Muhammad");
-            plan8.setTime("9:00 AM");
-            plan8.setTitle("Abid Hussain &  Brothers");
-            planList.add(plan8);
-        } else {
-
-            com.tallymarks.ffmapp.models.TodayPlan plan = new com.tallymarks.ffmapp.models.TodayPlan();
-            plan.setSalespoint("Sales Point: Kot Ghulam Muhammad");
-            plan.setTitle("Dr. Athar Rasheed");
-            plan.setLocation("Lahore");
-            plan.setMemebrship("Visited");
-            plan.setMobilenumber("023123421312");
-            planList.add(plan);
-
-            com.tallymarks.ffmapp.models.TodayPlan plan2 = new com.tallymarks.ffmapp.models.TodayPlan();
-            plan2.setSalespoint("Sales Point: Kot Ghulam Muhammad");
-            plan2.setTitle("Dr. Athar Rasheed");
-            plan2.setMemebrship("Visited");
-            plan2.setLocation("Lahore");
-            plan2.setMobilenumber("023123421312");
-            planList.add(plan2);
-
-            com.tallymarks.ffmapp.models.TodayPlan plan3 = new com.tallymarks.ffmapp.models.TodayPlan();
-            plan3.setSalespoint("Sales Point: Kot Ghulam Muhammad");
-            plan3.setTitle("Dr. Athar Rasheed");
-            plan3.setLocation("Lahore");
-            plan3.setMemebrship("Visited");
-            plan3.setMobilenumber("023123421312");
-            planList.add(plan3);
-
-            com.tallymarks.ffmapp.models.TodayPlan plan4 = new com.tallymarks.ffmapp.models.TodayPlan();
-            plan4.setSalespoint("Sales Point: Kot Ghulam Muhammad");
-            plan4.setTitle("Dr. Athar Rasheed");
-            plan4.setLocation("Lahore");
-            plan4.setMemebrship("Visited");
-            plan4.setMobilenumber("023123421312");
-            planList.add(plan4);
+                //}else{
+                plan.setSalespoint("" + Helpers.clean(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_SALES_POINT_NAME))));
+                plan.setTitle("" + Helpers.clean(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_NAME))));
+                plan.setLocation(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_ID)));
+                plan.setMemebrship("" + Helpers.clean(cursor.getString((cursor.getColumnIndex(mydb.KEY_TODAY_JOURNEY_IS_VISITED)))));
+                plan.setFatherName("" + Helpers.clean(cursor.getString((cursor.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_NAME)))));
+                plan.setMobilenumber(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_FARMER_MOBILE_NO)));
+                plan.setCustomercode(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_JOURNEYPLAN_ID)));
+                plan.setLatitude(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE)));
+                plan.setLongitude(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE)));
+                planList.add(plan);
 
 
+                //}
+
+
+
+            }
+            while (cursor.moveToNext());
         }
+
+
 
         // notify adapter about data set changes
         // so that it will render the list with new data
@@ -380,8 +359,116 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
             }
         }
         else {
-            Intent i = new Intent(getActivity(), FarmersStartActivity.class);
-            startActivity(i);
+            if(planList.get(position).getMemebrship().equals("Not Visited")) {
+                //sHelper.clearPreferenceStore();
+                gps = new GpsTracker(getActivity());
+                if (gps.canGetLocation()) {
+//                    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                        return;
+//                    }
+                    currentlat = String.valueOf(gps.getLatitude());
+                    currentlng = String.valueOf(gps.getLongitude());
+                    if (plan.getLatitude().equals("NA") || plan.getLatitude() == "NA" && plan.getLongitude().equals("NA") || plan.getLongitude() == "NA"){
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                        alertDialogBuilder
+                                .setMessage("Coordinate are Undefined. Do you want to continue ?")
+                                .setCancelable(false)
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent i = new Intent(getActivity(), FarmersStartActivity.class);
+                                        Bundle gameData = new Bundle();
+                                        gameData.putString(Constants.PLAN_TYPE_FARMER,"TODAY");
+                                        i.putExtras(gameData);
+                                        startActivity(i);
+                                        //Toast.makeText(ShopStatusActivity.this, "You are "+totalb+" Km away from the shop ", Toast.LENGTH_SHORT).show();
+                                    }
+                                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                }
+                        );
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+                        alertDialog.show();
+
+                    }
+//                    float distance = getMeterFromLatLong(Float.parseFloat(currentlat), Float.parseFloat(currentlng), Float.parseFloat(plan.getLatitude()), Float.parseFloat(plan.getLongitude()));
+//                    float totaldistance = distance / 1000;
+//                    String radius = "50";
+//                    int totalmeters = (int) Math.round(distance);
+//                    int totalb = (int) Math.round(totaldistance);
+//                    int c = (int) Math.round(distance);
+//                    boolean isWithinradius = c <= Integer.parseInt(radius) + 50;
+//                    if (isWithinradius) {
+//                        sHelper.setString(Constants.CUSTOMER_ID, plan.getCustomerID());
+//                        sHelper.setString(Constants.CUSTOMER_CODE, plan.getCustomercode());
+//                        sHelper.setString(Constants.CUSTOMER_NAME, plan.getTitle());
+//                        sHelper.setString(Constants.PLAN_TYPE, "today");
+//                        sHelper.setString(Constants.CUSTOMER_LAT, plan.getLatitude());
+//                        sHelper.setString(Constants.CUSTOMER_LNG, plan.getLongitude());
+//                        sHelper.setString(Constants.CUSTOMER_DAY_ID, plan.getCustomerDayID());
+//                        sHelper.setString(Constants.CUSTOMER_JOURNEYPLAN_ID, plan.getCustomerJourneyPlanID());
+//                        sHelper.setString(Constants.CUSTOMER_SALES_POINT_NAME, plan.getSalespoint());
+//                        Intent i = new Intent(getActivity(), StartActivity.class);
+//                        startActivity(i);
+//                    } else {
+//                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+//                        alertDialogBuilder
+//                                .setMessage("You are " + totalb + " Km" + "(" + totalmeters + " Meters" + ")" + " away from the shop. ")
+//                                .setCancelable(false)
+//                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        sHelper.setString(Constants.CUSTOMER_ID, plan.getCustomerID());
+//                                        sHelper.setString(Constants.CUSTOMER_CODE, plan.getCustomercode());
+//                                        sHelper.setString(Constants.PLAN_TYPE, "today");
+//                                        sHelper.setString(Constants.CUSTOMER_NAME, plan.getTitle());
+//                                        sHelper.setString(Constants.CUSTOMER_LAT, plan.getLatitude());
+//                                        sHelper.setString(Constants.CUSTOMER_LNG, plan.getLongitude());
+//                                        sHelper.setString(Constants.CUSTOMER_DAY_ID, plan.getCustomerDayID());
+//                                        sHelper.setString(Constants.CUSTOMER_JOURNEYPLAN_ID, plan.getCustomerJourneyPlanID());
+//                                        sHelper.setString(Constants.CUSTOMER_SALES_POINT_NAME, plan.getSalespoint());
+//                                        Intent i = new Intent(getActivity(), StartActivity.class);
+//                                        startActivity(i);
+//                                        //Toast.makeText(ShopStatusActivity.this, "You are "+totalb+" Km away from the shop ", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        dialog.cancel();
+//                                    }
+//                                }
+//                        );
+//                        AlertDialog alertDialog = alertDialogBuilder.create();
+//                        alertDialog.show();
+//
+//                    }
+                }
+
+                // set farmers details
+                Constants.FARMER_ID = planList.get(position).getLocation();
+                Constants.JOURNEY_PLAN_ID = planList.get(position).getCustomercode();
+                sHelper.setString(Constants.S_FARMER_ID, planList.get(position).getLocation());
+                sHelper.setString(Constants.S_JOURNEY_PLAN_ID, planList.get(position).getCustomercode());
+                sHelper.setString(Constants.FARMER_NAME, planList.get(position).getFatherName());
+                sHelper.setString(Constants.MOBIL_NO, planList.get(position).getMobilenumber());
+                sHelper.setString(Constants.SALES_POINT, planList.get(position).getSalespoint());
+                sHelper.setString(Constants.FARMER_LAT, currentlat);
+                sHelper.setString(Constants.FARMER_LONG, currentlng);
+                sHelper.setString(Constants.PLAN_TYPE_FARMER, "TODAY");
+
+//                Intent i = new Intent(getActivity(), FarmersStartActivity.class);
+//                Bundle gameData = new Bundle();
+//                gameData.putString(Constants.PLAN_TYPE,"TODAY");
+//                i.putExtras(gameData);
+//                startActivity(i);
+            }
+            else
+            {
+                Toast.makeText(getActivity(), "You Already performed The Activity for That Farmer", Toast.LENGTH_SHORT).show();
+            }
         }
     }
     public static float getMeterFromLatLong(float lat1, float lng1, float lat2, float lng2){

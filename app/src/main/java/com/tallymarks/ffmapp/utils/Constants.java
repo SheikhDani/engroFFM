@@ -1,5 +1,9 @@
 package com.tallymarks.ffmapp.utils;
 
+import com.tallymarks.ffmapp.models.getallFarmersplanoutput.FarmerCheckIn;
+
+import java.util.ArrayList;
+
 public class Constants {
 
     public static String LOGIN_USERNAME = "";
@@ -67,6 +71,34 @@ public class Constants {
 
 
 
+
+
+    public static final String ACTIVITY_STATUS_FARMER = "statusFarmer";
+    public static final String ACTIVITY_FARMER_OBJECTIVE_NAME = "farmerObjectiveName";
+    public static final String ACTIVITY_FARMER_OBJECTIVE = "Objective";
+    public static final String FARMER_LAT = "farmerLat";
+    public static final String FARMER_LONG = "farmerLong";
+    public static String FARMER_ID = "farmerId";
+    public static String JOURNEY_PLAN_ID = "journeyPlanId";
+
+    public static final String S_FARMER_ID = "farmerId";
+    public static final String S_JOURNEY_PLAN_ID = "journeyPlanId";
+
+    public static final String FARMER_NAME = "farmerName";
+    public static final String MOBIL_NO = "mobilNumber";
+    public static final String SALES_POINT = "test";
+    public static final String CHECK_IN = "000000";
+    public static final String CHECK_OUT = "000000";
+
+
+
+    public static String PLAN_TYPE_FARMER = "plantypeFarmer";
+    public static final String PLAN_TYPE_MAP_FARMER= "planTypeMapFarmer";
+    public static ArrayList<FarmerCheckIn> farmerCheckInArrayList = new ArrayList<>();
+
+
+
+
     // public static String DRIVER_RATING="Driver_status";
 
 
@@ -97,6 +129,12 @@ public class Constants {
     public static final String FFM_GET_PREVIOUS_SNAPSHOT_SUPERVISOR=  FFM_BASE_URL + "/app/trans/getPreviousStockSnapshot";
     public static final String FFM_GET_LAST_VISIT_STOCK_SALE=  FFM_BASE_URL + "/app/trans/getLastVisitStockSale";
     public static final String POST_NEW_FARMER=  FFM_BASE_URL + "/app/trans/createAppFarmer";
+
+    public static final String FFM_POST_FARMER_TODAY_JOURNEY_PLAN=  FFM_BASE_URL + "/app/trans/checkInJourneyPlan";
+    public static final String FFM_POST_FARMER_DEMO=  FFM_BASE_URL + "/app/trans/createProductDemo";
+    public static final String FFM_GET_ALL_FARMERS=  FFM_BASE_URL + "/global/lookup/getAssignedSalesPoints";
+    public static final String FFM_GET_ASSIGNED_FARMERS=  FFM_BASE_URL + "/global/lookup/getAssignedFarmersForCheckIn";
+
 
 
 

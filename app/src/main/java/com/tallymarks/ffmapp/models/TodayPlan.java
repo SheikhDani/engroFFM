@@ -42,6 +42,18 @@ public class TodayPlan {
     }
 
     private String title;
+
+
+    public String getFatherName() {
+        return fatherName;
+    }
+
+    public void setFatherName(String fatherName) {
+        this.fatherName = fatherName;
+    }
+
+
+    private String fatherName;
     private String memebrship;
     private String time;
     private String customercode;

@@ -55,6 +55,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.ExpandableListAdapter;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.MenuModel;
 import com.tallymarks.ffmapp.models.addfarmerinput.AddFarmerInput;
@@ -63,6 +64,10 @@ import com.tallymarks.ffmapp.models.addfarmerinput.LandProfile;
 import com.tallymarks.ffmapp.models.addfarmerinput.MarketPlayer;
 import com.tallymarks.ffmapp.models.addfarmerinput.ServingDealer;
 import com.tallymarks.ffmapp.models.assignedsalespoint.AssignedSalesPointOutput;
+import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Activity;
+import com.tallymarks.ffmapp.models.getallFarmersplanoutput.FarmerCheckIn;
+import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Recommendation;
+import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Sampling;
 import com.tallymarks.ffmapp.models.getallcustomersplanoutput.GetAllCustomersOutput;
 import com.tallymarks.ffmapp.models.listofallcrops.ListofallCropsOutput;
 import com.tallymarks.ffmapp.models.outletstatusesoutput.OutletStatusOutput;
@@ -91,6 +96,7 @@ import com.tallymarks.ffmapp.tasks.GetlistofAllFertTypes;
 import com.tallymarks.ffmapp.tasks.GetlistofallGenders;
 import com.tallymarks.ffmapp.tasks.LoadCustomersAllJourneyPlan;
 import com.tallymarks.ffmapp.tasks.LoadCustomersTodayJourneyPlan;
+import com.tallymarks.ffmapp.tasks.LoadFarmersAllJourneyPlan;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.GpsTracker;
 import com.tallymarks.ffmapp.utils.Helpers;
@@ -123,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     GpsTracker gpsTracker;
     String username = "";
     DatabaseHandler db;
+    MyDatabaseHandler mydb;
     SharedPrefferenceHelper sharedPrefferenceHelper;
     List<MenuModel> headerList = new ArrayList<>();
     HashMap<MenuModel, List<MenuModel>> childList = new HashMap<>();
@@ -130,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ImageView headerImage;
     String statuCustomer = "";
     String journeyType;
+
 
 
     @Override
@@ -161,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         sHelper = new SharedPrefferenceHelper(MainActivity.this);
         gpsTracker = new GpsTracker(MainActivity.this);
         db = new DatabaseHandler(MainActivity.this);
+        mydb = new MyDatabaseHandler(MainActivity.this);
         sharedPrefferenceHelper = new SharedPrefferenceHelper(this);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         txt_farmer_Demo.setOnClickListener(new View.OnClickListener() {
@@ -175,6 +184,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View view) {
                 if(Helpers.isNetworkAvailable(MainActivity.this)) {
                     postCustomerData();
+                    postAddFarmerData();
                     postFarmerData();
                 }
                 else
@@ -225,6 +235,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkStorageDepth();
         checkMarketPlayers();
         checkAssignedSalesPoint();
+        checkFarmerAllJourneyPlan();
+        checkFarmerTodayJourneyPlan();
 
 
         //new GetOutletStatus(MainActivity.this).execute();
@@ -520,7 +532,47 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     }
+    public void checkFarmerTodayJourneyPlan(){
+        mydb = new MyDatabaseHandler(MainActivity.this);
+        HashMap<String, String> map = new HashMap<>();
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_ID, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(mydb.KEY_PLAN_TYPE, "TODAY");
+        Cursor cursor = mydb.getData(mydb.TODAY_FARMER_JOURNEY_PLAN, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
 
+
+            }
+            while (cursor.moveToNext());
+        } else {
+            new GetFatmerTodayJourneyPlan(MainActivity.this).execute();
+        }
+
+    }
+    public void checkFarmerAllJourneyPlan() {
+
+        mydb = new MyDatabaseHandler(MainActivity.this);
+        HashMap<String, String> map = new HashMap<>();
+        map.put(mydb.KEY_ALL_FARMER_JOURNEY_PLAN_SALES_POINT_CODE, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        Cursor cursor = mydb.getData(mydb.ALL_FARMER_JOURNEY_PLAN, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+
+
+            }
+            while (cursor.moveToNext());
+        } else {
+            new LoadFarmersAllJourneyPlan(MainActivity.this).execute();
+        }
+
+
+    }
     public void checkAssignedSalesPoint() {
 
         HashMap<String, String> map = new HashMap<>();
@@ -632,6 +684,68 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     }
+    private boolean isMyDataSavedNotAvailable() {
+
+        boolean flag = false;
+        HashMap<String, String> map = new HashMap<>();
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_ID, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "Not Available"); // not visited means 0
+        Cursor cursor = mydb.getData(mydb.TODAY_FARMER_JOURNEY_PLAN, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                flag = true;
+                //  statuCustomer = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_IS_VISITED));;
+            }
+            while (cursor.moveToNext());
+        }
+        else {
+            flag = false;
+        }
+        return flag;
+
+    }
+
+
+    private boolean isMyDataSaved() {
+
+        boolean flag = false;
+        HashMap<String, String> map = new HashMap<>();
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_ID, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "Visited");
+        Cursor cursor = mydb.getData(mydb.TODAY_FARMER_JOURNEY_PLAN, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                flag = true;
+            }
+            while (cursor.moveToNext());
+        } else {
+            flag = false;
+        }
+        return flag;
+    }
+    private boolean isMyUnpostedDataExist() {
+
+        boolean flag = false;
+        HashMap<String, String> map = new HashMap<>();
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_ID, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+        Cursor cursor = mydb.getData(mydb.TODAY_FARMER_JOURNEY_PLAN, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                flag = true;
+            }
+            while (cursor.moveToNext());
+        } else {
+            flag = false;
+        }
+        return flag;
+    }
 
     public void checkLoadTodayCustomerJourneyPlan() {
 
@@ -661,8 +775,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     }
-
     public void postFarmerData() {
+        if (isMyUnpostedDataExist()) {
+            if (isMyDataSaved() || isMyDataSavedNotAvailable())
+                new PostSyncFarmer(statuCustomer).execute();
+        }
+    }
+
+
+    public void postAddFarmerData() {
         if (isUnpostedAddFarmerDataExist()) {
             new PostAddFarmer().execute();
         }
@@ -719,6 +840,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         MainActivity.this.deleteDatabase("FFMApplicationDataBasev1");
+                        MainActivity.this.deleteDatabase("FFMAppDb_Zohaib");
                         sharedPrefferenceHelper.clearPreferenceStore();
                         Toast.makeText(MainActivity.this, "Clear Data Successfully", Toast.LENGTH_SHORT).show();
                         Intent logout = new Intent(MainActivity.this, LoginActivity.class);
@@ -1326,7 +1448,243 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
     }
+    private class PostSyncFarmer extends AsyncTask<String, Void, Void> {
 
+        String response = null;
+        String status = "";
+        String message = "";
+        String discription = "";
+        ProgressDialog pDialog;
+        String jsonObject = "";
+        private HttpHandler httpHandler;
+        String farmerId = "";
+        String visitStatus;
+        PostSyncFarmer(String status)
+        {
+            this.visitStatus = status;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(MainActivity.this);
+            pDialog.setMessage(getResources().getString(R.string.loading));
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        @Override
+        protected Void doInBackground(String... Url) {
+
+            String farmerIdToupdate = "";
+            mydb = new MyDatabaseHandler(MainActivity.this);
+            System.out.println("Post Outlet URl" + Constants.FFM_POST_FARMER_TODAY_JOURNEY_PLAN);
+            ArrayList<FarmerCheckIn> inputCollection = new ArrayList<>();
+            Gson gson = new Gson();
+            HashMap<String, String> map = new HashMap<>();
+            map.put(mydb.KEY_TODAY_JOURNEY_FARMER_ID, "");
+            map.put(mydb.KEY_TODAY_JOURNEY_FARMER_JOURNEYPLAN_ID, "");
+            map.put(mydb.KEY_TODAY_JOURNEY_FARMER_NAME, "");
+            map.put(mydb.KEY_TODAY_FARMER_MOBILE_NO, "");
+            map.put(mydb.KEY_TODAY_JOURNEY_FARMER_SALES_POINT_NAME, "");
+            map.put(mydb.KEY_TODAY_JOURNEY_FARMER_CODE, "");
+            map.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "");
+            map.put(mydb.KEY_TODAY_JOURNEY_FARMER_DAY_ID, "");
+            map.put(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE, "");
+            map.put(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE, "");
+            HashMap<String, String> filters = new HashMap<>();
+            filters.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED , "2");
+            Cursor cursor2 = mydb.getData(mydb.TODAY_FARMER_JOURNEY_PLAN, map, filters);
+            if (cursor2.getCount() > 0) {
+                cursor2.moveToFirst();
+                do {
+
+                    FarmerCheckIn farmerCheckIn = new FarmerCheckIn();
+                    farmerCheckIn.setFarmerId(Integer.valueOf(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_ID))));
+                    farmerIdToupdate = cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_ID)); // to update status of record
+                    farmerId = cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_ID));
+                    if(!cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_DAY_ID)).equals("NA")) {
+                        farmerCheckIn.setDayId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_DAY_ID))));
+                    }
+                    else
+                    {
+                        farmerCheckIn.setDayId(0);
+                    }
+
+                    if(!cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_JOURNEYPLAN_ID)).equals("NA")) {
+                        farmerCheckIn.setJourneyPlanId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_JOURNEYPLAN_ID))));
+                    }
+                    else
+                    {
+                        farmerCheckIn.setJourneyPlanId(null);
+                    }
+
+                    farmerCheckIn.setFarmerName(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_NAME)));
+
+                    if(!cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE)).equals("NA") && !cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE)).equals("null")) {
+                        farmerCheckIn.setLatitude(Double.parseDouble(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE))));
+                    }
+                    else
+                    {
+                        farmerCheckIn.setLatitude(0.0);
+                    }if(!cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE)).equals("NA") && !cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE)).equals("null")) {
+                        farmerCheckIn.setLongtitude(Double.parseDouble(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE))));
+                    }
+                    else
+                    {
+                        farmerCheckIn.setLongtitude(0.0);
+                    }
+
+                    farmerCheckIn.setMobileNo(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_FARMER_MOBILE_NO)));
+
+                    farmerCheckIn.setSalesPoint(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_SALES_POINT_NAME)));
+                    //farmerCheckIn.setDistance(0);
+
+                    if(Helpers.clean(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_IS_VISITED))).equals("Visited"))
+
+                    {
+
+
+                        myloadStartActviiyResult(farmerCheckIn, farmerId);
+                        loadLocationlastFarmer(farmerCheckIn, farmerId);
+                        loadActivity(farmerCheckIn, farmerId);
+                        loadSampling(farmerCheckIn , farmerId);
+                        loadRecommendations(farmerCheckIn , farmerId);
+
+                    }
+                    else
+                    {
+                        myloadStartActviiyResultforNotAvailable(farmerCheckIn, farmerId);
+                        myloadLocationlastNotAvaolable(farmerCheckIn, farmerId);
+
+                    }
+
+                    //farmerCheckIn.setCheckOutLatitude("");
+                    //farmerCheckIn.setCheckOutLongitude("");
+                    farmerId = cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_ID));
+                    inputCollection.add(farmerCheckIn);
+
+                }
+                while (cursor2.moveToNext());
+                httpHandler = new HttpHandler();
+                HashMap<String, String> headerParams2 = new HashMap<>();
+                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                HashMap<String, String> bodyParams = new HashMap<>();
+                String output = gson.toJson(inputCollection);
+                //output = gson.toJson(inputParameters, SaveWorkInput.class);
+                try {
+                    response = httpHandler.httpPost(Constants.FFM_POST_FARMER_TODAY_JOURNEY_PLAN, headerParams2, bodyParams, output);
+                    if (response != null) {
+                        try {
+                            JSONObject jsonObj = new JSONObject(response);
+                            status = String.valueOf(jsonObj.getString("success"));
+                            message = String.valueOf(jsonObj.getString("message"));
+                            //discription = String.valueOf(jsonObj.getString("description"));
+
+                            Helpers.displayMessage(MainActivity.this, true, status);
+                            System.out.println(status + " ---- " + message);
+                            System.out.println(output);
+
+                            //Toast.makeText(getApplicationContext(), status +" "+ message, Toast.LENGTH_SHORT).show();
+                            if (status.equals("true")) {
+                                //updateOutletStatus();
+                                myUpdateOutletStatus();
+                                // Helpers.displayMessage(MainActivity.this, true, message);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+            //Helpers.displayMessage(MainActivity.this, true, "No Data Available");
+
+            mydb.close();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void args) {
+            pDialog.dismiss();
+            if (status.equals("true")) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                alertDialogBuilder.setTitle(R.string.alert)
+                        .setMessage("Data Posted Successfully")
+                        .setCancelable(false)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                //new PostSyncOutlet().execute();
+                            }
+                        });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            }
+
+        }
+    }
+    private void myloadLocationlastNotAvaolable(FarmerCheckIn farmerCheckIn, String farmerId) {
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LATITUDE, "");
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LONGITUDE, "");
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_TIMESTAMP, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(mydb.KEY_TODAY_FARMER_ID, farmerId);
+        Cursor cursor2 = mydb.getData(mydb.TODAY_JOURNEY_PLAN_POST_DATA, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                farmerCheckIn.setCheckOutLatitude(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LATITUDE)));
+                farmerCheckIn.setCheckOutLongitude(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LONGITUDE)));
+                farmerCheckIn.setCheckOutTimeStamp(Long.parseLong(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_TIMESTAMP))));
+
+            }
+            while (cursor2.moveToNext());
+        }
+
+    }
+
+    private void myloadStartActviiyResultforNotAvailable(FarmerCheckIn thisfarmerCheckIn , String thisfarmerId){
+        HashMap<String, String> mapForActivityResult = new HashMap<>();
+        mapForActivityResult.put(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_TIME, "");
+        mapForActivityResult.put(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_STATUS, "");
+        mapForActivityResult.put(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_LATITUDE, "");
+        mapForActivityResult.put(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_LONGITUDE, "");
+        mapForActivityResult.put(mydb.KEY_PLAN_TYPE, "");
+
+        HashMap<String, String> filtersforActivityResult = new HashMap<>();
+        filtersforActivityResult.put(mydb.KEY_TODAY_FARMER_FARMER_ID , thisfarmerId);
+
+        Cursor cursorActivity = mydb.getData(mydb.TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY, mapForActivityResult, filtersforActivityResult);
+        if (cursorActivity.getCount() > 0) {
+            cursorActivity.moveToFirst();
+            do {
+                journeyType = cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_PLAN_TYPE));
+                thisfarmerCheckIn.setStatus(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_STATUS))));
+                thisfarmerCheckIn.setOutletStatusId(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_STATUS))));
+                thisfarmerCheckIn.setCheckInTimeStamp(Long.parseLong(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_TIME))));
+                thisfarmerCheckIn.setCheckInLatitude(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_LATITUDE)));
+                thisfarmerCheckIn.setCheckInLongitude(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_LONGITUDE)));
+
+            }
+            while (cursorActivity.moveToNext());
+        }
+    }
+    private void myUpdateOutletStatus() {
+        HashMap<String, String> params = new HashMap<>();
+        params.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "1");
+        HashMap<String, String> filter = new HashMap<>();
+        //filter.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+        filter.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "2");
+        mydb.updateData(mydb.TODAY_FARMER_JOURNEY_PLAN, params, filter);
+    }
     private void updateOutletStatus() {
         HashMap<String, String> params = new HashMap<>();
         params.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "1");
@@ -1780,6 +2138,169 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
             while (cursor2.moveToNext());
+        }
+    }
+    private void loadRecommendations(FarmerCheckIn thisFarmerCheckIn , String thisFarmerId){
+        // Mapping for recommendation
+        //mydb = new MyDatabaseHandler(MainActivity.this);
+        HashMap<String, String> mapForRecommendation = new HashMap<>();
+        mapForRecommendation.put(mydb.KEY_TODAY_FARMMMER_ID, "");
+        mapForRecommendation.put(mydb.KEY_TODAY_CROPID, "");
+        mapForRecommendation.put(mydb.KEY_TODAY_FERTTYPE_ID, "");
+        mapForRecommendation.put(mydb.KEY_TODAY_BRAND_ID, "");
+        mapForRecommendation.put(mydb.KEY_TODAY_DOSAGE, "");
+
+        HashMap<String, String> filtersforRecommendation = new HashMap<>();
+        filtersforRecommendation.put(mydb.KEY_TODAY_FARMMMER_ID , thisFarmerId);
+
+        ArrayList<Recommendation> recommendationList = new ArrayList<>();
+
+        // for recommendations
+        Cursor cursorRecommendations = mydb.getData(mydb.TODAY_FARMER_RECOMMENDATION, mapForRecommendation, filtersforRecommendation);
+        if (cursorRecommendations.getCount() > 0) {
+            cursorRecommendations.moveToFirst();
+            do {
+                // do for recommendation
+                Recommendation recommendation = new Recommendation();
+                recommendation.setCropId(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_CROPID)));
+                recommendation.setFertAppTypeId(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_FERTTYPE_ID)));
+                recommendation.setBrandId(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_BRAND_ID)));
+                recommendation.setDosage(Double.valueOf(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_DOSAGE))));
+                recommendationList.add(recommendation);
+            }
+            while (cursorRecommendations.moveToNext());
+        }
+
+        thisFarmerCheckIn.setRecommendations(recommendationList);
+        //return recommendationList;
+    }
+
+    private void loadSampling(FarmerCheckIn thisFarmerCheckIn , String thisFarmerId){
+        // Mapping for sampling
+        HashMap<String, String> mapForSampleing = new HashMap<>();
+        mapForSampleing.put(mydb.KEY_TODAY_FARMMMER_ID, "");
+        mapForSampleing.put(mydb.KEY_TODAY_PREVIOUSCROP_ID, "");
+        mapForSampleing.put(mydb.KEY_TODAY_DEPTH_ID, "");
+        mapForSampleing.put(mydb.KEY_TODAY_CROP1_ID, "");
+        mapForSampleing.put(mydb.KEY_TODAY_CROP2_ID, "");
+        mapForSampleing.put(mydb.KEY_TODAY_PLOT_NUMBER, "");
+        mapForSampleing.put(mydb.KEY_TODAY_BLOCK_NUMBER, "");
+        mapForSampleing.put(mydb.KEY_TODAY_LATITUTE, "");
+        mapForSampleing.put(mydb.KEY_TODAY_LONGITUTE, "");
+        mapForSampleing.put(mydb.KEY_TODAY_REFRENCE, "");
+
+        HashMap<String, String> filtersforSampling = new HashMap<>();
+        filtersforSampling.put(mydb.KEY_TODAY_FARMMMER_ID , thisFarmerId);
+        Sampling sampling;
+        ArrayList<Sampling> samplingList = new ArrayList<>();
+
+        Cursor cursorSampling = mydb.getData(mydb.TODAY_FARMER_SAMPLING, mapForSampleing, filtersforSampling);
+        if (cursorSampling.getCount() > 0) {
+            cursorSampling.moveToFirst();
+            do {
+                // do for sampling
+                sampling = new Sampling();
+                sampling.setPreviousCropId(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_PREVIOUSCROP_ID)));
+                sampling.setDepthId(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_DEPTH_ID)));
+                sampling.setCrop1Id(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_CROP1_ID)));
+                sampling.setCrop2Id(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_CROP2_ID)));
+                sampling.setPlotNumber(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_PLOT_NUMBER)));
+                sampling.setBlockNumber(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_BLOCK_NUMBER)));
+                sampling.setLatitude(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_LATITUTE)));
+                sampling.setLongitude(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_LONGITUTE)));
+                sampling.setReference(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_REFRENCE)));
+                samplingList.add(sampling);
+            }
+            while (cursorSampling.moveToNext());
+        }
+
+        thisFarmerCheckIn.setSampling(samplingList);
+        //return samplingList;
+    }
+    private void loadActivity(FarmerCheckIn thisfarmerCheckIn , String thisfarmerId){
+        HashMap<String, String> mapForActivity = new HashMap<>();
+        mapForActivity.put(mydb.KEY_TODAY_FARMMMER_ID, "");
+        mapForActivity.put(mydb.KEY_TODAY_CROPID, "");
+        mapForActivity.put(mydb.KEY_TODAY_ADDRESS, "");
+        mapForActivity.put(mydb.KEY_TODAY_MAIN_PRODUCT, "");
+        mapForActivity.put(mydb.KEY_TODAY_REMARKS, "");
+        mapForActivity.put(mydb.KEY_TODAY_LATITUTE, "");
+        mapForActivity.put(mydb.KEY_TODAY_LONGITUTE, "");
+
+        HashMap<String, String> filtersforActivity = new HashMap<>();
+        filtersforActivity.put(mydb.KEY_TODAY_FARMMMER_ID , thisfarmerId);
+
+        Cursor cursorActivity = mydb.getData(mydb.TODAY_FARMER_ACTIVITY, mapForActivity, filtersforActivity);
+        Activity activity = new Activity();
+        if (cursorActivity.getCount() > 0) {
+            cursorActivity.moveToFirst();
+            do {
+                // do for activity
+
+                activity.setCropId(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_CROPID)));
+                activity.setAddress(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_ADDRESS)));
+                activity.setMainProduct(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_MAIN_PRODUCT)));
+                activity.setRemarks(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_REMARKS)));
+                activity.setLatitude(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_LATITUTE)));
+                activity.setLongitude(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_LONGITUTE)));
+                thisfarmerCheckIn.setActivity(activity);
+            }
+            while (cursorActivity.moveToNext());
+        }
+
+        //return activity;
+    }
+    private void loadLocationlastFarmer(FarmerCheckIn thisfarmerCheckIn , String thisfarmerId) {
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LATITUDE, "");
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LONGITUDE, "");
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_TIMESTAMP, "");
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_DISTANCE, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(mydb.KEY_TODAY_FARMER_ID, thisfarmerId);
+        Cursor cursor2 = mydb.getData(mydb.TODAY_JOURNEY_PLAN_POST_DATA, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                thisfarmerCheckIn.setCheckOutLatitude(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LATITUDE)));
+                thisfarmerCheckIn.setCheckOutLongitude(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LONGITUDE)));
+                thisfarmerCheckIn.setCheckOutTimeStamp(Long.parseLong(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_TIMESTAMP))));
+                thisfarmerCheckIn.setDistance(Double.parseDouble(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_DISTANCE))));
+            }
+            while (cursor2.moveToNext());
+        }
+
+    }
+
+
+    private void myloadStartActviiyResult(FarmerCheckIn thisfarmerCheckIn , String thisfarmerId){
+        HashMap<String, String> mapForActivityResult = new HashMap<>();
+        mapForActivityResult.put(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_TIME, "");
+
+        mapForActivityResult.put(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_STATUS, "");
+        mapForActivityResult.put(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_OBJECTIVE, "");
+        mapForActivityResult.put(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_LATITUDE, "");
+        mapForActivityResult.put(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_LONGITUDE, "");
+        mapForActivityResult.put(mydb.KEY_PLAN_TYPE, "");
+
+        HashMap<String, String> filtersforActivityResult = new HashMap<>();
+        filtersforActivityResult.put(mydb.KEY_TODAY_FARMER_FARMER_ID , thisfarmerId);
+
+        Cursor cursorActivity = mydb.getData(mydb.TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY, mapForActivityResult, filtersforActivityResult);
+        if (cursorActivity.getCount() > 0) {
+            cursorActivity.moveToFirst();
+            do {
+                journeyType = cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_PLAN_TYPE));
+                thisfarmerCheckIn.setVisitObjective(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_OBJECTIVE)));
+                thisfarmerCheckIn.setStatus(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_STATUS))));
+                thisfarmerCheckIn.setOutletStatusId(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_STATUS))));
+                thisfarmerCheckIn.setCheckInTimeStamp(Long.parseLong(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_TIME))));
+                thisfarmerCheckIn.setCheckInLatitude(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_LATITUDE)));
+                thisfarmerCheckIn.setCheckInLongitude(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_LONGITUDE)));
+
+            }
+            while (cursorActivity.moveToNext());
         }
     }
 

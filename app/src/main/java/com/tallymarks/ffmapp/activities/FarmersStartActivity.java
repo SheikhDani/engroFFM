@@ -61,7 +61,7 @@ public class FarmersStartActivity extends AppCompatActivity {
         Bundle data = getIntent().getExtras();
         if (data != null)
         {
-            planType = data.getString(Constants.PLAN_TYPE);
+            planType = data.getString(Constants.PLAN_TYPE_FARMER);
 
         }
         tvTopHeader = findViewById(R.id.tv_dashboard);
@@ -92,7 +92,7 @@ public class FarmersStartActivity extends AppCompatActivity {
         if(sHelper!=null)
         {
 
-            if(sHelper.getString(Constants.PLAN_TYPE).equals("TODAY"))
+            if(sHelper.getString(Constants.PLAN_TYPE_FARMER).equals("TODAY"))
             {
                 journeytype = "TODAY";
             }
@@ -127,7 +127,7 @@ public class FarmersStartActivity extends AppCompatActivity {
 
                         Intent n = new Intent(FarmersStartActivity.this, FarmVisitActivity.class);
                         Bundle data = new Bundle();
-                        data.putString(Constants.PLAN_TYPE,planType);
+                        data.putString(Constants.PLAN_TYPE_FARMER,planType);
                         n.putExtras(data);
                         startActivity(n);
                         addDataInCheckInTable();
