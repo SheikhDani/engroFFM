@@ -118,12 +118,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         sensorimg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                managerCompat = FingerprintManagerCompat.from(LoginActivity.this);
-                if (managerCompat.isHardwareDetected() && managerCompat.hasEnrolledFingerprints()) {
-                    showFingerPrintDialog();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Fingerprint not supported", Toast.LENGTH_SHORT).show();
-                }
+//                managerCompat = FingerprintManagerCompat.from(LoginActivity.this);
+//                if (managerCompat.isHardwareDetected() && managerCompat.hasEnrolledFingerprints()) {
+//                    showFingerPrintDialog();
+//                } else {
+//                    Toast.makeText(getApplicationContext(), "Fingerprint not supported", Toast.LENGTH_SHORT).show();
+//                }
             }
         });
         if (checkForExistingUser()) {

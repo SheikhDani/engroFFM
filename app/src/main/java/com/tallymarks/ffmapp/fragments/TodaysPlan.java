@@ -371,7 +371,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                     if (plan.getLatitude().equals("NA") || plan.getLatitude() == "NA" && plan.getLongitude().equals("NA") || plan.getLongitude() == "NA"){
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
                         alertDialogBuilder
-                                .setMessage("Coordinate are Undefined. Do you want to continue ?")
+                                .setMessage("Location info not available, Do you want to proceed?")
                                 .setCancelable(false)
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
