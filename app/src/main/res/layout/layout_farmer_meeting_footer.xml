@@ -1,0 +1,51 @@
+<LinearLayout android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/linear_bottom"
+    android:background="@color/white"
+    android:layout_alignParentBottom="true"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginStart="@dimen/p10"
+            android:layout_marginLeft="@dimen/p10"
+            android:layout_marginTop="@dimen/p10"
+            android:layout_marginEnd="@dimen/p10"
+            android:layout_marginRight="@dimen/p10"
+            android:layout_marginBottom="@dimen/p10"
+            android:background="@drawable/eidttext_boader"
+            android:drawableLeft="@drawable/backwoardresizer"
+            android:paddingRight="@dimen/p20"
+            android:text="BACK"
+            android:textColor="@color/green" />
+
+        <Button
+            android:id="@+id/btn_create"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginStart="@dimen/p10"
+            android:layout_marginLeft="@dimen/p10"
+            android:layout_marginTop="@dimen/p10"
+            android:layout_marginEnd="@dimen/p10"
+            android:layout_marginRight="@dimen/p10"
+            android:layout_marginBottom="@dimen/p10"
+            android:background="@drawable/eidttext_boader"
+            android:backgroundTint="@color/green"
+            android:drawableRight="@drawable/forwardresizer"
+            android:paddingLeft="@dimen/p20"
+            android:text="CREATE"
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+</LinearLayout>

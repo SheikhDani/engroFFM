@@ -48,6 +48,8 @@
         <item>Same</item>
     </string-array>
     <string name="field_required_message">Please  Enter All required Information</string>
+    <string name="invalid_token">Invalid Token</string>
+    <string name="error_occured">Error Occured</string>
 
     <string name="exit_message">Are you sure you want to exit from application?</string>
     <string name="gps_not_enabled">GPS is not enabled. Please enable it to proceed.</string>
@@ -72,6 +74,26 @@
     <string name="clear_data_alert">Do you want to clear all application data. This would include all the saved projects and downloaded data.\nOnce deleted this action cannot be undone. Do you want to proceed?</string>
     <string name="enable">Enable</string>
     <string name="postdataalert">There is no Customer Data Available for Posting.</string>
+
+    <string name="host_farmer">Host Farmer</string>
+    <string name="activity_date">Activity Date</string>
+    <string name="crop">Crop</string>
+    <string name="product">Product</string>
+    <string name="dealer">Dealer</string>
+    <string name="employee_attended">Employees Attended</string>
+    <string name="chief_guest">Chief Guest</string>
+    <string name="total_farmers">Total Farmers</string>
+    <string name="target_customers">Target Customers</string>
+    <string name="expenses_incurred">Expenses Incurred</string>
+    <string name="meeting_address">Meeting Address</string>
+    <string name="meeting_remarks">Remarks</string>
+    <string name="attendace">Attendance</string>
+    <string name="farmer_meeting">Farmer Meeting</string>
+    <string name="attachment">Attachment</string>
+
+    <string name="customers_required">Please enter target customers.</string>
+    <string name="farmers_required">Please enter total farmers.</string>
+    <string name="meeting_address_required">Please enter meeting address.</string>
 
 
     <string-array name="tab_A">

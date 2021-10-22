@@ -14,6 +14,8 @@ public class Constants {
     public static final String DATE_FORMAT= "dd-MM-yyyy";
     public static final String GMT_TIME_FORMAT= "EE MMM dd HH:mm:ss zz yyy";
     public static final String AUTHORIZATION= "Authorization";
+    public static final String YEAR_DATE_FORMAT= "yyyy-MM-dd";
+    public static final String BEARER= "Bearer";
 
     public static final String ACCESS_TOKEN= "AccessToken";
     public static final String TOKEN_TYPE= "TokenType";
@@ -135,6 +137,9 @@ public class Constants {
     public static final String FFM_GET_ALL_FARMERS=  FFM_BASE_URL + "/global/lookup/getAssignedSalesPoints";
     public static final String FFM_GET_ASSIGNED_FARMERS=  FFM_BASE_URL + "/global/lookup/getAssignedFarmersForCheckIn";
     public static final String FFM_GET_SOIL_SAMPLING_LOGS=  FFM_BASE_URL + "/global/lookup/listSoilSampleLogs";
+    public static final String BASE_URL = "https://attendance.tallymarkscloud.com:8080/mitracs/";
+    public static final String FFM_CREATE_FARMER_MEETING= "app/trans/createFarmerMeeting";
+
 
 
 

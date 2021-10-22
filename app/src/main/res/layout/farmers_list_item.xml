@@ -15,7 +15,7 @@
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:contentDescription="Icon"
-        android:src="@drawable/da" />
+        android:src="@drawable/engrologo" />
 
     <TextView
         android:id="@+id/textView"

@@ -1,6 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,485 +9,447 @@
         android:id="@+id/inc_common_header_colletion"
         layout="@layout/common_header" />
 
+    <include
+        android:id="@+id/inc_farmet_meeting_footer"
+        layout="@layout/layout_farmer_meeting_footer" />
+
     <ScrollView
+        android:layout_below="@id/inc_common_header_colletion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/inc_common_header_colletion"
-        android:fillViewport="true"
-        android:scrollbars="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/linear_host"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/txt_host"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1.2"
-                    android:gravity="center_vertical"
-                    android:text="Host Farmer"
-                    android:textColor="@color/black"
-
-                    />
-
-                <Button
-                    android:id="@+id/btn_host"
-                    android:layout_width="0dp"
-                    android:layout_height="30dp"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="0.8"
-                    android:background="@drawable/eidttext_boader"
-                    android:backgroundTint="@color/colorPrimaryDark"
-                    android:gravity="center"
-                    android:text="SELECT HOST"
-                    android:textColor="@color/white" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linear_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_host"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/txt_date"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Activity Date"
-                    android:textColor="@color/black"
-
-                    />
-
-                <TextView
-                    android:id="@+id/tv_date_meeting"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="1"
-                    android:background="@drawable/eidttext_boader"
-
-                    android:gravity="center"
-                    android:hint="Choose Date" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linear_crop"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_date"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/txt_crop"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Crop"
-                    android:textColor="@color/black"
-
-                    />
-
-                <AutoCompleteTextView
-                    android:id="@+id/auto_crop_list"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="1"
-                    android:background="@drawable/eidttext_boader"
-
-                    android:gravity="center"
-                    android:hint="Crop" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linear_prod"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_crop"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/txt_prod"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Product"
-                    android:textColor="@color/black"
-
-                    />
-
-                <AutoCompleteTextView
-                    android:id="@+id/auto_product_list"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="1"
-                    android:background="@drawable/eidttext_boader"
-
-                    android:gravity="center"
-                    android:hint="Product" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linear_dealers"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_prod"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/txt_dealers"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1.2"
-                    android:gravity="center_vertical"
-                    android:text="Dealers"
-                    android:textColor="@color/black"
-
-                    />
-
-                <TextView
-                    android:id="@+id/btn_dealers"
-                    android:layout_width="0dp"
-                    android:layout_height="30dp"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="0.8"
-                    android:background="@drawable/eidttext_boader"
-                    android:backgroundTint="@color/colorPrimaryDark"
-                    android:gravity="center"
-                    android:text="SELECT DEALERS"
-                    android:textColor="@color/white" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linear_attendance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_dealers"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/txt_attendance"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Attendance"
-                    android:textColor="@color/black"
-
-                    />
-
-
-                <EditText
-                    android:id="@+id/attendance"
-                    android:layout_width="0dp"
-                    android:layout_height="30dp"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="1"
-                    android:background="@drawable/eidttext_boader"
-                    android:gravity="center_horizontal"
-                    android:hint="Employees"
-                    android:inputType="number"
-                    android:maxLines="1"
-                    android:textAlignment="center"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linear_chief"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/attendance"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/txt_chief"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Chief Guest"
-                    android:textColor="@color/black"
-
-                    />
-
-                <EditText
-                    android:id="@+id/chiefGuest"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="1"
-                    android:background="@drawable/eidttext_boader"
-
-                    android:gravity="center" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linear_farmers"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_chief"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/txt_farmers"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Total farmers"
-                    android:textColor="@color/black"
-
-                    />
-
-
-                <EditText
-                    android:id="@+id/farmers"
-                    android:layout_width="0dp"
-                    android:layout_height="30dp"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="1"
-                    android:background="@drawable/eidttext_boader"
-                    android:cursorVisible="false"
-                    android:gravity="center_horizontal"
-                    android:textAlignment="center"
-                    android:hint="Count"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linear_target_customer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_farmers"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/txt_target_customer"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Target Customers"
-                    android:textColor="@color/black"
-
-                    />
-
-                <EditText
-                    android:id="@+id/targetCustomers"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="1"
-                    android:background="@drawable/eidttext_boader"
-                    android:hint="Count"
-                    android:gravity="center" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linear_expenses"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_target_customer"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/txt_expense"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Expenses Incurred"
-                    android:textColor="@color/black"
-
-                    />
-
-                <EditText
-                    android:id="@+id/expenses"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="1"
-                    android:background="@drawable/eidttext_boader"
-                    android:hint="Amount"
-                    android:gravity="center" />
-
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/linear_attachments"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_expenses"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/txt_atatchments"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1.2"
-                    android:gravity="center_vertical"
-                    android:text="Atatchments"
-                    android:textColor="@color/black"
-
-                    />
-
-                <Button
-                    android:id="@+id/btn_attachment"
-                    android:layout_width="0dp"
-                    android:layout_height="30dp"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="0.8"
-                    android:background="@drawable/eidttext_boader"
-                    android:backgroundTint="@color/colorPrimaryDark"
-                    android:gravity="center"
-                    android:text="ATTACHMENTS"
-                    android:textColor="@color/white" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-    </ScrollView>
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/p50"
-        android:layout_above="@+id/linear_bottom"
-        android:layout_marginBottom="@dimen/p10"
-        android:layout_height="1dp"
-        android:background="@color/grey" />
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/linear_bottom"
         android:background="@color/white"
-      android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:layout_marginBottom="@dimen/p70"
+        android:layout_centerVertical="true">
 
         <RelativeLayout
-            android:id="@+id/relativeLayout1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/back"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_marginStart="@dimen/p10"
-                android:layout_marginLeft="@dimen/p10"
-                android:layout_marginTop="@dimen/p10"
-                android:layout_marginEnd="@dimen/p10"
-                android:layout_marginRight="@dimen/p10"
-                android:layout_marginBottom="@dimen/p10"
-                android:background="@drawable/eidttext_boader"
-                android:drawableLeft="@drawable/backwoardresizer"
-                android:paddingRight="@dimen/p20"
-                android:text="BACK"
-                android:textColor="@color/green" />
+                android:orientation="vertical"
+                android:layout_centerInParent="true"
+                android:id="@+id/ll_top"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/host_farmer"
+                    android:textSize="@dimen/ts17"
+                    android:padding="@dimen/p10"
+                    android:layout_marginLeft="@dimen/p5"
+                    android:layout_marginRight="@dimen/p5"
+                    android:textColor="@color/green" />
 
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/p10"
+                    android:layout_marginRight="@dimen/p10"
+                    android:background="@drawable/borderd_view"
+                    >
+
+                    <Spinner
+                        android:id="@+id/sp_host_farmer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/p5"
+                        android:textSize="@dimen/ts16"
+                        android:backgroundTint="@color/black"
+                        />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_date"
+                    android:textSize="@dimen/ts17"
+                    android:padding="@dimen/p10"
+                    android:layout_marginLeft="@dimen/p5"
+                    android:layout_marginRight="@dimen/p5"
+                    android:textColor="@color/green" />
+
+
+                <EditText
+                    android:id="@+id/et_activity_date"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/p10"
+                    android:layout_marginRight="@dimen/p10"
+                    android:background="@drawable/borderd_view"
+                    android:hint="@string/activity_date"
+                    android:paddingLeft="@dimen/p10"
+                    android:paddingRight="@dimen/p10"
+                    android:paddingTop="@dimen/p5"
+                    android:paddingBottom="@dimen/p5"
+                    android:singleLine="true"
+                    android:textSize="@dimen/ts16" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/crop"
+                    android:textSize="@dimen/ts17"
+                    android:padding="@dimen/p10"
+                    android:layout_marginLeft="@dimen/p5"
+                    android:layout_marginRight="@dimen/p5"
+                    android:textColor="@color/green" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/p10"
+                    android:layout_marginRight="@dimen/p10"
+                    android:background="@drawable/borderd_view"
+                    >
+
+                    <Spinner
+                        android:id="@+id/sp_crop"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/p5"
+                        android:textSize="@dimen/ts16"
+                        android:backgroundTint="@color/black"
+                        />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/product"
+                    android:textSize="@dimen/ts17"
+                    android:padding="@dimen/p10"
+                    android:layout_marginLeft="@dimen/p5"
+                    android:layout_marginRight="@dimen/p5"
+                    android:textColor="@color/green" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/p10"
+                    android:layout_marginRight="@dimen/p10"
+                    android:background="@drawable/borderd_view"
+                    >
+
+                    <Spinner
+                        android:id="@+id/sp_product"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/p5"
+                        android:textSize="@dimen/ts16"
+                        android:backgroundTint="@color/black"
+                        />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dealer"
+                    android:textSize="@dimen/ts17"
+                    android:padding="@dimen/p10"
+                    android:layout_marginLeft="@dimen/p5"
+                    android:layout_marginRight="@dimen/p5"
+                    android:textColor="@color/green" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/p10"
+                    android:layout_marginRight="@dimen/p10"
+                    android:background="@drawable/borderd_view"
+                    >
+
+                    <Spinner
+                        android:id="@+id/sp_dealers"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/p5"
+                        android:textSize="@dimen/ts16"
+                        android:backgroundTint="@color/black"
+                        />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/employee_attended"
+                    android:textSize="@dimen/ts17"
+                    android:padding="@dimen/p10"
+                    android:layout_marginLeft="@dimen/p5"
+                    android:layout_marginRight="@dimen/p5"
+                    android:textColor="@color/green" />
+
+                <EditText
+                    android:id="@+id/et_employee_attended"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/p10"
+                    android:layout_marginRight="@dimen/p10"
+                    android:layout_marginTop="@dimen/p5"
+                    android:background="@drawable/borderd_view"
+                    android:drawablePadding="@dimen/p10"
+                    android:hint="@string/employee_attended"
+                    android:paddingLeft="@dimen/p10"
+                    android:paddingRight="@dimen/p10"
+                    android:paddingTop="@dimen/p5"
+                    android:paddingBottom="@dimen/p5"
+                    android:singleLine="true"
+                    android:inputType="numberSigned"
+                    android:textSize="@dimen/ts16" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/chief_guest"
+                    android:textSize="@dimen/ts17"
+                    android:padding="@dimen/p10"
+                    android:layout_marginLeft="@dimen/p5"
+                    android:layout_marginRight="@dimen/p5"
+                    android:textColor="@color/green" />
+
+                <EditText
+                    android:id="@+id/et_chief_guest"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/p10"
+                    android:layout_marginRight="@dimen/p10"
+                    android:layout_marginTop="@dimen/p5"
+                    android:background="@drawable/borderd_view"
+                    android:drawablePadding="@dimen/p10"
+                    android:hint="@string/chief_guest"
+                    android:paddingLeft="@dimen/p10"
+                    android:paddingRight="@dimen/p10"
+                    android:paddingTop="@dimen/p5"
+                    android:paddingBottom="@dimen/p5"
+                    android:singleLine="true"
+                    android:textSize="@dimen/ts16" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/total_farmers"
+                    android:textSize="@dimen/ts17"
+                    android:padding="@dimen/p10"
+                    android:layout_marginLeft="@dimen/p5"
+                    android:layout_marginRight="@dimen/p5"
+                    android:textColor="@color/green" />
+
+                <EditText
+                    android:id="@+id/et_total_Farmers"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/p10"
+                    android:layout_marginRight="@dimen/p10"
+                    android:layout_marginTop="@dimen/p5"
+                    android:background="@drawable/borderd_view"
+                    android:drawablePadding="@dimen/p10"
+                    android:hint="@string/total_farmers"
+                    android:paddingLeft="@dimen/p10"
+                    android:paddingRight="@dimen/p10"
+                    android:paddingTop="@dimen/p5"
+                    android:paddingBottom="@dimen/p5"
+                    android:singleLine="true"
+                    android:inputType="numberSigned"
+                    android:textSize="@dimen/ts16" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/target_customers"
+                    android:textSize="@dimen/ts17"
+                    android:padding="@dimen/p10"
+                    android:layout_marginLeft="@dimen/p5"
+                    android:layout_marginRight="@dimen/p5"
+                    android:textColor="@color/green" />
+
+                <EditText
+                    android:id="@+id/et_target_customer"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/p10"
+                    android:layout_marginRight="@dimen/p10"
+                    android:layout_marginTop="@dimen/p5"
+                    android:background="@drawable/borderd_view"
+                    android:drawablePadding="@dimen/p10"
+                    android:hint="@string/target_customers"
+                    android:paddingLeft="@dimen/p10"
+                    android:paddingRight="@dimen/p10"
+                    android:paddingTop="@dimen/p5"
+                    android:paddingBottom="@dimen/p5"
+                    android:singleLine="true"
+                    android:inputType="numberSigned"
+                    android:textSize="@dimen/ts16" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/expenses_incurred"
+                    android:textSize="@dimen/ts17"
+                    android:padding="@dimen/p10"
+                    android:layout_marginLeft="@dimen/p5"
+                    android:layout_marginRight="@dimen/p5"
+                    android:textColor="@color/green" />
+
+                <EditText
+                    android:id="@+id/et_expenses_incurred"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/p10"
+                    android:layout_marginRight="@dimen/p10"
+                    android:layout_marginTop="@dimen/p5"
+                    android:background="@drawable/borderd_view"
+                    android:drawablePadding="@dimen/p10"
+                    android:hint="@string/expenses_incurred"
+                    android:paddingLeft="@dimen/p10"
+                    android:paddingRight="@dimen/p10"
+                    android:paddingTop="@dimen/p5"
+                    android:paddingBottom="@dimen/p5"
+                    android:singleLine="true"
+                    android:inputType="number"
+                    android:textSize="@dimen/ts16" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/meeting_address"
+                    android:textSize="@dimen/ts17"
+                    android:padding="@dimen/p10"
+                    android:layout_marginLeft="@dimen/p5"
+                    android:layout_marginRight="@dimen/p5"
+                    android:textColor="@color/green" />
+
+                <EditText
+                    android:id="@+id/et_meeting_address"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/p10"
+                    android:layout_marginRight="@dimen/p10"
+                    android:layout_marginTop="@dimen/p5"
+                    android:background="@drawable/borderd_view"
+                    android:drawablePadding="@dimen/p10"
+                    android:hint="@string/meeting_address"
+                    android:paddingLeft="@dimen/p10"
+                    android:paddingRight="@dimen/p10"
+                    android:paddingTop="@dimen/p5"
+                    android:paddingBottom="@dimen/p5"
+                    android:singleLine="true"
+                    android:textSize="@dimen/ts16" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/meeting_remarks"
+                    android:textSize="@dimen/ts17"
+                    android:padding="@dimen/p10"
+                    android:layout_marginLeft="@dimen/p5"
+                    android:layout_marginRight="@dimen/p5"
+                    android:textColor="@color/green" />
+
+                <EditText
+                    android:id="@+id/et_meeting_remarks"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/p10"
+                    android:layout_marginRight="@dimen/p10"
+                    android:layout_marginTop="@dimen/p5"
+                    android:background="@drawable/borderd_view"
+                    android:drawablePadding="@dimen/p10"
+                    android:hint="@string/meeting_remarks"
+                    android:paddingLeft="@dimen/p10"
+                    android:paddingRight="@dimen/p10"
+                    android:paddingTop="@dimen/p5"
+                    android:paddingBottom="@dimen/p5"
+                    android:singleLine="true"
+                    android:textSize="@dimen/ts16" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/attachment"
+                    android:textSize="@dimen/ts17"
+                    android:padding="@dimen/p10"
+                    android:layout_marginLeft="@dimen/p5"
+                    android:layout_marginRight="@dimen/p5"
+                    android:textColor="@color/green" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/borderd_view"
+                    android:layout_marginLeft="@dimen/p10"
+                    android:layout_marginRight="@dimen/p10"
+                    android:layout_marginTop="@dimen/p5"
+                    android:padding="@dimen/p5"
+                    android:gravity="center"
+                    android:weightSum="5">
+
+                    <ImageView
+                        android:id="@+id/iv1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:visibility="gone"
+                        android:src="@drawable/ic_baseline_image_24" />
+                    <ImageView
+                        android:id="@+id/iv2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:visibility="gone"
+                        android:src="@drawable/ic_baseline_image_24" />
+
+                    <ImageView
+                        android:id="@+id/iv3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:visibility="gone"
+                        android:src="@drawable/ic_baseline_image_24" />
+
+                    <ImageView
+                        android:id="@+id/iv4"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:visibility="gone"
+                        android:src="@drawable/ic_baseline_image_24" />
+
+                    <ImageView
+                        android:id="@+id/iv5"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:visibility="gone"
+                        android:src="@drawable/ic_baseline_image_24" />
+
+                    <ImageView
+                        android:id="@+id/iv_add_attachment"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_baseline_add_circle_24"
+                        app:tint="@color/green" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginStart="@dimen/p10"
-                android:layout_marginLeft="@dimen/p10"
-                android:layout_marginTop="@dimen/p10"
-                android:layout_marginEnd="@dimen/p10"
-                android:layout_marginRight="@dimen/p10"
-                android:layout_marginBottom="@dimen/p10"
-                android:background="@drawable/eidttext_boader"
-                android:backgroundTint="@color/green"
-                android:drawableRight="@drawable/forwardresizer"
-                android:paddingLeft="@dimen/p20"
-                android:text="CREATE"
-                android:textColor="@color/white" />
-
+                android:layout_width="wrap_content"
+                android:layout_centerVertical="true"
+                android:indeterminateTint="@color/black"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                />
         </RelativeLayout>
-    </LinearLayout>
+
+    </ScrollView>
+
+
+
 </RelativeLayout>
