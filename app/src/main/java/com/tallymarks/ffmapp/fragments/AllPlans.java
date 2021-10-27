@@ -317,6 +317,9 @@ public class AllPlans extends Fragment implements ItemClickListener {
 
                     }
                 }
+                else {
+                    DialougeManager.gpsNotEnabledPopup(getActivity());
+                }
             }
             else
             {
@@ -333,6 +336,11 @@ public class AllPlans extends Fragment implements ItemClickListener {
 //                    }
                     currentlat = String.valueOf(gps.getLatitude());
                     currentlng = String.valueOf(gps.getLongitude());
+
+                }
+                else {
+
+                        DialougeManager.gpsNotEnabledPopup(getActivity());
 
                 }
 

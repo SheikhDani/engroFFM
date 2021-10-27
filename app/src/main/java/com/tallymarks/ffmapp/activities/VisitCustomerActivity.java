@@ -22,12 +22,15 @@ import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.VisitCustomerViewPagerAdapter;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.utils.Constants;
+import com.tallymarks.ffmapp.utils.DialougeManager;
+import com.tallymarks.ffmapp.utils.GpsTracker;
 
 public class VisitCustomerActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager viewPager;
     VisitCustomerViewPagerAdapter viewPagerAdapter;
     private TextView tvTopHeader;
+    GpsTracker gpsTracker;
     EditText et_search;
     ImageView iv_menu,iv_back,iv_location;
     SharedPrefferenceHelper sHelper;
@@ -50,29 +53,24 @@ public class VisitCustomerActivity extends AppCompatActivity {
         iv_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String tabText=tabLayout.getTabAt(tabLayout.getSelectedTabPosition()).getText().toString();
-               if(tabText.equals("TODAY PLANS"))
-               {
-                   sHelper.setString(Constants.PLAN_TYPE_MAP,"today");
-                            Intent loc = new Intent(VisitCustomerActivity.this,MapActivity.class);
-                            loc.putExtra("from","customer");
-                            startActivity(loc);
-               }
-               else if(tabText.equals("ALL PLANS"))
-               {
-                   sHelper.setString(Constants.PLAN_TYPE_MAP,"all");
-                   Intent loc = new Intent(VisitCustomerActivity.this,MapActivity.class);
-                   loc.putExtra("from","customer");
-                   startActivity(loc);
-               }
-               else if(tabText.equals("FUTURE PLANS"))
-               {
-                   Toast.makeText(VisitCustomerActivity.this, "No Customer Found", Toast.LENGTH_SHORT).show();
-               }
-               else if(tabText.equals("PAST PLANS"))
-               {
-                   Toast.makeText(VisitCustomerActivity.this, "No Customer Found", Toast.LENGTH_SHORT).show();
-               }
+                gpsTracker = new GpsTracker(VisitCustomerActivity.this);
+                if (gpsTracker.canGetLocation()) {
+                    String tabText = tabLayout.getTabAt(tabLayout.getSelectedTabPosition()).getText().toString();
+                    if (tabText.equals("TODAY PLANS")) {
+                        sHelper.setString(Constants.PLAN_TYPE_MAP, "today");
+                        Intent loc = new Intent(VisitCustomerActivity.this, MapActivity.class);
+                        loc.putExtra("from", "customer");
+                        startActivity(loc);
+                    } else if (tabText.equals("ALL PLANS")) {
+                        sHelper.setString(Constants.PLAN_TYPE_MAP, "all");
+                        Intent loc = new Intent(VisitCustomerActivity.this, MapActivity.class);
+                        loc.putExtra("from", "customer");
+                        startActivity(loc);
+                    } else if (tabText.equals("FUTURE PLANS")) {
+                        Toast.makeText(VisitCustomerActivity.this, "No Customer Found", Toast.LENGTH_SHORT).show();
+                    } else if (tabText.equals("PAST PLANS")) {
+                        Toast.makeText(VisitCustomerActivity.this, "No Customer Found", Toast.LENGTH_SHORT).show();
+                    }
 //                PopupMenu popup = new PopupMenu(VisitCustomerActivity.this,iv_location);
 //                //Inflating the Popup using xml file
 //                popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
@@ -97,6 +95,9 @@ public class VisitCustomerActivity extends AppCompatActivity {
 //                });
 //
 //                popup.show();//showing popup menu
+                } else {
+                    DialougeManager.gpsNotEnabledPopup(VisitCustomerActivity.this);
+                }
             }
 
 

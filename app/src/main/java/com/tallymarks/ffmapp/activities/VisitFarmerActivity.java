@@ -16,6 +16,8 @@ import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.VisitCustomerViewPagerAdapter;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.utils.Constants;
+import com.tallymarks.ffmapp.utils.DialougeManager;
+import com.tallymarks.ffmapp.utils.GpsTracker;
 
 public class VisitFarmerActivity extends AppCompatActivity {
     TabLayout tabLayout;
@@ -23,6 +25,7 @@ public class VisitFarmerActivity extends AppCompatActivity {
     VisitCustomerViewPagerAdapter viewPagerAdapter;
     private TextView tvTopHeader,tvTitile;
     ImageView iv_menu,iv_back,iv_location;
+    GpsTracker gpsTracker;
     EditText et_search;
     SharedPrefferenceHelper sHelper;
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,22 +47,28 @@ public class VisitFarmerActivity extends AppCompatActivity {
         iv_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String tabText=tabLayout.getTabAt(tabLayout.getSelectedTabPosition()).getText().toString();
-                if(tabText.equals("TODAY PLANS"))
-                {
-                    sHelper.setString(Constants.PLAN_TYPE_MAP_FARMER,"TODAY");
-                    Intent loc = new Intent(VisitFarmerActivity.this,MapActivity.class);
-                    loc.putExtra("from","farmer");
+                gpsTracker = new GpsTracker(VisitFarmerActivity.this);
+                if (gpsTracker.canGetLocation()) {
+
+                }
+                String tabText = tabLayout.getTabAt(tabLayout.getSelectedTabPosition()).getText().toString();
+                if (tabText.equals("TODAY PLANS")) {
+                    sHelper.setString(Constants.PLAN_TYPE_MAP_FARMER, "TODAY");
+                    Intent loc = new Intent(VisitFarmerActivity.this, MapActivity.class);
+                    loc.putExtra("from", "farmer");
+                    startActivity(loc);
+                } else if (tabText.equals("ALL PLANS")) {
+                    sHelper.setString(Constants.PLAN_TYPE_MAP_FARMER, "ALL");
+                    Intent loc = new Intent(VisitFarmerActivity.this, MapActivity.class);
+                    loc.putExtra("from", "farmer");
                     startActivity(loc);
                 }
-                else if(tabText.equals("ALL PLANS"))
-                {
-                    sHelper.setString(Constants.PLAN_TYPE_MAP_FARMER,"ALL");
-                    Intent loc = new Intent(VisitFarmerActivity.this,MapActivity.class);
-                    loc.putExtra("from","farmer");
-                    startActivity(loc);
+                else
+                    {
+                        DialougeManager.gpsNotEnabledPopup(VisitFarmerActivity.this);
                 }
             }
+
         });
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override

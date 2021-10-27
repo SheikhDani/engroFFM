@@ -104,8 +104,14 @@ public class DownloadFarmersDataActivity extends AppCompatActivity {
             @Override
             public void onClick(View view, int position) {
                 Farmes movie = movieList.get(position);
-                //Toast.makeText(getApplicationContext(), movie.getTitle() + " is selected!", Toast.LENGTH_SHORT).show();
-                new LoadAssignedFarmerFromSalesPoint(DownloadFarmersDataActivity.this, movieList.get(position).getStatus()).execute();
+                if(movie.getImage()==0) {
+                    //Toast.makeText(getApplicationContext(), movie.getTitle() + " is selected!", Toast.LENGTH_SHORT).show();
+                    new LoadAssignedFarmerFromSalesPoint(DownloadFarmersDataActivity.this, movieList.get(position).getStatus()).execute();
+                }
+                else
+                {
+                    Toast.makeText(DownloadFarmersDataActivity.this, "Farmer Already Downloaded", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -117,6 +123,7 @@ public class DownloadFarmersDataActivity extends AppCompatActivity {
 
     }
     private void prepareMovieData() {
+        movieList.clear();
         mydb = new MyDatabaseHandler(DownloadFarmersDataActivity.this);
 
         HashMap<String, String> map = new HashMap<>();
@@ -180,6 +187,6 @@ public class DownloadFarmersDataActivity extends AppCompatActivity {
 
         // notify adapter about data set changes
         // so that it will render the list with new data
-        mAdapter = new FarmersAdapter(movieList);
+        mAdapter = new FarmersAdapter(movieList,DownloadFarmersDataActivity.this);
     }
 }
