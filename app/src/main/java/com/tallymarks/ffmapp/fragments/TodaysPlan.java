@@ -352,6 +352,10 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
 
                     }
                 }
+                else
+                {
+                    DialougeManager.gpsNotEnabledPopup(getActivity());
+                }
             }
             else
             {
@@ -362,7 +366,8 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
             if(planList.get(position).getMemebrship().equals("Not Visited")) {
                 //sHelper.clearPreferenceStore();
                 gps = new GpsTracker(getActivity());
-                if (gps.canGetLocation()) {
+                if (gps.canGetLocation())
+                {
 //                    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 //                        return;
 //                    }
@@ -445,6 +450,11 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
 //                        alertDialog.show();
 //
 //                    }
+                }
+                else
+                {
+                    DialougeManager.gpsNotEnabledPopup(getActivity());
+
                 }
 
                 // set farmers details

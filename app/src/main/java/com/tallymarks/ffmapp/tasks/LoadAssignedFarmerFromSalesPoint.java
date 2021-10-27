@@ -90,9 +90,15 @@ public class LoadAssignedFarmerFromSalesPoint extends AsyncTask<String, Void, Vo
                         map.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
                         map.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "0");
                         map.put(mydb.KEY_PLAN_TYPE, "ALL");
-
                         mydb.addData(mydb.TODAY_FARMER_JOURNEY_PLAN , map);
+
                     }
+
+                    HashMap<String, String> map2 = new HashMap<>();
+                    map2.put(mydb.KEY_DOWNLOADED_FARMER_SALES_POINT_CODE,salesPointCode);
+                    mydb.addData(mydb.DOWNLOADED_FARMER_DATA,map2);
+                    pDialog.dismiss();
+                    Helpers.displayMessage(mContext, true, "Download Successfully");
 
                 }
                 JSONObject json = null;
@@ -115,15 +121,9 @@ public class LoadAssignedFarmerFromSalesPoint extends AsyncTask<String, Void, Vo
                 JSONObject json = null;
                 try {
                     json = new JSONObject(response);
-                    //errorMessage = json.getString("message");
-                    //String myerrorMessage = json.getString("error");
-//                    if (!myerrorMessage.equals(null)){
-//                        Helpers.displayMessage(mContext, true, myerrorMessage);
-//                    }
-                    String status = json.getString("success");
-                    if (status.equals("false")) {
-                         Helpers.displayMessage(mContext, true, errorMessage);
-                    }
+                    String message = json.getString("description");
+                    Helpers.displayMessage(mContext, true, message);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
 
@@ -139,7 +139,7 @@ public class LoadAssignedFarmerFromSalesPoint extends AsyncTask<String, Void, Vo
     protected void onPostExecute(Void args) {
 
         pDialog.dismiss();
-        Toast.makeText(mContext, "Farmer Downloaded Successfully", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(mContext, "Farmer Downloaded Successfully", Toast.LENGTH_SHORT).show();
 
     }
 

@@ -1,6 +1,8 @@
 package com.tallymarks.ffmapp.adapters;
 
 
+import android.content.Context;
+import android.database.Cursor;
 import android.icu.text.UnicodeSetSpanner;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +15,14 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.models.Farmes;
+import com.tallymarks.ffmapp.models.FloorStockChild;
 import com.tallymarks.ffmapp.models.TodayPlan;
+import com.tallymarks.ffmapp.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -24,24 +30,31 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmersAdapter.MyViewHo
 
     private List<Farmes> moviesList;
     private List<Farmes> headerList;
+    private Context mContext;
+    MyDatabaseHandler mydb;
+   String saelspointcode;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, status;
         ImageView image;
+        Button download;
 
         public MyViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.textView);
             status = (TextView) view.findViewById(R.id.status);
             image = (ImageView) view.findViewById(R.id.imageView);
+            download = (Button) view.findViewById(R.id.forward_img);
         }
     }
 
 
-    public FarmersAdapter(List<Farmes> moviesList) {
+    public FarmersAdapter(List<Farmes> moviesList,Context c) {
         this.moviesList = moviesList;
+        mContext = c;
         this.headerList = new ArrayList<Farmes>();
         this.headerList.addAll(moviesList);
+        this.mydb = new MyDatabaseHandler(c);
     }
 
     @Override
@@ -49,20 +62,30 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmersAdapter.MyViewHo
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.farmers_list_item, parent, false);
 
-        Button button = itemView.findViewById(R.id.forward_img);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(parent.getContext(), "Clicked position: ", Toast.LENGTH_SHORT).show();
-            }
-        });
         return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Farmes movie = moviesList.get(position);
+        getDownloadedFarmer();
+        if(saelspointcode!=null && !saelspointcode.equals(""))
+        {
+            if (saelspointcode.equals(movie.getStatus())) {
+                holder.download.setText("Downloaded");
+                movie.setImage(1);
+                holder.download.setClickable(false);
+                holder.download.setBackgroundColor(mContext.getResources().getColor(R.color.red));
+            } else {
+                holder.download.setText("Download");
+                holder.download.setClickable(true);
+                movie.setImage(0);
+                holder.download.setBackgroundColor(mContext.getResources().getColor(R.color.green));
+
+            }
+        }
         holder.title.setText(movie.getTitle());
+
         holder.status.setText(movie.getStatus());
 
     }
@@ -91,5 +114,20 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmersAdapter.MyViewHo
         }
 
         notifyDataSetChanged();
+    }
+    public void getDownloadedFarmer()
+    {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(mydb.KEY_DOWNLOADED_FARMER_SALES_POINT_CODE, "");
+        HashMap<String, String> filters = new HashMap<>();
+        Cursor cursor = mydb.getData(mydb.DOWNLOADED_FARMER_DATA, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+
+                saelspointcode = cursor.getString(cursor.getColumnIndex(mydb.KEY_DOWNLOADED_FARMER_SALES_POINT_CODE));
+            }
+            while (cursor.moveToNext());
+        }
     }
 }

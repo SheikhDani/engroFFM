@@ -18,15 +18,15 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
 
     private SQLiteDatabase db;
     /*Database Varaiables*/
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
     private static final String TAG = "DBAdapter";
     private static final String DATABASE_NAME = "FFMAppDb_Zohaib";
     private Context mContext;
 
     //List of all tables
     public static final String TODAY_FARMER_JOURNEY_PLAN = "TODAY_FARMER_JOURNEY_PLAN";
-
     public static final String TODAY_FARMER_ACTIVITY = "TODAY_FARMER_ACTIVITY";
+    public static final String DOWNLOADED_FARMER_DATA = "DOWNLOADED_FARMER_DATA";
     public static final String TODAY_FARMER_RECOMMENDATION = "TODAY_FARMER_RECOMMENDATION";
     public static final String TODAY_FARMER_SAMPLING = "TODAY_FARMER_SAMPLING";
     public static final String TODAY_FARMER_CHECKIN = "TODAY_FARMER_CHECKIN";
@@ -35,7 +35,6 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
     public static final String FARMER_MEETING = "FARMER_MEETING";
     public static final String DEALERS = "DEALERS";
     public static final String ATTACHMETNS = "ATTACHMENTS";
-
     public static final String TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY = "TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY";
     public static final String TODAY_JOURNEY_PLAN_POST_DATA = "TODAY_JOURNEY_PLAN_POST_DATA";
 
@@ -50,6 +49,9 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
     // All farmer fields
     public static final String KEY_ALL_FARMER_JOURNEY_PLAN_SALES_POINT_CODE = "farmer_SALES_POINT_CODE";
     public static final String KEY_ALL_FARMER_JOURNEY_PLAN_SALES_POINT_NAME = "farmer_SALES_POINT_NAME";
+
+    // Downloaded farmer fields
+    public static final String KEY_DOWNLOADED_FARMER_SALES_POINT_CODE= "DOWNLOADED_FARMER_SALES_POINT_CODE";
 
     // farmer Start activity fields
     public static final String KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_TIME = "farmer_startactivity_time";
@@ -164,6 +166,9 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
             + KEY_ALL_FARMER_JOURNEY_PLAN_SALES_POINT_CODE+ " TEXT,"
             + KEY_ALL_FARMER_JOURNEY_PLAN_SALES_POINT_NAME+ " TEXT" + ")";
 
+    String TABLE_DOWNLAODED_FARMER_DATA= "CREATE TABLE " + DOWNLOADED_FARMER_DATA+ "("
+            + KEY_DOWNLOADED_FARMER_SALES_POINT_CODE+ " TEXT" + ")";
+
     String TABLE_TODAY_FARMER_JOURNEY_PLAN= "CREATE TABLE " + TODAY_FARMER_JOURNEY_PLAN+ "("
             + KEY_TODAY_JOURNEY_FARMER_DAY_ID+ " TEXT,"
             + KEY_TODAY_JOURNEY_FARMER_ID+ " TEXT,"
@@ -270,7 +275,7 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
             + KEY_TODAY_JOURNEY_FARMER_CHECKOUT_TIMESTAMP+ " TEXT,"
             + KEY_PLAN_TYPE+ " TEXT" + ")";
 
-    private static MyDatabaseHandler sInstance;
+
 
     public MyDatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -291,6 +296,7 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(TABLE_FARMER_MEETING);
         db.execSQL(TABLE_DEALERS);
         db.execSQL(TABLE_ATTACHMENTS);
+        db.execSQL(TABLE_DOWNLAODED_FARMER_DATA);
 
     }
 
@@ -308,6 +314,8 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + FARMER_MEETING);
         db.execSQL("DROP TABLE IF EXISTS " + DEALERS);
         db.execSQL("DROP TABLE IF EXISTS " + ATTACHMETNS);
+        db.execSQL("DROP TABLE IF EXISTS " + DOWNLOADED_FARMER_DATA);
+
 
         onCreate(db);
 

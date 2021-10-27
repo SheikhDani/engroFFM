@@ -1,6 +1,8 @@
 package com.tallymarks.ffmapp.activities;
 
 
+import static com.tallymarks.ffmapp.database.MyDatabaseHandler.TODAY_FARMER_JOURNEY_PLAN;
+
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -98,6 +100,7 @@ import com.tallymarks.ffmapp.tasks.LoadCustomersAllJourneyPlan;
 import com.tallymarks.ffmapp.tasks.LoadCustomersTodayJourneyPlan;
 import com.tallymarks.ffmapp.tasks.LoadFarmersAllJourneyPlan;
 import com.tallymarks.ffmapp.utils.Constants;
+import com.tallymarks.ffmapp.utils.DialougeManager;
 import com.tallymarks.ffmapp.utils.GpsTracker;
 import com.tallymarks.ffmapp.utils.Helpers;
 import com.tallymarks.ffmapp.utils.HttpHandler;
@@ -204,9 +207,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         txt_refersh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity.this.deleteDatabase("FFMApplicationDataBasev1");
-                MainActivity.this.deleteDatabase("FFMAppDb_Zohaib");
-                loadAllData();
+                //customer tables
+                HashMap<String, String> filter = new HashMap<>();
+                filter.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
+                filter.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+                db.deleteData(db.TODAY_JOURNEY_PLAN_ORDERS,filter);
+                db.deleteData(db.TODAY_JOURNEY_PLAN_ORDERS,null);
+                db.deleteData(db.TODAY_JOURNEY_PLAN_ORDERS_INVOICES,null);
+                db.deleteData(db.TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT,null);
+                db.deleteData(db.TODAY_JOURNEY_PLAN_PREVIOUS_STOCK,null);
+
+                //farmer tables
+                HashMap<String, String> filter2 = new HashMap<>();
+                filter2.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
+                filter2.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+                db.deleteData(mydb.TODAY_FARMER_JOURNEY_PLAN,filter2);
+
+                loadCustomerData();
+                loadFarmerData();
 
 
             }
@@ -265,17 +283,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
 
             case R.id.nav_visitcustomer:
-                Intent visitCustomer = new Intent(MainActivity.this, VisitCustomerActivity.class);
-                startActivity(visitCustomer);
+                gpsTracker = new GpsTracker(MainActivity.this);
+                if (gpsTracker.canGetLocation()) {
+                    Intent visitCustomer = new Intent(MainActivity.this, VisitCustomerActivity.class);
+                    startActivity(visitCustomer);
+
+                } else {
+                    DialougeManager.gpsNotEnabledPopup(MainActivity.this);
+                }
 
 
                 drawer.closeDrawers();
 
                 return true;
             case R.id.nav_visitfarmers:
+                gpsTracker = new GpsTracker(MainActivity.this);
+                if (gpsTracker.canGetLocation()) {
+                    Intent farmvisit = new Intent(MainActivity.this, VisitFarmerActivity.class);
+                    startActivity(farmvisit);
+                } else {
+                    DialougeManager.gpsNotEnabledPopup(MainActivity.this);
+                }
 
-                Intent farmvisit = new Intent(MainActivity.this, VisitFarmerActivity.class);
-                startActivity(farmvisit);
                 drawer.closeDrawers();
 
                 return true;
@@ -285,8 +314,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 drawer.closeDrawers();
                 return true;
             case R.id.nav_customerlocation:
-                Intent farmerdemo = new Intent(MainActivity.this, CustomerLocationActivity.class);
-                startActivity(farmerdemo);
+                gpsTracker = new GpsTracker(MainActivity.this);
+                if (gpsTracker.canGetLocation()) {
+                    Intent farmerdemo = new Intent(MainActivity.this, CustomerLocationActivity.class);
+                    startActivity(farmerdemo);
+                } else {
+                    DialougeManager.gpsNotEnabledPopup(MainActivity.this);
+                }
+
+
                 drawer.closeDrawers();
                 return true;
 
@@ -368,6 +404,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
 
+    }
+    public void loadCustomerData()
+    {
+        checkLoadTodayCustomerJourneyPlan();
+        checkLoadAllCustomerJourneyPlan();
+    }
+    public void loadFarmerData()
+    {
+        checkFarmerAllJourneyPlan();
+        checkFarmerTodayJourneyPlan();
     }
 
     public void loadAllData() {
@@ -554,7 +600,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             while (cursor.moveToNext());
         } else {
-            new GetFatmerTodayJourneyPlan(MainActivity.this).execute();
+            if(Helpers.isNetworkAvailable(MainActivity.this)) {
+                new GetFatmerTodayJourneyPlan(MainActivity.this).execute();
+            }
+            else
+            {
+                Helpers.noConnectivityPopUp(MainActivity.this);
+            }
         }
 
     }
@@ -575,7 +627,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             while (cursor.moveToNext());
         } else {
-            new LoadFarmersAllJourneyPlan(MainActivity.this).execute();
+            if(Helpers.isNetworkAvailable(MainActivity.this)) {
+                new LoadFarmersAllJourneyPlan(MainActivity.this).execute();
+            }
+            else
+            {
+                Helpers.noConnectivityPopUp(MainActivity.this);
+            }
+
         }
 
 
