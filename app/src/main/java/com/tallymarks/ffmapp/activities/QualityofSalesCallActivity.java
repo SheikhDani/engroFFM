@@ -6,12 +6,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,6 +33,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -289,7 +294,18 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         filter.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
         db.updateData(db.TODAY_JOURNEY_PLAN, params, filter);
     }
-
+    @NonNull
+    private SpannableStringBuilder setStarToLabel(String text) {
+        String simple = text;
+        String colored = "*";
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        builder.append(simple);
+        int start = builder.length();
+        builder.append(colored);
+        int end = builder.length();
+        builder.setSpan(new ForegroundColorSpan(Color.RED), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return builder;
+    }
     private void openCommitment() {
         LayoutInflater li = LayoutInflater.from(QualityofSalesCallActivity.this);
         View promptsView = li.inflate(R.layout.dialouge_add_commitment, null);
@@ -299,8 +315,18 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 
         tv_Date = promptsView.findViewById(R.id.txt_date);
         EditText et_quantity = promptsView.findViewById(R.id.et_quantity);
+        TextView tv_quantity = promptsView.findViewById(R.id.txt_quantity);
+        TextView tv_product = promptsView.findViewById(R.id.txt_product);
+        TextView tv_timeline = promptsView.findViewById(R.id.txt_timeline);
         CheckBox ck_confirmed = promptsView.findViewById(R.id.checkBox_confirmed);
         TextView auto_Product = promptsView.findViewById(R.id.auto_product);
+
+        SpannableStringBuilder product = setStarToLabel("Product");
+        SpannableStringBuilder quantity = setStarToLabel("Quantity");
+        SpannableStringBuilder timeline = setStarToLabel("Timeline");
+        tv_quantity.setText(quantity);
+        tv_product.setText(product);
+        tv_timeline.setText(timeline);
         auto_Product.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -334,9 +360,8 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                prepareRecommendationData(auto_Product.getText().toString(), et_quantity.getText().toString(), tv_Date.getText().toString(), checkedCommitement);
-                drawRecommendationTable();
-                alertDialog.dismiss();
+                validateInputs(et_quantity , auto_Product , tv_Date,alertDialog);
+
 
             }
 
@@ -379,7 +404,35 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 
     };
 
+    private void validateInputs(EditText quanity , TextView product , TextView date,AlertDialog alertDialog) {
+        if (    quanity!=null
+                && product!=null
+                && date!=null
+                && !(Helpers.isEmptyTextview(getApplicationContext(),  date))
+                && !(Helpers.isEmptyTextview(getApplicationContext(),  product))
+                && !(Helpers.isEmpty(getApplicationContext(), quanity))
+        ) {
+            prepareRecommendationData(product.getText().toString(), quanity.getText().toString(), date.getText().toString(), checkedCommitement);
+            drawRecommendationTable();
+            alertDialog.dismiss();
 
+        } else {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(QualityofSalesCallActivity.this);
+            alertDialogBuilder
+                    .setMessage(getResources().getString(R.string.field_required_message))
+                    .setCancelable(false)
+                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+
+
+                        }
+                    });
+            AlertDialog alertDialog2 = alertDialogBuilder.create();
+            alertDialog2.show();
+        }
+    }
     private void openMarketintelligence() {
 
         LayoutInflater li = LayoutInflater.from(QualityofSalesCallActivity.this);

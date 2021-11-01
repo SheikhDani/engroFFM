@@ -411,14 +411,30 @@
                 android:layout_marginStart="@dimen/p10"
                 android:layout_marginLeft="@dimen/p10"
                 android:layout_marginTop="@dimen/p10"
-                android:layout_marginEnd="@dimen/p10"
-                android:layout_marginRight="@dimen/p10"
                 android:layout_marginBottom="@dimen/p10"
+
                 android:background="@drawable/eidttext_boader"
                 android:drawableLeft="@drawable/backwoardresizer"
                 android:paddingRight="@dimen/p20"
                 android:text="BACK"
-                android:textColor="@color/green" />
+                android:textColor="@color/green"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btn_skip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_centerInParent="true"
+                android:layout_marginTop="@dimen/p10"
+                android:layout_marginBottom="@dimen/p10"
+                android:background="@drawable/eidttext_boader"
+                android:backgroundTint="@color/green"
+                android:drawableRight="@drawable/forwardresizer"
+                android:paddingLeft="@dimen/p10"
+                android:text="SKIP"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
 
             <Button
                 android:id="@+id/btn_proceed"
@@ -434,9 +450,11 @@
                 android:background="@drawable/eidttext_boader"
                 android:backgroundTint="@color/green"
                 android:drawableRight="@drawable/forwardresizer"
-                android:paddingLeft="@dimen/p20"
-                android:text="PROCESSED"
-                android:textColor="@color/white" />
+                android:paddingLeft="@dimen/p10"
+                android:text="PROCEED"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
 
         </RelativeLayout>
     </LinearLayout>

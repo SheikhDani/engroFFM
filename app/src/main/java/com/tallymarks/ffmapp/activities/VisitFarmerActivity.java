@@ -23,7 +23,7 @@ public class VisitFarmerActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager viewPager;
     VisitCustomerViewPagerAdapter viewPagerAdapter;
-    private TextView tvTopHeader,tvTitile;
+    private TextView tvTopHeader;
     ImageView iv_menu,iv_back,iv_location;
     GpsTracker gpsTracker;
     EditText et_search;
@@ -84,8 +84,6 @@ public class VisitFarmerActivity extends AppCompatActivity {
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
         tvTopHeader = findViewById(R.id.tv_dashboard);
-        tvTitile = findViewById(R.id.txt_sales_plan);
-        tvTitile.setText("View Farmers");
         tvTopHeader.setVisibility(View.VISIBLE);
         tvTopHeader.setText("VISIT Farmers");
     }

@@ -51,6 +51,7 @@
         android:drawableRight="@drawable/ic_baseline_arrow_downward_24"
         android:drawablePadding="@dimen/p10"
         android:padding="@dimen/p10"
+        android:textSize="10sp"
         android:text="DOWNLOAD"
         android:textColor="@color/white" />
 

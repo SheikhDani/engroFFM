@@ -1,12 +1,18 @@
 package com.tallymarks.ffmapp.activities;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,8 +27,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
@@ -31,6 +39,7 @@ import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.Recommendations;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.GpsTracker;
+import com.tallymarks.ffmapp.utils.Helpers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,12 +48,15 @@ public class FarmVisitActivity extends AppCompatActivity {
     private TextView tvTopHeader, txt_lat_lng, txt_lcoation;
     private TableLayout mTableLayout;
     EditText remarks, address;
-    AutoCompleteTextView auto_crop,auto_main_product;
-    ImageView iv_menu,iv_back,img_add_recommendations;
-    Button btn_proceed,btn_back, btn_lcoation;
+    AutoCompleteTextView auto_crop, auto_main_product;
+    TextView txtcrop, txtmainproduct, txtsavelocation;
+    ImageView iv_menu, iv_back, img_add_recommendations;
+    Button btn_proceed, btn_back, btn_lcoation, btn_skip;
     DatabaseHandler db;
     MyDatabaseHandler mydb;
     SharedPrefferenceHelper sHelper;
+    double farmvisitLat = 0.0;
+    double farvisitLong = 0.0;
     String planType = "";
     ArrayList<Recommendations> arraylist = new ArrayList<Recommendations>();
     ArrayList<Recommendations> myarraylist = new ArrayList<Recommendations>();
@@ -55,19 +67,18 @@ public class FarmVisitActivity extends AppCompatActivity {
     ArrayList<String> fertTypeArraylist = new ArrayList<>();
     ArrayList<String> fertTypeIDArraylist = new ArrayList<>();
     HashMap<String, String> map = new HashMap<>();
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_farm_visit);
         initView();
 
 
-
     }
-    private void initView()
-    {
+
+    private void initView() {
         Bundle data = getIntent().getExtras();
-        if (data != null)
-        {
+        if (data != null) {
             planType = data.getString(Constants.PLAN_TYPE_FARMER);
 
         }
@@ -75,6 +86,9 @@ public class FarmVisitActivity extends AppCompatActivity {
         auto_crop = findViewById(R.id.auto_crop);
         btn_back = findViewById(R.id.back);
         btn_lcoation = findViewById(R.id.btn_lcoation);
+        txtcrop = findViewById(R.id.txt_crop);
+        txtmainproduct = findViewById(R.id.txt_main_prod);
+        txtsavelocation = findViewById(R.id.txt_location);
         txt_lat_lng = findViewById(R.id.txt_lat_lng);
         //txt_lcoation = findViewById(R.id.txt_location);
         remarks = findViewById(R.id.remarks);
@@ -97,13 +111,14 @@ public class FarmVisitActivity extends AppCompatActivity {
 //
 //                }
 
-                Intent i = new Intent(FarmVisitActivity.this,FarmersStartActivity.class);
+                Intent i = new Intent(FarmVisitActivity.this, FarmersStartActivity.class);
                 startActivity(i);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
         mTableLayout = (TableLayout) findViewById(R.id.displayLinear);
         btn_proceed = findViewById(R.id.btn_proceed);
+        btn_skip = findViewById(R.id.btn_skip);
 
         db = new DatabaseHandler(FarmVisitActivity.this);
         auto_main_product = findViewById(R.id.auto_main_product);
@@ -126,7 +141,7 @@ public class FarmVisitActivity extends AppCompatActivity {
         getCropfromDatabase();
         getMainProductfromDatabase();
         getFertTypeFromDatabase();
-        if (isthisFarmerDataAlreadyExists()){
+        if (isthisFarmerDataAlreadyExists()) {
             // fill the fields from database
 
             HashMap<String, String> map = new HashMap<>();
@@ -149,8 +164,8 @@ public class FarmVisitActivity extends AppCompatActivity {
                 while (cursor.moveToNext());
             }
         }
-        if (isthisFarmerRecommendationDataAlreadyExists()){
-             //fill the fields from database
+        if (isthisFarmerRecommendationDataAlreadyExists()) {
+            //fill the fields from database
 
             HashMap<String, String> map = new HashMap<>();
 
@@ -165,10 +180,10 @@ public class FarmVisitActivity extends AppCompatActivity {
                 cursor.moveToFirst();
                 do {
                     Recommendations myplan = new Recommendations();
-                    myplan.setCrop(cropArraylist.get(Integer.parseInt(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_CROPID)))-1));
+                    myplan.setCrop(cropArraylist.get(Integer.parseInt(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_CROPID))) - 1));
                     myplan.setDosage(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_DOSAGE)));
-                    myplan.setFert(fertTypeArraylist.get(Integer.parseInt(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_FERTTYPE_ID)))-1));
-                    myplan.setProduct(mainProductArraylist.get(Integer.parseInt(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_BRAND_ID)))-1));
+                    myplan.setFert(fertTypeArraylist.get(Integer.parseInt(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_FERTTYPE_ID))) - 1));
+                    myplan.setProduct(mainProductArraylist.get(Integer.parseInt(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_BRAND_ID))) - 1));
 
                     arraylist.add(myplan);
 
@@ -177,7 +192,7 @@ public class FarmVisitActivity extends AppCompatActivity {
             }
             drawRecommendationTable();
         }
-        final String arraylist[]={"Male","female","other"};
+        final String arraylist[] = {"Male", "female", "other"};
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_list_item_1, arraylist);
         final ArrayAdapter<String> arrayAdapter1 = new ArrayAdapter<>(
@@ -191,15 +206,29 @@ public class FarmVisitActivity extends AppCompatActivity {
         auto_main_product.setCursorVisible(false);
 
 
+        SpannableStringBuilder tvCrop = setStarToLabel("Crop");
+        SpannableStringBuilder tvMainProduct = setStarToLabel("Main Product");
+        SpannableStringBuilder tvSvelocation = setStarToLabel("Save Location");
+        txtcrop.setText(tvCrop);
+        txtsavelocation.setText(tvSvelocation);
+        txtmainproduct.setText(tvMainProduct);
+
+
         btn_lcoation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     GpsTracker gpsTracker = new GpsTracker(FarmVisitActivity.this);
-                    gpsTracker.getLatitude();
-                    gpsTracker.getLongitude();
-                    txt_lat_lng.setText("Selected Lat,Lng:" + gpsTracker.getLatitude() + " , " + gpsTracker.getLongitude());
-                }catch (Exception e){
+                    if (gpsTracker.canGetLocation()) {
+                        if (ActivityCompat.checkSelfPermission(FarmVisitActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(FarmVisitActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+                        farmvisitLat = gpsTracker.getLatitude();
+                        farvisitLong = gpsTracker.getLongitude();
+                    }
+                    txt_lat_lng.setText("Selected Lat,Lng:" + farmvisitLat + " , " + farvisitLong);
+
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -280,62 +309,102 @@ public class FarmVisitActivity extends AppCompatActivity {
                 auto_main_product.showDropDown();
             }
         });
+        btn_skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent soil = new Intent(FarmVisitActivity.this, SoilSamplingActivity.class);
+                Bundle data = new Bundle();
+                data.putString(Constants.PLAN_TYPE_FARMER, planType);
+                soil.putExtras(data);
+                startActivity(soil);
+            }
+        });
         btn_proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                GpsTracker gpsTracker = new GpsTracker(FarmVisitActivity.this);
-                mydb = new MyDatabaseHandler(FarmVisitActivity.this);
-                try {
-                    map.put(mydb.KEY_TODAY_FARMER_ID, sHelper.getString(Constants.S_FARMER_ID));
-                    //map.put(mydb.KEY_TODAY_ADDRESS, txt_lcoation.getText().toString());
+                validateInputs();
 
-                    if(remarks.getText().toString() != null || !remarks.equals(null)){
-                        map.put(mydb.KEY_TODAY_REMARKS, remarks.getText().toString());
-                    }else{map.put(mydb.KEY_TODAY_REMARKS, "");}
-
-                    if(address.getText().toString() != null || !address.equals(null)){
-                        map.put(mydb.KEY_TODAY_ADDRESS, address.getText().toString());
-                    }else{map.put(mydb.KEY_TODAY_ADDRESS, "");}
-
-                    if (gpsTracker.canGetLocation()) {
-                        map.put(mydb.KEY_TODAY_LATITUTE, String.valueOf(gpsTracker.getLatitude()));
-                        map.put(mydb.KEY_TODAY_LONGITUTE, String.valueOf(gpsTracker.getLongitude()));
-                    } else {
-                        map.put(mydb.KEY_TODAY_LATITUTE, String.valueOf("0.0"));
-                        map.put(mydb.KEY_TODAY_LONGITUTE, String.valueOf("0.0"));
-                    }
-
-                    map.put(mydb.KEY_PLAN_TYPE, planType);
-
-                    if(isthisFarmerDataAlreadyExists()){
-                        // update record
-                        HashMap<String, String> filer = new HashMap<>();
-                        filer.put(mydb.KEY_TODAY_FARMER_ID, sHelper.getString(Constants.S_FARMER_ID));
-                        mydb.updateData(mydb.TODAY_FARMER_ACTIVITY, map, filer);
-                    }else{
-                        // add new record
-                        mydb.addData(mydb.TODAY_FARMER_ACTIVITY, map);
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-
-                Intent soil = new Intent(FarmVisitActivity.this, SoilSamplingActivity.class);
-                Bundle data = new Bundle();
-                data.putString(Constants.PLAN_TYPE_FARMER,planType);
-                soil.putExtras(data);
-                startActivity(soil);
             }
         });
 
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(FarmVisitActivity.this,FarmersStartActivity.class);
+                Intent i = new Intent(FarmVisitActivity.this, FarmersStartActivity.class);
                 startActivity(i);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
+    }
+
+    private void validateInputs() {
+        if (
+                !(Helpers.isEmptyAutoTextview(getApplicationContext(), auto_crop))
+                        && !(Helpers.isEmptyAutoTextview(getApplicationContext(), auto_main_product))
+                        && !String.valueOf(farmvisitLat).equals("") && !String.valueOf(farvisitLong).equals("")
+        ) {
+            GpsTracker gpsTracker = new GpsTracker(FarmVisitActivity.this);
+            mydb = new MyDatabaseHandler(FarmVisitActivity.this);
+            try {
+                map.put(mydb.KEY_TODAY_FARMER_ID, sHelper.getString(Constants.S_FARMER_ID));
+                //map.put(mydb.KEY_TODAY_ADDRESS, txt_lcoation.getText().toString());
+
+                if (remarks.getText().toString() != null || !remarks.equals(null)) {
+                    map.put(mydb.KEY_TODAY_REMARKS, remarks.getText().toString());
+                } else {
+                    map.put(mydb.KEY_TODAY_REMARKS, "");
+                }
+
+                if (address.getText().toString() != null || !address.equals(null)) {
+                    map.put(mydb.KEY_TODAY_ADDRESS, address.getText().toString());
+                } else {
+                    map.put(mydb.KEY_TODAY_ADDRESS, "");
+                }
+
+                if (gpsTracker.canGetLocation()) {
+                    map.put(mydb.KEY_TODAY_LATITUTE, String.valueOf(gpsTracker.getLatitude()));
+                    map.put(mydb.KEY_TODAY_LONGITUTE, String.valueOf(gpsTracker.getLongitude()));
+                } else {
+                    map.put(mydb.KEY_TODAY_LATITUTE, String.valueOf("0.0"));
+                    map.put(mydb.KEY_TODAY_LONGITUTE, String.valueOf("0.0"));
+                }
+
+                map.put(mydb.KEY_PLAN_TYPE, planType);
+
+                if (isthisFarmerDataAlreadyExists()) {
+                    // update record
+                    HashMap<String, String> filer = new HashMap<>();
+                    filer.put(mydb.KEY_TODAY_FARMER_ID, sHelper.getString(Constants.S_FARMER_ID));
+                    mydb.updateData(mydb.TODAY_FARMER_ACTIVITY, map, filer);
+                } else {
+                    // add new record
+                    mydb.addData(mydb.TODAY_FARMER_ACTIVITY, map);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            Intent soil = new Intent(FarmVisitActivity.this, SoilSamplingActivity.class);
+            Bundle data = new Bundle();
+            data.putString(Constants.PLAN_TYPE_FARMER, planType);
+            soil.putExtras(data);
+            startActivity(soil);
+        } else {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitActivity.this);
+            alertDialogBuilder
+                    .setMessage(getResources().getString(R.string.field_required_message))
+                    .setCancelable(false)
+                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+
+
+                        }
+                    });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        }
     }
 
     private boolean isthisFarmerDataAlreadyExists() {
@@ -345,16 +414,17 @@ public class FarmVisitActivity extends AppCompatActivity {
         HashMap<String, String> filer = new HashMap<>();
         filer.put(mydb.KEY_TODAY_FARMER_ID, sHelper.getString(Constants.S_FARMER_ID));
         Cursor cursor = mydb.getData(mydb.TODAY_FARMER_ACTIVITY, map, filer);
-        if (cursor.getCount() >0 ) {
+        if (cursor.getCount() > 0) {
             cursor.moveToFirst();
-            do{
+            do {
                 flag = true;
-            }while (cursor.moveToNext());
-        }else{
+            } while (cursor.moveToNext());
+        } else {
             flag = false;
         }
         return flag;
     }
+
     private boolean isthisFarmerRecommendationDataAlreadyExists() {
         boolean flag = false;
         HashMap<String, String> map = new HashMap<>();
@@ -362,18 +432,18 @@ public class FarmVisitActivity extends AppCompatActivity {
         HashMap<String, String> filer = new HashMap<>();
         filer.put(mydb.KEY_TODAY_FARMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
         Cursor cursor = mydb.getData(mydb.TODAY_FARMER_RECOMMENDATION, map, filer);
-        if (cursor.getCount() >0 ) {
+        if (cursor.getCount() > 0) {
             cursor.moveToFirst();
-            do{
+            do {
                 flag = true;
-            }while (cursor.moveToNext());
-        }else{
+            } while (cursor.moveToNext());
+        } else {
             flag = false;
         }
         return flag;
     }
 
-    public void getCropfromDatabase(){
+    public void getCropfromDatabase() {
         HashMap<String, String> map = new HashMap<>();
 
         map.put(db.KEY_CROP_ID, "");
@@ -390,12 +460,13 @@ public class FarmVisitActivity extends AppCompatActivity {
             while (cursor.moveToNext());
         }
 
-        for (int i=0;i<cropArraylist.size();i++){
+        for (int i = 0; i < cropArraylist.size(); i++) {
             if (cropArraylist.get(i).contains("%20"))
-            cropArraylist.set(i, cropArraylist.get(i).replace("%20" , " "));
+                cropArraylist.set(i, cropArraylist.get(i).replace("%20", " "));
         }
     }
-    public void getMainProductfromDatabase(){
+
+    public void getMainProductfromDatabase() {
         HashMap<String, String> map = new HashMap<>();
 
         map.put(db.KEY_ENGRO_RAND_NAME, "");
@@ -412,12 +483,13 @@ public class FarmVisitActivity extends AppCompatActivity {
             while (cursor.moveToNext());
         }
 
-        for (int i=0;i<mainProductArraylist.size();i++){
-            mainProductArraylist.get(i).replace("%20" , " ");
-            mainProductArraylist.set(i, mainProductArraylist.get(i).replace("%20" , " "));
+        for (int i = 0; i < mainProductArraylist.size(); i++) {
+            mainProductArraylist.get(i).replace("%20", " ");
+            mainProductArraylist.set(i, mainProductArraylist.get(i).replace("%20", " "));
         }
     }
-    public void getFertTypeFromDatabase(){
+
+    public void getFertTypeFromDatabase() {
         HashMap<String, String> map = new HashMap<>();
 
 
@@ -434,9 +506,9 @@ public class FarmVisitActivity extends AppCompatActivity {
             }
             while (cursor.moveToNext());
         }
-        for (int i=0;i<fertTypeArraylist.size();i++){
-            fertTypeArraylist.get(i).replace("%20" , " ");
-            fertTypeArraylist.set(i, fertTypeArraylist.get(i).replace("%20" , " "));
+        for (int i = 0; i < fertTypeArraylist.size(); i++) {
+            fertTypeArraylist.get(i).replace("%20", " ");
+            fertTypeArraylist.set(i, fertTypeArraylist.get(i).replace("%20", " "));
         }
     }
 
@@ -450,13 +522,20 @@ public class FarmVisitActivity extends AppCompatActivity {
         Recommendations plan = new Recommendations();
         HashMap<String, String> mapRecommendation = new HashMap<>();
 
-        //ImageView ivClose = promptsView.findViewById(R.id.iv_close);
-        AutoCompleteTextView recommendation_auto_crop,recommendation_auto_main_product, recommendation_auto_fert;
+        ImageView ivClose = promptsView.findViewById(R.id.imageView);
+        AutoCompleteTextView recommendation_auto_crop, recommendation_auto_main_product, recommendation_auto_fert;
         recommendation_auto_crop = promptsView.findViewById(R.id.auto_crop_recom);
         recommendation_auto_main_product = promptsView.findViewById(R.id.auto_product_recomm);
         recommendation_auto_fert = promptsView.findViewById(R.id.auto_fert);
         EditText et_acre = promptsView.findViewById(R.id.et_acre);
         EditText et_dosePerAcre = promptsView.findViewById(R.id.et_dosePerAcre);
+
+        TextView txtCrop = promptsView.findViewById(R.id.txt_crop);
+        TextView txtfert = promptsView.findViewById(R.id.txt_fert);
+        TextView txtproduct = promptsView.findViewById(R.id.txt_product);
+        TextView txtacres = promptsView.findViewById(R.id.txt_acre);
+        TextView txtdosage = promptsView.findViewById(R.id.txt_dosage);
+
 
         final ArrayAdapter<String> arrayAdapter1 = new ArrayAdapter<>(
                 this, android.R.layout.simple_list_item_1, cropArraylist);
@@ -468,6 +547,26 @@ public class FarmVisitActivity extends AppCompatActivity {
         recommendation_auto_crop.setAdapter(arrayAdapter1);
         recommendation_auto_main_product.setAdapter(arrayAdapter2);
         recommendation_auto_fert.setAdapter(arrayAdapter3);
+
+        SpannableStringBuilder product = setStarToLabel("Product");
+        SpannableStringBuilder crop = setStarToLabel("Crop");
+        SpannableStringBuilder fert = setStarToLabel("Fert App Type");
+        SpannableStringBuilder acres = setStarToLabel("No. of Acres");
+        SpannableStringBuilder dosage = setStarToLabel("Dosage Per Acre");
+
+        txtCrop.setText(crop);
+        txtproduct.setText(product);
+        txtfert.setText(fert);
+        txtacres.setText(acres);
+        txtdosage.setText(dosage);
+
+
+        ivClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
 
         recommendation_auto_crop.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -492,7 +591,7 @@ public class FarmVisitActivity extends AppCompatActivity {
                         String selection = cropArraylist.get(which);
                         plan.setCrop(selection);
                         recommendation_auto_crop.setText(selection);
-                        mapRecommendation.put(mydb.KEY_TODAY_CROPID , cropIDArraylist.get(which));
+                        mapRecommendation.put(mydb.KEY_TODAY_CROPID, cropIDArraylist.get(which));
 
                     }
                 };
@@ -531,7 +630,7 @@ public class FarmVisitActivity extends AppCompatActivity {
                         String selection = mainProductArraylist.get(which);
                         plan.setProduct(selection);
                         recommendation_auto_main_product.setText(selection);
-                        mapRecommendation.put(mydb.KEY_TODAY_BRAND_ID , mainProductIDArraylist.get(which));
+                        mapRecommendation.put(mydb.KEY_TODAY_BRAND_ID, mainProductIDArraylist.get(which));
 
                     }
                 };
@@ -575,36 +674,7 @@ public class FarmVisitActivity extends AppCompatActivity {
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (et_acre != null || !et_acre.equals(null) && et_dosePerAcre != null || !et_dosePerAcre.equals(null)){
-                    int acre = Integer.parseInt( et_acre.getText().toString() );
-                    int dosePerAcre = Integer.parseInt( et_dosePerAcre.getText().toString() );
-
-                    int dosage = acre * dosePerAcre;
-                    plan.setDosage(String.valueOf(dosage));
-                    mapRecommendation.put(mydb.KEY_TODAY_DOSAGE, String.valueOf(dosage));
-                    mapRecommendation.put(mydb.KEY_TODAY_FARMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
-                    mapRecommendation.put(mydb.KEY_PLAN_TYPE, planType);
-
-
-                }
-
-                arraylist.add(plan);
-//                if(isthisFarmerRecommendationDataAlreadyExists()){
-//                    // update record
-//                    HashMap<String, String> filer = new HashMap<>();
-//                    filer.put(mydb.KEY_TODAY_FARMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
-//                    mydb.updateData(mydb.TODAY_FARMER_RECOMMENDATION, mapRecommendation, filer);
-//                }else{
-                    // add new record
-                    mydb.addData(mydb.TODAY_FARMER_RECOMMENDATION, mapRecommendation);
-//                }
-                drawRecommendationTable();
-                alertDialog.dismiss();
-
-//                Intent salescall = new Intent(FarmVisitActivity.this,QualityofSalesCallActivity.class);
-//                startActivity(salescall);
-
+                validateInputsRecommendation(et_acre, et_dosePerAcre, recommendation_auto_crop, recommendation_auto_main_product, recommendation_auto_fert, alertDialog,plan,mapRecommendation);
             }
 
 
@@ -612,9 +682,63 @@ public class FarmVisitActivity extends AppCompatActivity {
         alertDialogBuilder.setCancelable(false);
         alertDialog.show();
     }
-    public void drawRecommendationTable()
-    {
-        int cursorIndex=0;
+
+    private void validateInputsRecommendation(EditText acre, EditText dosage, AutoCompleteTextView crop, AutoCompleteTextView mainproduct, AutoCompleteTextView fert, AlertDialog alertDialog,Recommendations plan,HashMap<String, String> mapRecommendation) {
+        if (!(Helpers.isEmpty(getApplicationContext(), acre))
+                        && !(Helpers.isEmpty(getApplicationContext(), dosage))
+                        && !(Helpers.isEmptyAutoTextview(getApplicationContext(), fert))
+                        && !(Helpers.isEmptyAutoTextview(getApplicationContext(), mainproduct))
+                        && !(Helpers.isEmptyAutoTextview(getApplicationContext(), crop))
+        ) {
+            if (acre != null || !acre.equals(null) && dosage != null || !dosage.equals(null)) {
+                int acrecal = Integer.parseInt(acre.getText().toString());
+                int dosePerAcre = Integer.parseInt(dosage.getText().toString());
+
+                int dosagecal = acrecal * dosePerAcre;
+                plan.setDosage(String.valueOf(dosagecal));
+                mapRecommendation.put(mydb.KEY_TODAY_DOSAGE, String.valueOf(dosage));
+                mapRecommendation.put(mydb.KEY_TODAY_FARMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
+                mapRecommendation.put(mydb.KEY_PLAN_TYPE, planType);
+
+
+            }
+
+            arraylist.add(plan);
+//                if(isthisFarmerRecommendationDataAlreadyExists()){
+//                    // update record
+//                    HashMap<String, String> filer = new HashMap<>();
+//                    filer.put(mydb.KEY_TODAY_FARMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
+//                    mydb.updateData(mydb.TODAY_FARMER_RECOMMENDATION, mapRecommendation, filer);
+//                }else{
+            // add new record
+            mydb.addData(mydb.TODAY_FARMER_RECOMMENDATION, mapRecommendation);
+//                }
+            drawRecommendationTable();
+            alertDialog.dismiss();
+
+//                Intent salescall = new Intent(FarmVisitActivity.this,QualityofSalesCallActivity.class);
+//                startActivity(salescall);
+
+        } else {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitActivity.this);
+            alertDialogBuilder
+                    .setMessage(getResources().getString(R.string.field_required_message))
+                    .setCancelable(false)
+                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+
+
+                        }
+                    });
+            AlertDialog alertDialog2 = alertDialogBuilder.create();
+            alertDialog2.show();
+        }
+    }
+
+    public void drawRecommendationTable() {
+        int cursorIndex = 0;
         mTableLayout.removeAllViews();
         TableRow row = new TableRow(this);
         row.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -673,7 +797,7 @@ public class FarmVisitActivity extends AppCompatActivity {
         vline.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, 2));
         mTableLayout.addView(vline);
 
-        for(int i=0;i<arraylist.size();i++) {
+        for (int i = 0; i < arraylist.size(); i++) {
             cursorIndex++;
 
             TableRow row2 = new TableRow(this);
@@ -698,7 +822,7 @@ public class FarmVisitActivity extends AppCompatActivity {
             product.setTextSize(16);
             //status.setBackgroundResource(R.drawable.table_row);
             product.setPadding(2, 2, 2, 2);
-            TextView dosage= new TextView(this);
+            TextView dosage = new TextView(this);
             dosage.setText(arraylist.get(i).getDosage());
             dosage.setGravity(Gravity.CENTER);
             dosage.setTextSize(16);
@@ -726,6 +850,7 @@ public class FarmVisitActivity extends AppCompatActivity {
         }*/
 
     }
+
     private void prepareRecommendationData() {
 //       Recommendations plan = new Recommendations();
 //        plan.setCrop("Wheat");
@@ -758,5 +883,18 @@ public class FarmVisitActivity extends AppCompatActivity {
         // notify adapter about data set changes
         // so that it will render the list with new data
 
+    }
+
+    @NonNull
+    private SpannableStringBuilder setStarToLabel(String text) {
+        String simple = text;
+        String colored = "*";
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        builder.append(simple);
+        int start = builder.length();
+        builder.append(colored);
+        int end = builder.length();
+        builder.setSpan(new ForegroundColorSpan(Color.RED), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return builder;
     }
 }

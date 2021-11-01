@@ -329,7 +329,7 @@ public class Helpers {
         if(input.equals(""))
         {
             editText.setText("");
-            editText.setError(context.getResources().getString(R.string.required));
+           // editText.setError(context.getResources().getString(R.string.required));
             return true;
         }
         else
