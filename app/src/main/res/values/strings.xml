@@ -50,6 +50,8 @@
     <string name="field_required_message">Please  Enter All required Information</string>
     <string name="invalid_token">Invalid Token</string>
     <string name="error_occured">Error Occured</string>
+    <string name="usercredential">Please Enter Both username and password</string>
+    <string name="no_data_available">Either journey plan is not defined or not approved by your supervisor.</string>
 
     <string name="exit_message">Are you sure you want to exit from application?</string>
     <string name="gps_not_enabled">GPS is not enabled. Please enable it to proceed.</string>

@@ -6,6 +6,7 @@
 
 
     >
+
     <include
         android:id="@+id/inc_common_header_colletion"
         layout="@layout/common_header" />
@@ -17,25 +18,10 @@
         android:layout_below="@+id/inc_common_header_colletion"
         android:background="@color/white">
 
-        <TextView
-            android:id="@+id/txt_sales_plan"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginStart="@dimen/p20"
-            android:layout_marginLeft="@dimen/p20"
-            android:layout_marginTop="@dimen/p20"
-            android:layout_marginEnd="@dimen/p20"
-            android:layout_marginRight="@dimen/p20"
-            android:layout_marginBottom="@dimen/p20"
-            android:gravity="center"
-            android:text="@string/visitcustomer"
-
-            android:textColor="@color/green"
-            android:textStyle="bold"></TextView>
 
         <EditText
             android:id="@+id/et_Search"
-            android:layout_width="120dp"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/p10"

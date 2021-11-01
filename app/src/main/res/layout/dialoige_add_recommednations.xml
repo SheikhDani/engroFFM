@@ -70,7 +70,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="@dimen/p20"
-
+                android:id="@+id/txt_crop"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="Crop"
@@ -118,7 +118,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="@dimen/p20"
-
+                android:id="@+id/txt_fert"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="Fert App type"
@@ -166,7 +166,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="@dimen/p20"
-
+                android:id="@+id/txt_product"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="Product"
@@ -214,7 +214,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="@dimen/p20"
-
+                android:id="@+id/txt_acre"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="N0. of Acre"
@@ -250,7 +250,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="@dimen/p20"
-
+                android:id="@+id/txt_dosage"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="Dosage Per Acre"

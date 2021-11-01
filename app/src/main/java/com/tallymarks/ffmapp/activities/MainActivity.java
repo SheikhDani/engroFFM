@@ -211,17 +211,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 HashMap<String, String> filter = new HashMap<>();
                 filter.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
                 filter.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "0");
-                db.deleteData(db.TODAY_JOURNEY_PLAN_ORDERS,filter);
-                db.deleteData(db.TODAY_JOURNEY_PLAN_ORDERS,null);
-                db.deleteData(db.TODAY_JOURNEY_PLAN_ORDERS_INVOICES,null);
-                db.deleteData(db.TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT,null);
-                db.deleteData(db.TODAY_JOURNEY_PLAN_PREVIOUS_STOCK,null);
+                db.deleteData(db.TODAY_JOURNEY_PLAN,filter);
+                HashMap<String, String> filterorders = new HashMap<>();
+                db.deleteData(db.TODAY_JOURNEY_PLAN_ORDERS,filterorders);
+                HashMap<String, String> filterinvoice = new HashMap<>();
+                db.deleteData(db.TODAY_JOURNEY_PLAN_ORDERS_INVOICES,filterinvoice);
+                HashMap<String, String> filtersnapshot= new HashMap<>();
+                db.deleteData(db.TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT,filtersnapshot);
+                HashMap<String, String> filterstock = new HashMap<>();
+                db.deleteData(db.TODAY_JOURNEY_PLAN_PREVIOUS_STOCK,filterstock);
 
                 //farmer tables
                 HashMap<String, String> filter2 = new HashMap<>();
                 filter2.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
                 filter2.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "0");
-                db.deleteData(mydb.TODAY_FARMER_JOURNEY_PLAN,filter2);
+                mydb.deleteData(mydb.TODAY_FARMER_JOURNEY_PLAN,filter2);
 
                 loadCustomerData();
                 loadFarmerData();

@@ -51,6 +51,7 @@ import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.loginoutput.LoginOutput;
 import com.tallymarks.ffmapp.utils.Constants;
+import com.tallymarks.ffmapp.utils.DialougeManager;
 import com.tallymarks.ffmapp.utils.FingerprintDialog;
 import com.tallymarks.ffmapp.utils.GpsTracker;
 import com.tallymarks.ffmapp.utils.HTTPSTrustManager;
@@ -80,6 +81,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     final static int REQUEST_LOCATION = 199;
     private GoogleApiClient googleApiClient;
     GpsTracker gpsTracker;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +109,20 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 Constants.LOGIN_USERNAME = et_username.getText().toString();
                 Constants.LOGIN_PASSWORD = et_password.getText().toString();
                 if(Helpers.isNetworkAvailable(LoginActivity.this)) {
-                    new LoginData().execute();
+                    gpsTracker = new GpsTracker(LoginActivity.this);
+                    if (gpsTracker.canGetLocation()) {
+                        if (Constants.LOGIN_USERNAME != null && Constants.LOGIN_PASSWORD != null
+                                && !Constants.LOGIN_USERNAME.equals("") && !Constants.LOGIN_PASSWORD.equals("")
+                        ) {
+
+                            new LoginData().execute();
+                        } else {
+                          DialougeManager.invalidCredentialsPopup(LoginActivity.this,"",getResources().getString(R.string.usercredential));
+
+                        }
+                    } else {
+                        DialougeManager.gpsNotEnabledPopup(LoginActivity.this);
+                    }
                 }
                 else
                 {
@@ -186,6 +201,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         ProgressDialog pDialog;
         String message = "";
         String status = "";
+        String error = "";
+        String errorMessage = "";
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -259,11 +276,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     JSONObject json = null;
                     try {
                         json = new JSONObject(response);
-                        String errorMessage = json.getString("message");
-                        String status2 = json.getString("success");
-                        if (status2.equals("false")) {
-                            Helpers.displayMessage(LoginActivity.this, true, errorMessage);
-                        }
+                       errorMessage = json.getString("error_description");
+                        error = json.getString("error");
+
+
                     } catch (JSONException e) {
                         e.printStackTrace();
 
@@ -278,6 +294,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         @Override
         protected void onPostExecute(String result) {
             pDialog.dismiss();
+            if(error!=null && !error.equals(""))
+            {
+                if(error.equals("invalid_grant"))
+                {
+                    DialougeManager.invalidCredentialsPopup(LoginActivity.this,"",errorMessage);
+                }
+            }
 
 
 //            parseErrorResponse(result);

@@ -173,14 +173,14 @@
 
         <TextView
             android:id="@+id/tv_appinfo"
-            android:text="Version : 1.0"
-            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/p20"
+            android:gravity="center"
+            android:text="Version : 1.0"
             android:textColor="@color/white"
-            android:textSize="@dimen/ts18"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:textSize="@dimen/ts18" />
     </RelativeLayout>
 
 </ScrollView>

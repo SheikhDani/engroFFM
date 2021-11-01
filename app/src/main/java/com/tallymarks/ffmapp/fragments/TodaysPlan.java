@@ -57,12 +57,11 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
     DatabaseHandler db;
     GpsTracker gps;
     String currentlat;
-    String  currentlng;
+    String currentlng;
     SharedPrefferenceHelper sHelper;
     static EditText et_search_plan;
     MyDatabaseHandler mydb;
-
-
+    TextView txt_no_data;
 
 
     public static TodaysPlan newInstance(String activity, EditText et_search) {
@@ -92,6 +91,8 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
         }
         db = new DatabaseHandler(getActivity());
         mydb = new MyDatabaseHandler(getActivity());
+        txt_no_data = view.findViewById(R.id.empty_view);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         sHelper = new SharedPrefferenceHelper(getActivity());
         planList.clear();
         gps = new GpsTracker(getActivity());
@@ -101,33 +102,45 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
             }
             currentlat = String.valueOf(gps.getLatitude());
             currentlng = String.valueOf(gps.getLongitude());
-        }
-        else
-        {
+        } else {
             DialougeManager.gpsNotEnabledPopup(getActivity());
         }
-        if(activity.equals("customers")) {
+        if (activity.equals("customers")) {
             sHelper.setString(Constants.PLAN_TYPE, "today");
             getTodayCustomerJourneyPlan();
-        }
-        else
-        {
+            if (planList.isEmpty()) {
+                recyclerView.setVisibility(View.GONE);
+                txt_no_data.setVisibility(View.VISIBLE);
+
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                txt_no_data.setVisibility(View.GONE);
+            }
+        } else {
             prepareMovieData(activity);
+            if (planList.isEmpty()) {
+                recyclerView.setVisibility(View.GONE);
+                txt_no_data.setVisibility(View.VISIBLE);
+
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                txt_no_data.setVisibility(View.GONE);
+            }
         }
 
 
         TodayPlanAdapter adapter = new TodayPlanAdapter(planList, activity);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         adapter.setClickListener(this);
-        if(activity.equals("customers")) {
+        if (activity.equals("customers")) {
             et_search_plan.addTextChangedListener(new TextWatcher() {
 
                 @Override
                 public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                    if(et_search_plan.hasFocus()) {
+                    if (et_search_plan.hasFocus()) {
                         adapter.filter(cs.toString());
                     }
                 }
@@ -143,14 +156,12 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                 }
             });
 
-        }
-        else
-        {
+        } else {
             et_search_plan.addTextChangedListener(new TextWatcher() {
 
                 @Override
                 public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                    if(et_search_plan.hasFocus()) {
+                    if (et_search_plan.hasFocus()) {
                         adapter.filter(cs.toString());
                     }
                 }
@@ -168,9 +179,9 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
 
         }
     }
-    private void getTodayCustomerJourneyPlan()
-    {
-        String  customerCode="" , customerName="" , customerLat="", customerLng="" ,customersalesPoint="" , customerVisit="", customerID= "",customerDayid="",custoemrjourneyplanID="";
+
+    private void getTodayCustomerJourneyPlan() {
+        String customerCode = "", customerName = "", customerLat = "", customerLng = "", customersalesPoint = "", customerVisit = "", customerID = "", customerDayid = "", custoemrjourneyplanID = "";
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CODE, "");
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
@@ -186,6 +197,8 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
         filters.put(db.KEY_TODAY_JOURNEY_TYPE, "today");
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
+
+
             cursor.moveToFirst();
             do {
                 TodayPlan plan = new TodayPlan();
@@ -216,8 +229,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                 boolean isWithinradius = c <= Integer.parseInt(radius) + 50;
                 if (isWithinradius) {
                     plan.setDistance("Reached");
-                }
-                else {
+                } else {
                     plan.setDistance(totalb + " Km away");
                 }
                 planList.add(plan);
@@ -226,6 +238,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
             }
             while (cursor.moveToNext());
         }
+
     }
 
     private void prepareMovieData(String activity) {
@@ -275,11 +288,9 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                 //}
 
 
-
             }
             while (cursor.moveToNext());
         }
-
 
 
         // notify adapter about data set changes
@@ -292,7 +303,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
         final TodayPlan plan = planList.get(position);
         // Toast.makeText(getContext(), "" + planList.get(position).getTitle(), Toast.LENGTH_SHORT).show();
         if (activity.equals("customers")) {
-            if(planList.get(position).getMemebrship().equals("Not Visited")) {
+            if (planList.get(position).getMemebrship().equals("Not Visited")) {
                 gps = new GpsTracker(getActivity());
                 if (gps.canGetLocation()) {
                     if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -351,29 +362,23 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                         alertDialog.show();
 
                     }
-                }
-                else
-                {
+                } else {
                     DialougeManager.gpsNotEnabledPopup(getActivity());
                 }
-            }
-            else
-            {
+            } else {
                 Toast.makeText(getActivity(), "You Already performed The Activity for That Customer", Toast.LENGTH_SHORT).show();
             }
-        }
-        else {
-            if(planList.get(position).getMemebrship().equals("Not Visited")) {
+        } else {
+            if (planList.get(position).getMemebrship().equals("Not Visited")) {
                 //sHelper.clearPreferenceStore();
                 gps = new GpsTracker(getActivity());
-                if (gps.canGetLocation())
-                {
+                if (gps.canGetLocation()) {
 //                    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 //                        return;
 //                    }
                     currentlat = String.valueOf(gps.getLatitude());
                     currentlng = String.valueOf(gps.getLongitude());
-                    if (plan.getLatitude().equals("NA") || plan.getLatitude() == "NA" && plan.getLongitude().equals("NA") || plan.getLongitude() == "NA"){
+                    if (plan.getLatitude().equals("NA") || plan.getLatitude() == "NA" && plan.getLongitude().equals("NA") || plan.getLongitude() == "NA") {
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
                         alertDialogBuilder
                                 .setMessage("Location info not available, Do you want to proceed?")
@@ -383,7 +388,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                                     public void onClick(DialogInterface dialog, int which) {
                                         Intent i = new Intent(getActivity(), FarmersStartActivity.class);
                                         Bundle gameData = new Bundle();
-                                        gameData.putString(Constants.PLAN_TYPE_FARMER,"TODAY");
+                                        gameData.putString(Constants.PLAN_TYPE_FARMER, "TODAY");
                                         i.putExtras(gameData);
                                         startActivity(i);
                                         //Toast.makeText(ShopStatusActivity.this, "You are "+totalb+" Km away from the shop ", Toast.LENGTH_SHORT).show();
@@ -450,9 +455,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
 //                        alertDialog.show();
 //
 //                    }
-                }
-                else
-                {
+                } else {
                     DialougeManager.gpsNotEnabledPopup(getActivity());
 
                 }
@@ -474,14 +477,13 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
 //                gameData.putString(Constants.PLAN_TYPE,"TODAY");
 //                i.putExtras(gameData);
 //                startActivity(i);
-            }
-            else
-            {
+            } else {
                 Toast.makeText(getActivity(), "You Already performed The Activity for That Farmer", Toast.LENGTH_SHORT).show();
             }
         }
     }
-    public static float getMeterFromLatLong(float lat1, float lng1, float lat2, float lng2){
+
+    public static float getMeterFromLatLong(float lat1, float lng1, float lat2, float lng2) {
         Location loc1 = new Location("");
         loc1.setLatitude(lat1);
         loc1.setLongitude(lng1);

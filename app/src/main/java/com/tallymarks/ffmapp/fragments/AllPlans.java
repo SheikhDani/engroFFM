@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -53,6 +54,7 @@ public class AllPlans extends Fragment implements ItemClickListener {
     String  currentlng;
     SharedPrefferenceHelper sHelper;
     static EditText et_search_plan;
+    TextView txt_no_data;
 
 
     public static AllPlans newInstance(String activity,EditText et) {
@@ -82,6 +84,8 @@ public class AllPlans extends Fragment implements ItemClickListener {
         }
         mydb = new MyDatabaseHandler(getActivity());
         db = new DatabaseHandler(getActivity());
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        txt_no_data = view.findViewById(R.id.empty_view);
         sHelper = new SharedPrefferenceHelper(getActivity());
         planList.clear();
         gps = new GpsTracker(getActivity());
@@ -99,13 +103,29 @@ public class AllPlans extends Fragment implements ItemClickListener {
         if(activity.equals("customers")) {
             sHelper.setString(Constants.PLAN_TYPE, "all");
             getAllCustomerJourneyPlan();
+            if (planList.isEmpty()) {
+                recyclerView.setVisibility(View.GONE);
+                txt_no_data.setVisibility(View.VISIBLE);
+
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                txt_no_data.setVisibility(View.GONE);
+            }
         }
         else
         {
             prepareMovieData(activity);
+            if (planList.isEmpty()) {
+                recyclerView.setVisibility(View.GONE);
+                txt_no_data.setVisibility(View.VISIBLE);
+
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                txt_no_data.setVisibility(View.GONE);
+            }
         }
         AllPlanAdapter adapter = new AllPlanAdapter(planList, activity);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -221,6 +241,8 @@ public class AllPlans extends Fragment implements ItemClickListener {
         map.put(mydb.KEY_TODAY_JOURNEY_FARMER_SALES_POINT_NAME, "");
         map.put(mydb.KEY_TODAY_FARMER_MOBILE_NO, "");
         map.put(mydb.KEY_TODAY_JOURNEY_FARMER_JOURNEYPLAN_ID, "");
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE, "");
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE, "");
         map.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "");
         map.put(mydb.KEY_TODAY_JOURNEY_FARMER_NAME, "");
         //map.put(db.KEY_TODAY_JOURNEY_FARMER_NAME, "");
@@ -240,6 +262,8 @@ public class AllPlans extends Fragment implements ItemClickListener {
                 plan.setFatherName("" + Helpers.clean(cursor.getString((cursor.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_NAME)))));
                 plan.setMobilenumber(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_FARMER_MOBILE_NO)));
                 plan.setCustomercode("");
+                plan.setLatitude(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE)));
+                plan.setLongitude(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE)));
                 planList.add(plan);
 
             }
@@ -336,6 +360,32 @@ public class AllPlans extends Fragment implements ItemClickListener {
 //                    }
                     currentlat = String.valueOf(gps.getLatitude());
                     currentlng = String.valueOf(gps.getLongitude());
+                    if (plan.getLatitude().equals("NA") || plan.getLatitude() == "NA" && plan.getLongitude().equals("NA") || plan.getLongitude() == "NA") {
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                        alertDialogBuilder
+                                .setMessage("Location info not available, Do you want to proceed?")
+                                .setCancelable(false)
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent i = new Intent(getActivity(), FarmersStartActivity.class);
+                                        Bundle gameData = new Bundle();
+                                        gameData.putString(Constants.PLAN_TYPE_FARMER, "ALL");
+                                        i.putExtras(gameData);
+                                        startActivity(i);
+                                        //Toast.makeText(ShopStatusActivity.this, "You are "+totalb+" Km away from the shop ", Toast.LENGTH_SHORT).show();
+                                    }
+                                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                }
+                        );
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+                        alertDialog.show();
+
+                    }
 
                 }
                 else {
@@ -355,12 +405,12 @@ public class AllPlans extends Fragment implements ItemClickListener {
                 sHelper.setString(Constants.FARMER_LAT, currentlat);
                 sHelper.setString(Constants.FARMER_LONG, currentlng);
                 sHelper.setString(Constants.PLAN_TYPE_FARMER, "ALL");
-
-                Intent i = new Intent(getActivity(), FarmersStartActivity.class);
-                Bundle gameData = new Bundle();
-                gameData.putString(Constants.PLAN_TYPE_FARMER,"ALL");
-                i.putExtras(gameData);
-                startActivity(i);
+//
+//                Intent i = new Intent(getActivity(), FarmersStartActivity.class);
+//                Bundle gameData = new Bundle();
+//                gameData.putString(Constants.PLAN_TYPE_FARMER,"ALL");
+//                i.putExtras(gameData);
+//                startActivity(i);
             }
             else
             {

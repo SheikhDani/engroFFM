@@ -94,11 +94,11 @@ public class DownloadFarmersDataActivity extends AppCompatActivity {
 
         // vertical RecyclerView
         // keep movie_list_row.xml width to `match_parent`
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, layoutManager.getOrientation()));
+      //  recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
@@ -106,7 +106,11 @@ public class DownloadFarmersDataActivity extends AppCompatActivity {
                 Farmes movie = movieList.get(position);
                 if(movie.getImage()==0) {
                     //Toast.makeText(getApplicationContext(), movie.getTitle() + " is selected!", Toast.LENGTH_SHORT).show();
-                    new LoadAssignedFarmerFromSalesPoint(DownloadFarmersDataActivity.this, movieList.get(position).getStatus()).execute();
+                    new LoadAssignedFarmerFromSalesPoint(DownloadFarmersDataActivity.this, movieList.get(position).getStatus(),mAdapter).execute();
+                    //mAdapter.notifyItemChanged(position);
+
+
+
                 }
                 else
                 {

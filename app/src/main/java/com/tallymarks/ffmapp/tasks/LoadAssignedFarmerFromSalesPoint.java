@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.adapters.FarmersAdapter;
 import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.getFarmerTodayJourneyPlan.FarmerTodayJourneyPlan;
@@ -37,11 +38,13 @@ public class LoadAssignedFarmerFromSalesPoint extends AsyncTask<String, Void, Vo
     private SharedPrefferenceHelper sHelper;
     private MyDatabaseHandler mydb;
     private Context mContext;
-    public LoadAssignedFarmerFromSalesPoint(Context context, String salesPoint){
+    FarmersAdapter farmersAdapter;
+    public LoadAssignedFarmerFromSalesPoint(Context context, String salesPoint, FarmersAdapter adapter){
         this.mContext = context;
         this.sHelper = new SharedPrefferenceHelper(mContext);
         this.mydb = new MyDatabaseHandler(mContext);
         this.salesPointCode = salesPoint;
+        this.farmersAdapter = adapter;
     }
 
     @Override
@@ -100,6 +103,7 @@ public class LoadAssignedFarmerFromSalesPoint extends AsyncTask<String, Void, Vo
                     pDialog.dismiss();
                     Helpers.displayMessage(mContext, true, "Download Successfully");
 
+
                 }
                 JSONObject json = null;
                 try {
@@ -139,6 +143,7 @@ public class LoadAssignedFarmerFromSalesPoint extends AsyncTask<String, Void, Vo
     protected void onPostExecute(Void args) {
 
         pDialog.dismiss();
+        farmersAdapter.notifyDataSetChanged();
        // Toast.makeText(mContext, "Farmer Downloaded Successfully", Toast.LENGTH_SHORT).show();
 
     }

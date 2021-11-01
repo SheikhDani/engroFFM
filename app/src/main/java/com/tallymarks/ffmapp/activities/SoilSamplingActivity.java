@@ -5,10 +5,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,6 +25,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -38,6 +43,7 @@ import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Sampling;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.DialougeManager;
 import com.tallymarks.ffmapp.utils.GpsTracker;
+import com.tallymarks.ffmapp.utils.Helpers;
 import com.tallymarks.ffmapp.utils.HttpHandler;
 
 import java.sql.Timestamp;
@@ -47,6 +53,7 @@ import java.util.List;
 
 public class SoilSamplingActivity extends AppCompatActivity {
     private TextView tvTopHeader, acres, blocks, txt_lat_lng, txt_reference;
+    TextView txtacre, txtblock,txtpreviouscrop, txtcurrentcrop,txtdepth,txtsavelocation;
     AutoCompleteTextView auto_pre_rop,auto_current_crop,auto_current_crop2,auto_depth;
     ImageView iv_menu,iv_back;
     private TableLayout mTableLayout;
@@ -86,6 +93,12 @@ public class SoilSamplingActivity extends AppCompatActivity {
         }
         tvTopHeader = findViewById(R.id.tv_dashboard);
         auto_pre_rop = findViewById(R.id.auto_pre_crop);
+        txtacre = findViewById(R.id.txt_acre);
+        txtblock = findViewById(R.id.txt_block);
+        txtpreviouscrop = findViewById(R.id.txt_prev_crop);
+        txtcurrentcrop = findViewById(R.id.txt_curr_crop);
+        txtdepth = findViewById(R.id.txt_depth);
+        txtsavelocation = findViewById(R.id.txt_location);
         btn_save = findViewById(R.id.btn_save);
         auto_current_crop = findViewById(R.id.auto_cr_crop);
         db = new DatabaseHandler(SoilSamplingActivity.this);
@@ -119,6 +132,24 @@ public class SoilSamplingActivity extends AppCompatActivity {
         auto_current_crop2.setCursorVisible(false);
         auto_current_crop.setCursorVisible(false);
         auto_pre_rop.setCursorVisible(false);
+
+
+        SpannableStringBuilder tvAcre = setStarToLabel("Plot/Acre#");
+        SpannableStringBuilder tvBlock= setStarToLabel("Block/Square#");
+        SpannableStringBuilder tvPreviousCrop = setStarToLabel("Previous Crop");
+        SpannableStringBuilder tvCurrentCrop = setStarToLabel("Current Crop");
+        SpannableStringBuilder tvDepth = setStarToLabel("Depth");
+        SpannableStringBuilder tvSvelocation = setStarToLabel("Save Location");
+
+        txtacre.setText(tvAcre);
+        txtblock.setText(tvBlock);
+        txtpreviouscrop.setText(tvPreviousCrop);
+        txtcurrentcrop.setText(tvCurrentCrop);
+        txtdepth.setText(tvDepth);
+        txtsavelocation.setText(tvSvelocation);
+
+
+
         getCropfromDatabase();
         getDepthfromDatabase();
         loadCheckInLocation();
@@ -357,63 +388,9 @@ public class SoilSamplingActivity extends AppCompatActivity {
         btn_add_sampling.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                validateInputs();
 
-                SoilSamplingCrops prod = new  SoilSamplingCrops();
 
-                if(acres != null || !acres.equals(null)){
-                    int acre = Integer.parseInt( acres.getText().toString() );
-                    prod.setAcre(String.valueOf(acre));
-                    soilhashmap.put(mydb.KEY_TODAY_PLOT_NUMBER, String.valueOf(acre));
-                }else{
-                    prod.setAcre("");
-                    soilhashmap.put(mydb.KEY_TODAY_PLOT_NUMBER, "");
-                }
-                if (blocks != null || !blocks.equals(null)){
-                    int block = Integer.parseInt( blocks.getText().toString() );
-                    prod.setBlock(String.valueOf(block));
-                    soilhashmap.put(mydb.KEY_TODAY_BLOCK_NUMBER, String.valueOf(block));
-                }else{
-                    prod.setBlock("");
-                    soilhashmap.put(mydb.KEY_TODAY_BLOCK_NUMBER, "");
-                }
-                if (txt_reference!=null || !txt_reference.equals(null)){
-                    soilhashmap.put(mydb.KEY_TODAY_REFRENCE, txt_reference.getText().toString());
-                }else{
-                    soilhashmap.put(mydb.KEY_TODAY_REFRENCE, "");
-                }
-
-                soilhashmap.put(mydb.KEY_TODAY_FARMMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
-
-                if (auto_pre_rop != null || !auto_pre_rop.equals(null)){
-                    prod.setPreviouscrop(auto_pre_rop.getText().toString());
-                }else{prod.setPreviouscrop("");}
-
-                if (auto_current_crop != null || !auto_current_crop.equals(null)){
-                    prod.setCrop1(auto_current_crop.getText().toString());
-                }else{prod.setCrop1("");}
-
-                if (auto_current_crop2 != null || !auto_current_crop2.equals(null)){
-                    prod.setCrop2(auto_current_crop2.getText().toString());
-                }else{prod.setCrop2("");}
-
-                if (auto_depth != null || !auto_depth.equals(null)){
-                    prod.setDepth(auto_depth.getText().toString());
-                }else{prod.setDepth("");}
-
-                if(!soilhashmap.equals("0.0")){
-                    soilhashmap.put(mydb.KEY_TODAY_LATITUTE, String.valueOf(soilSamplingLat));
-                    soilhashmap.put(mydb.KEY_TODAY_LONGITUTE, String.valueOf(soilSamplingLong));
-                }else{
-                    soilhashmap.put(mydb.KEY_TODAY_LATITUTE, "0.0");
-                    soilhashmap.put(mydb.KEY_TODAY_LONGITUTE, "0.0");
-                }
-
-                soilhashmap.put(mydb.KEY_PLAN_TYPE, planType);
-
-                arraylistSoilSampling.add(prod);
-                mydb.addData(mydb.TODAY_FARMER_SAMPLING, soilhashmap);
-
-                drawRecommendationTable();
             }
         });
         prepareRecommendationData();
@@ -449,7 +426,88 @@ public class SoilSamplingActivity extends AppCompatActivity {
             }
         });
     }
+    private void validateInputs() {
+        if (!(Helpers.isEmptyTextview(getApplicationContext(), acres))
+                && !(Helpers.isEmptyTextview(getApplicationContext(), blocks))
+                && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_pre_rop))
+                && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_current_crop))
+                && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_depth))
+                && !String.valueOf(soilSamplingLat).equals("") && !String.valueOf(soilSamplingLong).equals("")
+        ) {
+            SoilSamplingCrops prod = new  SoilSamplingCrops();
 
+            if(acres != null || !acres.equals(null)){
+                int acre = Integer.parseInt( acres.getText().toString() );
+                prod.setAcre(String.valueOf(acre));
+                soilhashmap.put(mydb.KEY_TODAY_PLOT_NUMBER, String.valueOf(acre));
+            }else{
+                prod.setAcre("");
+                soilhashmap.put(mydb.KEY_TODAY_PLOT_NUMBER, "");
+            }
+            if (blocks != null || !blocks.equals(null)){
+                int block = Integer.parseInt( blocks.getText().toString() );
+                prod.setBlock(String.valueOf(block));
+                soilhashmap.put(mydb.KEY_TODAY_BLOCK_NUMBER, String.valueOf(block));
+            }else{
+                prod.setBlock("");
+                soilhashmap.put(mydb.KEY_TODAY_BLOCK_NUMBER, "");
+            }
+            if (txt_reference!=null || !txt_reference.equals(null)){
+                soilhashmap.put(mydb.KEY_TODAY_REFRENCE, txt_reference.getText().toString());
+            }else{
+                soilhashmap.put(mydb.KEY_TODAY_REFRENCE, "");
+            }
+
+            soilhashmap.put(mydb.KEY_TODAY_FARMMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
+
+            if (auto_pre_rop != null || !auto_pre_rop.equals(null)){
+                prod.setPreviouscrop(auto_pre_rop.getText().toString());
+            }else{prod.setPreviouscrop("");}
+
+            if (auto_current_crop != null || !auto_current_crop.equals(null)){
+                prod.setCrop1(auto_current_crop.getText().toString());
+            }else{prod.setCrop1("");}
+
+            if (auto_current_crop2 != null || !auto_current_crop2.equals(null)){
+                prod.setCrop2(auto_current_crop2.getText().toString());
+            }else{prod.setCrop2("");}
+
+            if (auto_depth != null || !auto_depth.equals(null)){
+                prod.setDepth(auto_depth.getText().toString());
+            }else{prod.setDepth("");}
+
+            if(!soilhashmap.equals("0.0")){
+                soilhashmap.put(mydb.KEY_TODAY_LATITUTE, String.valueOf(soilSamplingLat));
+                soilhashmap.put(mydb.KEY_TODAY_LONGITUTE, String.valueOf(soilSamplingLong));
+            }else{
+                soilhashmap.put(mydb.KEY_TODAY_LATITUTE, "0.0");
+                soilhashmap.put(mydb.KEY_TODAY_LONGITUTE, "0.0");
+            }
+
+            soilhashmap.put(mydb.KEY_PLAN_TYPE, planType);
+
+            arraylistSoilSampling.add(prod);
+            mydb.addData(mydb.TODAY_FARMER_SAMPLING, soilhashmap);
+
+            drawRecommendationTable();
+            txt_lat_lng.setText("Selected Lat,Log" +  "0.0" + " , " + "0.0");
+        } else {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SoilSamplingActivity.this);
+            alertDialogBuilder
+                    .setMessage(getResources().getString(R.string.field_required_message))
+                    .setCancelable(false)
+                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+
+
+                        }
+                    });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        }
+    }
     private void updateOutletStatus(String visited) {
             HashMap<String, String> params = new HashMap<>();
             params.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, visited);
@@ -792,5 +850,17 @@ public class SoilSamplingActivity extends AppCompatActivity {
         // notify adapter about data set changes
         // so that it will render the list with new data
         // i added this in dev
+    }
+    @NonNull
+    private SpannableStringBuilder setStarToLabel(String text) {
+        String simple = text;
+        String colored = "*";
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        builder.append(simple);
+        int start = builder.length();
+        builder.append(colored);
+        int end = builder.length();
+        builder.setSpan(new ForegroundColorSpan(Color.RED), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return builder;
     }
 }

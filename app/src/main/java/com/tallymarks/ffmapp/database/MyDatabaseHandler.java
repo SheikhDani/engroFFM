@@ -458,5 +458,22 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
         db.delete(tableName, null, null);
         db.close();
     }
+    public void deleteData(String tablename, HashMap<String, String> filters) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+        String filterKeys = null;
+        String filterValues = null;
+        String[] filterArray = null;
+        if (!filters.isEmpty()) {
+            filterKeys = filterBuilder(filters, false);
+            filterValues = paramsBuilder(filters, true);
+            filterArray = paramsBuilder(filters, true).split(",");
+        }
+        db.delete(tablename, filterKeys, filterArray);
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        db.close();
+    }
+
 
 }

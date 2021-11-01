@@ -3,10 +3,14 @@ package com.tallymarks.ffmapp.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -20,6 +24,8 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.tallymarks.ffmapp.R;
@@ -59,6 +65,7 @@ public class FarmerMeetingActivity extends AppCompatActivity {
     private EditText etActivityDate, etEmployeesAttended, etChiefGuest, etTotalFarmers, etTargetCustomers, etExpenseIncurred, etMeetingAddress, etRemarks;
     private Spinner spHostFarmer, spDealers, spProducts, spCrop;
     private Button btnBack, btnCreate;
+    TextView txtHostFarmer, txtActivityDate, txtCrop, txtProduct, txttotalfarmers, txttargetCustomers, txtMeetingAddress;
     private ProgressBar progressBar;
 
     private DatabaseHandler databaseHandler;
@@ -84,12 +91,20 @@ public class FarmerMeetingActivity extends AppCompatActivity {
         tvHeaderText = findViewById(R.id.tv_dashboard);
         ivMenu = findViewById(R.id.iv_drawer);
         ivBack = findViewById(R.id.iv_back);
-        ivAddAttachment=findViewById(R.id.iv_add_attachment);
+        ivAddAttachment = findViewById(R.id.iv_add_attachment);
         iv1 = findViewById(R.id.iv1);
         iv2 = findViewById(R.id.iv2);
         iv3 = findViewById(R.id.iv3);
         iv4 = findViewById(R.id.iv4);
         iv5 = findViewById(R.id.iv5);
+        txtHostFarmer = findViewById(R.id.tvHostFarmer);
+        txtActivityDate = findViewById(R.id.tvActivityDate);
+        txtCrop = findViewById(R.id.tvCrop);
+        txtProduct = findViewById(R.id.tvProduct);
+        txttotalfarmers = findViewById(R.id.tvtotalFarmers);
+        txttargetCustomers = findViewById(R.id.tvtargetCustomers);
+        txtMeetingAddress = findViewById(R.id.tvmeetingAddress);
+
 
         etActivityDate = findViewById(R.id.et_activity_date);
         etEmployeesAttended = findViewById(R.id.et_employee_attended);
@@ -108,16 +123,32 @@ public class FarmerMeetingActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btn_back);
         btnCreate = findViewById(R.id.btn_create);
 
-        progressBar=findViewById(R.id.progress_bar);
+        progressBar = findViewById(R.id.progress_bar);
 
         ivBack.setVisibility(View.VISIBLE);
         ivMenu.setVisibility(View.GONE);
         tvHeaderText.setVisibility(View.VISIBLE);
         tvHeaderText.setText(getResources().getString(R.string.farmer_meeting));
 
+        SpannableStringBuilder tvHostFarmer = setStarToLabel("Host Farmer");
+        SpannableStringBuilder tvActivityDate = setStarToLabel("Activity Date");
+        SpannableStringBuilder tvCrop = setStarToLabel("Crop");
+        SpannableStringBuilder tvProduct = setStarToLabel("Product");
+        SpannableStringBuilder tvtotalFarmers = setStarToLabel("Total Farmers");
+        SpannableStringBuilder tvtargetCustomers = setStarToLabel("Target Customers");
+        SpannableStringBuilder tvmeetingAddress = setStarToLabel("Meeting Address");
+
+        txtHostFarmer.setText(tvHostFarmer);
+        txtActivityDate.setText(tvActivityDate);
+        txtCrop.setText(tvCrop);
+        txtProduct.setText(tvProduct);
+        txttotalfarmers.setText(tvtotalFarmers);
+        txttargetCustomers.setText(tvtargetCustomers);
+        txtMeetingAddress.setText(tvmeetingAddress);
+
         databaseHandler = new DatabaseHandler(FarmerMeetingActivity.this);
         myDatabaseHandler = new MyDatabaseHandler(FarmerMeetingActivity.this);
-        sharedPrefferenceHelper=new SharedPrefferenceHelper(FarmerMeetingActivity.this);
+        sharedPrefferenceHelper = new SharedPrefferenceHelper(FarmerMeetingActivity.this);
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,27 +167,23 @@ public class FarmerMeetingActivity extends AppCompatActivity {
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(etTotalFarmers.getText().toString().trim().isEmpty()){
+                if (etTotalFarmers.getText().toString().trim().isEmpty()) {
                     etTotalFarmers.setError(getResources().getString(R.string.required));
-                    Toast.makeText(FarmerMeetingActivity.this,getResources().getString(R.string.farmers_required),Toast.LENGTH_LONG).show();
-                }
-                else if(etTargetCustomers.getText().toString().trim().isEmpty()){
+                    Toast.makeText(FarmerMeetingActivity.this, getResources().getString(R.string.farmers_required), Toast.LENGTH_LONG).show();
+                } else if (etTargetCustomers.getText().toString().trim().isEmpty()) {
                     etTargetCustomers.setError(getResources().getString(R.string.required));
-                    Toast.makeText(FarmerMeetingActivity.this,getResources().getString(R.string.customers_required),Toast.LENGTH_LONG).show();
-                }
-                else if(etMeetingAddress.getText().toString().trim().isEmpty()){
+                    Toast.makeText(FarmerMeetingActivity.this, getResources().getString(R.string.customers_required), Toast.LENGTH_LONG).show();
+                } else if (etMeetingAddress.getText().toString().trim().isEmpty()) {
                     etMeetingAddress.setError(getResources().getString(R.string.required));
-                    Toast.makeText(FarmerMeetingActivity.this,getResources().getString(R.string.meeting_address_required),Toast.LENGTH_LONG).show();
-                }
-                else{
-                    if(NetworkManager.isNetworkAvailable(FarmerMeetingActivity.this)) {
-                        String accessToken=sharedPrefferenceHelper.getString(Constants.ACCESS_TOKEN);
-                        String authorization=Constants.BEARER+" "+accessToken;
+                    Toast.makeText(FarmerMeetingActivity.this, getResources().getString(R.string.meeting_address_required), Toast.LENGTH_LONG).show();
+                } else {
+                    if (NetworkManager.isNetworkAvailable(FarmerMeetingActivity.this)) {
+                        String accessToken = sharedPrefferenceHelper.getString(Constants.ACCESS_TOKEN);
+                        String authorization = Constants.BEARER + " " + accessToken;
 //                        String authorization="Bearer 9371e3e4-f427-4078-a8f4-7158f412717c";
-                        createMeeting(getCreateMeetingRequest(),authorization);
-                    }
-                    else{
-                        Toast.makeText(FarmerMeetingActivity.this,getResources().getString(R.string.internet_available_msg),Toast.LENGTH_LONG).show();
+                        createMeeting(getCreateMeetingRequest(), authorization);
+                    } else {
+                        Toast.makeText(FarmerMeetingActivity.this, getResources().getString(R.string.internet_available_msg), Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -164,7 +191,7 @@ public class FarmerMeetingActivity extends AppCompatActivity {
         initData();
     }
 
-    private void goBack(){
+    private void goBack() {
         Intent i = new Intent(FarmerMeetingActivity.this, MainActivity.class);
         startActivity(i);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
@@ -177,39 +204,35 @@ public class FarmerMeetingActivity extends AppCompatActivity {
             try {
                 String base64Url = convertUriToBase64(Uri.parse(mPaths.get(0)));
                 attachments.add(base64Url);
-                if(attachments.size()==1){
+                if (attachments.size() == 1) {
                     iv1.setVisibility(View.VISIBLE);
                     iv2.setVisibility(View.GONE);
                     iv3.setVisibility(View.GONE);
                     iv4.setVisibility(View.GONE);
                     iv5.setVisibility(View.GONE);
                     ivAddAttachment.setVisibility(View.VISIBLE);
-                }
-                else if(attachments.size()==2) {
+                } else if (attachments.size() == 2) {
                     iv1.setVisibility(View.VISIBLE);
                     iv2.setVisibility(View.VISIBLE);
                     iv3.setVisibility(View.GONE);
                     iv4.setVisibility(View.GONE);
                     iv5.setVisibility(View.GONE);
                     ivAddAttachment.setVisibility(View.VISIBLE);
-                }
-                else if(attachments.size()==3) {
+                } else if (attachments.size() == 3) {
                     iv1.setVisibility(View.VISIBLE);
                     iv2.setVisibility(View.VISIBLE);
                     iv3.setVisibility(View.VISIBLE);
                     iv4.setVisibility(View.GONE);
                     iv5.setVisibility(View.GONE);
                     ivAddAttachment.setVisibility(View.VISIBLE);
-                }
-                else if(attachments.size()==4) {
+                } else if (attachments.size() == 4) {
                     iv1.setVisibility(View.VISIBLE);
                     iv2.setVisibility(View.VISIBLE);
                     iv3.setVisibility(View.VISIBLE);
                     iv4.setVisibility(View.VISIBLE);
                     iv5.setVisibility(View.GONE);
                     ivAddAttachment.setVisibility(View.VISIBLE);
-                }
-                else if(attachments.size()==5) {
+                } else if (attachments.size() == 5) {
                     iv1.setVisibility(View.VISIBLE);
                     iv2.setVisibility(View.VISIBLE);
                     iv3.setVisibility(View.VISIBLE);
@@ -257,19 +280,19 @@ public class FarmerMeetingActivity extends AppCompatActivity {
         }
     }
 
-    private void initData(){
+    private void initData() {
         loadProducts(databaseHandler);
         loadDealers(databaseHandler);
         loadCrops(databaseHandler);
         loadFarmers(myDatabaseHandler);
         etActivityDate.setText(DateUtil.getCurrentDate(Constants.DATE_FORMAT));
-        datePicker=new DateTimePicker();
+        datePicker = new DateTimePicker();
 
         etActivityDate.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    datePicker.showDatePickerDialog(FarmerMeetingActivity.this, true, etActivityDate, Constants.DATE_FORMAT, activityDate,DateUtil.getPastDate(Constants.DATE_FORMAT,0),DateUtil.getFutureDate(Constants.DATE_FORMAT,365));
+                    datePicker.showDatePickerDialog(FarmerMeetingActivity.this, true, etActivityDate, Constants.DATE_FORMAT, activityDate, DateUtil.getPastDate(Constants.DATE_FORMAT, 0), DateUtil.getFutureDate(Constants.DATE_FORMAT, 365));
                     return true;
                 }
                 return false;
@@ -298,7 +321,7 @@ public class FarmerMeetingActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
-                hostFarmerID=farmerArrayList.get(position).getFarmerID();
+                hostFarmerID = farmerArrayList.get(position).getFarmerID();
 //                Toast.makeText(FarmerMeetingActivity.this,hostFarmerID,Toast.LENGTH_LONG).show();
             }
 
@@ -313,8 +336,8 @@ public class FarmerMeetingActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
-                dealerID=dealersArrayList.get(position).getCustomerCode();
-                dealerName=dealersArrayList.get(position).getCustomerName();
+                dealerID = dealersArrayList.get(position).getCustomerCode();
+                dealerName = dealersArrayList.get(position).getCustomerName();
 //                Toast.makeText(FarmerMeetingActivity.this,dealerID,Toast.LENGTH_LONG).show();
             }
 
@@ -328,7 +351,7 @@ public class FarmerMeetingActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
-                cropID=cropsArrayList.get(position).getCropID();
+                cropID = cropsArrayList.get(position).getCropID();
 //                Toast.makeText(FarmerMeetingActivity.this,cropID,Toast.LENGTH_LONG).show();
             }
 
@@ -342,7 +365,7 @@ public class FarmerMeetingActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
-                productID=productArrayList.get(position).getBranchID();
+                productID = productArrayList.get(position).getBranchID();
 //                Toast.makeText(FarmerMeetingActivity.this,productID,Toast.LENGTH_LONG).show();
             }
 
@@ -373,13 +396,13 @@ public class FarmerMeetingActivity extends AppCompatActivity {
     }
 
     private void loadProducts(DatabaseHandler databaseHandler) {
-            productArrayList = FarmerMeetingDbHelper.loadProductsFromDB(databaseHandler);
-            populateProductsSpinner();
+        productArrayList = FarmerMeetingDbHelper.loadProductsFromDB(databaseHandler);
+        populateProductsSpinner();
     }
 
-    private void populateProductsSpinner(){
-        ArrayList<String> productsList=new ArrayList<>();
-        for(int i=0;i<productArrayList.size();i++){
+    private void populateProductsSpinner() {
+        ArrayList<String> productsList = new ArrayList<>();
+        for (int i = 0; i < productArrayList.size(); i++) {
             productsList.add(productArrayList.get(i).getBranchName());
         }
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(FarmerMeetingActivity.this, android.R.layout.simple_spinner_item, productsList);
@@ -388,14 +411,14 @@ public class FarmerMeetingActivity extends AppCompatActivity {
 
     }
 
-    private void loadDealers(DatabaseHandler databaseHandler){
-        dealersArrayList= FarmerMeetingDbHelper.loadDealersFromDB(databaseHandler);
+    private void loadDealers(DatabaseHandler databaseHandler) {
+        dealersArrayList = FarmerMeetingDbHelper.loadDealersFromDB(databaseHandler);
         populateDealersSpinner();
     }
 
-    private void populateDealersSpinner(){
-        ArrayList<String> dealersList=new ArrayList<>();
-        for(int i=0;i<productArrayList.size();i++){
+    private void populateDealersSpinner() {
+        ArrayList<String> dealersList = new ArrayList<>();
+        for (int i = 0; i < dealersArrayList.size(); i++) {
             dealersList.add(dealersArrayList.get(i).getCustomerName());
         }
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(FarmerMeetingActivity.this, android.R.layout.simple_spinner_item, dealersList);
@@ -403,29 +426,29 @@ public class FarmerMeetingActivity extends AppCompatActivity {
         spDealers.setAdapter(dataAdapter);
     }
 
-    private void loadCrops(DatabaseHandler databaseHandler){
-        cropsArrayList= FarmerMeetingDbHelper.loadCropsFromDB(databaseHandler);
+    private void loadCrops(DatabaseHandler databaseHandler) {
+        cropsArrayList = FarmerMeetingDbHelper.loadCropsFromDB(databaseHandler);
         populateCropsSpinner();
     }
 
-    private void populateCropsSpinner(){
-        ArrayList<String> cropsList=new ArrayList<>();
-        for(int i=0;i<cropsArrayList.size();i++){
+    private void populateCropsSpinner() {
+        ArrayList<String> cropsList = new ArrayList<>();
+        for (int i = 0; i < cropsArrayList.size(); i++) {
             cropsList.add(cropsArrayList.get(i).getCropName());
         }
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(FarmerMeetingActivity.this, android.R.layout.simple_spinner_item,cropsList);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(FarmerMeetingActivity.this, android.R.layout.simple_spinner_item, cropsList);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spCrop.setAdapter(dataAdapter);
     }
 
-    private void loadFarmers(MyDatabaseHandler databaseHandler){
-        farmerArrayList= FarmerMeetingDbHelper.loadFarmersFromDB(databaseHandler);
+    private void loadFarmers(MyDatabaseHandler databaseHandler) {
+        farmerArrayList = FarmerMeetingDbHelper.loadFarmersFromDB(databaseHandler);
         populateFarmersSpinner();
     }
 
-    private void populateFarmersSpinner(){
-        ArrayList<String> farmersList=new ArrayList<>();
-        for(int i=0;i<farmerArrayList.size();i++){
+    private void populateFarmersSpinner() {
+        ArrayList<String> farmersList = new ArrayList<>();
+        for (int i = 0; i < farmerArrayList.size(); i++) {
             farmersList.add(farmerArrayList.get(i).getFarmerName());
         }
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(FarmerMeetingActivity.this, android.R.layout.simple_spinner_item, farmersList);
@@ -433,7 +456,7 @@ public class FarmerMeetingActivity extends AppCompatActivity {
         spHostFarmer.setAdapter(dataAdapter);
     }
 
-    private void createMeeting(ArrayList<CreateFarmerMeetingRequest> createFarmerMeetingRequest, String authorization){
+    private void createMeeting(ArrayList<CreateFarmerMeetingRequest> createFarmerMeetingRequest, String authorization) {
         final CreateFarmerMeetingInterface createFarmerMeetingInterface = ApiClient.getClient().create(CreateFarmerMeetingInterface.class);
         Call<CreateFarmerMeetingResponse> call = createFarmerMeetingInterface.createMeeting(createFarmerMeetingRequest, authorization);
         progressBar.setVisibility(View.VISIBLE);
@@ -444,15 +467,11 @@ public class FarmerMeetingActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
                     goBack();
-                    Toast.makeText(FarmerMeetingActivity.this,response.body().getDescription(),Toast.LENGTH_LONG).show();
-                }
-                else if(response.code()==401)
-                {
-                    Toast.makeText(FarmerMeetingActivity.this,getResources().getString(R.string.invalid_token),Toast.LENGTH_LONG).show();
-                }
-                else
-                {
-                    Toast.makeText(FarmerMeetingActivity.this,getResources().getString(R.string.error_occured),Toast.LENGTH_LONG).show();
+                    Toast.makeText(FarmerMeetingActivity.this, response.body().getDescription(), Toast.LENGTH_LONG).show();
+                } else if (response.code() == 401) {
+                    Toast.makeText(FarmerMeetingActivity.this, getResources().getString(R.string.invalid_token), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(FarmerMeetingActivity.this, getResources().getString(R.string.error_occured), Toast.LENGTH_LONG).show();
 
                 }
             }
@@ -460,15 +479,15 @@ public class FarmerMeetingActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<CreateFarmerMeetingResponse> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
-                Toast.makeText(FarmerMeetingActivity.this,t.getMessage(),Toast.LENGTH_LONG).show();
+                Toast.makeText(FarmerMeetingActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    private ArrayList<CreateFarmerMeetingRequest> getCreateMeetingRequest(){
-        ArrayList<CreateFarmerMeetingRequest> createFarmerMeetingRequestsArrayList=new ArrayList<>();
-        CreateFarmerMeetingRequest createFarmerMeetingRequest=new CreateFarmerMeetingRequest();
-        createFarmerMeetingRequest.setActivityDate(Helpers.utcToAnyDateFormat(etActivityDate.getText().toString().trim(),Constants.DATE_FORMAT,Constants.YEAR_DATE_FORMAT));
+    private ArrayList<CreateFarmerMeetingRequest> getCreateMeetingRequest() {
+        ArrayList<CreateFarmerMeetingRequest> createFarmerMeetingRequestsArrayList = new ArrayList<>();
+        CreateFarmerMeetingRequest createFarmerMeetingRequest = new CreateFarmerMeetingRequest();
+        createFarmerMeetingRequest.setActivityDate(Helpers.utcToAnyDateFormat(etActivityDate.getText().toString().trim(), Constants.DATE_FORMAT, Constants.YEAR_DATE_FORMAT));
         createFarmerMeetingRequest.setAttachements(attachments);
         createFarmerMeetingRequest.setChiefGuest(etChiefGuest.getText().toString().trim());
         createFarmerMeetingRequest.setCropId(Integer.parseInt(cropID));
@@ -485,12 +504,25 @@ public class FarmerMeetingActivity extends AppCompatActivity {
         return createFarmerMeetingRequestsArrayList;
     }
 
-    private ArrayList<Dealer> getDealers(){
-        ArrayList<Dealer> dealerArrayList=new ArrayList<>();
-        Dealer dealer=new Dealer();
+    private ArrayList<Dealer> getDealers() {
+        ArrayList<Dealer> dealerArrayList = new ArrayList<>();
+        Dealer dealer = new Dealer();
         dealer.setCustomerCode(dealerID);
         dealer.setCustomerName(dealerName);
         dealerArrayList.add(dealer);
         return dealerArrayList;
+    }
+
+    @NonNull
+    private SpannableStringBuilder setStarToLabel(String text) {
+        String simple = text;
+        String colored = "*";
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        builder.append(simple);
+        int start = builder.length();
+        builder.append(colored);
+        int end = builder.length();
+        builder.setSpan(new ForegroundColorSpan(Color.RED), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return builder;
     }
 }
