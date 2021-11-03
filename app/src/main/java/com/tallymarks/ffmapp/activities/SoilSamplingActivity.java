@@ -121,6 +121,47 @@ public class SoilSamplingActivity extends AppCompatActivity {
         iv_menu.setVisibility(View.GONE);
         tvTopHeader.setVisibility(View.VISIBLE);
         tvTopHeader.setText("SOIL SAMPLING");
+        Intent intent = getIntent();
+        if(intent.getExtras()!=null) {
+            if (intent.getExtras().getString("soillat") != null &&
+                    !intent.getExtras().getString("soillat").equals("") &&
+                    intent.getExtras().getString("soillng") != null &&
+                    !intent.getExtras().getString("soillng").equals("")
+            ) {
+                soilSamplingLat = Double.parseDouble(intent.getExtras().getString("soillat"));
+                soilSamplingLong = Double.parseDouble(intent.getExtras().getString("soillng"));
+                txt_lat_lng.setText("Selected Lat,Log: " + soilSamplingLat + " , " + soilSamplingLong);
+                soilhashmap.put(mydb.KEY_TODAY_LATITUTE, String.valueOf(soilSamplingLat));
+                soilhashmap.put(mydb.KEY_TODAY_LONGITUTE, String.valueOf(soilSamplingLong));
+            }
+        }
+         else{
+                soilhashmap.put(mydb.KEY_TODAY_LATITUTE, "0.0");
+                soilhashmap.put(mydb.KEY_TODAY_LONGITUTE, "0.0");
+            }
+
+
+//        if(sHelper!=null)
+//        {
+//            if(sHelper.getString(Constants.CUSTOM_LNG_SOIL)!=null &&
+//                    !sHelper.getString(Constants.CUSTOM_LNG_SOIL).equals("") &&
+//                    sHelper.getString(Constants.CUSTOM_LAT_SOIL)!=null &&
+//                    !sHelper.getString(Constants.CUSTOM_LAT_SOIL).equals("")
+//            )
+//            {
+//                soilSamplingLat = Double.parseDouble(sHelper.getString(Constants.CUSTOM_LAT_SOIL));
+//                soilSamplingLong = Double.parseDouble(sHelper.getString(Constants.CUSTOM_LNG_SOIL));
+//                txt_lat_lng.setText("Selected Lat,Log: " +  soilSamplingLat + " , " + soilSamplingLong);
+//                soilhashmap.put(mydb.KEY_TODAY_LATITUTE, String.valueOf(soilSamplingLat));
+//                soilhashmap.put(mydb.KEY_TODAY_LONGITUTE, String.valueOf(soilSamplingLong));
+//
+//            }
+//            else{
+//                soilhashmap.put(mydb.KEY_TODAY_LATITUTE, "0.0");
+//                soilhashmap.put(mydb.KEY_TODAY_LONGITUTE, "0.0");
+//            }
+//
+//        }
         final String arraylist[]={"Male","female","other"};
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_list_item_1, arraylist);
@@ -365,24 +406,26 @@ public class SoilSamplingActivity extends AppCompatActivity {
         btn_lcoation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gps = new GpsTracker(SoilSamplingActivity.this);
-
-                if (gps.canGetLocation()) {
-                    if (ActivityCompat.checkSelfPermission(SoilSamplingActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SoilSamplingActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        return;
-                    }
-                    soilSamplingLat = gps.getLatitude();
-                    soilSamplingLong = gps.getLongitude();
-                }
-                txt_lat_lng.setText("Selected Lat,Log" +  soilSamplingLat + " , " + soilSamplingLong);
-
-                if(gps.getLatitude() != 0.0 && gps.getLongitude() != 0.0){
-                    soilhashmap.put(mydb.KEY_TODAY_LATITUTE, String.valueOf(soilSamplingLat));
-                    soilhashmap.put(mydb.KEY_TODAY_LONGITUTE, String.valueOf(soilSamplingLong));
-                }else{
-                    soilhashmap.put(mydb.KEY_TODAY_LATITUTE, "0.0");
-                    soilhashmap.put(mydb.KEY_TODAY_LONGITUTE, "0.0");
-                }
+                Intent loc = new Intent(SoilSamplingActivity.this, CustomMap.class);
+                loc.putExtra("from", "soil");
+                startActivity(loc);
+//                gps = new GpsTracker(SoilSamplingActivity.this);
+//                if (gps.canGetLocation()) {
+//                    if (ActivityCompat.checkSelfPermission(SoilSamplingActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SoilSamplingActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                        return;
+//                    }
+//                    soilSamplingLat = gps.getLatitude();
+//                    soilSamplingLong = gps.getLongitude();
+//                }
+//                txt_lat_lng.setText("Selected Lat,Log" +  soilSamplingLat + " , " + soilSamplingLong);
+//
+//                if(gps.getLatitude() != 0.0 && gps.getLongitude() != 0.0){
+//                    soilhashmap.put(mydb.KEY_TODAY_LATITUTE, String.valueOf(soilSamplingLat));
+//                    soilhashmap.put(mydb.KEY_TODAY_LONGITUTE, String.valueOf(soilSamplingLong));
+//                }else{
+//                    soilhashmap.put(mydb.KEY_TODAY_LATITUTE, "0.0");
+//                    soilhashmap.put(mydb.KEY_TODAY_LONGITUTE, "0.0");
+//                }
             }
         });
         btn_add_sampling.setOnClickListener(new View.OnClickListener() {

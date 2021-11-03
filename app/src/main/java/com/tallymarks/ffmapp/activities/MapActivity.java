@@ -318,5 +318,18 @@ public class MapActivity  extends AppCompatActivity implements OnMapReadyCallbac
             });
         }
     }
-
+    @Override
+    public void onBackPressed() {
+        if(from.equals("customer")) {
+            Intent i = new Intent(MapActivity.this, VisitCustomerActivity.class);
+            startActivity(i);
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        }
+        else
+        {
+            Intent i = new Intent(MapActivity.this, VisitFarmerActivity.class);
+            startActivity(i);
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        }
+    }
 }

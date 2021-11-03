@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/white"
-    android:layout_gravity="bottom"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_gravity="bottom"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <!-- row 1 -->
 
@@ -18,7 +18,7 @@
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:weightSum="3" >
+        android:weightSum="3">
 
         <!-- col 1 -->
 
@@ -26,29 +26,29 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@color/yellow"
-                android:gravity="center"
                 android:id="@+id/produc_demo"
-                android:layout_marginBottom="@dimen/p4"
-                android:layout_marginRight="@dimen/p4"
-                android:textColor="@color/green"
-                android:text="PRODUCT\nDEMO" />
-
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:id="@+id/tvRefersh"
-                android:layout_marginBottom="@dimen/p4"
                 android:layout_marginRight="@dimen/p4"
+                android:layout_marginBottom="@dimen/p4"
                 android:background="@color/yellow"
                 android:gravity="center"
-                android:textColor="@color/green"
-                android:text="REFRESH\nDATA"/>
+                android:text="PRODUCT\nDEMO"
+                android:textColor="@color/green" />
+
+            <TextView
+                android:id="@+id/tvRefersh"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginRight="@dimen/p4"
+                android:layout_marginBottom="@dimen/p4"
+                android:background="@color/yellow"
+                android:gravity="center"
+                android:text="REFRESH\nDATA"
+                android:textColor="@color/green" />
         </LinearLayout>
         <!-- col 1 end -->
         <!-- col 2 -->
@@ -57,29 +57,29 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
                 android:id="@+id/txt_post"
-                android:background="@color/yellow"
-                android:layout_marginBottom="@dimen/p4"
-                android:layout_marginRight="@dimen/p4"
-                android:gravity="center"
-                android:textColor="@color/green"
-                android:text="POST\nDATA" />
-
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:background="@color/yellow"
-                android:layout_marginBottom="@dimen/p4"
                 android:layout_marginRight="@dimen/p4"
-                android:id="@+id/soil_logs"
+                android:layout_marginBottom="@dimen/p4"
+                android:background="@color/yellow"
                 android:gravity="center"
-                android:textColor="@color/green"
-                android:text="SOIL\nSAMPLING\nLOGS"/>
+                android:text="POST\nDATA"
+                android:textColor="@color/green" />
+
+            <TextView
+                android:id="@+id/soil_logs"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginRight="@dimen/p4"
+                android:layout_marginBottom="@dimen/p4"
+                android:background="@color/yellow"
+                android:gravity="center"
+                android:text="SOIL\nSAMPLING\nLOGS"
+                android:textColor="@color/green" />
         </LinearLayout>
         <!-- col 2 end -->
         <!-- col 3 -->
@@ -88,28 +88,28 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
+                android:id="@+id/txt_user_guide"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
+                android:layout_marginBottom="@dimen/p4"
                 android:background="@color/yellow"
-                android:layout_marginBottom="@dimen/p4"
-
                 android:gravity="center"
-                android:textColor="@color/green"
-                android:text="USER\nGUIDE" />
+                android:text="USER\nGUIDE"
+                android:textColor="@color/green" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginBottom="@dimen/p4"
                 android:id="@+id/logout"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginBottom="@dimen/p4"
 
                 android:background="@color/yellow"
                 android:gravity="center"
-                android:textColor="@color/green"
-                android:text="LOGOUT"/>
+                android:text="LOGOUT"
+                android:textColor="@color/green" />
         </LinearLayout>
     </LinearLayout>
     <!-- col 3 end -->

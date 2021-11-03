@@ -118,6 +118,11 @@ public class FloorStockActivity extends AppCompatActivity {
         btn_snap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (isUnpostedDataExist()) {
+                    updateFloorStock();
+                } else {
+                    addFloorStock();
+                }
                 Intent snap = new Intent(FloorStockActivity.this, CustomerSnapShotActivity.class);
                 startActivity(snap);
             }

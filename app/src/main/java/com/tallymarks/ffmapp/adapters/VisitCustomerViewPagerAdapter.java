@@ -52,7 +52,10 @@ public class VisitCustomerViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 4;
+
+            return 4;
+
+
     }
 
     @Override
@@ -65,6 +68,7 @@ public class VisitCustomerViewPagerAdapter extends FragmentPagerAdapter {
             title = "ALL PLANS";
         } else if (position == 2) {
             title = "PAST PLANS";
+
         }
         else if (position == 3) {
             title = "FUTURE PLANS";

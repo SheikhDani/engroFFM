@@ -136,6 +136,35 @@ public class FarmVisitActivity extends AppCompatActivity {
         iv_menu.setVisibility(View.GONE);
         tvTopHeader.setVisibility(View.VISIBLE);
         tvTopHeader.setText("FARM VISIT");
+        Intent intent = getIntent();
+        if(intent.getExtras()!=null) {
+            if (intent.getExtras().getString("farmlat") != null &&
+                    !intent.getExtras().getString("farmlat").equals("") &&
+                    intent.getExtras().getString("farmlng") != null &&
+                    !intent.getExtras().getString("farmlng").equals("")
+            ) {
+                farmvisitLat = Double.parseDouble(intent.getExtras().getString("farmlat"));
+                farvisitLong = Double.parseDouble(intent.getExtras().getString("farmlng"));
+                txt_lat_lng.setText("Selected Lat,Log: " + farmvisitLat + " , " + farvisitLong);
+
+            }
+        }
+//        if(sHelper!=null)
+//        {
+//            if(sHelper.getString(Constants.CUSTOM_LNG_FARM)!=null &&
+//                    !sHelper.getString(Constants.CUSTOM_LNG_FARM).equals("") &&
+//                    sHelper.getString(Constants.CUSTOM_LAT_FARM)!=null &&
+//                    !sHelper.getString(Constants.CUSTOM_LAT_FARM).equals("")
+//            )
+//            {
+//                farmvisitLat = Double.parseDouble(sHelper.getString(Constants.CUSTOM_LAT_SOIL));
+//                farvisitLong = Double.parseDouble(sHelper.getString(Constants.CUSTOM_LNG_SOIL));
+//                txt_lat_lng.setText("Selected Lat,Log: " +  farmvisitLat + " , " + farvisitLong);
+//
+//            }
+//
+//
+//        }
         //prepareRecommendationData();
         //drawRecommendationTable();
         getCropfromDatabase();
@@ -218,15 +247,19 @@ public class FarmVisitActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
+                    Intent loc = new Intent(FarmVisitActivity.this, CustomMap.class);
+                    loc.putExtra("from", "farm");
+                    startActivity(loc);
                     GpsTracker gpsTracker = new GpsTracker(FarmVisitActivity.this);
-                    if (gpsTracker.canGetLocation()) {
-                        if (ActivityCompat.checkSelfPermission(FarmVisitActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(FarmVisitActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            return;
-                        }
-                        farmvisitLat = gpsTracker.getLatitude();
-                        farvisitLong = gpsTracker.getLongitude();
-                    }
-                    txt_lat_lng.setText("Selected Lat,Lng:" + farmvisitLat + " , " + farvisitLong);
+//
+//                    if (gpsTracker.canGetLocation()) {
+//                        if (ActivityCompat.checkSelfPermission(FarmVisitActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(FarmVisitActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                            return;
+//                        }
+//                        farmvisitLat = gpsTracker.getLatitude();
+//                        farvisitLong = gpsTracker.getLongitude();
+//                    }
+//                    txt_lat_lng.setText("Selected Lat,Lng:" + farmvisitLat + " , " + farvisitLong);
 
                 } catch (Exception e) {
                     e.printStackTrace();

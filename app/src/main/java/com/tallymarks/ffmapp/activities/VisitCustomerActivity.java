@@ -48,6 +48,7 @@ public class VisitCustomerActivity extends AppCompatActivity {
         et_search = findViewById(R.id.et_Search);
         iv_back.setVisibility(View.VISIBLE);
         iv_menu.setVisibility(View.GONE);
+
         sHelper = new SharedPrefferenceHelper(VisitCustomerActivity.this);
         iv_location = findViewById(R.id.img_location);
         iv_location.setOnClickListener(new View.OnClickListener() {
@@ -120,6 +121,46 @@ public class VisitCustomerActivity extends AppCompatActivity {
         tvTopHeader.setVisibility(View.VISIBLE);
         tvTopHeader.setText("VISIT CUSTOMERS");
 
+
+        for (int i = 0; i < 4; i++){
+            if(tabLayout.getTabAt(i).getText().toString().equals("FUTURE PLANS")) {
+                tabLayout.getTabAt(i).view.setEnabled(false);
+                tabLayout.getTabAt(i).view.setSelected(false);
+                tabLayout.getTabAt(i).setIcon(R.drawable.ic_action_lock_outline);
+
+            }
+            else if(tabLayout.getTabAt(i).getText().toString().equals("PAST PLANS"))
+            {
+                tabLayout.getTabAt(i).view.setEnabled(false);
+                tabLayout.getTabAt(i).view.setSelected(false);
+                tabLayout.getTabAt(i).setIcon(R.drawable.ic_action_lock_outline);
+            }
+            else
+            {
+                tabLayout.getTabAt(i).view.setEnabled(true);
+            }
+        }
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+
+                if(position == 2 || position==3) {
+                    //To disable specific tab and set the previuos tab
+                    viewPager.setCurrentItem(1); //We cannot provide the position in setSelected(boolean) now. This was missed in above solution
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                super.onPageScrollStateChanged(state);
+            }
+        });
     }
 
 }
