@@ -50,8 +50,10 @@ public class Constants {
     public static final String SUBORDINATE_CUSTOMER_ID= "subordiantecustomerid";
     public static final String SUBORDINATE_CUSTOMER_NAME= "subordiantecustomerName";
 
-    public static final String CUSTOM_LAT= "customLat";
-    public static final String CUSTOM_LNG= "customLng";
+    public static final String CUSTOM_LAT_SOIL= "customLatsoil";
+    public static final String CUSTOM_LNG_SOIL= "customLngsoil";
+    public static final String CUSTOM_LAT_FARM= "customLatfarm";
+    public static final String CUSTOM_LNG_FARM= "customLngfarm";
 
 
 

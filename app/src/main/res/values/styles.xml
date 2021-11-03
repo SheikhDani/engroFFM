@@ -12,6 +12,9 @@
         <item name="windowNoTitle">true</item>
 
     </style>
+    <style name="MineCustomTabText" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">14sp</item>
+    </style>
     <style name="NavigationDrawerStyle">
 
         <item name="android:textSize">14sp</item>

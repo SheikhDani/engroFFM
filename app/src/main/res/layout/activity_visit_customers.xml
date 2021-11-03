@@ -63,11 +63,12 @@
         style="@style/MyStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        app:tabTextAppearance="@style/MineCustomTabText"
         android:layout_below="@+id/rel_field_sales"
         android:background="@color/white"
         app:tabGravity="fill"
         app:tabMode="auto"
+        app:tabInlineLabel="true"
         app:tabSelectedTextColor="@color/green" />
 
     <androidx.viewpager.widget.ViewPager

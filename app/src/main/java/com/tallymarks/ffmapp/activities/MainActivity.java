@@ -11,6 +11,7 @@ import android.content.IntentSender;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -135,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MyDatabaseHandler mydb;
     List<MenuModel> headerList = new ArrayList<>();
     HashMap<MenuModel, List<MenuModel>> childList = new HashMap<>();
-    TextView txt_farmer_Demo, txt_soil_logs, txt_logout, txt_post_data, txt_refersh;
+    TextView txt_farmer_Demo, txt_soil_logs, txt_logout, txt_post_data, txt_refersh,txt_user_guide;
     ImageView headerImage;
     String statuCustomer = "";
     String journeyType;
@@ -161,10 +162,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         txt_logout = findViewById(R.id.logout);
         txt_post_data = findViewById(R.id.txt_post);
         txt_refersh = findViewById(R.id.tvRefersh);
+        txt_user_guide = findViewById(R.id.txt_user_guide);
 
         iv_Menu.setVisibility(View.VISIBLE);
         iv_filter = findViewById(R.id.iv_notification);
         userName = findViewById(R.id.userName);
+
+        txt_user_guide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("https://drive.google.com/file/d/10Hc6QYr5MizjKaaZ4FqukWo1DLeVnz16")); // only used based on your example.
+
+                String title = "Open With";
+// Create intent to show the chooser dialog
+                Intent chooser = Intent.createChooser(intent, title);
+
+// Verify the original intent will resolve to at least one activity
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(chooser);
+                }
+//                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://drive.google.com/file/d/10Hc6QYr5MizjKaaZ4FqukWo1DLeVnz16/view"));
+//                startActivity(Intent.createChooser(browserIntent, "Open with"));
+            }
+        });
 
         iv_filter.setVisibility(View.VISIBLE);
         tvTopHeader.setVisibility(View.VISIBLE);
@@ -1634,7 +1655,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             message = String.valueOf(jsonObj.getString("message"));
                             //discription = String.valueOf(jsonObj.getString("description"));
 
-                            Helpers.displayMessage(MainActivity.this, true, status);
+                           // Helpers.displayMessage(MainActivity.this, true, status);
                             System.out.println(status + " ---- " + message);
                             System.out.println(output);
 

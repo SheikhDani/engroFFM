@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -63,6 +64,11 @@ public class VisitFarmerActivity extends AppCompatActivity {
                     loc.putExtra("from", "farmer");
                     startActivity(loc);
                 }
+                else if (tabText.equals("FUTURE PLANS")) {
+                    Toast.makeText(VisitFarmerActivity.this, "No Customer Found", Toast.LENGTH_SHORT).show();
+                } else if (tabText.equals("PAST PLANS")) {
+                    Toast.makeText(VisitFarmerActivity.this, "No Customer Found", Toast.LENGTH_SHORT).show();
+                }
                 else
                     {
                         DialougeManager.gpsNotEnabledPopup(VisitFarmerActivity.this);
@@ -85,6 +91,46 @@ public class VisitFarmerActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         tvTopHeader = findViewById(R.id.tv_dashboard);
         tvTopHeader.setVisibility(View.VISIBLE);
-        tvTopHeader.setText("VISIT Farmers");
+        tvTopHeader.setText("VISIT FARMERS");
+        for (int i = 0; i < 4; i++){
+            if(tabLayout.getTabAt(i).getText().toString().equals("FUTURE PLANS")) {
+                tabLayout.getTabAt(i).view.setEnabled(false);
+                tabLayout.getTabAt(i).view.setSelected(false);
+                tabLayout.getTabAt(i).setIcon(R.drawable.ic_action_lock_outline);
+
+            }
+            else if(tabLayout.getTabAt(i).getText().toString().equals("PAST PLANS"))
+            {
+                tabLayout.getTabAt(i).view.setEnabled(false);
+                tabLayout.getTabAt(i).view.setSelected(false);
+                tabLayout.getTabAt(i).setIcon(R.drawable.ic_action_lock_outline);
+            }
+            else
+            {
+                tabLayout.getTabAt(i).view.setEnabled(true);
+            }
+        }
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+
+                if(position == 2 || position==3) {
+                    //To disable specific tab and set the previuos tab
+                    viewPager.setCurrentItem(1); //We cannot provide the position in setSelected(boolean) now. This was missed in above solution
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                super.onPageScrollStateChanged(state);
+            }
+        });
+
     }
 }
