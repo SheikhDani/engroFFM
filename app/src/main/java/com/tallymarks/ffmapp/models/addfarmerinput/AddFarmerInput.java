@@ -27,6 +27,12 @@ public class AddFarmerInput {
     @SerializedName("cnicNumber")
     @Expose
     private String cnicNumber;
+
+
+
+    @SerializedName("transactionType")
+    @Expose
+    private String transactionType;
     @SerializedName("genderId")
     @Expose
     private Integer genderId;
@@ -68,6 +74,13 @@ public class AddFarmerInput {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+    public String getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(String transactionType) {
+        this.transactionType = transactionType;
     }
 
     public String getMobileNumber() {

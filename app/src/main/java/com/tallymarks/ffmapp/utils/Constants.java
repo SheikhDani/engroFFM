@@ -55,6 +55,10 @@ public class Constants {
     public static final String CUSTOM_LAT_FARM= "customLatfarm";
     public static final String CUSTOM_LNG_FARM= "customLngfarm";
 
+    public static final String EDIT_FARMER_MOBILENUBMER ="editfarmermobilenumber";
+    public static final String EDIT_FARMER_NAME= "editfarmername";
+    public static final String EDIT_FARMER_ID= "editfarmerid";
+
 
 
 

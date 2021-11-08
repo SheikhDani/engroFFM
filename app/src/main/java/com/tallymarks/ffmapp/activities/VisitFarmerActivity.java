@@ -93,7 +93,7 @@ public class VisitFarmerActivity extends AppCompatActivity {
         tvTopHeader.setVisibility(View.VISIBLE);
         tvTopHeader.setText("VISIT FARMERS");
         for (int i = 0; i < 4; i++){
-            if(tabLayout.getTabAt(i).getText().toString().equals("FUTURE PLANS")) {
+            if(tabLayout.getTabAt(tabLayout.getSelectedTabPosition()).getText().toString().equals("FUTURE PLANS")) {
                 tabLayout.getTabAt(i).view.setEnabled(false);
                 tabLayout.getTabAt(i).view.setSelected(false);
                 tabLayout.getTabAt(i).setIcon(R.drawable.ic_action_lock_outline);

@@ -165,7 +165,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 //        dataModels.add(new DataModel("Zarkhez Khas(MOP)", false));
 //        dataModels.add(new DataModel("EFERT Agritrade Zingro", false));
 
-        adapter = new SalesCallAdapter(dataModels, getApplicationContext());
+        adapter = new SalesCallAdapter(dataModels, getApplicationContext(),"quality");
 
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -363,6 +363,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 drawer.closeDrawers();
                 return true;
 
+            case R.id.nav_editfarmer:
+                Intent editfarmerdetail = new Intent(MainActivity.this, EditFarmerDetailActivity.class);
+                startActivity(editfarmerdetail);
+                drawer.closeDrawers();
+                return true;
+
             case R.id.nav_addfarmermeeting:
 
                 Intent farmerMeeting = new Intent(MainActivity.this, FarmerMeetingActivity.class);
@@ -1411,6 +1417,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             headerParams.put(db.KEY_ADD_FARMER_LANDLINE_NUMBER, "");
             headerParams.put(db.KEY_ADD_FARMER_LAST_NAME, "");
             headerParams.put(db.KEY_ADD_FARMER_EMAL, "");
+            headerParams.put(db.KEY_FARMER_TRANSACTION_TYPE, "");
             headerParams.put(db.KEY_ADD_FARMER_FIRST_NAME, "");
             HashMap<String, String> filter = new HashMap<>();
             filter.put(db.KEY_FARMER_IS_POSTED, "0");
@@ -1420,6 +1427,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 do {
                     AddFarmerInput inputParameters = new AddFarmerInput();
                     inputParameters.setCnicNumber(cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_CNIC_NUMBER)));
+                    inputParameters.setTransactionType(cursor2.getString(cursor2.getColumnIndex(db.KEY_FARMER_TRANSACTION_TYPE)));
                     inputParameters.setEmail(cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_EMAL)));
                     inputParameters.setFirstName("" + Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_FIRST_NAME))));
                     inputParameters.setLastName("" + Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_LAST_NAME))));
@@ -2128,7 +2136,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private ArrayList<CroppingPattern> loadlandprofileCropPattern(String mobileNumber) {
+    private ArrayList<CroppingPattern> loadlandprofileCropPattern(String mobileNumber,String salepointcode) {
         ArrayList<CroppingPattern> croppingPatternList = new ArrayList<>();
         HashMap<String, String> map = new HashMap<>();
 
@@ -2136,6 +2144,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         map.put(db.KEY_ADD_FARMER_LAND_PROFILE_CROPPING_PATTERN_LAND_HOLDING, "");
         HashMap<String, String> filter = new HashMap<>();
         filter.put(db.KEY_ADD_FARMER_MOBILE_NUMBER, mobileNumber);
+        filter.put(db.KEY_ADD_FARMER_LAND_PROFILE_SALES_POINT_CODE,salepointcode);
         Cursor cursor2 = db.getData(db.ADD_NEW_FARMER_LAND_PROFILE_CROPPING_PATTERN, map, filter);
         if (cursor2.getCount() > 0) {
             cursor2.moveToFirst();
@@ -2184,6 +2193,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ArrayList<LandProfile> landProfileList = new ArrayList<>();
         HashMap<String, String> map = new HashMap<>();
         int position;
+        String salePointCode = "";
 
         map.put(db.KEY_ADD_FARMER_LAND_PROFILE_SALES_POINT_NAME, "");
         map.put(db.KEY_ADD_FARMER_LAND_PROFILE_SIZE, "");
@@ -2206,9 +2216,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 land.setOwnership(cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_LAND_PROFILE_OWNERSHIP)));
                 land.setWaterSource(Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_LAND_PROFILE_WATERSOURCE))));
                 land.setSalesPointCode(cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_LAND_PROFILE_SALES_POINT_CODE)));
+                salePointCode = cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_LAND_PROFILE_SALES_POINT_CODE));
                 landProfileList.add(land);
                 position = cursor2.getPosition();
-                landProfileList.get(position).setCroppingPatterns(loadlandprofileCropPattern(mobileNumber));
+                landProfileList.get(position).setCroppingPatterns(loadlandprofileCropPattern(mobileNumber,salePointCode));
                 inputParameters.setLandProfiles(landProfileList);
 
             }

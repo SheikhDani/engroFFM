@@ -12,8 +12,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/linear_bottom"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/divider"
         android:layout_below="@+id/inc_common_header_colletion"
         android:fillViewport="true"
         android:scrollbars="vertical">
@@ -23,9 +23,8 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-
             <LinearLayout
-                android:id="@+id/linear_ac_crops"
+                android:id="@+id/linear_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/p20"
@@ -33,40 +32,7 @@
                 android:weightSum="2">
 
                 <TextView
-                    android:id="@+id/txt_crops"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1.2"
-                    android:gravity="center_vertical"
-                    android:text="Activity on Crops"
-                    android:textColor="@color/green"
-
-                    />
-
-
-            </LinearLayout>
-
-            <View
-
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/p20"
-                android:background="@color/grey" />
-
-            <LinearLayout
-                android:id="@+id/linear_crop"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_ac_crops"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/txt_crop"
+                    android:id="@+id/txt_email"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
@@ -74,13 +40,240 @@
 
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:text="Crop"
+                    android:text="Email"
                     android:textColor="@color/black"
 
                     />
 
+                <EditText
+                    android:id="@+id/et_email"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/eidttext_boader"
+
+                    android:gravity="center"
+                    android:hint="Email"
+                    android:textColor="@color/black" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_first_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_email"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+
+                    android:id="@+id/txt_first_name"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="First Name"
+                    android:textColor="@color/black"
+
+                    />
+
+                <EditText
+                    android:id="@+id/et_firstname"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/eidttext_boader"
+
+                    android:gravity="center"
+                    android:hint="First Name" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_lastname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_first_name"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Last Name"
+                    android:textColor="@color/black"
+
+                    />
+
+                <EditText
+                    android:id="@+id/et_lastname"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/eidttext_boader"
+                    android:gravity="center"
+                    android:hint="Last name" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_mobile_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_lastname"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+
+                    android:id="@+id/txt_mobile_number"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Mobile Number"
+                    android:textColor="@color/black"
+
+                    />
+
+                <EditText
+                    android:id="@+id/et_number"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/eidttext_boader"
+                    android:inputType="number"
+                    android:gravity="center"
+                    android:hint="Mobile Number" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_landline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_mobile_number"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Landline Number"
+                    android:textColor="@color/black"
+
+                    />
+
+                <EditText
+                    android:id="@+id/et_landline"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/eidttext_boader"
+                    android:gravity="center"
+                    android:hint="landline number"
+                    android:inputType="number"
+                    android:textColor="@color/black" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_cnic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_landline"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_cnic"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="CNIC Number"
+                    android:textColor="@color/black"
+
+                    />
+
+
+                <EditText
+                    android:id="@+id/et_cnic"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/eidttext_boader"
+                    android:gravity="center_horizontal"
+                    android:hint="CNIC Number"
+                    android:inputType="number"
+
+                    android:maxLines="1"
+                    android:textAlignment="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/linear_gender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_cnic"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_farmers"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Gender"
+                    android:textColor="@color/black"
+
+                    />
+
+
                 <AutoCompleteTextView
-                    android:id="@+id/auto_crop"
+                    android:id="@+id/auto_gender"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:layout_marginRight="@dimen/p20"
@@ -92,7 +285,7 @@
                     android:dropDownHeight="155dp"
                     android:focusable="false"
                     android:gravity="center_horizontal"
-                    android:hint="Select Crop"
+                    android:hint="Select Gender"
                     android:inputType="none"
                     android:maxLines="1"
                     android:textAlignment="center"
@@ -101,379 +294,63 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-
             </LinearLayout>
 
+
             <LinearLayout
-                android:id="@+id/linear_address"
+                android:id="@+id/linear_market"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_crop"
+                android:layout_below="@+id/linear_gender"
                 android:layout_marginTop="@dimen/p20"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
                 <TextView
-                    android:id="@+id/txt_address"
+                    android:id="@+id/txt_market"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="@dimen/p20"
-                    android:layout_weight="1"
+
+                    android:layout_weight="0.5"
                     android:gravity="center_vertical"
-                    android:text="Address"
+                    android:text="Market"
                     android:textColor="@color/black"
 
                     />
 
-<!--                <TextView-->
-<!--                    android:id="@+id/txt_lcoation"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:layout_marginRight="@dimen/p20"-->
-<!--                    android:layout_weight="0.8"-->
-
-<!--                    android:gravity="left"-->
-<!--                    android:text="Lahore" />-->
-
-                <EditText
-                    android:id="@+id/address"
+                <TextView
+                    android:id="@+id/txt_selected_market"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="1"
-                    android:background="@drawable/eidttext_boader"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="@dimen/p10"
+                    android:layout_weight="0.5"
                     android:gravity="center"
-                    android:hint="Address" />
+                    android:singleLine="true"
+                    android:textColor="@color/black" />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linear_main_prod"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_address"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/txt_main_prod"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Main Product"
-                    android:textColor="@color/black"
-
-                    />
-
-                <AutoCompleteTextView
-                    android:id="@+id/auto_main_product"
+                <Button
+                    android:id="@+id/btn_market"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:layout_marginRight="@dimen/p20"
                     android:layout_weight="1"
-
                     android:background="@drawable/eidttext_boader"
-                    android:clickable="true"
-                    android:cursorVisible="false"
-                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
-                    android:dropDownHeight="155dp"
-                    android:focusable="false"
-                    android:gravity="center_horizontal"
-                    android:hint="Select Product"
-                    android:inputType="none"
-                    android:maxLines="1"
-                    android:textAlignment="center"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/linear_pack"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_main_prod"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/txt_pack"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Packs Liquidated"
-                    android:textColor="@color/black"
-
-                    />
-
-                <EditText
-                    android:id="@+id/etPack"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="1"
-                    android:inputType="number"
-                    android:background="@drawable/eidttext_boader"
+                    android:backgroundTint="@color/colorPrimaryDark"
                     android:gravity="center"
-                    android:hint="packs" />
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/linear_remarks"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_pack"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/txt_remarks"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Remarks"
-                    android:textColor="@color/black"
-
-                    />
-
-                <EditText
-                    android:id="@+id/remarks"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="1"
-                    android:background="@drawable/eidttext_boader"
-                    android:gravity="center"
-                    android:hint="Remarks" />
-
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/linear_crop_Acre"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_remarks"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/txt_crop_acre"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Crop Acreage"
-                    android:textColor="@color/black"
-
-                    />
-
-                <EditText
-                    android:id="@+id/etCropAcre"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="1"
-                    android:inputType="number"
-                    android:background="@drawable/eidttext_boader"
-                    android:gravity="center"
-                    android:hint="crop" />
+                    android:text="SELECT MARKET"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linear_crop_Def"
+                android:id="@+id/linear_location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_crop_Acre"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/txt_crop_def"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Crop Deficiency"
-                    android:textColor="@color/black"
-
-                    />
-
-                <EditText
-                    android:id="@+id/etCropdef"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="1"
-                    android:inputType="number"
-                    android:background="@drawable/eidttext_boader"
-                    android:gravity="center"
-                    android:hint="crop" />
-
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/linear_other_product"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/txt_other_product"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Other Product"
-                    android:textColor="@color/black"
-
-                    />
-
-                <AutoCompleteTextView
-                    android:id="@+id/auto_other_product"
-                    android:layout_width="0dp"
-                    android:layout_height="30dp"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="1"
-
-                    android:background="@drawable/eidttext_boader"
-                    android:clickable="true"
-                    android:cursorVisible="false"
-                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
-                    android:dropDownHeight="155dp"
-                    android:focusable="false"
-                    android:gravity="center_horizontal"
-                    android:hint="Select Product"
-                    android:inputType="none"
-                    android:maxLines="1"
-                    android:textAlignment="center"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/linear_other_liquidated"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_main_prod"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/txt_other_liquidated"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Others Packs Liquidated"
-                    android:textColor="@color/black"
-
-                    />
-
-                <EditText
-                    android:id="@+id/etOtehrLiquitad"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="1"
-                    android:inputType="number"
-                    android:background="@drawable/eidttext_boader"
-                    android:gravity="center"
-                    android:hint="packs" />
-
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/linear_serving_dealer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/txt_serving_dealer"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Serving Dealers"
-                    android:textColor="@color/black"
-
-                    />
-
-                <AutoCompleteTextView
-                    android:id="@+id/auto_serving_dealer"
-                    android:layout_width="0dp"
-                    android:layout_height="30dp"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="1"
-
-                    android:background="@drawable/eidttext_boader"
-                    android:clickable="true"
-                    android:cursorVisible="false"
-                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
-                    android:dropDownHeight="155dp"
-                    android:focusable="false"
-                    android:gravity="center_horizontal"
-                    android:hint="Dealers"
-                    android:inputType="none"
-                    android:maxLines="1"
-                    android:textAlignment="center"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linear_locatio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_market"
                 android:layout_marginTop="@dimen/p20"
                 android:orientation="horizontal"
                 android:weightSum="2">
@@ -485,7 +362,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="@dimen/p20"
 
-                    android:layout_weight="1"
+                    android:layout_weight="1.2"
                     android:gravity="center_vertical"
                     android:text="Save Location"
                     android:textColor="@color/black"
@@ -493,14 +370,16 @@
                     />
 
                 <Button
-                    android:id="@+id/btn_lcoation"
+                    android:id="@+id/btn_location"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:layout_marginRight="@dimen/p20"
                     android:layout_weight="0.8"
                     android:background="@drawable/eidttext_boader"
                     android:backgroundTint="@color/colorPrimaryDark"
-                    android:drawableRight="@drawable/ic_baseline_arrow_downward_24"
+                    android:drawableRight="@drawable/ic_baseline_location_on_24"
+
+
                     android:gravity="center"
                     android:text="GET LOCATION"
                     android:textColor="@color/white" />
@@ -523,121 +402,125 @@
                     android:layout_marginLeft="@dimen/p20"
                     android:layout_weight="2"
                     android:gravity="center_vertical"
-                    android:text="Selected Lat,Lng:"
                     android:textColor="@color/black"
-
 
                     />
 
 
             </LinearLayout>
 
-            <View
-
+            <RelativeLayout
+                android:id="@+id/linear_serving_details"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/p10"
-                android:background="@color/grey" />
-
-            <LinearLayout
-                android:id="@+id/l1"
-                android:layout_width="fill_parent"
-                android:layout_height="60dp"
-                android:background="@color/white"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_location"
+                android:layout_marginTop="@dimen/p20"
+                android:background="@color/green"
+                android:padding="@dimen/p5">
 
                 <TextView
-                    android:id="@+id/tv_option"
-                    android:layout_width="0dp"
+                    android:id="@+id/txt_quanity"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="@dimen/p10"
-                    android:layout_weight="1.8"
-                    android:padding="@dimen/p10"
-                    android:text="RECOMMENDATIONS"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/ts16"
-
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/p5"
+                    android:text="SERVING DEALERS"
+                    android:textColor="@color/white"
 
                     />
 
+
                 <ImageView
-                    android:id="@+id/img_add_recommendations"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/p50"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center"
+                    android:id="@+id/img_add_serving"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/p20"
+                    android:gravity="end"
+                    android:padding="@dimen/p5"
+                    android:src="@drawable/engroadd"
+                    android:tint="@color/white" />
 
-                    android:layout_margin="@dimen/p20"
 
-                    android:layout_weight="0.2"
-                    android:contentDescription="Icon"
-
-                    android:src="@drawable/plusgreen" />
-            </LinearLayout>
+            </RelativeLayout>
 
             <LinearLayout
-                android:id="@+id/linear_table_recommendations"
+                android:id="@+id/linear_layout_dynamic_serving"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/linear_bottom"
+                android:layout_height="wrap_content"
 
-                android:orientation="horizontal">
+                android:orientation="vertical" />
 
-                <ScrollView
-                    android:id="@+id/layout"
-                    android:layout_height="match_parent"
-                    android:scrollbars="horizontal|vertical"
-                    android:layout_width="match_parent"
+            <RelativeLayout
+                android:id="@+id/linear_landing_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_layout_dynamic_serving"
+                android:layout_marginTop="@dimen/p10"
+                android:background="@color/green"
+                android:padding="@dimen/p5">
 
-                    android:scrollbarStyle="outsideInset"
-                    android:fillViewport="true">
-                    <HorizontalScrollView
-                        android:id="@+id/horizontalView"
-                        android:layout_height="wrap_content"
-                        android:scrollbars="horizontal|vertical"
-                        android:layout_width="wrap_content"
-                        >
+                <TextView
 
-                        <TableLayout
-                            android:id="@+id/displayLinear"
-                            android:layout_width="match_parent"
-                            android:divider="@color/grey"
-                            android:layout_height="match_parent"
-                            android:showDividers="middle"
-                            android:stretchColumns="*">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/p5"
+                    android:text="LANDING PROFILE"
+                    android:textColor="@color/white"
+
+                    />
 
 
+                <ImageView
+                    android:id="@+id/img_add_profile"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/p20"
+                    android:gravity="end"
+                    android:padding="@dimen/p5"
+                    android:src="@drawable/engroadd"
+                    android:tint="@color/white" />
 
-                        </TableLayout>
-                    </HorizontalScrollView>
-                </ScrollView>
-            </LinearLayout>
 
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_layout_dynamic_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:orientation="vertical" />
 
         </LinearLayout>
     </ScrollView>
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/linear_bottom"
+        android:layout_marginBottom="@dimen/p10"
+        android:background="@color/grey" />
 
     <LinearLayout
+        android:id="@+id/linear_bottom"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:id="@+id/linear_bottom"
-
         android:layout_alignParentBottom="true"
-
+        android:background="@color/white"
         android:orientation="horizontal">
-
 
         <RelativeLayout
             android:id="@+id/relativeLayout1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@color/white">
-
 
             <Button
                 android:id="@+id/back"
@@ -647,33 +530,17 @@
                 android:layout_marginStart="@dimen/p10"
                 android:layout_marginLeft="@dimen/p10"
                 android:layout_marginTop="@dimen/p10"
+                android:layout_marginEnd="@dimen/p10"
+                android:layout_marginRight="@dimen/p10"
                 android:layout_marginBottom="@dimen/p10"
-
                 android:background="@drawable/eidttext_boader"
                 android:drawableLeft="@drawable/backwoardresizer"
                 android:paddingRight="@dimen/p20"
                 android:text="BACK"
-                android:textColor="@color/green"
-                android:textSize="12sp" />
+                android:textColor="@color/green" />
 
             <Button
-                android:id="@+id/btn_skip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_centerInParent="true"
-                android:layout_marginTop="@dimen/p10"
-                android:layout_marginBottom="@dimen/p10"
-                android:background="@drawable/eidttext_boader"
-                android:backgroundTint="@color/green"
-                android:drawableRight="@drawable/forwardresizer"
-                android:paddingLeft="@dimen/p10"
-                android:text="SKIP"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-
-            <Button
-                android:id="@+id/btn_proceed"
+                android:id="@+id/btn_create"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -686,14 +553,10 @@
                 android:background="@drawable/eidttext_boader"
                 android:backgroundTint="@color/green"
                 android:drawableRight="@drawable/forwardresizer"
-                android:paddingLeft="@dimen/p10"
-                android:text="PROCEED"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-
+                android:paddingLeft="@dimen/p20"
+                android:text="UPDATE"
+                android:textColor="@color/white" />
 
         </RelativeLayout>
     </LinearLayout>
-
-
 </RelativeLayout>

@@ -28,5 +28,6 @@
         android:layout_marginBottom="@dimen/p10"
         android:button="@drawable/custom_checkbox"
         android:focusable="false"
+        android:checked="false"
         android:focusableInTouchMode="false" />
 </RelativeLayout>

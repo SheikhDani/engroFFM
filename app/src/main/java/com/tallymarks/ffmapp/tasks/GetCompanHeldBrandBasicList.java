@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.companybrandbasiclistoutput.CompanyHeldBrandBasicListOutput;
 import com.tallymarks.ffmapp.models.productsbrandbycategory.ProductBrandByCategoryOutput;
@@ -34,11 +35,13 @@ public class GetCompanHeldBrandBasicList extends AsyncTask<String, Void, Void> {
     private Context mContext;
     SharedPrefferenceHelper sHelper;
     DatabaseHandler db;
-    public  GetCompanHeldBrandBasicList (Context context)
-    {
+    MyDatabaseHandler mydb;
+
+    public GetCompanHeldBrandBasicList(Context context) {
         this.mContext = context;
         this.sHelper = new SharedPrefferenceHelper(mContext);
         this.db = new DatabaseHandler(mContext);
+        this.mydb = new MyDatabaseHandler(mContext);
     }
 
     @Override
@@ -77,10 +80,17 @@ public class GetCompanHeldBrandBasicList extends AsyncTask<String, Void, Void> {
                     for (int j = 0; j < journeycode.size(); j++) {
                         HashMap<String, String> dbParams = new HashMap<>();
                         dbParams.put(db.KEY_ENGRO_BRANCH_ID, journeycode.get(j).getId() == null || journeycode.get(j).getId() == 0 ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getId().toString());
-                        dbParams.put(db.KEY_ENGRO_DIVISION_CODE,journeycode.get(j).getDivisionCode() == null || journeycode.get(j).getDivisionCode().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getDivisionCode().toString());
-                        dbParams.put(db.KEY_ENGRO_RAND_NAME,journeycode.get(j).getBrandName() == null || journeycode.get(j).getBrandName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getBrandName());
-                        dbParams.put(db.KEY_ENGRO_FERT_TYPE,journeycode.get(j).getFertAppType() == null || journeycode.get(j).getFertAppType().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getFertAppType().toString());
+                        dbParams.put(db.KEY_ENGRO_DIVISION_CODE, journeycode.get(j).getDivisionCode() == null || journeycode.get(j).getDivisionCode().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getDivisionCode().toString());
+                        dbParams.put(db.KEY_ENGRO_RAND_NAME, journeycode.get(j).getBrandName() == null || journeycode.get(j).getBrandName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getBrandName());
+                        dbParams.put(db.KEY_ENGRO_FERT_TYPE, journeycode.get(j).getFertAppType() == null || journeycode.get(j).getFertAppType().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getFertAppType().toString());
                         db.addData(db.ENGRO_BRANCH, dbParams);
+                        HashMap<String, String> dbParams2 = new HashMap<>();
+                        dbParams2.put(mydb.KEY_ENGRO_PRODUCT_NAME, journeycode.get(j).getBrandName() == null || journeycode.get(j).getBrandName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getBrandName());
+                        dbParams2.put(mydb.KEY_ENGRO_PRODUCT_ID, journeycode.get(j).getId() == null || journeycode.get(j).getId() == 0 ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getId().toString());
+                        dbParams2.put(mydb.KEY_ENGRO_PRODUCT_CHECKED, "false");
+                        mydb.addData(mydb.ENGRO_DEALAERS_LIST, dbParams2);
+
+
                     }
                 }
             }
