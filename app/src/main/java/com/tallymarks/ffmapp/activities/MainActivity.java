@@ -69,6 +69,7 @@ import com.tallymarks.ffmapp.models.addfarmerinput.ServingDealer;
 import com.tallymarks.ffmapp.models.assignedsalespoint.AssignedSalesPointOutput;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Activity;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.FarmerCheckIn;
+import com.tallymarks.ffmapp.models.getallFarmersplanoutput.OtherProduct;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Recommendation;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Sampling;
 import com.tallymarks.ffmapp.models.getallcustomersplanoutput.GetAllCustomersOutput;
@@ -2252,7 +2253,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 recommendation.setCropId(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_CROPID)));
                 recommendation.setFertAppTypeId(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_FERTTYPE_ID)));
                 recommendation.setBrandId(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_BRAND_ID)));
-                recommendation.setDosage(Double.valueOf(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_DOSAGE))));
+                recommendation.setDosage(Double.parseDouble(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_DOSAGE))));
                 recommendationList.add(recommendation);
             }
             while (cursorRecommendations.moveToNext());
@@ -2310,6 +2311,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapForActivity.put(mydb.KEY_TODAY_ADDRESS, "");
         mapForActivity.put(mydb.KEY_TODAY_MAIN_PRODUCT, "");
         mapForActivity.put(mydb.KEY_TODAY_REMARKS, "");
+        mapForActivity.put(mydb.KEY_TODAY_CROP_DEF, "");
+        mapForActivity.put(mydb.KEY_TODAY_CROP_ACE, "");
+        mapForActivity.put(mydb.KEY_TODAY_OTHER_PRODUCT_LIQUIDATED, "");
+        mapForActivity.put(mydb.KEY_TODAY_PACKS_LIQUIATED, "");
+        mapForActivity.put(mydb.KEY_TODAY_SERVINGDEALERID, "");
         mapForActivity.put(mydb.KEY_TODAY_LATITUTE, "");
         mapForActivity.put(mydb.KEY_TODAY_LONGITUTE, "");
 
@@ -2323,12 +2329,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             do {
                 // do for activity
 
-                activity.setCropId(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_CROPID)));
+                activity.setCropId(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_CROPID))));
                 activity.setAddress(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_ADDRESS)));
-                activity.setMainProduct(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_MAIN_PRODUCT)));
+                activity.setMainProduct(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_MAIN_PRODUCT))));
                 activity.setRemarks(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_REMARKS)));
-                activity.setLatitude(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_LATITUTE)));
-                activity.setLongitude(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_LONGITUTE)));
+                activity.setPacksLiquidated(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_PACKS_LIQUIATED))));
+                activity.setOtherPacksLiquidated(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_OTHER_PRODUCT_LIQUIDATED))));
+                activity.setLatitude(Double.parseDouble(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_LATITUTE))));
+                activity.setLongitude(Double.parseDouble(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_LONGITUTE))));
+                activity.setCropDeficiency(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_CROP_DEF))));
+                activity.setCropAcreage(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_CROP_ACE))));
+                activity.setCustomerId(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_SERVINGDEALERID)));
+                activity.setOtherProducts(loadotherProducts(thisfarmerId));
+
                 thisfarmerCheckIn.setActivity(activity);
             }
             while (cursorActivity.moveToNext());
@@ -2336,6 +2349,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //return activity;
     }
+    private ArrayList<OtherProduct> loadotherProducts(String farmerid) {
+        ArrayList<OtherProduct> productsList = new ArrayList<>();
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(mydb.KEY_TODAY_FARMER_OTHER_PRODUCT_ID, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(mydb.KEY_TODAY_FARMMER_ID, farmerid);
+        Cursor cursor2 = mydb.getData(mydb.TODAY_FARMER_OTHER_PRODUCTS, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+               OtherProduct prod = new OtherProduct();
+                prod.setProductId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_FARMER_OTHER_PRODUCT_ID))));
+                productsList.add(prod);
+
+            }
+            while (cursor2.moveToNext());
+        }
+        return productsList;
+    }
+
 
     private void loadLocationlastFarmer(FarmerCheckIn thisfarmerCheckIn, String thisfarmerId) {
         HashMap<String, String> map = new HashMap<>();

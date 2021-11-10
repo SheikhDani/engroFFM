@@ -105,7 +105,7 @@ public class FarmVisitActivity extends AppCompatActivity {
 //        }
 //        else
 //        {
-            planType = sHelper.getString(Constants.PLAN_TYPE_FARMER);
+        planType = sHelper.getString(Constants.PLAN_TYPE_FARMER);
 //        }
         tvTopHeader = findViewById(R.id.tv_dashboard);
         auto_crop = findViewById(R.id.auto_crop);
@@ -288,7 +288,7 @@ public class FarmVisitActivity extends AppCompatActivity {
 
         auto_crop.setCursorVisible(false);
         auto_main_product.setCursorVisible(false);
-       auto_Serving_dealer.setCursorVisible(false);
+        auto_Serving_dealer.setCursorVisible(false);
 
 
         SpannableStringBuilder tvCrop = setStarToLabel("Crop");
@@ -415,7 +415,7 @@ public class FarmVisitActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               auto_Serving_dealer.showDropDown();
+                auto_Serving_dealer.showDropDown();
                 String selection = servingDealersArraylist.get(position);
                 map.put(mydb.KEY_TODAY_SERVINGDEALERID, servingDealersIDArraylist.get(position));
                 Toast.makeText(getApplicationContext(), selection,
@@ -482,17 +482,19 @@ public class FarmVisitActivity extends AppCompatActivity {
             }
         });
     }
+
     private void addOtherProducts(ArrayList<DataModel> dataModels) {
         for (int i = 0; i < dataModels.size(); i++) {
+
             if (dataModels.get(i).isChecked()) {
                 HashMap<String, String> headerParams = new HashMap<>();
                 headerParams.put(mydb.KEY_TODAY_FARMER_OTHER_PRODUCT_ID, dataModels.get(i).getId());
-                headerParams.put(mydb.KEY_TODAY_FARMER_ID, sHelper.getString(Constants.S_FARMER_ID));
+                headerParams.put(mydb.KEY_TODAY_FARMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
                 headerParams.put(mydb.KEY_PLAN_TYPE, planType);
                 mydb.addData(mydb.TODAY_FARMER_OTHER_PRODUCTS, headerParams);
-
-
             }
+
+
             HashMap<String, String> headerParams2 = new HashMap<>();
             if (dataModels.get(i).isChecked()) {
                 headerParams2.put(mydb.KEY_ENGRO_PRODUCT_CHECKED, "true");
@@ -500,10 +502,10 @@ public class FarmVisitActivity extends AppCompatActivity {
                 headerParams2.put(mydb.KEY_ENGRO_PRODUCT_CHECKED, "false");
             }
 
-            headerParams2.put(mydb.KEY_TODAY_FARMER_ID, sHelper.getString(Constants.S_FARMER_ID));
+            headerParams2.put(mydb.KEY_TODAY_FARMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
             headerParams2.put(mydb.KEY_PLAN_TYPE, planType);
             HashMap<String, String> filter2 = new HashMap<>();
-            filter2.put(mydb.KEY_ENGRO_PRODUCT_ID,dataModels.get(i).getId());
+            filter2.put(mydb.KEY_ENGRO_PRODUCT_ID, dataModels.get(i).getId());
             mydb.updateData(mydb.ENGRO_DEALAERS_LIST, headerParams2, filter2);
 
         }
@@ -514,42 +516,41 @@ public class FarmVisitActivity extends AppCompatActivity {
             if (dataModels.get(i).isChecked()) {
                 HashMap<String, String> headerParams = new HashMap<>();
                 headerParams.put(mydb.KEY_TODAY_FARMER_OTHER_PRODUCT_ID, dataModels.get(i).getId());
-                headerParams.put(mydb.KEY_TODAY_FARMER_ID, sHelper.getString(Constants.FARMER_ID));
-                headerParams.put(mydb.KEY_PLAN_TYPE, planType);
                 HashMap<String, String> filter = new HashMap<>();
-                filter.put(mydb.KEY_TODAY_FARMER_ID, sHelper.getString(Constants.S_FARMER_ID));
-                filter.put(mydb.KEY_PLAN_TYPE,planType);
-                mydb.updateData(mydb.TODAY_FARMER_OTHER_PRODUCTS, headerParams,filter);
+                filter.put(mydb.KEY_TODAY_FARMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
+                filter.put(mydb.KEY_PLAN_TYPE, planType);
+                mydb.updateData(mydb.TODAY_FARMER_OTHER_PRODUCTS, headerParams, filter);
             }
 
-                HashMap<String, String> headerParams2 = new HashMap<>();
-                if (dataModels.get(i).isChecked()) {
-                    headerParams2.put(mydb.KEY_ENGRO_PRODUCT_CHECKED, "true");
-                } else {
-                    headerParams2.put(mydb.KEY_ENGRO_PRODUCT_CHECKED, "false");
-                }
 
-                headerParams2.put(mydb.KEY_TODAY_FARMER_ID, sHelper.getString(Constants.S_FARMER_ID));
-                headerParams2.put(mydb.KEY_PLAN_TYPE, planType);
-                HashMap<String, String> filter2 = new HashMap<>();
-                filter2.put(mydb.KEY_ENGRO_PRODUCT_ID,dataModels.get(i).getId());
-                mydb.updateData(mydb.ENGRO_DEALAERS_LIST, headerParams2, filter2);
+            HashMap<String, String> headerParams2 = new HashMap<>();
+            if (dataModels.get(i).isChecked()) {
+                headerParams2.put(mydb.KEY_ENGRO_PRODUCT_CHECKED, "true");
+            } else {
+                headerParams2.put(mydb.KEY_ENGRO_PRODUCT_CHECKED, "false");
+            }
+
+            headerParams2.put(mydb.KEY_TODAY_FARMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
+            headerParams2.put(mydb.KEY_PLAN_TYPE, planType);
+            HashMap<String, String> filter2 = new HashMap<>();
+            filter2.put(mydb.KEY_ENGRO_PRODUCT_ID, dataModels.get(i).getId());
+            mydb.updateData(mydb.ENGRO_DEALAERS_LIST, headerParams2, filter2);
 
 
         }
     }
-    private void openotherproduct()
-    {
+
+    private void openotherproduct() {
         LayoutInflater li = LayoutInflater.from(FarmVisitActivity.this);
         View promptsView = li.inflate(R.layout.dialouge_other_product, null);
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitActivity.this);
         alertDialogBuilder.setView(promptsView);
         final AlertDialog alertDialog = alertDialogBuilder.create();
-       final  ArrayList<DataModel> dataModels = new ArrayList<>();
+        final ArrayList<DataModel> dataModels = new ArrayList<>();
         final TextView title = promptsView.findViewById(R.id.tv_option);
         final Button otherProduct = promptsView.findViewById(R.id.btn_add_other_product);
         final ImageView ivClsoe = promptsView.findViewById(R.id.iv_Close);
-       final  ListView listView = promptsView.findViewById(R.id.listView);
+        final ListView listView = promptsView.findViewById(R.id.listView);
         ivClsoe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -559,18 +560,14 @@ public class FarmVisitActivity extends AppCompatActivity {
         otherProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(dataModels.size()>0 && dataModels!=null)
-                {
-                    if(isthisFarmeOtherProductsAlreadyExists())
-                    {
+                if (dataModels.size() > 0 && dataModels != null) {
+                    if (isthisFarmeOtherProductsAlreadyExists()) {
                         updateOtherProducts(dataModels);
-                    }
-                    else {
+                    } else {
                         addOtherProducts(dataModels);
                     }
                     alertDialog.dismiss();
-                }
-                else {
+                } else {
                     Toast.makeText(FarmVisitActivity.this, "Please Select at least one Product", Toast.LENGTH_SHORT).show();
                 }
 
@@ -578,7 +575,7 @@ public class FarmVisitActivity extends AppCompatActivity {
         });
         title.setText("Select Product");
         prepareBrandData(dataModels);
-        final SalesCallAdapter adapter = new SalesCallAdapter(dataModels, getApplicationContext(),"farmvisit");
+        final SalesCallAdapter adapter = new SalesCallAdapter(dataModels, getApplicationContext(), "farmvisit");
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -589,21 +586,19 @@ public class FarmVisitActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
 
 
-
             }
         });
         //ImageView ivClose = promptsView.findViewById(R.id.iv_close);
         alertDialogBuilder.setCancelable(true);
         alertDialog.show();
     }
+
     private boolean isFarmerCheckedSaved() {
         boolean flag = false;
         HashMap<String, String> map = new HashMap<>();
-        map.put(mydb.KEY_ENGRO_PRODUCT_CHECKED, "");
-
+        map.put(mydb.KEY_PLAN_TYPE, "");
         HashMap<String, String> filer = new HashMap<>();
-        filer.put(mydb.KEY_TODAY_FARMER_ID, sHelper.getString(Constants.S_FARMER_ID));
-
+        filer.put(mydb.KEY_TODAY_FARMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
         Cursor cursor = mydb.getData(mydb.ENGRO_DEALAERS_LIST, map, filer);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -615,8 +610,9 @@ public class FarmVisitActivity extends AppCompatActivity {
         }
         return flag;
     }
+
     private void prepareBrandData(ArrayList<DataModel> dataModels) {
-        String productName = "", productID = "" ,productChecked="";
+        String productName = "", productID = "", productChecked = "";
         HashMap<String, String> map = new HashMap<>();
         dataModels.clear();
 
@@ -625,9 +621,9 @@ public class FarmVisitActivity extends AppCompatActivity {
         map.put(mydb.KEY_ENGRO_PRODUCT_CHECKED, "");
         //map.put(db.KEY_IS_VALID_USER, "");
         HashMap<String, String> filters = new HashMap<>();
-        if(isFarmerCheckedSaved()) {
+        if (isFarmerCheckedSaved()) {
             filters.put(mydb.KEY_PLAN_TYPE, planType);
-            filters.put(mydb.KEY_TODAY_FARMER_ID, sHelper.getString(Constants.S_FARMER_ID));
+            filters.put(mydb.KEY_TODAY_FARMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
         }
 
         Cursor cursor = mydb.getData(mydb.ENGRO_DEALAERS_LIST, map, filters);
@@ -640,15 +636,13 @@ public class FarmVisitActivity extends AppCompatActivity {
                 productChecked = cursor.getString(cursor.getColumnIndex(mydb.KEY_ENGRO_PRODUCT_CHECKED));
                 model.setName(productName);
                 model.setId(productID);
-                if(isFarmerCheckedSaved()) {
+                if (isFarmerCheckedSaved()) {
                     if (productChecked.equals("false")) {
                         model.setChecked(false);
                     } else {
                         model.setChecked(true);
                     }
-                }
-                else
-                {
+                } else {
                     model.setChecked(false);
                 }
                 dataModels.add(model);
@@ -666,7 +660,6 @@ public class FarmVisitActivity extends AppCompatActivity {
         if (
                 !(Helpers.isEmptyAutoTextview(getApplicationContext(), auto_crop)) &&
                         !(Helpers.isEmptyAutoTextview(getApplicationContext(), auto_Serving_dealer)) &&
-                        !(Helpers.isEmptyAutoTextview(getApplicationContext(), auto_other_product)) &&
                         !(Helpers.isEmpty(getApplicationContext(), etcropacre)) &&
                         !(Helpers.isEmpty(getApplicationContext(), etcropdef)) &&
                         !(Helpers.isEmpty(getApplicationContext(), etpacks)) &&
@@ -686,22 +679,22 @@ public class FarmVisitActivity extends AppCompatActivity {
                     map.put(mydb.KEY_TODAY_REMARKS, "");
                 }
                 if (etpacks.getText().toString() != null || !etpacks.equals(null)) {
-                    map.put(mydb.KEY_TODAY_PACKS_LIQUIATED,etpacks.getText().toString());
+                    map.put(mydb.KEY_TODAY_PACKS_LIQUIATED, etpacks.getText().toString());
                 } else {
                     map.put(mydb.KEY_TODAY_PACKS_LIQUIATED, "");
                 }
                 if (etotherpacksliq.getText().toString() != null || !etotherpacksliq.equals(null)) {
-                    map.put(mydb.KEY_TODAY_OTHER_PRODUCT_LIQUIDATED,etotherpacksliq.getText().toString());
+                    map.put(mydb.KEY_TODAY_OTHER_PRODUCT_LIQUIDATED, etotherpacksliq.getText().toString());
                 } else {
                     map.put(mydb.KEY_TODAY_OTHER_PRODUCT_LIQUIDATED, "");
                 }
                 if (etcropacre.getText().toString() != null || !etcropacre.equals(null)) {
-                    map.put(mydb.KEY_TODAY_CROP_ACE,etcropacre.getText().toString());
+                    map.put(mydb.KEY_TODAY_CROP_ACE, etcropacre.getText().toString());
                 } else {
                     map.put(mydb.KEY_TODAY_CROP_ACE, "");
                 }
                 if (etcropdef.getText().toString() != null || !etcropdef.equals(null)) {
-                    map.put(mydb.KEY_TODAY_CROP_DEF,etcropdef.getText().toString());
+                    map.put(mydb.KEY_TODAY_CROP_DEF, etcropdef.getText().toString());
                 } else {
                     map.put(mydb.KEY_TODAY_CROP_DEF, "");
                 }
@@ -793,6 +786,7 @@ public class FarmVisitActivity extends AppCompatActivity {
         }
         return flag;
     }
+
     private boolean isthisFarmeOtherProductsAlreadyExists() {
         boolean flag = false;
         HashMap<String, String> map = new HashMap<>();
@@ -857,6 +851,7 @@ public class FarmVisitActivity extends AppCompatActivity {
             mainProductArraylist.set(i, mainProductArraylist.get(i).replace("%20", " "));
         }
     }
+
     public void getServingDealersfromDatabase() {
         HashMap<String, String> map = new HashMap<>();
 
@@ -864,7 +859,7 @@ public class FarmVisitActivity extends AppCompatActivity {
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME, "");
         //map.put(db.KEY_IS_VALID_USER, "");
         HashMap<String, String> filters = new HashMap<>();
-        filters.put(db.KEY_TODAY_JOURNEY_TYPE,"all");
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE, "all");
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -1088,7 +1083,7 @@ public class FarmVisitActivity extends AppCompatActivity {
 
                 int dosagecal = acrecal * dosePerAcre;
                 plan.setDosage(String.valueOf(dosagecal));
-                mapRecommendation.put(mydb.KEY_TODAY_DOSAGE, String.valueOf(dosage));
+                mapRecommendation.put(mydb.KEY_TODAY_DOSAGE, String.valueOf(dosagecal));
                 mapRecommendation.put(mydb.KEY_TODAY_FARMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
                 mapRecommendation.put(mydb.KEY_PLAN_TYPE, planType);
 
