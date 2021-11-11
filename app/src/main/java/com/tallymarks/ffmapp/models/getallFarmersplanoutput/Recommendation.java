@@ -17,7 +17,7 @@ public class Recommendation {
     private String brandId;
     @SerializedName("dosage")
     @Expose
-    private Double dosage;
+    private Integer dosage;
 
     public String getCropId() {
         return cropId;
@@ -43,11 +43,11 @@ public class Recommendation {
         this.brandId = brandId;
     }
 
-    public Double getDosage() {
+    public Integer getDosage() {
         return dosage;
     }
 
-    public void setDosage(Double dosage) {
+    public void setDosage(Integer dosage) {
         this.dosage = dosage;
     }
 

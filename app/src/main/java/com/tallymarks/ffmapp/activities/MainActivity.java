@@ -2253,7 +2253,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 recommendation.setCropId(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_CROPID)));
                 recommendation.setFertAppTypeId(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_FERTTYPE_ID)));
                 recommendation.setBrandId(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_BRAND_ID)));
-                recommendation.setDosage(Double.parseDouble(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_DOSAGE))));
+                recommendation.setDosage(Integer.parseInt(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_DOSAGE))));
                 recommendationList.add(recommendation);
             }
             while (cursorRecommendations.moveToNext());
