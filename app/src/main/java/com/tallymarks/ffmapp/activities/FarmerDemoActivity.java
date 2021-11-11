@@ -32,6 +32,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.Gson;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.createProductDemo.CreateProductDemo;
@@ -57,6 +58,7 @@ public class FarmerDemoActivity extends AppCompatActivity {
     Calendar myCalendar;
     MyDatabaseHandler mydb;
     SharedPrefferenceHelper sHelper;
+    ExtraHelper extraHelper;
     EditText et_address;
     DatePickerDialog datePickerDialog;
     ArrayList<String> cropArraylist = new ArrayList<>();
@@ -100,6 +102,7 @@ public class FarmerDemoActivity extends AppCompatActivity {
         iv_menu.setVisibility(View.GONE);
         tvTopHeader.setVisibility(View.VISIBLE);
         sHelper = new SharedPrefferenceHelper(FarmerDemoActivity.this);
+        extraHelper = new ExtraHelper(FarmerDemoActivity.this);
         db = new DatabaseHandler(FarmerDemoActivity.this);
         mydb = new MyDatabaseHandler(FarmerDemoActivity.this);
 
@@ -517,7 +520,14 @@ public class FarmerDemoActivity extends AppCompatActivity {
 
                  httpHandler = new HttpHandler();
                 HashMap<String, String> headerParams2 = new HashMap<>();
+            if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
                 headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+            }
+            else
+            {
+                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+            }
+               // headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
                 HashMap<String, String> bodyParams = new HashMap<>();
                 String output = gson.toJson(farmerDemoCollection);
                 //output = gson.toJson(inputParameters, SaveWorkInput.class);

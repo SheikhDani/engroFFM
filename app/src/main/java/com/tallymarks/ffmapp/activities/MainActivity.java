@@ -58,6 +58,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.ExpandableListAdapter;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.MenuModel;
@@ -124,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public DrawerLayout drawer;
     private TextView tvTopHeader;
     SharedPrefferenceHelper sHelper;
+    ExtraHelper extraHelper;
     NavigationView navigationView;
     TextView userName;
     ImageView iv_Menu, iv_Back;
@@ -191,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tvTopHeader.setVisibility(View.VISIBLE);
         tvTopHeader.setText("DASHBOARD");
         sHelper = new SharedPrefferenceHelper(MainActivity.this);
+        extraHelper = new ExtraHelper(MainActivity.this);
         Log.e("token", String.valueOf(sHelper.getString(Constants.ACCESS_TOKEN)));
         gpsTracker = new GpsTracker(MainActivity.this);
         db = new DatabaseHandler(MainActivity.this);
@@ -469,6 +472,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             while (cursor.moveToNext());
             userName.setText(username);
 
+        }
+        else
+        {
+            userName.setText(extraHelper.getString(Constants.NAME));
         }
     }
 
@@ -1301,7 +1308,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 while (cursor2.moveToNext());
                 httpHandler = new HttpHandler();
                 HashMap<String, String> headerParams2 = new HashMap<>();
-                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                    headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                }
+                else
+                {
+                    headerParams2.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+                }
+                //headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
                 HashMap<String, String> bodyParams = new HashMap<>();
                 String output = gson.toJson(inputCollection);
                 Log.e("postoutput", String.valueOf(output));
@@ -1444,7 +1458,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 while (cursor2.moveToNext());
                 httpHandler = new HttpHandler();
                 HashMap<String, String> headerParams2 = new HashMap<>();
-                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                    headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                }
+                else
+                {
+                    headerParams2.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+                }
+               // headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
                 HashMap<String, String> bodyParams = new HashMap<>();
                 String output = gson.toJson(inputCollection);
                 Log.e("postoutput", String.valueOf(output));
@@ -1642,7 +1663,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 while (cursor2.moveToNext());
                 httpHandler = new HttpHandler();
                 HashMap<String, String> headerParams2 = new HashMap<>();
-                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                    headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                }
+                else
+                {
+                    headerParams2.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+                }
+               // headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
                 HashMap<String, String> bodyParams = new HashMap<>();
                 String output = gson.toJson(inputCollection);
                 //output = gson.toJson(inputParameters, SaveWorkInput.class);

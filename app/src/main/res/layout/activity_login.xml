@@ -80,22 +80,23 @@
             <EditText
                 android:id="@+id/et_username"
                 android:layout_width="fill_parent"
-                android:paddingTop="10dp"
-                android:gravity="center_horizontal"
-                android:background="@drawable/eidttext_boader"
                 android:layout_height="@dimen/p50"
+                android:background="@drawable/eidttext_boader"
+                android:gravity="center_horizontal"
                 android:hint="@string/username"
+                android:paddingTop="10dp"
                 android:singleLine="true"
                 android:textColorHint="#cccccc" />
+
             <EditText
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
-                android:background="@drawable/eidttext_boader"
                 android:layout_height="@dimen/p50"
-                android:paddingTop="10dp"
-                android:gravity="center_horizontal"
                 android:layout_marginTop="20dp"
+                android:background="@drawable/eidttext_boader"
+                android:gravity="center_horizontal"
                 android:hint="@string/passowrd"
+                android:paddingTop="10dp"
                 android:password="true"
                 android:singleLine="true"
                 android:textColorHint="#cccccc" />
@@ -107,7 +108,6 @@
                 android:layout_marginTop="@dimen/p20"
                 android:orientation="horizontal"
                 android:weightSum="2">
-
 
 
                 <Button
@@ -131,7 +131,6 @@
                 android:weightSum="2">
 
 
-
                 <TextView
                     android:id="@+id/txt_forget"
                     android:layout_width="match_parent"
@@ -145,6 +144,7 @@
                     android:textSize="@dimen/ts16" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -153,20 +153,17 @@
                 android:weightSum="2">
 
 
-
                 <ImageView
+                    android:id="@+id/icon"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/engrofingerprint"
-                    android:id="@+id/icon"
+                    android:layout_marginBottom="30dp"
 
                     android:paddingTop="2dp"
-                    android:layout_marginBottom="30dp"/>
+                    android:src="@drawable/engrofingerprint" />
 
             </LinearLayout>
-
-
 
 
         </LinearLayout>

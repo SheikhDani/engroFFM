@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.getFarmerTodayJourneyPlan.FarmerTodayJourneyPlan;
@@ -36,6 +37,7 @@ public class GetFatmerTodayJourneyPlan extends AsyncTask<String, Void, Void> {
     ProgressDialog pDialog;
     Context mContext;
     SharedPrefferenceHelper sHelper;
+    ExtraHelper extraHelper;
     MyDatabaseHandler db;
 
     String errorMessage = "";
@@ -43,6 +45,7 @@ public class GetFatmerTodayJourneyPlan extends AsyncTask<String, Void, Void> {
     {
         this.mContext = context;
         sHelper = new SharedPrefferenceHelper(mContext);
+        extraHelper = new ExtraHelper(mContext);
         this.db = new MyDatabaseHandler(mContext);
     }
 
@@ -69,7 +72,14 @@ public class GetFatmerTodayJourneyPlan extends AsyncTask<String, Void, Void> {
             httpHandler = new HttpHandler();
             db = new MyDatabaseHandler(mContext);
             HashMap<String, String> headerParams = new HashMap<>();
-            headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+            if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+            }
+            else
+            {
+                headerParams.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+            }
+           // headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
             response = httpHandler.httpGet(journeyPlanUrl, headerParams);
             Log.e("lOGIN Url", journeyPlanUrl);
             Log.e("Response", response);

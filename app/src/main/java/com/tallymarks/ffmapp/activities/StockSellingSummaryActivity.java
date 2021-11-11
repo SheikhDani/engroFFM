@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.TodayPlanAdapter;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.SoilSamplingCrops;
 import com.tallymarks.ffmapp.models.StockSellingSummary;
@@ -50,6 +51,7 @@ public class StockSellingSummaryActivity extends AppCompatActivity {
     private TableLayout mTableLayout;
     ArrayList<StockSellingSummary> arraylist = new ArrayList<StockSellingSummary>();
     SharedPrefferenceHelper sHelper;
+    ExtraHelper extraHelper;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +63,7 @@ public class StockSellingSummaryActivity extends AppCompatActivity {
         tvTopHeader = findViewById(R.id.tv_dashboard);
         mTableLayout = (TableLayout) findViewById(R.id.displayLinear);
         sHelper = new SharedPrefferenceHelper(StockSellingSummaryActivity.this);
+        extraHelper = new ExtraHelper(StockSellingSummaryActivity.this);
         iv_menu = findViewById(R.id.iv_drawer);
         iv_back = findViewById(R.id.iv_back);
         iv_back.setVisibility(View.VISIBLE);
@@ -292,7 +295,14 @@ public class StockSellingSummaryActivity extends AppCompatActivity {
             try {
                 httpHandler = new HttpHandler();
                 HashMap<String, String> headerParams = new HashMap<>();
-                headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                    headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                }
+                else
+                {
+                    headerParams.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+                }
+                //headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
                 response = httpHandler.httpGet(getsupervsorsnapshot, headerParams);
                 Log.e("Assigned Sales Point", getsupervsorsnapshot);
                 Log.e("Response", response);

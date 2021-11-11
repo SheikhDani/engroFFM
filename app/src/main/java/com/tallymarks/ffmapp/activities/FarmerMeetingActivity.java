@@ -30,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.farmerMeeting.local.Crop;
@@ -71,6 +72,7 @@ public class FarmerMeetingActivity extends AppCompatActivity {
     private DatabaseHandler databaseHandler;
     private MyDatabaseHandler myDatabaseHandler;
     private SharedPrefferenceHelper sharedPrefferenceHelper;
+    private ExtraHelper extraHelper;
     private DateTimePicker datePicker;
 
     private ArrayList<Product> productArrayList;
@@ -149,6 +151,7 @@ public class FarmerMeetingActivity extends AppCompatActivity {
         databaseHandler = new DatabaseHandler(FarmerMeetingActivity.this);
         myDatabaseHandler = new MyDatabaseHandler(FarmerMeetingActivity.this);
         sharedPrefferenceHelper = new SharedPrefferenceHelper(FarmerMeetingActivity.this);
+        extraHelper = new ExtraHelper(FarmerMeetingActivity.this);
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,7 +181,16 @@ public class FarmerMeetingActivity extends AppCompatActivity {
                     Toast.makeText(FarmerMeetingActivity.this, getResources().getString(R.string.meeting_address_required), Toast.LENGTH_LONG).show();
                 } else {
                     if (NetworkManager.isNetworkAvailable(FarmerMeetingActivity.this)) {
-                        String accessToken = sharedPrefferenceHelper.getString(Constants.ACCESS_TOKEN);
+                        String accessToken ;
+
+                        if(sharedPrefferenceHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sharedPrefferenceHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                             accessToken = sharedPrefferenceHelper.getString(Constants.ACCESS_TOKEN);
+
+                        }
+                        else
+                        {
+                           accessToken = extraHelper.getString(Constants.ACCESS_TOKEN);
+                        }
                         String authorization = Constants.BEARER + " " + accessToken;
 //                        String authorization="Bearer 9371e3e4-f427-4078-a8f4-7158f412717c";
                         createMeeting(getCreateMeetingRequest(), authorization);

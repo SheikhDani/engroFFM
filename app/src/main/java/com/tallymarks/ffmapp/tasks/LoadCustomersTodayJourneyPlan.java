@@ -13,6 +13,7 @@ import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.activities.MainActivity;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.getallcustomersplanoutput.GetAllCustomersOutput;
 import com.tallymarks.ffmapp.models.todayjourneyplanoutput.TodayJourneyPlanOutput;
@@ -34,6 +35,7 @@ public class LoadCustomersTodayJourneyPlan extends AsyncTask<String, Void, Void>
     ProgressDialog pDialog;
     Context mContext;
     SharedPrefferenceHelper sHelper;
+    ExtraHelper extraHelper;
     DatabaseHandler db;
 
     String errorMessage = "";
@@ -41,6 +43,7 @@ public class LoadCustomersTodayJourneyPlan extends AsyncTask<String, Void, Void>
     public LoadCustomersTodayJourneyPlan(Context context) {
         this.mContext = context;
         sHelper = new SharedPrefferenceHelper(mContext);
+        extraHelper = new ExtraHelper((mContext));
         db = new DatabaseHandler(mContext);
     }
 
@@ -66,7 +69,14 @@ public class LoadCustomersTodayJourneyPlan extends AsyncTask<String, Void, Void>
         try {
             httpHandler = new HttpHandler();
             HashMap<String, String> headerParams = new HashMap<>();
-            headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+            if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+            }
+            else
+            {
+                headerParams.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+            }
+           // headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
             response = httpHandler.httpGet(journeyPlanUrl, headerParams);
             Log.e("lOGIN Url", journeyPlanUrl);
             Log.e("Response", response);

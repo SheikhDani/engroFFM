@@ -32,6 +32,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.Recommendations;
@@ -76,6 +77,7 @@ public class SoilSamplingActivity extends AppCompatActivity {
     Double checkoutlat = null, checkoutlng = null;
     String checkinlat;
     String checkinlong;
+    ExtraHelper extraHelper;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +94,7 @@ public class SoilSamplingActivity extends AppCompatActivity {
 
         }
         tvTopHeader = findViewById(R.id.tv_dashboard);
+        extraHelper = new ExtraHelper(SoilSamplingActivity.this);
         auto_pre_rop = findViewById(R.id.auto_pre_crop);
         txtacre = findViewById(R.id.txt_acre);
         txtblock = findViewById(R.id.txt_block);
@@ -721,6 +724,10 @@ public class SoilSamplingActivity extends AppCompatActivity {
                 //UserMap.put(cursor.getString(cursor.getColumnIndex(db.KEY_USER_NAME)), cursor.getString(cursor.getColumnIndex(db.KEY_IS_LOGGED_IN)));
             }
             while (cursor.moveToNext());
+        }
+        else
+        {
+            username = extraHelper.getString(Constants.USER_NAME);
         }
         return username;
     }
