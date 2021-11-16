@@ -309,10 +309,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             pDialog.dismiss();
             if(error!=null && !error.equals(""))
             {
-                if(error.equals("invalid_grant"))
-                {
+
                     DialougeManager.invalidCredentialsPopup(LoginActivity.this,"",errorMessage);
-                }
+
             }
 
 

@@ -68,7 +68,7 @@
                 android:backgroundTint="@color/green"
                 android:drawableRight="@drawable/forwardresizer"
                 android:paddingLeft="@dimen/p20"
-                android:text="CREATE"
+                android:text="NEXT"
                 android:textColor="@color/white" />
 
         </RelativeLayout>

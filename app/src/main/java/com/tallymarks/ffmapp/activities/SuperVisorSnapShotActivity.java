@@ -79,7 +79,6 @@ public class SuperVisorSnapShotActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent n = new Intent(SuperVisorSnapShotActivity.this, StockSellingSummaryActivity.class);
-
                 startActivity(n);
 
             }

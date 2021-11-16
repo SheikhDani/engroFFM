@@ -96,7 +96,12 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
             if (movie.getMemebrship().equals("Visited")) {
                 holder.member.setBackgroundColor(Color.parseColor("#159356"));
                 holder.member.setText(movie.getMemebrship());
-            } else {
+            } else if(movie.getMemebrship().equals("Not Available")) {
+                holder.member.setBackgroundColor(Color.RED);
+                holder.member.setText(movie.getMemebrship());
+            }
+            else
+            {
                 holder.member.setBackgroundColor(Color.GRAY);
                 holder.member.setText(movie.getMemebrship());
             }

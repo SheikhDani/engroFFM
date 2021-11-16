@@ -18,6 +18,8 @@
         android:background="@null"
         android:gravity="center_vertical"
         android:hint="0"
+        android:inputType="number"
+        android:maxLength="9"
         android:textColor="@color/black"
 
         />
@@ -29,6 +31,8 @@
         android:layout_weight="1.2"
         android:id="@+id/et_net_price"
         android:background="@null"
+        android:maxLength="9"
+        android:inputType="number"
         android:padding="@dimen/p5"
         android:gravity="center"
         android:textColor="@color/black"

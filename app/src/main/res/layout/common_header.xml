@@ -74,7 +74,7 @@
         android:layout_toLeftOf="@+id/ly_badges"
 
         android:src="@drawable/engronotification"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/cart_badge"
@@ -86,6 +86,7 @@
         android:layout_toLeftOf="@+id/ly_badges"
         android:background="@drawable/notificaiton_badge"
         android:gravity="center"
+        android:visibility="gone"
 
         android:text="0"
         android:textColor="@android:color/white"

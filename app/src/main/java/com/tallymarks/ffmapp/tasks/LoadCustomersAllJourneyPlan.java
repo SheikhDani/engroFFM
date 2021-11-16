@@ -128,45 +128,47 @@ public class LoadCustomersAllJourneyPlan extends AsyncTask<String, Void, Void> {
                                 }
                             }
                         }
-                        if (journeycode.get(i).getPreviousStockSnapshot().size() > 0) {
-                            for (int l = 0; l < journeycode.get(i).getPreviousStockSnapshot().size(); l++) {
+                        if(journeycode.get(i).getPreviousStockSnapshot()!=null) {
+                            if (journeycode.get(i).getPreviousStockSnapshot().size() > 0) {
+                                for (int l = 0; l < journeycode.get(i).getPreviousStockSnapshot().size(); l++) {
 
-                                HashMap<String, String> dbParamsSnapShot = new HashMap<>();
-                                dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_TYPE, "all");
-                                dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY, journeycode.get(i).getPreviousStockSnapshot().get(l).getCategory() == null || journeycode.get(i).getPreviousStockSnapshot().get(l).getCategory().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getPreviousStockSnapshot().get(l).getCategory().toString());
-                                dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, journeycode.get(i).getCustomerId() == null || journeycode.get(i).getCustomerId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getCustomerId());
-                                db.addData(db.TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT, dbParamsSnapShot);
-                                for (int m = 0; m < journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().size(); m++) {
-                                    HashMap<String, String> dbParams = new HashMap<>();
-                                    dbParams.put(db.KEY_TODAY_JOURNEY_TYPE, "all");
-                                    dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_ID, journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getId() == null || journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getId().toString());
-                                    dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_NAME, journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getName() == null || journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getName().toString());
-                                    dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_COMPANYHELD, journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getCompanyHeld() == null || journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getCompanyHeld().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getCompanyHeld().toString());
-                                    dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_QUANTITY, journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getQuantity() == null || journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getQuantity().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getQuantity().toString());
-                                    dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_VISIT_DATE, journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getVisitDate() == null || journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getVisitDate().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getVisitDate().toString());
-                                    dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY, journeycode.get(i).getPreviousStockSnapshot().get(l).getCategory() == null || journeycode.get(i).getPreviousStockSnapshot().get(l).getCategory().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getPreviousStockSnapshot().get(l).getCategory().toString());
-                                    db.addData(db.TODAY_JOURNEY_PLAN_PREVIOUS_STOCK, dbParams);
-                                }
-                            }
-                        }
-                        try {
-                            JSONObject jsonObject = null;
-                            jsonObject = new JSONObject(response);
-                            if (jsonObject.has("stockSold")) {
-                                if (journeycode.get(i).getStockSold().size() > 0) {
-                                    for (int n = 0; n < journeycode.get(i).getStockSold().size(); n++) {
-                                        HashMap<String, String> dbParamsSnapShot = new HashMap<>();
-                                        dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_TYPE, "all");
-                                        dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_STOCK_INVOICE_NUMBER, journeycode.get(i).getStockSold().get(n).getInvoiceNumber() == null || journeycode.get(i).getStockSold().get(n).getInvoiceNumber().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getStockSold().get(n).getInvoiceNumber().toString());
-                                        dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, journeycode.get(i).getCustomerId() == null || journeycode.get(i).getCustomerId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getCustomerId());
-                                        db.addData(db.TODAY_JOURNEY_PLAN_STOCK, dbParamsSnapShot);
-
+                                    HashMap<String, String> dbParamsSnapShot = new HashMap<>();
+                                    dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_TYPE, "all");
+                                    dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY, journeycode.get(i).getPreviousStockSnapshot().get(l).getCategory() == null || journeycode.get(i).getPreviousStockSnapshot().get(l).getCategory().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getPreviousStockSnapshot().get(l).getCategory().toString());
+                                    dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, journeycode.get(i).getCustomerId() == null || journeycode.get(i).getCustomerId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getCustomerId());
+                                    db.addData(db.TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT, dbParamsSnapShot);
+                                    for (int m = 0; m < journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().size(); m++) {
+                                        HashMap<String, String> dbParams = new HashMap<>();
+                                        dbParams.put(db.KEY_TODAY_JOURNEY_TYPE, "all");
+                                        dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_ID, journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getId() == null || journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getId().toString());
+                                        dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_NAME, journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getName() == null || journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getName().toString());
+                                        dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_COMPANYHELD, journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getCompanyHeld() == null || journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getCompanyHeld().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getCompanyHeld().toString());
+                                        dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_QUANTITY, journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getQuantity() == null || journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getQuantity().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getQuantity().toString());
+                                        dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_STOCK_VISIT_DATE, journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getVisitDate() == null || journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getVisitDate().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getPreviousStockSnapshot().get(l).getPreviousStock().get(m).getVisitDate().toString());
+                                        dbParams.put(db.KEY_TODAY_JOURNEY_ORDER_PREVIOUS_SNAPSHOT_CATEGORY, journeycode.get(i).getPreviousStockSnapshot().get(l).getCategory() == null || journeycode.get(i).getPreviousStockSnapshot().get(l).getCategory().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getPreviousStockSnapshot().get(l).getCategory().toString());
+                                        db.addData(db.TODAY_JOURNEY_PLAN_PREVIOUS_STOCK, dbParams);
                                     }
                                 }
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
+//                        try {
+//                            JSONObject jsonObject = null;
+//                            jsonObject = new JSONObject(response);
+//                            if (jsonObject.has("stockSold")) {
+//                                if (journeycode.get(i).getStockSold().size() > 0) {
+//                                    for (int n = 0; n < journeycode.get(i).getStockSold().size(); n++) {
+//                                        HashMap<String, String> dbParamsSnapShot = new HashMap<>();
+//                                        dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_TYPE, "all");
+//                                        dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_STOCK_INVOICE_NUMBER, journeycode.get(i).getStockSold().get(n).getInvoiceNumber() == null || journeycode.get(i).getStockSold().get(n).getInvoiceNumber().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getStockSold().get(n).getInvoiceNumber().toString());
+//                                        dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, journeycode.get(i).getCustomerId() == null || journeycode.get(i).getCustomerId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getCustomerId());
+//                                        db.addData(db.TODAY_JOURNEY_PLAN_STOCK, dbParamsSnapShot);
+//
+//                                    }
+//                                }
+//                            }
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
 
                     }
                 }

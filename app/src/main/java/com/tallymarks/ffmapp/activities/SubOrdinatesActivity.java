@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -246,8 +247,14 @@ public class SubOrdinatesActivity extends AppCompatActivity {
         protected void onPostExecute(Void args) {
 
             pDialog.dismiss();
-            adapter = new SubOrdinatesAdapter(dataModels, getApplicationContext());
-            listView.setAdapter(adapter);
+            if(args==null)
+            {
+                Toast.makeText(SubOrdinatesActivity.this, "No SubOrdinate Found", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                adapter = new SubOrdinatesAdapter(dataModels, getApplicationContext());
+                listView.setAdapter(adapter);
+            }
 
         }
     }

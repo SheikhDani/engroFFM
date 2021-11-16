@@ -51,13 +51,33 @@
                     android:background="@drawable/borderd_view"
                     >
 
-                    <Spinner
-                        android:id="@+id/sp_host_farmer"
+                    <AutoCompleteTextView
+                        android:id="@+id/auto_farmer"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/p5"
-                        android:textSize="@dimen/ts16"
-                        android:backgroundTint="@color/black"
+                        android:layout_height="30dp"
+
+                        android:layout_weight="1"
+
+                        android:background="@drawable/eidttext_boader"
+                        android:clickable="true"
+                        android:cursorVisible="false"
+                        android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                        android:dropDownHeight="155dp"
+                        android:focusable="false"
+
+                        android:hint="Select Host"
+                        android:inputType="none"
+                        android:maxLines="1"
+                        android:paddingLeft="@dimen/p10"
+                        android:paddingTop="@dimen/p5"
+                        android:paddingRight="@dimen/p10"
+                        android:paddingBottom="@dimen/p5"
+
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+
                         />
                 </LinearLayout>
 
@@ -104,16 +124,36 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/p10"
                     android:layout_marginRight="@dimen/p10"
-                    android:background="@drawable/borderd_view"
+
                     >
 
-                    <Spinner
-                        android:id="@+id/sp_crop"
+                    <AutoCompleteTextView
+                        android:id="@+id/auto_crop"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/p5"
-                        android:textSize="@dimen/ts16"
-                        android:backgroundTint="@color/black"
+                        android:layout_height="30dp"
+
+                        android:layout_weight="1"
+
+                        android:background="@drawable/eidttext_boader"
+                        android:clickable="true"
+                        android:cursorVisible="false"
+                        android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                        android:dropDownHeight="155dp"
+                        android:focusable="false"
+
+                        android:hint="Select Crop"
+                        android:inputType="none"
+                        android:maxLines="1"
+                        android:paddingLeft="@dimen/p10"
+                        android:paddingTop="@dimen/p5"
+                        android:paddingRight="@dimen/p10"
+                        android:paddingBottom="@dimen/p5"
+
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+
                         />
                 </LinearLayout>
 
@@ -136,13 +176,33 @@
                     android:background="@drawable/borderd_view"
                     >
 
-                    <Spinner
-                        android:id="@+id/sp_product"
+                    <AutoCompleteTextView
+                        android:id="@+id/auto_product"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/p5"
-                        android:textSize="@dimen/ts16"
-                        android:backgroundTint="@color/black"
+                        android:layout_height="30dp"
+
+                        android:layout_weight="1"
+
+                        android:background="@drawable/eidttext_boader"
+                        android:clickable="true"
+                        android:cursorVisible="false"
+                        android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                        android:dropDownHeight="155dp"
+                        android:focusable="false"
+
+                        android:hint="Select Product"
+                        android:inputType="none"
+                        android:maxLines="1"
+                        android:paddingLeft="@dimen/p10"
+                        android:paddingTop="@dimen/p5"
+                        android:paddingRight="@dimen/p10"
+                        android:paddingBottom="@dimen/p5"
+
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+
                         />
                 </LinearLayout>
 
@@ -164,13 +224,33 @@
                     android:background="@drawable/borderd_view"
                     >
 
-                    <Spinner
-                        android:id="@+id/sp_dealers"
+                    <AutoCompleteTextView
+                        android:id="@+id/auto_dealer"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/p5"
-                        android:textSize="@dimen/ts16"
-                        android:backgroundTint="@color/black"
+                        android:layout_height="30dp"
+
+                        android:layout_weight="1"
+
+                        android:background="@drawable/eidttext_boader"
+                        android:clickable="true"
+                        android:cursorVisible="false"
+                        android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                        android:dropDownHeight="155dp"
+                        android:focusable="false"
+
+                        android:hint="Select Dealer"
+                        android:inputType="none"
+                        android:maxLines="1"
+                        android:paddingLeft="@dimen/p10"
+                        android:paddingTop="@dimen/p5"
+                        android:paddingRight="@dimen/p10"
+                        android:paddingBottom="@dimen/p5"
+
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+
                         />
                 </LinearLayout>
 
@@ -199,6 +279,7 @@
                     android:paddingTop="@dimen/p5"
                     android:paddingBottom="@dimen/p5"
                     android:singleLine="true"
+                    android:maxLength="9"
                     android:inputType="numberSigned"
                     android:textSize="@dimen/ts16" />
 
@@ -255,6 +336,7 @@
                     android:paddingTop="@dimen/p5"
                     android:paddingBottom="@dimen/p5"
                     android:singleLine="true"
+                    android:maxLength="9"
                     android:inputType="numberSigned"
                     android:textSize="@dimen/ts16" />
 
@@ -283,6 +365,7 @@
                     android:paddingRight="@dimen/p10"
                     android:paddingTop="@dimen/p5"
                     android:paddingBottom="@dimen/p5"
+                    android:maxLength="9"
                     android:singleLine="true"
                     android:inputType="numberSigned"
                     android:textSize="@dimen/ts16" />
@@ -312,6 +395,7 @@
                     android:paddingTop="@dimen/p5"
                     android:paddingBottom="@dimen/p5"
                     android:singleLine="true"
+                    android:maxLength="9"
                     android:inputType="number"
                     android:textSize="@dimen/ts16" />
 

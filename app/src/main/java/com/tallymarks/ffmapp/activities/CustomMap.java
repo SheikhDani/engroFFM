@@ -146,15 +146,19 @@ public class CustomMap extends AppCompatActivity implements OnMapReadyCallback, 
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (from.equals("soil")) {
-                    Intent i = new Intent(CustomMap.this, SoilSamplingActivity.class);
-                    startActivity(i);
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                } else if (from.equals("farm")) {
-                    Intent i = new Intent(CustomMap.this, FarmVisitActivity.class);
-                    startActivity(i);
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                }
+                onBackPressed();
+//                Intent i = new Intent(StockSellingSummaryActivity.this, SuperVisorSnapShotActivity.class);
+//                startActivity(i);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//                if (from.equals("soil")) {
+//                    Intent i = new Intent(CustomMap.this, SoilSamplingActivity.class);
+//                    startActivity(i);
+//                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//                } else if (from.equals("farm")) {
+//                    Intent i = new Intent(CustomMap.this, FarmVisitActivity.class);
+//                    startActivity(i);
+//                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//                }
 
             }
         });
@@ -162,16 +166,22 @@ public class CustomMap extends AppCompatActivity implements OnMapReadyCallback, 
             @Override
             public void onClick(View view) {
                 if (from.equals("soil")) {
-                    Intent i = new Intent(CustomMap.this, SoilSamplingActivity.class);
-                    i.putExtra("soillat", currentlat);
-                    i.putExtra("soillng", currentlng);
-                    startActivity(i);
+                    sHelper.setString(Constants.CUSTOM_LAT_SOIL,currentlat);
+                    sHelper.setString(Constants.CUSTOM_LNG_SOIL,currentlng);
+                    onBackPressed();
+////                    Intent i = new Intent(CustomMap.this, SoilSamplingActivity.class);
+////                    i.putExtra("soillat", currentlat);
+////                    i.putExtra("soillng", currentlng);
+//                    startActivity(i);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 } else if (from.equals("farm")) {
-                    Intent i = new Intent(CustomMap.this, FarmVisitActivity.class);
-                    i.putExtra("farmlat", currentlat);
-                    i.putExtra("farmlng", currentlng);
-                    startActivity(i);
+                    sHelper.setString(Constants.CUSTOM_LAT_FARM,currentlat);
+                    sHelper.setString(Constants.CUSTOM_LNG_FARM,currentlng);
+//                    Intent i = new Intent(CustomMap.this, FarmVisitActivity.class);
+//                    i.putExtra("farmlat", currentlat);
+//                    i.putExtra("farmlng", currentlng);
+//                    startActivity(i);
+                    onBackPressed();
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 }
             }
@@ -259,15 +269,17 @@ public class CustomMap extends AppCompatActivity implements OnMapReadyCallback, 
     }
     @Override
     public void onBackPressed() {
-        if (from.equals("soil")) {
-            Intent i = new Intent(CustomMap.this, SoilSamplingActivity.class);
-            startActivity(i);
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-        } else if (from.equals("farm")) {
-            Intent i = new Intent(CustomMap.this, FarmVisitActivity.class);
-            startActivity(i);
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-        }
+        super.onBackPressed();
+//        if (from.equals("soil")) {
+//            Intent i = new Intent(CustomMap.this, SoilSamplingActivity.class);
+//            startActivity(i);
+//            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//        } else if (from.equals("farm")) {
+//            Intent i = new Intent(CustomMap.this, FarmVisitActivity.class);
+//            startActivity(i);
+//            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//        }
     }
+
 
 }

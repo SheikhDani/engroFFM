@@ -10,9 +10,12 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,18 +31,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.adapters.SalesPointAdapter;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
+import com.tallymarks.ffmapp.models.SaelsPoint;
 import com.tallymarks.ffmapp.models.createProductDemo.CreateProductDemo;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.FarmerCheckIn;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.Helpers;
 import com.tallymarks.ffmapp.utils.HttpHandler;
+import com.tallymarks.ffmapp.utils.RecyclerTouchListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,6 +58,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class FarmerDemoActivity extends AppCompatActivity {
     private TextView tvTopHeader, et_date, pending;
@@ -75,6 +86,145 @@ public class FarmerDemoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_farmer_demo);
         initView();
+
+    }
+    private void prepareProductData(List<SaelsPoint> movieList) {
+        movieList.clear();
+        String productName = "", productID = "";
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(db.KEY_ENGRO_RAND_NAME, "");
+        map.put(db.KEY_ENGRO_BRANCH_ID, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        Cursor cursor = db.getData(db.ENGRO_BRANCH, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                SaelsPoint companyname = new SaelsPoint();
+                productName = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_ENGRO_RAND_NAME)));
+                productID = cursor.getString(cursor.getColumnIndex(db.KEY_ENGRO_BRANCH_ID));
+                companyname.setPoint(productName);
+                companyname.setId(productID);
+                movieList.add(companyname);
+            }
+            while (cursor.moveToNext());
+        }
+
+    }
+    public void selectDialouge(AutoCompleteTextView autoProduct,String from) {
+        LayoutInflater li = LayoutInflater.from(FarmerDemoActivity.this);
+        View promptsView = li.inflate(R.layout.dialouge_sales_point, null);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmerDemoActivity.this);
+        alertDialogBuilder.setView(promptsView);
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        final List<SaelsPoint> companyList = new ArrayList<>();
+        final TextView title = promptsView.findViewById(R.id.tv_option);
+        final EditText search = promptsView.findViewById(R.id.et_Search);
+        final ImageView ivClsoe = promptsView.findViewById(R.id.iv_Close);
+        ivClsoe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+        if(from.equals("crop")) {
+            title.setText("Select Crop");
+        }
+        else if(from.equals("product"))
+        {
+            title.setText("Select Product");
+        }
+
+        final RecyclerView recyclerView = promptsView.findViewById(R.id.recyclerView);
+        if(from.equals("crop")) {
+            prepareCropData(companyList);
+        }
+        else if(from.equals("product"))
+        {
+            prepareProductData(companyList);
+        }
+        final SalesPointAdapter mAdapter = new SalesPointAdapter(companyList,"salescall");
+
+        // vertical RecyclerView
+        // keep movie_list_row.xml width to `match_parent`
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                SaelsPoint companyname = companyList.get(position);
+                alertDialog.dismiss();
+                autoProduct.setText(companyname.getPoint());
+                if(from.equals("crop")) {
+
+                    map.put(mydb.KEY_CROP_ID, companyname.getId());
+                }
+                else if(from.equals("product"))
+                {
+                    map.put(mydb.KEY_PRODUCT_ID, companyname.getId());
+                }
+
+
+                // Toast.makeText(getApplicationContext(), movie.getPoint() + " is selected!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+        search.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                if(search.hasFocus()) {
+                    mAdapter.filter(cs.toString());
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+                // Toast.makeText(getApplicationContext(),"before text change",Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                //Toast.makeText(getApplicationContext(),"after text change",Toast.LENGTH_LONG).show();
+            }
+        });
+
+        //ImageView ivClose = promptsView.findViewById(R.id.iv_close);
+
+        alertDialogBuilder.setCancelable(true);
+        alertDialog.show();
+    }
+
+    private void prepareCropData(List<SaelsPoint> movieList) {
+        movieList.clear();
+        String productName = "", productID = "";
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_CROP_ID, "");
+        map.put(db.KEY_CROP_NAME, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        Cursor cursor = db.getData(db.CROPS_LIST, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                SaelsPoint companyname = new SaelsPoint();
+                productName = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_CROP_NAME)));
+                productID = cursor.getString(cursor.getColumnIndex(db.KEY_CROP_ID));
+                companyname.setPoint(productName);
+                companyname.setId(productID);
+                movieList.add(companyname);
+            }
+            while (cursor.moveToNext());
+        }
 
     }
 
@@ -116,8 +266,8 @@ public class FarmerDemoActivity extends AppCompatActivity {
         tvProduct.setText(product);
         tvAddress.setText(address);
         tvObjective.setText(objective);
-        getCropfromDatabase();
-        getMainProductfromDatabase();
+        //getCropfromDatabase();
+        //getMainProductfromDatabase();
         tvTopHeader.setText("FARMER DEMO");
         final String arraylist[] = {"Zabardast Urea vs Urea", "Zarkhez vs DAP", "Zarkhez vs MOP", "Zarkhez vs NP", "Zarkhez vs SOP"};
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
@@ -139,37 +289,38 @@ public class FarmerDemoActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                auto_crop.showDropDown();
-                String selection = cropArraylist.get(position);
-                map.put(mydb.KEY_CROP_ID, cropIDArraylist.get(position));
-                Toast.makeText(getApplicationContext(), selection,
-                        Toast.LENGTH_SHORT).show();
+//                auto_crop.showDropDown();
+//                String selection = cropArraylist.get(position);
+//                map.put(mydb.KEY_CROP_ID, cropIDArraylist.get(position));
+//                Toast.makeText(getApplicationContext(), selection,
+//                        Toast.LENGTH_SHORT).show();
             }
         });
 
         auto_crop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View arg0) {
-                final AlertDialog actions;
-                DialogInterface.OnClickListener actionListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //goto category list with which as the category
-                        String selection = cropArraylist.get(which);
-                        map.put(mydb.KEY_CROP_ID, cropIDArraylist.get(which));
-                        auto_crop.setText(selection);
-
-                    }
-                };
-
-                AlertDialog.Builder categoryAlert = new AlertDialog.Builder(FarmerDemoActivity.this);
-                categoryAlert.setTitle("Crop List");
-
-                categoryAlert.setItems(cropArraylist.toArray(new String[0]), actionListener);
-                actions = categoryAlert.create();
-                actions.show();
-
-                auto_crop.showDropDown();
+                selectDialouge(auto_crop,"crop");
+//                final AlertDialog actions;
+//                DialogInterface.OnClickListener actionListener = new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        //goto category list with which as the category
+//                        String selection = cropArraylist.get(which);
+//                        map.put(mydb.KEY_CROP_ID, cropIDArraylist.get(which));
+//                        auto_crop.setText(selection);
+//
+//                    }
+//                };
+//
+//                AlertDialog.Builder categoryAlert = new AlertDialog.Builder(FarmerDemoActivity.this);
+//                categoryAlert.setTitle("Crop List");
+//
+//                categoryAlert.setItems(cropArraylist.toArray(new String[0]), actionListener);
+//                actions = categoryAlert.create();
+//                actions.show();
+//
+//                auto_crop.showDropDown();
             }
         });
         auto_objective.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -195,11 +346,11 @@ public class FarmerDemoActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                auto_prod.showDropDown();
-                String selection = mainProductArraylist.get(position);
-                map.put(mydb.KEY_PRODUCT_ID, mainProductIDArraylist.get(position));
-                Toast.makeText(getApplicationContext(), selection,
-                        Toast.LENGTH_SHORT).show();
+//                auto_prod.showDropDown();
+//                String selection = mainProductArraylist.get(position);
+//                map.put(mydb.KEY_PRODUCT_ID, mainProductIDArraylist.get(position));
+//                Toast.makeText(getApplicationContext(), selection,
+//                        Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -207,26 +358,27 @@ public class FarmerDemoActivity extends AppCompatActivity {
         auto_prod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View arg0) {
-                final AlertDialog actions;
-                DialogInterface.OnClickListener actionListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //goto category list with which as the category
-                        String selection = mainProductArraylist.get(which);
-                        map.put(mydb.KEY_PRODUCT_ID, mainProductIDArraylist.get(which));
-                        auto_prod.setText(selection);
-
-                    }
-                };
-
-                AlertDialog.Builder categoryAlert = new AlertDialog.Builder(FarmerDemoActivity.this);
-                categoryAlert.setTitle("Crop List");
-
-                categoryAlert.setItems(mainProductArraylist.toArray(new String[0]), actionListener);
-                actions = categoryAlert.create();
-                actions.show();
-
-                auto_prod.showDropDown();
+                selectDialouge(auto_prod,"product");
+//                final AlertDialog actions;
+//                DialogInterface.OnClickListener actionListener = new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        //goto category list with which as the category
+//                        String selection = mainProductArraylist.get(which);
+//                        map.put(mydb.KEY_PRODUCT_ID, mainProductIDArraylist.get(which));
+//                        auto_prod.setText(selection);
+//
+//                    }
+//                };
+//
+//                AlertDialog.Builder categoryAlert = new AlertDialog.Builder(FarmerDemoActivity.this);
+//                categoryAlert.setTitle("Crop List");
+//
+//                categoryAlert.setItems(mainProductArraylist.toArray(new String[0]), actionListener);
+//                actions = categoryAlert.create();
+//                actions.show();
+//
+//                auto_prod.showDropDown();
             }
         });
         iv_back.setOnClickListener(new View.OnClickListener() {

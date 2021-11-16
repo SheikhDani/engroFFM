@@ -19,9 +19,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private SQLiteDatabase db;
     /*Database Varaiables*/
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 1;
     private static final String TAG = "DBAdapter";
-    private static final String DATABASE_NAME = "FFMApplicationDataBasev1";
+    private static final String DATABASE_NAME = "FFMApplicationDataBasev2";
     private Context mContext;
 
     //List of all tables
