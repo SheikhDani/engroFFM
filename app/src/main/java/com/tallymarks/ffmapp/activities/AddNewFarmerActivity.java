@@ -651,6 +651,7 @@ public class AddNewFarmerActivity extends AppCompatActivity {
         getFarmerSalesPointData(txt_selected_market.getText().toString());
         headerParamsParent.put(db.KEY_ADD_FARMER_SALEPOINT_cODE,farmersalespointcode);
         headerParamsParent.put(db.KEY_ADD_FARMER_LAT,currentlat);
+        headerParamsParent.put(db.KEY_FARMER_TRANSACTION_TYPE,"create");
         headerParamsParent.put(db.KEY_ADD_FARMER_LNG,currentLng);
         db.addData2(db.ADD_NEW_FARMER_POST_DATA, headerParamsParent);
 
@@ -690,7 +691,8 @@ public class AddNewFarmerActivity extends AppCompatActivity {
             View addView = LinearLayoutList2.getChildAt(i);
             EditText et_size = (EditText) addView.findViewById(R.id.et_size);
             EditText et_land = (EditText) addView.findViewById(R.id.et_landmark);
-           AutoCompleteTextView auto_owner = addView.findViewById(R.id.auto_owner_ship);
+            AutoCompleteTextView auto_owner = addView.findViewById(R.id.auto_owner_ship);
+            LinearLayout crop = (LinearLayout) addView.findViewById(R.id.linear_layout_dynamic_cropping_pattern);
             AutoCompleteTextView auto_watersource = addView.findViewById(R.id.auto_water_soruce);
             TextView txt_selected_Market = addView.findViewById(R.id.txt_selected_market);
             HashMap<String, String> headerParams = new HashMap<>();
@@ -705,19 +707,21 @@ public class AddNewFarmerActivity extends AppCompatActivity {
             getLandProfileData(txt_selected_Market.getText().toString());
             headerParams.put(db.KEY_ADD_FARMER_LAND_PROFILE_SALES_POINT_CODE, saelspointcode);
             db.addData(db.ADD_NEW_FARMER_LAND_PROFILE, headerParams);
-        }
-        for (int i = 0; i < LinearLayoutList2.getChildCount(); i++) {
-            Log.d("Child Count: ", String.valueOf(LinearLayoutList2.getChildCount()));
-            View addView = LinearLayoutList2.getChildAt(i);
-            EditText et_land_holding = (EditText) addView.findViewById(R.id.et_land_holding);
-            AutoCompleteTextView auto_crop = addView.findViewById(R.id.auto_crop);
-            HashMap<String, String> headerParams = new HashMap<>();
-            headerParams.put(db.KEY_ADD_FARMER_EMAL, et_email.getText().toString());
-            headerParams.put(db.KEY_ADD_FARMER_MOBILE_NUMBER, et_mobile.getText().toString());
-            getCropData(auto_crop.getText().toString());
-            headerParams.put(db.KEY_ADD_FARMER_LAND_PROFILE_CROPPING_PATTERN_CROP_ID, cropid);
-            headerParams.put(db.KEY_ADD_FARMER_LAND_PROFILE_CROPPING_PATTERN_LAND_HOLDING, et_land_holding.getText().toString());
-            db.addData(db.ADD_NEW_FARMER_LAND_PROFILE_CROPPING_PATTERN, headerParams);
+
+            for (int j = 0; j < crop.getChildCount(); j++) {
+                Log.d("Child Count: ", String.valueOf(crop.getChildCount()));
+                View addView2 = crop.getChildAt(j);
+                EditText et_land_holding = (EditText) addView2.findViewById(R.id.et_land_holding);
+                AutoCompleteTextView auto_crop = addView2.findViewById(R.id.auto_crop);
+                HashMap<String, String> headerParams2 = new HashMap<>();
+                headerParams2.put(db.KEY_ADD_FARMER_EMAL, et_email.getText().toString());
+                headerParams2.put(db.KEY_ADD_FARMER_MOBILE_NUMBER, et_mobile.getText().toString());
+                getCropData(auto_crop.getText().toString());
+                headerParams2.put(db.KEY_ADD_FARMER_LAND_PROFILE_SALES_POINT_CODE, saelspointcode);
+                headerParams2.put(db.KEY_ADD_FARMER_LAND_PROFILE_CROPPING_PATTERN_CROP_ID, cropid);
+                headerParams2.put(db.KEY_ADD_FARMER_LAND_PROFILE_CROPPING_PATTERN_LAND_HOLDING, et_land_holding.getText().toString());
+                db.addData(db.ADD_NEW_FARMER_LAND_PROFILE_CROPPING_PATTERN, headerParams2);
+            }
         }
 
 

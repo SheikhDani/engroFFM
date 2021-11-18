@@ -102,6 +102,7 @@ public class LoadAssignedFarmerFromSalesPoint extends AsyncTask<String, Void, Vo
                         map.put(mydb.KEY_TODAY_FARMER_MOBILE_NO, journeycode.get(j).getMobileNo()== null || journeycode.get(j).getMobileNo().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getMobileNo());
                         map.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
                         map.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+                        map.put(mydb.KEY_TODAY_JOURNEY_IS_EDITED, "Not Edited");
                         map.put(mydb.KEY_PLAN_TYPE, "ALL");
                         mydb.addData(mydb.TODAY_FARMER_JOURNEY_PLAN , map);
 

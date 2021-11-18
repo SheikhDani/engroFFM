@@ -196,9 +196,8 @@
 
 
             </LinearLayout>
-
             <LinearLayout
-                android:id="@+id/linear_remarks"
+                android:id="@+id/linear_pack"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/linear_main_prod"
@@ -207,9 +206,46 @@
                 android:weightSum="2">
 
                 <TextView
-                    android:id="@+id/txt_remarks"
+                    android:id="@+id/txt_pack"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Packs Liquidated"
+                    android:textColor="@color/black"
+
+                    />
+
+                <EditText
+                    android:id="@+id/etPack"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:background="@drawable/eidttext_boader"
+                    android:gravity="center"
+                    android:hint="packs" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_remarks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_pack"
+
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_remarks"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="@dimen/p20"
 
@@ -231,7 +267,208 @@
                     android:hint="Remarks" />
 
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_crop_Acre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_remarks"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
+                <TextView
+                    android:id="@+id/txt_crop_acre"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Crop Acreage"
+                    android:textColor="@color/black"
+
+                    />
+
+                <EditText
+                    android:id="@+id/etCropAcre"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:background="@drawable/eidttext_boader"
+                    android:gravity="center"
+                    android:hint="crop" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_crop_Def"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_crop_Acre"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_crop_def"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Crop Deficiency"
+                    android:textColor="@color/black"
+
+                    />
+
+                <EditText
+                    android:id="@+id/etCropdef"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:background="@drawable/eidttext_boader"
+                    android:gravity="center"
+                    android:hint="crop" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_other_product"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_other_product"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Other Product"
+                    android:textColor="@color/black"
+
+                    />
+
+                <AutoCompleteTextView
+                    android:id="@+id/auto_other_product"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+
+                    android:background="@drawable/eidttext_boader"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:dropDownHeight="155dp"
+                    android:focusable="false"
+                    android:gravity="center_horizontal"
+                    android:hint="Select Product"
+                    android:inputType="none"
+                    android:maxLines="1"
+                    android:textAlignment="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_other_liquidated"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_main_prod"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_other_liquidated"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Others Packs Liquidated"
+                    android:textColor="@color/black"
+
+                    />
+
+                <EditText
+                    android:id="@+id/etOtehrLiquitad"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:background="@drawable/eidttext_boader"
+                    android:gravity="center"
+                    android:hint="packs" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_serving_dealer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_serving_dealer"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Serving Dealers"
+                    android:textColor="@color/black"
+
+                    />
+
+                <AutoCompleteTextView
+                    android:id="@+id/auto_serving_dealer"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+
+                    android:background="@drawable/eidttext_boader"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:dropDownHeight="155dp"
+                    android:focusable="false"
+                    android:gravity="center_horizontal"
+                    android:hint="Dealers"
+                    android:inputType="none"
+                    android:maxLines="1"
+                    android:textAlignment="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linear_locatio"

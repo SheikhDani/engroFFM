@@ -15,6 +15,18 @@ public class AddFarmerInput {
     @SerializedName("firstName")
     @Expose
     private String firstName;
+
+    public String getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(String transactionType) {
+        this.transactionType = transactionType;
+    }
+
+    @SerializedName("transactionType")
+    @Expose
+   private String transactionType;
     @SerializedName("lastName")
     @Expose
     private String lastName;

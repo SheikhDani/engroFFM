@@ -75,7 +75,9 @@ public class Constants {
     public static String FLOOR_STOCK_RELOAD_ADAPTER= "FloorStockReloadAdapter";
 
 
-
+    public static final String EDIT_FARMER_MOBILENUBMER ="editfarmermobilenumber";
+  public static final String EDIT_FARMER_NAME= "editfarmername";
+  public static final String EDIT_FARMER_ID= "editfarmerid";
 
 
 
