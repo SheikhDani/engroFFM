@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.FarmersAdapter;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.getFarmerTodayJourneyPlan.FarmerTodayJourneyPlan;
@@ -37,11 +38,13 @@ public class LoadAssignedFarmerFromSalesPoint extends AsyncTask<String, Void, Vo
     String salesPointCode = "";
     private SharedPrefferenceHelper sHelper;
     private MyDatabaseHandler mydb;
+    private ExtraHelper extraHelper;
     private Context mContext;
     FarmersAdapter farmersAdapter;
     public LoadAssignedFarmerFromSalesPoint(Context context, String salesPoint, FarmersAdapter adapter){
         this.mContext = context;
         this.sHelper = new SharedPrefferenceHelper(mContext);
+        this.extraHelper = new ExtraHelper(mContext);
         this.mydb = new MyDatabaseHandler(mContext);
         this.salesPointCode = salesPoint;
         this.farmersAdapter = adapter;
@@ -69,7 +72,14 @@ public class LoadAssignedFarmerFromSalesPoint extends AsyncTask<String, Void, Vo
         try {
             httpHandler = new HttpHandler();
             HashMap<String, String> headerParams = new HashMap<>();
-            headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+            if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+            }
+            else
+            {
+                headerParams.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+            }
+          //  headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
             response = httpHandler.httpGet(journeyPlanUrl, headerParams);
             Log.e("lOGIN Url", journeyPlanUrl);
             Log.e("Response", response);

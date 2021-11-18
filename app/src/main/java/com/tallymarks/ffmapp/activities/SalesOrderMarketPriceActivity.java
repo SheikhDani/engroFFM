@@ -191,20 +191,22 @@ public class SalesOrderMarketPriceActivity extends AppCompatActivity {
             }
             while (cursor.moveToNext());
         } else {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SalesOrderMarketPriceActivity.this);
-            alertDialogBuilder
-                    .setMessage("There are no Sales Order Against this Customer")
-                    .setCancelable(false)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                    //Toast.makeText(ShopStatusActivity.this, "You are "+totalb+" Km away from the shop ", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                    );
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
+            Toast.makeText(SalesOrderMarketPriceActivity.this, "There are no Sales Order Against this Customer", Toast.LENGTH_SHORT).show();
+
+//            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SalesOrderMarketPriceActivity.this);
+//            alertDialogBuilder
+//                    .setMessage("There are no Sales Order Against this Customer")
+//                    .setCancelable(false)
+//                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.cancel();
+//                                    //Toast.makeText(ShopStatusActivity.this, "You are "+totalb+" Km away from the shop ", Toast.LENGTH_SHORT).show();
+//                                }
+//                            }
+//                    );
+//            AlertDialog alertDialog = alertDialogBuilder.create();
+//            alertDialog.show();
         }
     }
 

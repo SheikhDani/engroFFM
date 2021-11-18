@@ -347,7 +347,7 @@ public class AllPlans extends Fragment implements ItemClickListener {
             }
             else
             {
-                Toast.makeText(getActivity(), "You Already Performed the Activity for that Customer", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "You Already performed The Activity against "+plan.getTitle(), Toast.LENGTH_SHORT).show();
             }
         }
         else {
@@ -414,7 +414,7 @@ public class AllPlans extends Fragment implements ItemClickListener {
             }
             else
             {
-                Toast.makeText(getActivity(), "You Already performed The Activity for That Farmer", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "You Already performed The Activity against "+planList.get(position).getFatherName(), Toast.LENGTH_SHORT).show();
             }
 
         }

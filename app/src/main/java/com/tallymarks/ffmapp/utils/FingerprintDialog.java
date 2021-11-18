@@ -2,6 +2,7 @@ package com.tallymarks.ffmapp.utils;
 
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
@@ -11,8 +12,10 @@ import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,7 @@ import android.widget.Toast;
 
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.activities.MainActivity;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -44,6 +48,7 @@ public class FingerprintDialog extends DialogFragment
     Button mCancelButton;
     public static final String DEFAULT_KEY_NAME = "default_key";
     FingerprintManager mFingerprintManager;
+    ExtraHelper extraHelper;
 
     private FingerprintManager.CryptoObject mCryptoObject;
     private FingerprintHelper mFingerprintHelper;
@@ -59,6 +64,7 @@ public class FingerprintDialog extends DialogFragment
         super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
+
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Material_Light_Dialog);
 
         try {
@@ -190,11 +196,36 @@ public class FingerprintDialog extends DialogFragment
     @Override
     public void onAuthenticated(boolean b) {
         if (b) {
-            Toast.makeText(mContext.getApplicationContext(), "Auth success", Toast.LENGTH_LONG).show();
+            extraHelper = new ExtraHelper(getActivity());
+            if(extraHelper!=null)
+            {
+                if(extraHelper.getString(Constants.ACCESS_TOKEN)!=null && !extraHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                    Toast.makeText(mContext.getApplicationContext(), "Auth success", Toast.LENGTH_LONG).show();
+                    dismiss();
+                    Log.e("keyaccess", String.valueOf(extraHelper.getString(Constants.ACCESS_TOKEN)));
+                    Intent move = new Intent(mContext, MainActivity.class);
+                    startActivity(move);
+                }
+                else
+                {
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                    alertDialogBuilder.setTitle(R.string.alert)
+                            .setMessage("Please Login First with username and password")
+                            .setCancelable(true)
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    //new PostSyncOutlet().execute();
+                                }
+                            });
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                    //Toast.makeText(getActivity(), "Please Login First with username and password", Toast.LENGTH_SHORT).show();
+                }
+            }
 
-            dismiss();
-            Intent move = new Intent(mContext, MainActivity.class);
-            startActivity(move);
+
         } else
             Toast.makeText(mContext.getApplicationContext(), "Auth failed", Toast.LENGTH_LONG).show();
     }

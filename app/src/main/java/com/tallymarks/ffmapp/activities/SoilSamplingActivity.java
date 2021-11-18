@@ -10,15 +10,20 @@ import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -29,12 +34,19 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.adapters.SalesPointAdapter;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.Recommendations;
+import com.tallymarks.ffmapp.models.SaelsPoint;
 import com.tallymarks.ffmapp.models.SoilSamplingCrops;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Activity;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.FarmerCheckIn;
@@ -45,14 +57,17 @@ import com.tallymarks.ffmapp.utils.DialougeManager;
 import com.tallymarks.ffmapp.utils.GpsTracker;
 import com.tallymarks.ffmapp.utils.Helpers;
 import com.tallymarks.ffmapp.utils.HttpHandler;
+import com.tallymarks.ffmapp.utils.RecyclerTouchListener;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 public class SoilSamplingActivity extends AppCompatActivity {
-    private TextView tvTopHeader, acres, blocks, txt_lat_lng, txt_reference;
+    private TextView tvTopHeader, acres, blocks, txt_lat, txt_reference,txt_lng;
     TextView txtacre, txtblock,txtpreviouscrop, txtcurrentcrop,txtdepth,txtsavelocation;
     AutoCompleteTextView auto_pre_rop,auto_current_crop,auto_current_crop2,auto_depth;
     ImageView iv_menu,iv_back;
@@ -76,6 +91,7 @@ public class SoilSamplingActivity extends AppCompatActivity {
     Double checkoutlat = null, checkoutlng = null;
     String checkinlat;
     String checkinlong;
+    ExtraHelper extraHelper;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +108,7 @@ public class SoilSamplingActivity extends AppCompatActivity {
 
         }
         tvTopHeader = findViewById(R.id.tv_dashboard);
+        extraHelper = new ExtraHelper(SoilSamplingActivity.this);
         auto_pre_rop = findViewById(R.id.auto_pre_crop);
         txtacre = findViewById(R.id.txt_acre);
         txtblock = findViewById(R.id.txt_block);
@@ -105,7 +122,11 @@ public class SoilSamplingActivity extends AppCompatActivity {
         acres = findViewById(R.id.acres);
         blocks = findViewById(R.id.blocks);
         txt_reference = findViewById(R.id.txt_reference);
-        txt_lat_lng = findViewById(R.id.txt_lat_lng);
+        txt_lat = findViewById(R.id.txt_lat);
+        txt_lng = findViewById(R.id.txt_lng);
+
+
+
         btn_add_sampling = findViewById(R.id.btn_add_sampling);
         btn_lcoation = findViewById(R.id.btn_lcoation);
         mydb = new MyDatabaseHandler(SoilSamplingActivity.this);
@@ -121,24 +142,24 @@ public class SoilSamplingActivity extends AppCompatActivity {
         iv_menu.setVisibility(View.GONE);
         tvTopHeader.setVisibility(View.VISIBLE);
         tvTopHeader.setText("SOIL SAMPLING");
-        Intent intent = getIntent();
-        if(intent.getExtras()!=null) {
-            if (intent.getExtras().getString("soillat") != null &&
-                    !intent.getExtras().getString("soillat").equals("") &&
-                    intent.getExtras().getString("soillng") != null &&
-                    !intent.getExtras().getString("soillng").equals("")
-            ) {
-                soilSamplingLat = Double.parseDouble(intent.getExtras().getString("soillat"));
-                soilSamplingLong = Double.parseDouble(intent.getExtras().getString("soillng"));
-                txt_lat_lng.setText("Selected Lat,Log: " + soilSamplingLat + " , " + soilSamplingLong);
-                soilhashmap.put(mydb.KEY_TODAY_LATITUTE, String.valueOf(soilSamplingLat));
-                soilhashmap.put(mydb.KEY_TODAY_LONGITUTE, String.valueOf(soilSamplingLong));
-            }
-        }
-         else{
-                soilhashmap.put(mydb.KEY_TODAY_LATITUTE, "0.0");
-                soilhashmap.put(mydb.KEY_TODAY_LONGITUTE, "0.0");
-            }
+//        Intent intent = getIntent();
+//        if(intent.getExtras()!=null) {
+//            if (intent.getExtras().getString("soillat") != null &&
+//                    !intent.getExtras().getString("soillat").equals("") &&
+//                    intent.getExtras().getString("soillng") != null &&
+//                    !intent.getExtras().getString("soillng").equals("")
+//            ) {
+//                soilSamplingLat = Double.parseDouble(intent.getExtras().getString("soillat"));
+//                soilSamplingLong = Double.parseDouble(intent.getExtras().getString("soillng"));
+//                txt_lat_lng.setText("Selected Lat,Log: " + soilSamplingLat + " , " + soilSamplingLong);
+//                soilhashmap.put(mydb.KEY_TODAY_LATITUTE, String.valueOf(soilSamplingLat));
+//                soilhashmap.put(mydb.KEY_TODAY_LONGITUTE, String.valueOf(soilSamplingLong));
+//            }
+//        }
+//         else{
+//                soilhashmap.put(mydb.KEY_TODAY_LATITUTE, "0.0");
+//                soilhashmap.put(mydb.KEY_TODAY_LONGITUTE, "0.0");
+//            }
 
 
 //        if(sHelper!=null)
@@ -191,7 +212,7 @@ public class SoilSamplingActivity extends AppCompatActivity {
 
 
 
-        getCropfromDatabase();
+        //getCropfromDatabase();
         getDepthfromDatabase();
         loadCheckInLocation();
         if (isthisFarmerSamplingDataAlreadyExists()){
@@ -215,17 +236,26 @@ public class SoilSamplingActivity extends AppCompatActivity {
                     SoilSamplingCrops mysampling = new SoilSamplingCrops();
                     mysampling.setBlock(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_BLOCK_NUMBER)));
                     mysampling.setAcre(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_PLOT_NUMBER)));
-                    mysampling.setPreviouscrop(cropArraylist.get(Integer.parseInt(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_PREVIOUSCROP_ID)))-1));
-                    mysampling.setCrop1(cropArraylist.get(Integer.parseInt(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_CROP1_ID)))-1));
-                    mysampling.setCrop2(cropArraylist.get(Integer.parseInt(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_CROP2_ID)))-1));
+                    mysampling.setPreviouscrop(getCropData(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_PREVIOUSCROP_ID))));
+                    mysampling.setCrop1(getCropData(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_CROP1_ID))));
+                    mysampling.setCrop2(getCropData(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_CROP2_ID))));
                     mysampling.setDepth(depthArraylist.get(Integer.parseInt(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_DEPTH_ID)))-1));
-
                     arraylistSoilSampling.add(mysampling);
 
                 }
                 while (cursor.moveToNext());
             }
             drawRecommendationTable();
+            gps = new GpsTracker(SoilSamplingActivity.this);
+            if (gps.canGetLocation()) {
+                if (ActivityCompat.checkSelfPermission(SoilSamplingActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SoilSamplingActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                soilSamplingLat = gps.getLatitude();
+                soilSamplingLong = gps.getLongitude();
+            }
+            txt_lat.setText("Selected Lat: " +  soilSamplingLat);
+            txt_lng.setText("Selected Long: " +  soilSamplingLong);
         }
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_list_item_1, cropArraylist);
@@ -235,17 +265,18 @@ public class SoilSamplingActivity extends AppCompatActivity {
         final ArrayAdapter<String> adapter1 = new ArrayAdapter<>(
                 this, android.R.layout.simple_list_item_1, depthArraylist);
         auto_depth.setAdapter(adapter1);
-
-        txt_reference.setText(getUsernamefromDatabase() + "-" + new Timestamp(System.currentTimeMillis()));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        String currentDateandTime = sdf.format(new Date());
+        txt_reference.setText(getUsernamefromDatabase() + "-" + currentDateandTime);
         auto_pre_rop.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                auto_pre_rop.showDropDown();
-                String selection = cropArraylist.get(position);
-                soilhashmap.put(mydb.KEY_TODAY_PREVIOUSCROP_ID, cropIDArraylist.get(position));
-                Toast.makeText(getApplicationContext(), selection,
-                        Toast.LENGTH_SHORT);
+//                auto_pre_rop.showDropDown();
+//                String selection = cropArraylist.get(position);
+//                soilhashmap.put(mydb.KEY_TODAY_PREVIOUSCROP_ID, cropIDArraylist.get(position));
+//                Toast.makeText(getApplicationContext(), selection,
+//                        Toast.LENGTH_SHORT);
 
             }
         });
@@ -253,26 +284,27 @@ public class SoilSamplingActivity extends AppCompatActivity {
         auto_pre_rop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View arg0) {
-                final AlertDialog actions;
-                DialogInterface.OnClickListener actionListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //goto category list with which as the category
-                        String selection = cropArraylist.get(which);
-                        soilhashmap.put(mydb.KEY_TODAY_PREVIOUSCROP_ID, cropIDArraylist.get(which));
-                        auto_pre_rop.setText(selection);
-
-                    }
-                };
-
-                AlertDialog.Builder categoryAlert = new AlertDialog.Builder(SoilSamplingActivity.this);
-                categoryAlert.setTitle("Crop List");
-
-                categoryAlert.setItems(cropArraylist.toArray(new String[0]), actionListener);
-                actions = categoryAlert.create();
-                actions.show();
-
-                auto_pre_rop.showDropDown();
+                selectDialouge(auto_pre_rop , "precrop",soilhashmap);
+//                final AlertDialog actions;
+//                DialogInterface.OnClickListener actionListener = new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        //goto category list with which as the category
+//                        String selection = cropArraylist.get(which);
+//                        soilhashmap.put(mydb.KEY_TODAY_PREVIOUSCROP_ID, cropIDArraylist.get(which));
+//                        auto_pre_rop.setText(selection);
+//
+//                    }
+//                };
+//
+//                AlertDialog.Builder categoryAlert = new AlertDialog.Builder(SoilSamplingActivity.this);
+//                categoryAlert.setTitle("Crop List");
+//
+//                categoryAlert.setItems(cropArraylist.toArray(new String[0]), actionListener);
+//                actions = categoryAlert.create();
+//                actions.show();
+//
+//                auto_pre_rop.showDropDown();
 
             }
         });
@@ -280,11 +312,11 @@ public class SoilSamplingActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                auto_current_crop.showDropDown();
-                String selection = cropArraylist.get(position);
-                soilhashmap.put(mydb.KEY_TODAY_CROP1_ID, cropIDArraylist.get(position));
-                Toast.makeText(getApplicationContext(), selection,
-                        Toast.LENGTH_SHORT);
+//                auto_current_crop.showDropDown();
+//                String selection = cropArraylist.get(position);
+//                soilhashmap.put(mydb.KEY_TODAY_CROP1_ID, cropIDArraylist.get(position));
+//                Toast.makeText(getApplicationContext(), selection,
+//                        Toast.LENGTH_SHORT);
 
             }
         });
@@ -292,37 +324,38 @@ public class SoilSamplingActivity extends AppCompatActivity {
         auto_current_crop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View arg0) {
-                final AlertDialog actions;
-                DialogInterface.OnClickListener actionListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //goto category list with which as the category
-                        String selection = cropArraylist.get(which);
-                        soilhashmap.put(mydb.KEY_TODAY_CROP1_ID, cropIDArraylist.get(which));
-                        auto_current_crop.setText(selection);
-
-                    }
-                };
-
-                AlertDialog.Builder categoryAlert = new AlertDialog.Builder(SoilSamplingActivity.this);
-                categoryAlert.setTitle("Crop List");
-
-                categoryAlert.setItems(cropArraylist.toArray(new String[0]), actionListener);
-                actions = categoryAlert.create();
-                actions.show();
-
-                auto_current_crop.showDropDown();
+                selectDialouge(auto_current_crop, "currentcrop",soilhashmap);
+//                final AlertDialog actions;
+//                DialogInterface.OnClickListener actionListener = new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        //goto category list with which as the category
+//                        String selection = cropArraylist.get(which);
+//                        soilhashmap.put(mydb.KEY_TODAY_CROP1_ID, cropIDArraylist.get(which));
+//                        auto_current_crop.setText(selection);
+//
+//                    }
+//                };
+//
+//                AlertDialog.Builder categoryAlert = new AlertDialog.Builder(SoilSamplingActivity.this);
+//                categoryAlert.setTitle("Crop List");
+//
+//                categoryAlert.setItems(cropArraylist.toArray(new String[0]), actionListener);
+//                actions = categoryAlert.create();
+//                actions.show();
+//
+//                auto_current_crop.showDropDown();
             }
         });
         auto_current_crop2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                auto_current_crop2.showDropDown();
-                String selection = cropArraylist.get(position);
-                soilhashmap.put(mydb.KEY_TODAY_CROP2_ID, cropIDArraylist.get(position));
-                Toast.makeText(getApplicationContext(), selection,
-                        Toast.LENGTH_SHORT);
+//                auto_current_crop2.showDropDown();
+//                String selection = cropArraylist.get(position);
+//                soilhashmap.put(mydb.KEY_TODAY_CROP2_ID, cropIDArraylist.get(position));
+//                Toast.makeText(getApplicationContext(), selection,
+//                        Toast.LENGTH_SHORT);
 
             }
         });
@@ -330,26 +363,27 @@ public class SoilSamplingActivity extends AppCompatActivity {
         auto_current_crop2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View arg0) {
-                final AlertDialog actions;
-                DialogInterface.OnClickListener actionListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //goto category list with which as the category
-                        String selection = cropArraylist.get(which);
-                        soilhashmap.put(mydb.KEY_TODAY_CROP2_ID, cropIDArraylist.get(which));
-                        auto_current_crop2.setText(selection);
-
-                    }
-                };
-
-                AlertDialog.Builder categoryAlert = new AlertDialog.Builder(SoilSamplingActivity.this);
-                categoryAlert.setTitle("Crop List");
-
-                categoryAlert.setItems(cropArraylist.toArray(new String[0]), actionListener);
-                actions = categoryAlert.create();
-                actions.show();
-
-                auto_current_crop2.showDropDown();
+                selectDialouge(auto_current_crop2, "currentcropsecond",soilhashmap);
+//                final AlertDialog actions;
+//                DialogInterface.OnClickListener actionListener = new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        //goto category list with which as the category
+//                        String selection = cropArraylist.get(which);
+//                        soilhashmap.put(mydb.KEY_TODAY_CROP2_ID, cropIDArraylist.get(which));
+//                        auto_current_crop2.setText(selection);
+//
+//                    }
+//                };
+//
+//                AlertDialog.Builder categoryAlert = new AlertDialog.Builder(SoilSamplingActivity.this);
+//                categoryAlert.setTitle("Crop List");
+//
+//                categoryAlert.setItems(cropArraylist.toArray(new String[0]), actionListener);
+//                actions = categoryAlert.create();
+//                actions.show();
+//
+//                auto_current_crop2.showDropDown();
             }
         });
         auto_depth.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -409,23 +443,25 @@ public class SoilSamplingActivity extends AppCompatActivity {
                 Intent loc = new Intent(SoilSamplingActivity.this, CustomMap.class);
                 loc.putExtra("from", "soil");
                 startActivity(loc);
-//                gps = new GpsTracker(SoilSamplingActivity.this);
-//                if (gps.canGetLocation()) {
-//                    if (ActivityCompat.checkSelfPermission(SoilSamplingActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SoilSamplingActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                        return;
-//                    }
-//                    soilSamplingLat = gps.getLatitude();
-//                    soilSamplingLong = gps.getLongitude();
-//                }
-//                txt_lat_lng.setText("Selected Lat,Log" +  soilSamplingLat + " , " + soilSamplingLong);
-//
-//                if(gps.getLatitude() != 0.0 && gps.getLongitude() != 0.0){
-//                    soilhashmap.put(mydb.KEY_TODAY_LATITUTE, String.valueOf(soilSamplingLat));
-//                    soilhashmap.put(mydb.KEY_TODAY_LONGITUTE, String.valueOf(soilSamplingLong));
-//                }else{
-//                    soilhashmap.put(mydb.KEY_TODAY_LATITUTE, "0.0");
-//                    soilhashmap.put(mydb.KEY_TODAY_LONGITUTE, "0.0");
-//                }
+
+               gps = new GpsTracker(SoilSamplingActivity.this);
+               if (gps.canGetLocation()) {
+                  if (ActivityCompat.checkSelfPermission(SoilSamplingActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SoilSamplingActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                      return;
+                  }
+                  soilSamplingLat = gps.getLatitude();
+                  soilSamplingLong = gps.getLongitude();
+             }
+                txt_lat.setText("Selected Lat: " +  soilSamplingLat);
+                txt_lng.setText("Selected Long: " +  soilSamplingLong);
+
+                if(gps.getLatitude() != 0.0 && gps.getLongitude() != 0.0){
+                   soilhashmap.put(mydb.KEY_TODAY_LATITUTE, String.valueOf(soilSamplingLat));
+                   soilhashmap.put(mydb.KEY_TODAY_LONGITUTE, String.valueOf(soilSamplingLong));
+               }else{
+                  soilhashmap.put(mydb.KEY_TODAY_LATITUTE, "0.0");
+                    soilhashmap.put(mydb.KEY_TODAY_LONGITUTE, "0.0");
+                }
             }
         });
         btn_add_sampling.setOnClickListener(new View.OnClickListener() {
@@ -442,11 +478,18 @@ public class SoilSamplingActivity extends AppCompatActivity {
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Checkout logic here
+                if (!(Helpers.isEmptyTextview(getApplicationContext(), acres))
+                        && !(Helpers.isEmptyTextview(getApplicationContext(), blocks))
+                        && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_pre_rop))
+                        && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_current_crop))
+                        && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_depth))
+                        && !String.valueOf(soilSamplingLat).equals("") && !String.valueOf(soilSamplingLong).equals("")
+                ) {
+                    // Checkout logic here
 
-                // Mapping for activity
-                mydb = new MyDatabaseHandler(getBaseContext());
-                long time = System.currentTimeMillis();
+                    // Mapping for activity
+                    mydb = new MyDatabaseHandler(getBaseContext());
+                    long time = System.currentTimeMillis();
 
 //                HashMap<String, String> map = new HashMap<>();
 //                map.put(mydb.KEY_TODAY_CHECKOUT_LATITUTE, String.valueOf(gps.getLatitude()));
@@ -457,17 +500,171 @@ public class SoilSamplingActivity extends AppCompatActivity {
 //                filter.put(mydb.KEY_TODAY_FARMER_FARMER_ID, Constants.FARMER_ID);
 //                mydb.updateData(mydb.TODAY_FARMER_CHECKIN, map, filter);
 
-                addCheckOut();
-                updateOutletStatus("Visited");
+                    addCheckOut();
+                    updateOutletStatus("Visited");
 
-                Toast.makeText(getApplicationContext(), "Farmer Saved" , Toast.LENGTH_SHORT).show();
-                //sHelper.clearPreferenceStore();
+                    Toast.makeText(getApplicationContext(), "Farmer Saved", Toast.LENGTH_SHORT).show();
+                    //sHelper.clearPreferenceStore();
 
-                Intent farmvisit = new Intent(SoilSamplingActivity.this, VisitFarmerActivity.class);
-                startActivity(farmvisit);
+                    Intent farmvisit = new Intent(SoilSamplingActivity.this, VisitFarmerActivity.class);
+                    startActivity(farmvisit);
+                }
+                else
+                {
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SoilSamplingActivity.this);
+                    alertDialogBuilder
+                            .setMessage(getResources().getString(R.string.field_required_message))
+                            .setCancelable(false)
+                            .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+
+
+                                }
+                            });
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                }
 
             }
         });
+    }
+    private String getCropData(String cropid) {
+
+        String productName = "", productID = "";
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(db.KEY_CROP_NAME, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_CROP_ID, cropid);
+        Cursor cursor = db.getData(db.CROPS_LIST, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+
+                productName = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_CROP_NAME)));
+
+            }
+            while (cursor.moveToNext());
+        }
+        return productName;
+
+    }
+
+    public void selectDialouge(AutoCompleteTextView autoProduct,String from, HashMap<String, String> soilhashmap ) {
+        LayoutInflater li = LayoutInflater.from(SoilSamplingActivity.this);
+        View promptsView = li.inflate(R.layout.dialouge_sales_point, null);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SoilSamplingActivity.this);
+        alertDialogBuilder.setView(promptsView);
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        final List<SaelsPoint> companyList = new ArrayList<>();
+        final TextView title = promptsView.findViewById(R.id.tv_option);
+        final EditText search = promptsView.findViewById(R.id.et_Search);
+        final ImageView ivClsoe = promptsView.findViewById(R.id.iv_Close);
+        ivClsoe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+
+            title.setText("Select Crop");
+
+        final RecyclerView recyclerView = promptsView.findViewById(R.id.recyclerView);
+        prepareCropData(companyList);
+        final SalesPointAdapter mAdapter = new SalesPointAdapter(companyList,"salescall");
+
+        // vertical RecyclerView
+        // keep movie_list_row.xml width to `match_parent`
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                SaelsPoint companyname = companyList.get(position);
+                alertDialog.dismiss();
+                autoProduct.setText(companyname.getPoint());
+                if(from.equals("precrop")) {
+                    soilhashmap.put(mydb.KEY_TODAY_PREVIOUSCROP_ID, companyname.getId());
+                }
+                else if(from.equals("currentcrop"))
+                {
+                    soilhashmap.put(mydb.KEY_TODAY_CROP1_ID, companyname.getId());
+                }
+                else if(from.equals("currentcropsecond"))
+                {
+                    soilhashmap.put(mydb.KEY_TODAY_CROP2_ID, companyname.getId());
+                }
+
+                // Toast.makeText(getApplicationContext(), movie.getPoint() + " is selected!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+        search.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                if(search.hasFocus()) {
+                    mAdapter.filter(cs.toString());
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+                // Toast.makeText(getApplicationContext(),"before text change",Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                //Toast.makeText(getApplicationContext(),"after text change",Toast.LENGTH_LONG).show();
+            }
+        });
+
+        //ImageView ivClose = promptsView.findViewById(R.id.iv_close);
+
+        alertDialogBuilder.setCancelable(true);
+        alertDialog.show();
+    }
+    private void prepareCropData(List<SaelsPoint> movieList) {
+        movieList.clear();
+        String productName = "", productID = "";
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_CROP_ID, "");
+        map.put(db.KEY_CROP_NAME, "");
+        //map.put(db.KEY_IS_VALID_USER, "");
+        HashMap<String, String> filters = new HashMap<>();
+        Cursor cursor = db.getData(db.CROPS_LIST, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                SaelsPoint companyname = new SaelsPoint();
+                productName = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_CROP_NAME)));
+                productID = cursor.getString(cursor.getColumnIndex(db.KEY_CROP_ID));
+                companyname.setPoint(productName);
+                companyname.setId(productID);
+                movieList.add(companyname);
+            }
+            while (cursor.moveToNext());
+        }
+
+
+
+
+
+
+        // notify adapter about data set changes
+        // so that it will render the list with new data
+        // mAdapter.notifyDataSetChanged();
     }
     private void validateInputs() {
         if (!(Helpers.isEmptyTextview(getApplicationContext(), acres))
@@ -533,7 +730,8 @@ public class SoilSamplingActivity extends AppCompatActivity {
             mydb.addData(mydb.TODAY_FARMER_SAMPLING, soilhashmap);
 
             drawRecommendationTable();
-            txt_lat_lng.setText("Selected Lat,Log" +  "0.0" + " , " + "0.0");
+            txt_lat.setText("Selected Lat" +  "0.0");
+            txt_lng.setText("Selected Long" +  "0.0");
         } else {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SoilSamplingActivity.this);
             alertDialogBuilder
@@ -722,6 +920,10 @@ public class SoilSamplingActivity extends AppCompatActivity {
             }
             while (cursor.moveToNext());
         }
+        else
+        {
+            username = extraHelper.getString(Constants.USER_NAME);
+        }
         return username;
     }
 
@@ -858,12 +1060,12 @@ public class SoilSamplingActivity extends AppCompatActivity {
 //            row2.addView(name);
 //            row2.addView(startDate);
 //            row2.addView(status);
-            row2.addView(acre, new TableRow.LayoutParams(0, 150, 0.80f));
-            row2.addView(block, new TableRow.LayoutParams(0, 150, 0.80f));
-            row2.addView(precrop, new TableRow.LayoutParams(0, 150, 0.80f));
-            row2.addView(crop1, new TableRow.LayoutParams(0, 150, 0.40f));
-            row2.addView(crop2, new TableRow.LayoutParams(0, 150, 0.40f));
-            row2.addView(depth, new TableRow.LayoutParams(0, 150, 0.40f));
+            row2.addView(acre, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.80f));
+            row2.addView(block, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.80f));
+            row2.addView(precrop, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.80f));
+            row2.addView(crop1, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.40f));
+            row2.addView(crop2, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.40f));
+            row2.addView(depth, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.40f));
 
 
             mTableLayout.addView(row2);

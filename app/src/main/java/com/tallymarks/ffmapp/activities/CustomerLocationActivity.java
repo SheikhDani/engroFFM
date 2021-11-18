@@ -45,6 +45,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.changecustomerlocation.ChnageCustomerLocationinput;
 import com.tallymarks.ffmapp.models.todayjourneyplaninput.TodayCustomerPostInput;
@@ -69,6 +70,7 @@ public class CustomerLocationActivity extends AppCompatActivity implements OnMap
     private GoogleApiClient googleApiClient;
     private SupportMapFragment mapFragment;
     SharedPrefferenceHelper sHelper;
+    ExtraHelper extraHelper;
     private GpsTracker gpsTracker;
     private String currentlng = "";
     private String currentlat = "";
@@ -95,6 +97,8 @@ public class CustomerLocationActivity extends AppCompatActivity implements OnMap
         et_customercode = findViewById(R.id.et_custoemrcode);
         iv_location = findViewById(R.id.iv_location);
         txt_lng = findViewById(R.id.txt_longitude);
+        sHelper = new SharedPrefferenceHelper(CustomerLocationActivity.this);
+        extraHelper = new ExtraHelper(CustomerLocationActivity.this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -311,7 +315,14 @@ public class CustomerLocationActivity extends AppCompatActivity implements OnMap
 
             httpHandler = new HttpHandler();
             HashMap<String, String> headerParams2 = new HashMap<>();
-            headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+            if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+            }
+            else
+            {
+                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+            }
+           // headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
             HashMap<String, String> bodyParams = new HashMap<>();
             String jsonObject = new Gson().toJson(inputParameters, ChnageCustomerLocationinput .class);
             Log.e("postoutput", String.valueOf(jsonObject));

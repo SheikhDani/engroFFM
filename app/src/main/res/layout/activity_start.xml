@@ -38,7 +38,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
+                    android:layout_height="120dp"
                     android:layout_below="@+id/txt_Status"
                     android:orientation="horizontal"
                     android:weightSum="2">
@@ -111,7 +111,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
+                    android:layout_height="120dp"
                     android:layout_below="@+id/txt_objective"
                     android:orientation="horizontal"
                     android:weightSum="2">
@@ -174,7 +174,7 @@
             <LinearLayout
                 android:id="@+id/linear_invetory"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="120dp"
                 android:layout_below="@+id/objective"
                 android:background="@color/white"
                 android:orientation="horizontal"
@@ -250,7 +250,7 @@
                     android:layout_marginBottom="@dimen/p5"
                     android:drawableTop="@mipmap/compainhandling"
                     android:drawablePadding="@dimen/p10"
-                    android:padding="@dimen/p20"
+
                     android:text="COMPLAINT HANDLING"
                     android:textSize="16sp"></TextView>
             </LinearLayout>

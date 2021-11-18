@@ -25,6 +25,7 @@ import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.CustomerSnapShotAdapter;
 import com.tallymarks.ffmapp.adapters.SuperVisorSnapShotAdapter;
 import com.tallymarks.ffmapp.adapters.TodayPlanAdapter;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.CustomerSnapShot;
 import com.tallymarks.ffmapp.models.CustomerSnapShotParent;
@@ -54,6 +55,7 @@ public class SuperVisorSnapShotActivity extends AppCompatActivity {
     Button btnSumamry;
     SharedPrefferenceHelper sHelper;
     ExpandableListView elv;
+    ExtraHelper extraHelper;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +67,7 @@ public class SuperVisorSnapShotActivity extends AppCompatActivity {
         tvTopHeader = findViewById(R.id.tv_dashboard);
         iv_menu = findViewById(R.id.iv_drawer);
         sHelper = new SharedPrefferenceHelper(SuperVisorSnapShotActivity.this);
+        extraHelper = new ExtraHelper(SuperVisorSnapShotActivity.this);
         iv_back = findViewById(R.id.iv_back);
         iv_back.setVisibility(View.VISIBLE);
         iv_menu.setVisibility(View.GONE);
@@ -76,7 +79,6 @@ public class SuperVisorSnapShotActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent n = new Intent(SuperVisorSnapShotActivity.this, StockSellingSummaryActivity.class);
-
                 startActivity(n);
 
             }
@@ -202,7 +204,14 @@ public class SuperVisorSnapShotActivity extends AppCompatActivity {
             try {
                 httpHandler = new HttpHandler();
                 HashMap<String, String> headerParams = new HashMap<>();
-                headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                    headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                }
+                else
+                {
+                    headerParams.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+                }
+               // headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
                 response = httpHandler.httpGet(getsupervsorsnapshot, headerParams);
                 Log.e("Assigned Sales Point", getsupervsorsnapshot);
                 Log.e("Response", response);

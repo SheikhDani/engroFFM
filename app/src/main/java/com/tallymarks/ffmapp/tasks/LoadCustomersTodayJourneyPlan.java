@@ -13,6 +13,7 @@ import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.activities.MainActivity;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.getallcustomersplanoutput.GetAllCustomersOutput;
 import com.tallymarks.ffmapp.models.todayjourneyplanoutput.TodayJourneyPlanOutput;
@@ -34,6 +35,7 @@ public class LoadCustomersTodayJourneyPlan extends AsyncTask<String, Void, Void>
     ProgressDialog pDialog;
     Context mContext;
     SharedPrefferenceHelper sHelper;
+    ExtraHelper extraHelper;
     DatabaseHandler db;
 
     String errorMessage = "";
@@ -41,6 +43,7 @@ public class LoadCustomersTodayJourneyPlan extends AsyncTask<String, Void, Void>
     public LoadCustomersTodayJourneyPlan(Context context) {
         this.mContext = context;
         sHelper = new SharedPrefferenceHelper(mContext);
+        extraHelper = new ExtraHelper((mContext));
         db = new DatabaseHandler(mContext);
     }
 
@@ -66,7 +69,14 @@ public class LoadCustomersTodayJourneyPlan extends AsyncTask<String, Void, Void>
         try {
             httpHandler = new HttpHandler();
             HashMap<String, String> headerParams = new HashMap<>();
-            headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+            if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+            }
+            else
+            {
+                headerParams.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+            }
+           // headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
             response = httpHandler.httpGet(journeyPlanUrl, headerParams);
             Log.e("lOGIN Url", journeyPlanUrl);
             Log.e("Response", response);
@@ -136,24 +146,24 @@ public class LoadCustomersTodayJourneyPlan extends AsyncTask<String, Void, Void>
                                 }
                             }
                         }
-                        try {
-                            JSONObject jsonObject = null;
-                            jsonObject = new JSONObject(response);
-                            if (jsonObject.has("stockSold")) {
-                            if (journeycode.get(i).getStockSold().size() > 0) {
-                                for (int n = 0; n < journeycode.get(i).getStockSold().size(); n++) {
-                                    HashMap<String, String> dbParamsSnapShot = new HashMap<>();
-                                    dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_TYPE, "today");
-                                    dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_STOCK_INVOICE_NUMBER, journeycode.get(i).getStockSold().get(n).getInvoiceNumber() == null || journeycode.get(i).getStockSold().get(n).getInvoiceNumber().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getStockSold().get(n).getInvoiceNumber().toString());
-                                    dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, journeycode.get(i).getCustomerId() == null || journeycode.get(i).getCustomerId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getCustomerId());
-                                    db.addData(db.TODAY_JOURNEY_PLAN_STOCK, dbParamsSnapShot);
-
-                                }
-                            }
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+//                        try {
+//                            JSONObject jsonObject = null;
+//                            jsonObject = new JSONObject(response);
+//                            if (jsonObject.has("stockSold")) {
+//                            if (journeycode.get(i).getStockSold().size() > 0) {
+//                                for (int n = 0; n < journeycode.get(i).getStockSold().size(); n++) {
+//                                    HashMap<String, String> dbParamsSnapShot = new HashMap<>();
+//                                    dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_TYPE, "today");
+//                                    dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_STOCK_INVOICE_NUMBER, journeycode.get(i).getStockSold().get(n).getInvoiceNumber() == null || journeycode.get(i).getStockSold().get(n).getInvoiceNumber().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getStockSold().get(n).getInvoiceNumber().toString());
+//                                    dbParamsSnapShot.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, journeycode.get(i).getCustomerId() == null || journeycode.get(i).getCustomerId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getCustomerId());
+//                                    db.addData(db.TODAY_JOURNEY_PLAN_STOCK, dbParamsSnapShot);
+//
+//                                }
+//                            }
+//                            }
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
 
                     }
                     }

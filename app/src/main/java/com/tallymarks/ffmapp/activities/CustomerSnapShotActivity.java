@@ -120,20 +120,21 @@ public class CustomerSnapShotActivity extends AppCompatActivity {
 
 
         } else {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(CustomerSnapShotActivity.this);
-            alertDialogBuilder
-                    .setMessage("There is No Previous SnapShot Available against this Customer")
-                    .setCancelable(false)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                    //Toast.makeText(ShopStatusActivity.this, "You are "+totalb+" Km away from the shop ", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                    );
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
+            Toast.makeText(CustomerSnapShotActivity.this, "\"There is No Previous SnapShot Available against this Customer", Toast.LENGTH_SHORT).show();
+//            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(CustomerSnapShotActivity.this);
+//            alertDialogBuilder
+//                    .setMessage("There is No Previous SnapShot Available against this Customer")
+//                    .setCancelable(false)
+//                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.cancel();
+//                                    //Toast.makeText(ShopStatusActivity.this, "You are "+totalb+" Km away from the shop ", Toast.LENGTH_SHORT).show();
+//                                }
+//                            }
+//                    );
+//            AlertDialog alertDialog = alertDialogBuilder.create();
+//            alertDialog.show();
         }
 
     }

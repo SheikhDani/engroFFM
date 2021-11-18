@@ -36,7 +36,10 @@ public class FarmerMeetingDbHelper {
         HashMap<String, String> map = new HashMap<>();
         map.put(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_NAME, "");
         map.put(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_CODE, "");
+
         HashMap<String, String> filters = new HashMap<>();
+        filters.put(databaseHandler.KEY_TODAY_JOURNEY_TYPE, "all");
+
         Cursor cursor = databaseHandler.getData(databaseHandler.TODAY_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -76,6 +79,7 @@ public class FarmerMeetingDbHelper {
         map.put(databaseHandler.KEY_TODAY_JOURNEY_FARMER_CODE, "");
         map.put(databaseHandler.KEY_TODAY_JOURNEY_FARMER_NAME, "");
         HashMap<String, String> filters = new HashMap<>();
+        filters.put(databaseHandler.KEY_PLAN_TYPE, "ALL");
         Cursor cursor = databaseHandler.getData(databaseHandler.TODAY_FARMER_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();

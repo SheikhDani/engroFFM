@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.SalesCallAdapter;
 import com.tallymarks.ffmapp.adapters.SubOrdinatesAdapter;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.DataModel;
 import com.tallymarks.ffmapp.models.Subordinates;
@@ -49,6 +51,7 @@ public class SubOrdinatesActivity extends AppCompatActivity {
     private SubOrdinatesAdapter adapter;
     ArrayList<Subordinates> dataModels;
     SharedPrefferenceHelper sHelper;
+    ExtraHelper extraHelper;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +69,7 @@ public class SubOrdinatesActivity extends AppCompatActivity {
         tvTopHeader.setVisibility(View.VISIBLE);
         tvTopHeader.setText("SUBORDINATES");
         sHelper = new SharedPrefferenceHelper(SubOrdinatesActivity.this);
+        extraHelper = new ExtraHelper(SubOrdinatesActivity.this);
         listView = findViewById(R.id.lv_subordinates);
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,7 +190,14 @@ public class SubOrdinatesActivity extends AppCompatActivity {
             try {
                 httpHandler = new HttpHandler();
                 HashMap<String, String> headerParams = new HashMap<>();
-                headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                    headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                }
+                else
+                {
+                    headerParams.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+                }
+                //headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
                 response = httpHandler.httpGet(getsupervsorsnapshot, headerParams);
                 Log.e("Assigned Sales Point", getsupervsorsnapshot);
                 Log.e("Response", response);
@@ -236,8 +247,14 @@ public class SubOrdinatesActivity extends AppCompatActivity {
         protected void onPostExecute(Void args) {
 
             pDialog.dismiss();
-            adapter = new SubOrdinatesAdapter(dataModels, getApplicationContext());
-            listView.setAdapter(adapter);
+            if(args==null)
+            {
+                Toast.makeText(SubOrdinatesActivity.this, "No SubOrdinate Found", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                adapter = new SubOrdinatesAdapter(dataModels, getApplicationContext());
+                listView.setAdapter(adapter);
+            }
 
         }
     }

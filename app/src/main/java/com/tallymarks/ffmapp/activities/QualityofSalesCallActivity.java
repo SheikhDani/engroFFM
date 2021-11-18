@@ -115,7 +115,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(QualityofSalesCallActivity.this, MarketPricesActivity.class);
+                Intent i = new Intent(QualityofSalesCallActivity.this, SalesOrderMarketPriceActivity.class);
                 startActivity(i);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
@@ -139,7 +139,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(QualityofSalesCallActivity.this, MarketPricesActivity.class);
+                Intent i = new Intent(QualityofSalesCallActivity.this, SalesOrderMarketPriceActivity.class);
                 startActivity(i);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
@@ -320,6 +320,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         TextView tv_timeline = promptsView.findViewById(R.id.txt_timeline);
         CheckBox ck_confirmed = promptsView.findViewById(R.id.checkBox_confirmed);
         TextView auto_Product = promptsView.findViewById(R.id.auto_product);
+        ImageView ivClose = promptsView.findViewById(R.id.imageView);
 
         SpannableStringBuilder product = setStarToLabel("Product");
         SpannableStringBuilder quantity = setStarToLabel("Quantity");
@@ -327,6 +328,13 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         tv_quantity.setText(quantity);
         tv_product.setText(product);
         tv_timeline.setText(timeline);
+        ivClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+
+            }
+        });
         auto_Product.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -444,6 +452,13 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 
         EditText et_review = promptsView.findViewById(R.id.et_Remarks);
         CheckBox ck_forward = promptsView.findViewById(R.id.checkBox_forward);
+        ImageView ivClsoe = promptsView.findViewById(R.id.ivClose);
+        ivClsoe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
         if(ck_forward.isChecked())
         {
             forward = "1";
@@ -700,7 +715,8 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
             quantity.setPadding(2, 2, 2, 2);
 
             TextView timeline = new TextView(this);
-            timeline.setText(arraylist.get(i).getTimeline());
+
+            timeline.setText(Helpers.utcToAnyDateFormat(arraylist.get(i).getTimeline(),"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'","MMM d yyyy"));
             timeline.setGravity(Gravity.CENTER);
 
             timeline.setTextSize(14);
@@ -747,6 +763,13 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 
         // notify adapter about data set changes
         // so that it will render the list with new data
+
+    }
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(QualityofSalesCallActivity.this, SalesOrderMarketPriceActivity.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
     }
 }

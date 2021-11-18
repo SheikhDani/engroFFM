@@ -24,6 +24,7 @@ import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.SubOrdinatesAdapter;
 import com.tallymarks.ffmapp.adapters.TodayPlanAdapter;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.Subordinates;
 import com.tallymarks.ffmapp.models.TodayPlan;
@@ -53,6 +54,7 @@ public class SubordinatListActivity extends AppCompatActivity implements ItemCli
     private List<TodayPlan> planList = new ArrayList<>();
     private RecyclerView recyclerView;
     SharedPrefferenceHelper sHelper;
+    ExtraHelper extraHelper;
     EditText et_Search;
     TodayPlanAdapter adapter;
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,7 @@ public class SubordinatListActivity extends AppCompatActivity implements ItemCli
         iv_menu = findViewById(R.id.iv_drawer);
         et_Search = findViewById(R.id.et_Search);
         sHelper = new SharedPrefferenceHelper(SubordinatListActivity.this);
+        extraHelper = new ExtraHelper(SubordinatListActivity.this);
         iv_back = findViewById(R.id.iv_back);
         iv_back.setVisibility(View.VISIBLE);
         iv_menu.setVisibility(View.GONE);
@@ -194,7 +197,14 @@ public class SubordinatListActivity extends AppCompatActivity implements ItemCli
             try {
                 httpHandler = new HttpHandler();
                 HashMap<String, String> headerParams = new HashMap<>();
-                headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                    headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                }
+                else
+                {
+                    headerParams.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+                }
+               // headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
                 response = httpHandler.httpGet(getsupervsorsnapshot, headerParams);
                 Log.e("Assigned Sales Point", getsupervsorsnapshot);
                 Log.e("Response", response);

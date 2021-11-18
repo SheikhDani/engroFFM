@@ -6,7 +6,10 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,6 +29,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -48,6 +52,7 @@ import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.loginoutput.LoginOutput;
 import com.tallymarks.ffmapp.utils.Constants;
@@ -78,6 +83,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     EditText et_username, et_password;
     DatabaseHandler db;
     SharedPrefferenceHelper sHelper;
+    ExtraHelper extraHelper;
     final static int REQUEST_LOCATION = 199;
     private GoogleApiClient googleApiClient;
     GpsTracker gpsTracker;
@@ -100,6 +106,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         et_password = findViewById(R.id.et_password);
         db = new DatabaseHandler(LoginActivity.this);
         sHelper = new SharedPrefferenceHelper(LoginActivity.this);
+        extraHelper = new ExtraHelper(LoginActivity.this);
         requestMultiplePermissions();
         btn_sumit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,12 +140,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         sensorimg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                managerCompat = FingerprintManagerCompat.from(LoginActivity.this);
-//                if (managerCompat.isHardwareDetected() && managerCompat.hasEnrolledFingerprints()) {
-//                    showFingerPrintDialog();
-//                } else {
-//                    Toast.makeText(getApplicationContext(), "Fingerprint not supported", Toast.LENGTH_SHORT).show();
-//                }
+              managerCompat = FingerprintManagerCompat.from(LoginActivity.this);
+              if (managerCompat.isHardwareDetected() && managerCompat.hasEnrolledFingerprints()) {
+                   showFingerPrintDialog();
+                } else {
+                   Toast.makeText(getApplicationContext(), "Fingerprint not supported", Toast.LENGTH_SHORT).show();
+               }
             }
         });
         if (checkForExistingUser()) {
@@ -147,6 +154,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
         }
+        setAppInfo();
     }
     private void showFingerPrintDialog() {
 
@@ -237,6 +245,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     sHelper.setString(Constants.ACCESS_TOKEN,logincode.getAccessToken());
                     sHelper.setString(Constants.REFERSH_TOKEN,logincode.getRefreshToken());
                     sHelper.setString(Constants.TOKEN_TYPE,logincode.getTokenType());
+                    extraHelper.setString(Constants.ACCESS_TOKEN,logincode.getAccessToken());
+                    extraHelper.setString(Constants.REFERSH_TOKEN,logincode.getRefreshToken());
+                    extraHelper.setString(Constants.TOKEN_TYPE,logincode.getTokenType());
+                    extraHelper.setString(Constants.USER_NAME,logincode.getUsername());
+                    extraHelper.setString(Constants.NAME,logincode.getName());
                     HashMap<String, String> map = new HashMap<>();
                     map.put(db.KEY_COMPANY_NAME, "" + logincode.getCompanyName() == null || logincode.getCompanyName().equals("") ? getString(R.string.not_applicable): logincode.getCompanyName());
                     map.put(db.KEY_USER_NAME, "" + logincode.getUsername() == null || logincode.getUsername().equals("") ? getString(R.string.not_applicable) : logincode.getUsername());
@@ -296,10 +309,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             pDialog.dismiss();
             if(error!=null && !error.equals(""))
             {
-                if(error.equals("invalid_grant"))
-                {
+
                     DialougeManager.invalidCredentialsPopup(LoginActivity.this,"",errorMessage);
-                }
+
             }
 
 
@@ -442,6 +454,23 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             });
         }
     }
-
+    public void setAppInfo(){
+        TextView appinfo = (TextView)findViewById(R.id.tv_appinfo);
+        PackageInfo pInfo = null;
+        try {
+            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("App Ver:");
+        sb.append(pInfo.versionName);
+        sb.append("\t \t");
+        sb.append("Build:");
+        sb.append(Constants.ENVIRONMENT);
+        appinfo.setTextSize(13);
+        appinfo.setTypeface(null, Typeface.ITALIC);
+        appinfo.setText(sb.toString());
+    }
 
 }

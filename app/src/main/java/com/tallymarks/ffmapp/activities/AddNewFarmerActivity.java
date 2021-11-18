@@ -58,7 +58,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class AddNewFarmerActivity extends AppCompatActivity {
-    private TextView tvTopHeader, tvSelectedMarket, tvLatLng;
+    private TextView tvTopHeader, tvSelectedMarket, tvLat,tvLong;
     ImageView iv_menu, iv_back;
     ImageView img_add_serving, img_add_profile;
     LinearLayout linearLayoutList, LinearLayoutList2;
@@ -93,7 +93,8 @@ public class AddNewFarmerActivity extends AppCompatActivity {
         tvTopHeader = findViewById(R.id.tv_dashboard);
         tvSelectedMarket = findViewById(R.id.txt_selected_market);
         auto_gender = findViewById(R.id.auto_gender);
-        tvLatLng = findViewById(R.id.txt_lat_lng);
+        tvLat = findViewById(R.id.txt_lat);
+        tvLong= findViewById(R.id.txt_lng);
         db = new DatabaseHandler(AddNewFarmerActivity.this);
         et_email = findViewById(R.id.et_email);
         et_firstname = findViewById(R.id.et_firstname);
@@ -140,10 +141,12 @@ public class AddNewFarmerActivity extends AppCompatActivity {
                     }
                     currentlat = String.valueOf(gps.getLatitude());
                     currentLng = String.valueOf(gps.getLongitude());
-                    tvLatLng.setText("Selected Lat, Lng: " + currentlat + "," + currentLng);
+                    tvLat.setText("Selected Lat:" + currentlat);
+                    tvLong.setText("Selected Long:" + currentLng);
 
                 } else {
-                    tvLatLng.setText("Selected Lat, Lng: 0.0 , 0.0");
+                    tvLat.setText("Selected Lat: 0.0");
+                    tvLong.setText("Selected Long: 0.0");
                 }
             }
         });

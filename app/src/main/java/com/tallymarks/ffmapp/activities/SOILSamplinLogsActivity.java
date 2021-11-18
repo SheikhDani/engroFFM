@@ -26,6 +26,7 @@ import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.SOILSamplingLogsAdapter;
 import com.tallymarks.ffmapp.adapters.TodayPlanAdapter;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.SoilSamplingLogs;
 import com.tallymarks.ffmapp.models.TodayPlan;
@@ -58,6 +59,7 @@ public class SOILSamplinLogsActivity extends AppCompatActivity {
     TextView tvTotalSample;
     Calendar myCalendar;
     String targetDate = "";
+    ExtraHelper extraHelper;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +75,7 @@ public class SOILSamplinLogsActivity extends AppCompatActivity {
         myCalendar = Calendar.getInstance();
         db = new DatabaseHandler(SOILSamplinLogsActivity.this);
         sHelper = new SharedPrefferenceHelper(SOILSamplinLogsActivity.this);
+        extraHelper = new ExtraHelper(SOILSamplinLogsActivity.this);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         tvTotalSample = findViewById(R.id.txt_total_sample);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(SOILSamplinLogsActivity.this);
@@ -171,7 +174,14 @@ public class SOILSamplinLogsActivity extends AppCompatActivity {
             try {
                 httpHandler = new HttpHandler();
                 HashMap<String, String> headerParams = new HashMap<>();
-                headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                    headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                }
+                else
+                {
+                    headerParams.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+                }
+              //  headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
                 response = httpHandler.httpGet(getsupervsorsnapshot, headerParams);
                 Log.e("Assigned Sales Point", getsupervsorsnapshot);
                 Log.e("Response", response);

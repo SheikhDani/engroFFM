@@ -58,6 +58,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.ExpandableListAdapter;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.MenuModel;
@@ -124,9 +125,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public DrawerLayout drawer;
     private TextView tvTopHeader;
     SharedPrefferenceHelper sHelper;
+    ExtraHelper extraHelper;
     NavigationView navigationView;
-    TextView userName;
-    ImageView iv_Menu, iv_Back;
+    TextView userName,cartbadge;
+    ImageView iv_Menu, iv_Notification;
     ImageView iv_filter;
     final static int REQUEST_LOCATION = 199;
     private GoogleApiClient googleApiClient;
@@ -156,6 +158,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void initView() {
         tvTopHeader = findViewById(R.id.tv_dashboard);
         iv_Menu = findViewById(R.id.iv_drawer);
+        iv_Notification = findViewById(R.id.iv_notification);
+        cartbadge = findViewById(R.id.cart_badge);
         txt_farmer_Demo = findViewById(R.id.produc_demo);
         txt_soil_logs = findViewById(R.id.soil_logs);
         headerImage = findViewById(R.id.profile_image);
@@ -165,6 +169,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         txt_user_guide = findViewById(R.id.txt_user_guide);
 
         iv_Menu.setVisibility(View.VISIBLE);
+        iv_Notification.setVisibility(View.VISIBLE);
+        cartbadge.setVisibility(View.VISIBLE);
         iv_filter = findViewById(R.id.iv_notification);
         userName = findViewById(R.id.userName);
 
@@ -191,6 +197,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tvTopHeader.setVisibility(View.VISIBLE);
         tvTopHeader.setText("DASHBOARD");
         sHelper = new SharedPrefferenceHelper(MainActivity.this);
+        extraHelper = new ExtraHelper(MainActivity.this);
         Log.e("token", String.valueOf(sHelper.getString(Constants.ACCESS_TOKEN)));
         gpsTracker = new GpsTracker(MainActivity.this);
         db = new DatabaseHandler(MainActivity.this);
@@ -469,6 +476,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             while (cursor.moveToNext());
             userName.setText(username);
 
+        }
+        else
+        {
+            userName.setText(extraHelper.getString(Constants.NAME));
         }
     }
 
@@ -923,8 +934,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        MainActivity.this.deleteDatabase("FFMApplicationDataBasev1");
-                        MainActivity.this.deleteDatabase("FFMAppDb_Zohaib");
+                        MainActivity.this.deleteDatabase("FFMApplicationDataBasev2");
+                        MainActivity.this.deleteDatabase("FFMAppDb_Zohaib_v2");
                         sHelper.clearPreferenceStore();
                         Toast.makeText(MainActivity.this, "Clear Data Successfully", Toast.LENGTH_SHORT).show();
                         Intent logout = new Intent(MainActivity.this, LoginActivity.class);
@@ -1301,7 +1312,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 while (cursor2.moveToNext());
                 httpHandler = new HttpHandler();
                 HashMap<String, String> headerParams2 = new HashMap<>();
-                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                    headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                }
+                else
+                {
+                    headerParams2.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+                }
+                //headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
                 HashMap<String, String> bodyParams = new HashMap<>();
                 String output = gson.toJson(inputCollection);
                 Log.e("postoutput", String.valueOf(output));
@@ -1444,7 +1462,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 while (cursor2.moveToNext());
                 httpHandler = new HttpHandler();
                 HashMap<String, String> headerParams2 = new HashMap<>();
-                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                    headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                }
+                else
+                {
+                    headerParams2.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+                }
+               // headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
                 HashMap<String, String> bodyParams = new HashMap<>();
                 String output = gson.toJson(inputCollection);
                 Log.e("postoutput", String.valueOf(output));
@@ -1642,7 +1667,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 while (cursor2.moveToNext());
                 httpHandler = new HttpHandler();
                 HashMap<String, String> headerParams2 = new HashMap<>();
-                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                    headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                }
+                else
+                {
+                    headerParams2.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+                }
+               // headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
                 HashMap<String, String> bodyParams = new HashMap<>();
                 String output = gson.toJson(inputCollection);
                 //output = gson.toJson(inputParameters, SaveWorkInput.class);

@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.listofallGenders.ListofAllGendersOutput;
 import com.tallymarks.ffmapp.models.listofallcrops.ListofallCropsOutput;
@@ -32,10 +33,12 @@ public class GetlistofallGenders extends AsyncTask<String, Void, Void> {
     String errorMessage = "";
     private Context mContext;
     SharedPrefferenceHelper sHelper;
+    ExtraHelper extraHelper;
     public  GetlistofallGenders(Context context)
     {
         this.mContext = context;
         this.sHelper = new SharedPrefferenceHelper(mContext);
+        this.extraHelper = new ExtraHelper(mContext);
     }
 
     @Override
@@ -61,7 +64,14 @@ public class GetlistofallGenders extends AsyncTask<String, Void, Void> {
         try {
             httpHandler = new HttpHandler();
             HashMap<String, String> headerParams = new HashMap<>();
-            headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+            if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+            }
+            else
+            {
+                headerParams.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+            }
+           // headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
             response = httpHandler.httpGet(listofAllCrops, headerParams);
             Log.e("list Crops", listofAllCrops);
             Log.e("Response", response);

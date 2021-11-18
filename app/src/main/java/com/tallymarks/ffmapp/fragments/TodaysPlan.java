@@ -366,7 +366,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                     DialougeManager.gpsNotEnabledPopup(getActivity());
                 }
             } else {
-                Toast.makeText(getActivity(), "You Already performed The Activity for That Customer", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "You Already performed The Activity against "+plan.getTitle(), Toast.LENGTH_SHORT).show();
             }
         } else {
             if (planList.get(position).getMemebrship().equals("Not Visited")) {
@@ -478,7 +478,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
 //                i.putExtras(gameData);
 //                startActivity(i);
             } else {
-                Toast.makeText(getActivity(), "You Already performed The Activity for That Farmer", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "You Already performed The Activity against "+planList.get(position).getFatherName(), Toast.LENGTH_SHORT).show();
             }
         }
     }
