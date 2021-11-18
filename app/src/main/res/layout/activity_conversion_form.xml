@@ -1,0 +1,1118 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <include
+        android:id="@+id/inc_common_header_colletion"
+        layout="@layout/common_header" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/divider"
+        android:layout_below="@+id/inc_common_header_colletion"
+        android:fillViewport="true"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/linear_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Parent Activity"
+                    android:textColor="@color/black"
+
+                    />
+
+                <AutoCompleteTextView
+                    android:id="@+id/auto_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/eidttext_boader"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:dropDownHeight="155dp"
+                    android:focusable="false"
+                    android:gravity="center_horizontal"
+                    android:inputType="none"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:text="Farm Visit"
+                    android:textAlignment="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_first_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_email"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+
+                    android:id="@+id/txt_farmer"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Farmer"
+                    android:textColor="@color/black"
+
+                    />
+
+                <AutoCompleteTextView
+                    android:id="@+id/auto_farmer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/eidttext_boader"
+                    android:clickable="true"
+                    android:textColor="@color/black"
+                    android:cursorVisible="false"
+                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:dropDownHeight="155dp"
+                    android:focusable="false"
+                    android:gravity="center_horizontal"
+                    android:hint="Select Farmer"
+                    android:inputType="none"
+                    android:textAlignment="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_lastname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_first_name"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+
+                    android:id="@+id/txt_user"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="User"
+                    android:textColor="@color/black"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txt_user_data"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:background="@drawable/textview_grey_boader"
+                    android:gravity="center"
+                    android:hint="User" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_mobile_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_lastname"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+
+                    android:id="@+id/txt_activity"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Activity"
+                    android:textColor="@color/black"
+
+                    />
+
+                <AutoCompleteTextView
+                    android:id="@+id/auto_activity"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/eidttext_boader"
+                    android:clickable="true"
+                    android:textColor="@color/black"
+                    android:cursorVisible="false"
+                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:dropDownHeight="155dp"
+                    android:focusable="false"
+                    android:gravity="center_horizontal"
+                    android:hint="Select Activity"
+                    android:inputType="none"
+                    android:textAlignment="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </LinearLayout>
+
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/p20"
+                android:background="@color/grey" />
+
+
+            <LinearLayout
+                android:id="@+id/linear_ac_crops"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_crops"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1.2"
+                    android:gravity="center_vertical"
+                    android:text="Activity on Crops"
+                    android:textColor="@color/green"
+
+                    />
+
+
+            </LinearLayout>
+
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/p20"
+                android:background="@color/grey" />
+
+            <LinearLayout
+                android:id="@+id/linear_landline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_mobile_number"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+
+                    android:id="@+id/txt_crop"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Crop"
+                    android:textColor="@color/black"
+
+                    />
+
+                <AutoCompleteTextView
+                    android:id="@+id/auto_crop"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/eidttext_boader"
+                    android:clickable="true"
+                    android:textColor="@color/black"
+                    android:cursorVisible="false"
+                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:dropDownHeight="155dp"
+                    android:focusable="false"
+                    android:gravity="center_horizontal"
+                    android:hint="Select Crop"
+                    android:inputType="none"
+
+                    android:textAlignment="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_cnic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_landline"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_product"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Product"
+                    android:textColor="@color/black"
+
+                    />
+
+
+                <AutoCompleteTextView
+                    android:id="@+id/auto_product"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:background="@drawable/eidttext_boader"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:dropDownHeight="155dp"
+                    android:focusable="false"
+                    android:gravity="center_horizontal"
+                    android:hint="Select Product"
+                    android:inputType="none"
+                    android:textAlignment="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/linear_gender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_cnic"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_zarkesh_user"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Zarkhes User"
+                    android:textColor="@color/black"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txt_zarkesh_user_data"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:background="@drawable/textview_grey_boader"
+                    android:gravity="center"
+                    />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_farm_size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_cnic"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_farm_Size"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Total Farm Size"
+                    android:textColor="@color/black"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txt_farm_size_data"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/textview_grey_boader"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_Crop_acre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_cnic"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_crop_acre"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Crop Acearage"
+                    android:textColor="@color/black"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txt_crop_acre_data"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:background="@drawable/textview_grey_boader"
+                    android:gravity="center"
+                   />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_rec_dose"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_cnic"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_rec_dosage"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Recommended Dose"
+                    android:textColor="@color/black"
+
+                    />
+
+                <EditText
+                    android:id="@+id/et_rec_dosage"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/eidttext_boader"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:hint="Enter Dosage"
+                    android:inputType="number"
+                    android:maxLength="9" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_rec_acre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_cnic"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_rec_acre"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Recommended Acearage"
+                    android:textColor="@color/black"
+
+                    />
+
+                <EditText
+                    android:id="@+id/et_rec_acre"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/eidttext_boader"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:hint="Ente Acearage"
+                    android:inputType="number"
+                    android:maxLength="9" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_rc_pr_quantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_rc_pr_quanitty"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Recommended Product Quantity"
+                    android:textColor="@color/black"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txt_rec_pr_quantity_data"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:background="@drawable/textview_grey_boader"
+                    android:gravity="center"
+                />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_remarks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_cnic"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_remarks"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Remarks"
+                    android:textColor="@color/black"
+
+                    />
+
+                <EditText
+                    android:id="@+id/et_remarks"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/eidttext_boader"
+                    android:gravity="center"
+                    android:hint="Remarks"
+                    android:textColor="@color/black"
+                    />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_sales_point"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_cnic"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_sales_point"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Sales Point"
+                    android:textColor="@color/black"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txt_sales_point_data"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/textview_grey_boader"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:hint="" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_timeline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_acres"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+
+                    android:id="@+id/txt_date"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+                    android:layout_weight="1"
+
+                    android:gravity="center_vertical"
+                    android:text="Activity Date"
+                    android:textColor="@color/black"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txt_date_data"
+                    android:layout_width="0dp"
+                    android:layout_height="25dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/eidttext_boader"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:hint="Date" />
+
+            </LinearLayout>
+
+
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/p20"
+                android:background="@color/grey" />
+
+
+            <LinearLayout
+                android:id="@+id/linear_actual_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_actual_data"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1.2"
+                    android:gravity="center_vertical"
+                    android:text="Actual Data"
+                    android:textColor="@color/green"
+
+                    />
+
+
+            </LinearLayout>
+
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/p20"
+                android:background="@color/grey" />
+            <LinearLayout
+                android:id="@+id/linear_actua_dose_acre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_cnic"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_actual_dose_acre"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Actual Dose Per Acre"
+                    android:textColor="@color/black"
+
+                    />
+
+                <EditText
+                    android:id="@+id/et_actual_dose_per_acre"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/eidttext_boader"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:hint="Enter Dosage"
+                    android:inputType="number"
+                    android:maxLength="9" />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_actua_acre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_cnic"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_actual_acre"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Actual Acerage"
+                    android:textColor="@color/black"
+
+                    />
+
+                <EditText
+                    android:id="@+id/et_actual_acre_data"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/eidttext_boader"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:hint="Enter Dosage"
+                    android:inputType="number"
+                    android:maxLength="9" />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_actual_product_quantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_cnic"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_actual_product_quantity"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Actual Product Quantity"
+                    android:textColor="@color/black"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txt_actual_prod_quantity_data"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:textColor="@color/black"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/textview_grey_boader"
+                    android:gravity="center"
+                     />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_tareget_acre_rent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_cnic"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_target_acre_rent"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Target Acreages For Retention"
+                    android:textColor="@color/black"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txt_tareget_Acre_Rent_data"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/textview_grey_boader"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                     />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_acre_retention"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_cnic"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_acre_retention"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Acreages For Retention"
+                    android:textColor="@color/black"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txt_acre_retetion_data"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:textColor="@color/black"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/textview_grey_boader"
+                    android:gravity="center"
+                    />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_acre_percetn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_cnic"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_acre_percent"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Acreages For Retention %"
+                    android:textColor="@color/black"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txt_acre_percent_data"
+                    android:layout_width="0dp"
+                    android:textColor="@color/black"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/textview_grey_boader"
+                    android:gravity="center"
+                    />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/linear_reason_devitation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_cnic"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_reason_deviation"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Reason For Deviation"
+                    android:textColor="@color/black"
+
+                    />
+
+                <EditText
+                    android:id="@+id/et_reason_deviation"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:background="@drawable/eidttext_boader"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:hint="Reason"
+
+                  />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_cnic"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_address"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Address"
+                    android:textColor="@color/black"
+
+                    />
+
+                <EditText
+                    android:id="@+id/et_address"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:background="@drawable/eidttext_boader"
+                    android:gravity="center"
+                    android:hint="Address"
+
+                   />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/txt_status"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Pending"
+                    android:textColor="@color/black"
+
+                    />
+
+                <AutoCompleteTextView
+                    android:id="@+id/auto_status"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:background="@drawable/eidttext_boader"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:dropDownHeight="155dp"
+                    android:focusable="false"
+                    android:gravity="center_horizontal"
+                    android:inputType="none"
+                    android:maxLines="1"
+                    android:text="Pending"
+                    android:textAlignment="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/linear_bottom"
+        android:layout_marginBottom="@dimen/p10"
+        android:background="@color/grey" />
+
+    <LinearLayout
+        android:id="@+id/linear_bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <Button
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginStart="@dimen/p10"
+                android:layout_marginLeft="@dimen/p10"
+                android:layout_marginTop="@dimen/p10"
+                android:layout_marginEnd="@dimen/p10"
+                android:layout_marginRight="@dimen/p10"
+                android:layout_marginBottom="@dimen/p10"
+                android:background="@drawable/eidttext_boader"
+                android:drawableLeft="@drawable/backwoardresizer"
+                android:paddingRight="@dimen/p20"
+                android:text="BACK"
+                android:textColor="@color/green" />
+
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="@dimen/p10"
+                android:layout_marginLeft="@dimen/p10"
+                android:layout_marginTop="@dimen/p10"
+                android:layout_marginEnd="@dimen/p10"
+                android:layout_marginRight="@dimen/p10"
+                android:layout_marginBottom="@dimen/p10"
+                android:background="@drawable/eidttext_boader"
+                android:backgroundTint="@color/green"
+                android:drawableRight="@drawable/forwardresizer"
+                android:paddingLeft="@dimen/p20"
+                android:text="SAVE"
+                android:textColor="@color/white" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -90,6 +90,9 @@ public class LoadAssignedFarmerFromSalesPoint extends AsyncTask<String, Void, Vo
                         map.put(mydb.KEY_TODAY_JOURNEY_FARMER_JOURNEYPLAN_ID, journeycode.get(j).getJourneyPlanId()== null || journeycode.get(j).getJourneyPlanId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getJourneyPlanId().toString());
                         map.put(mydb.KEY_TODAY_JOURNEY_FARMER_SALES_POINT_NAME, journeycode.get(j).getSalesPoint()== null || journeycode.get(j).getSalesPoint().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getSalesPoint());
                         map.put(mydb.KEY_TODAY_FARMER_MOBILE_NO, journeycode.get(j).getMobileNo()== null || journeycode.get(j).getMobileNo().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getMobileNo());
+                        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_USERTYPE, journeycode.get(j).getUserType()== null || journeycode.get(j).getUserType().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getUserType());
+                        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_ACRAEGE, journeycode.get(j).getAcreage()== null || journeycode.get(j).getAcreage().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getAcreage().toString());
+                        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_AREA_CULTIVATION, journeycode.get(j).getAreaCultivation()== null || journeycode.get(j).getAreaCultivation().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getAreaCultivation().toString());
                         map.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
                         map.put(mydb.KEY_TODAY_JOURNEY_IS_EDITED, "Not Edited");
                         map.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "0");

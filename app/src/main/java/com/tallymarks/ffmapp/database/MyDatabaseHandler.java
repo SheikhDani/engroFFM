@@ -18,7 +18,7 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
 
     private SQLiteDatabase db;
     /*Database Varaiables*/
-    private static final int DATABASE_VERSION = 18;
+    private static final int DATABASE_VERSION = 19;
     private static final String TAG = "DBAdapter";
     private static final String DATABASE_NAME = "FFMAppDb_Zohaib";
     private Context mContext;
@@ -122,6 +122,10 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_TODAY_JOURNEY_IS_EDITED= "isVisitedTodayCustomerJourneyPlanIsEdited";
     public static final String KEY_TODAY_JOURNEY_FARMER_NAME = "farmerName";
     public static final String KEY_TODAY_JOURNEY_FARMER_LATITUDE = "latitude";
+
+    public static final String KEY_TODAY_JOURNEY_FARMER_USERTYPE = "farmeruserType";
+    public static final String KEY_TODAY_JOURNEY_FARMER_AREA_CULTIVATION = "areacultivation";
+    public static final String KEY_TODAY_JOURNEY_FARMER_ACRAEGE = "farmeracerage";
     public static final String KEY_TODAY_JOURNEY_FARMER_LONGITUDE = "longtitude";
     public static final String KEY_TODAY_JOURNEY_FARMER_DAY_ID = "dayId";
     public static final String KEY_TODAY_JOURNEY_FARMER_JOURNEYPLAN_ID = "journeyPlanId";
@@ -192,6 +196,9 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
             + KEY_TODAY_JOURNEY_FARMER_JOURNEYPLAN_ID+ " TEXT,"
             + KEY_TODAY_JOURNEY_FARMER_CODE+ " TEXT,"
             + KEY_TODAY_JOURNEY_FARMER_LATITUDE+ " TEXT,"
+            + KEY_TODAY_JOURNEY_FARMER_USERTYPE+ " TEXT,"
+            + KEY_TODAY_JOURNEY_FARMER_ACRAEGE+ " TEXT,"
+            + KEY_TODAY_JOURNEY_FARMER_AREA_CULTIVATION+ " TEXT,"
             + KEY_TODAY_JOURNEY_FARMER_LONGITUDE+ " TEXT,"
             + KEY_TODAY_JOURNEY_FARMER_NAME+ " TEXT,"
             + KEY_TODAY_FARMER_MOBILE_NO+ " TEXT,"

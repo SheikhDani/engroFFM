@@ -377,6 +377,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 drawer.closeDrawers();
                 return true;
 
+            case R.id.nav_conversion:
+
+                Intent conversionRetention= new Intent(MainActivity.this, ConversionRetentionActivity.class);
+                startActivity(conversionRetention);
+                drawer.closeDrawers();
+                return true;
+
 
         }
 

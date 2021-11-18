@@ -8,6 +8,7 @@ public class FarmerTodayJourneyPlan {
     @SerializedName("farmerId")
     @Expose
     private Integer farmerId;
+
     @SerializedName("dayId")
     @Expose
     private Object dayId;
@@ -32,6 +33,40 @@ public class FarmerTodayJourneyPlan {
     @SerializedName("salesPoint")
     @Expose
     private String salesPoint;
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
+    public Double getAreaCultivation() {
+        return areaCultivation;
+    }
+
+    public void setAreaCultivation(Double areaCultivation) {
+        this.areaCultivation = areaCultivation;
+    }
+
+    public Double getAcreage() {
+        return acreage;
+    }
+
+    public void setAcreage(Double acreage) {
+        this.acreage = acreage;
+    }
+
+    @SerializedName("userType")
+    @Expose
+    private String userType;
+    @SerializedName("areaCultivation")
+    @Expose
+    private Double areaCultivation;
+    @SerializedName("acreage")
+    @Expose
+    private Double acreage;
 
     public Integer getFarmerId() {
         return farmerId;

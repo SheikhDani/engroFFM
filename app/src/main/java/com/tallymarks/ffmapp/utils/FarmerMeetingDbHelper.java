@@ -75,7 +75,12 @@ public class FarmerMeetingDbHelper {
         map.put(databaseHandler.KEY_TODAY_JOURNEY_FARMER_ID, "");
         map.put(databaseHandler.KEY_TODAY_JOURNEY_FARMER_CODE, "");
         map.put(databaseHandler.KEY_TODAY_JOURNEY_FARMER_NAME, "");
+        map.put(databaseHandler.KEY_TODAY_JOURNEY_FARMER_SALES_POINT_NAME,"");
+        map.put(databaseHandler.KEY_TODAY_JOURNEY_FARMER_AREA_CULTIVATION,"");
+        map.put(databaseHandler.KEY_TODAY_JOURNEY_FARMER_ACRAEGE,"");
+        map.put(databaseHandler.KEY_TODAY_JOURNEY_FARMER_USERTYPE,"");
         HashMap<String, String> filters = new HashMap<>();
+        filters.put(databaseHandler.KEY_PLAN_TYPE, "ALL");
         Cursor cursor = databaseHandler.getData(databaseHandler.TODAY_FARMER_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -83,7 +88,11 @@ public class FarmerMeetingDbHelper {
                 String farmerID = cursor.getString(cursor.getColumnIndex(databaseHandler.KEY_TODAY_JOURNEY_FARMER_ID));
                 String farmerCode = Helpers.clean(cursor.getString(cursor.getColumnIndex(databaseHandler.KEY_TODAY_JOURNEY_FARMER_CODE)));
                 String farmerName= Helpers.clean(cursor.getString(cursor.getColumnIndex(databaseHandler.KEY_TODAY_JOURNEY_FARMER_NAME)));
-                farmersArrayList.add(new Farmer(farmerID, farmerCode, farmerName));
+                String farmerSalesPoint = Helpers.clean(cursor.getString(cursor.getColumnIndex(databaseHandler.KEY_TODAY_JOURNEY_FARMER_SALES_POINT_NAME)));
+                String farmerAcerage = cursor.getString(cursor.getColumnIndex(databaseHandler.KEY_TODAY_JOURNEY_FARMER_ACRAEGE));
+                String farmerAreaCultivation = cursor.getString(cursor.getColumnIndex(databaseHandler.KEY_TODAY_JOURNEY_FARMER_AREA_CULTIVATION));
+                String farmerUserType = Helpers.clean(cursor.getString(cursor.getColumnIndex(databaseHandler.KEY_TODAY_JOURNEY_FARMER_USERTYPE)));
+                farmersArrayList.add(new Farmer(farmerID, farmerCode, farmerName,farmerSalesPoint,farmerUserType,farmerAcerage,farmerAreaCultivation));
             }
             while (cursor.moveToNext());
         }
