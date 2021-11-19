@@ -71,6 +71,7 @@ public class Constants {
     public static final String CONTENT_TYPE_FORM_URL_ENCODED = "application/x-www-form-urlencoded";
 
     public static final String POST = "POST";
+    public static final String PUT = "PUT";
     public static final String CONTENT_TYPE_JSON ="application/json";
     public static String FLOOR_STOCK_RELOAD_ADAPTER= "FloorStockReloadAdapter";
 
@@ -78,6 +79,31 @@ public class Constants {
     public static final String EDIT_FARMER_MOBILENUBMER ="editfarmermobilenumber";
   public static final String EDIT_FARMER_NAME= "editfarmername";
   public static final String EDIT_FARMER_ID= "editfarmerid";
+    public static final String FARMER_CONVERSION_RETENTION= "farmerconversionretention";
+
+
+    public static final String FARMER_CONVERSION_PARENT_ACTIVITY= "farmerconversionparentactivty";
+    public static final String FARMER_CONVERSION_FARMER_NAME= "farmerconversionfarmername";
+    public static final String FARMER_CONVERSION_PARENT_ACTIVITY_ID= "farmerconversionparentactivtyID";
+    public static final String FARMER_CONVERSION_PARENT_CROP= "farmerconversionparentcrop";
+    public static final String FARMER_CONVERSION_PARENT_PRODUCT= "farmerconversionparentproduct";
+    public static final String FARMER_CONVERSION_PARENT_TOTAL_FARM_SIZE= "farmerconversionparenttotalfarmersize";
+    public static final String FARMER_CONVERSION_PARENT_CROP_ACREAGE= "farmerconversionparentcropacreage";
+    public static final String FARMER_CONVERSION_PARENT_ZERKHAIZ_USER =  "farmerconversionparentzerkhaizuser";
+    public static final String FARMER_CONVERSION_PARENT_RECOMMENDED_DOSAGE =  "farmerconversionparentrecommendeddosage";
+    public static final String FARMER_CONVERSION_PARENT_RECOMMENDED_ACERAGE =  "farmerconversionparentrecommedndeacerage";
+    public static final String FARMER_CONVERSION_PARENT_RECOMMENDE_PRODUCT_QUANITY =  "farmerconversionparentrecommendproductquanitty";
+    public static final String FARMER_CONVERSION_PARENT_REMAKRS =  "farmerconversionparentremarks";
+    public static final String FARMER_CONVERSION_PARENT_ACTIVITY_DATE =  "farmerconversionparentactivitydate";
+    public static final String FARMER_CONVERSION_PARENT_ADDRESS =  "farmerconversionparentaddress";
+    public static final String FARMER_CONVERSION_PARENT_STATUS=  "farmerconversionparentstatus";
+    public static final String FARMER_CONVERSION_PARENT_ACTUAL_DOSAGE_PER_ACRE=  "farmerconversionparentactualdosageperacre";
+    public static final String FARMER_CONVERSION_PARENT_ACTUAL_ACREAGE=  "farmerconversionparentactualAcreage";
+    public static final String FARMER_CONVERSION_PARENT_ACTUAL_PRODUCT_QUANTITY=  "farmerconversionparentactualproductquantity";
+    public static final String FARMER_CONVERSION_PARENT_ACERAGE_RETENTION=  "farmerconversionparentacerageretention";
+    public static final String FARMER_CONVERSION_PARENT_ACERAGE_RETENTION_PERCENT=  "farmerconversionparentacerageretentionpercent";
+    public static final String FARMER_CONVERSION_PARENT_REASON=  "farmerconversionparentreason";
+    public static final String FARMER_CONVERSION_ID=  "farmerconversionID";
 
 
 
@@ -145,6 +171,10 @@ public class Constants {
     public static final String FFM_GET_SOIL_SAMPLING_LOGS=  FFM_BASE_URL + "/global/lookup/listSoilSampleLogs";
     public static final String BASE_URL = "https://attendance.tallymarkscloud.com:8080/mitracs/";
     public static final String FFM_CREATE_FARMER_MEETING= "app/trans/createFarmerMeeting";
+    public static final String FFM_FARMER_DETAIL_DATA= FFM_BASE_URL +"/global/lookup/getFarmerDetailsData";
+    public static final String FFM_FARMER_ADD_CONVERSION_RETENTION= FFM_BASE_URL +"/app/trans/createConversionRetention";
+    public static final String FFM_FARMER_GET_CONVERSION_RETENTION= FFM_BASE_URL +"/app/trans/getAllConversionRetention";
+    public static final String FFM_FARMER_EDIT_CONVERSION_RETENTION= FFM_BASE_URL +"/app/trans/editConversionRetention";
 
 
 

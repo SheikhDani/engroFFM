@@ -20,7 +20,7 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
     /*Database Varaiables*/
     private static final int DATABASE_VERSION = 1;
     private static final String TAG = "DBAdapter";
-    private static final String DATABASE_NAME = "FFMAppDb_Zohaib_v3";
+    private static final String DATABASE_NAME = "FFMAppDb_Zohaib_v4";
     private Context mContext;
 
     //List of all tables
@@ -118,6 +118,9 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
     // Farmer Today Journey Plan Table Fields
     public static final String KEY_TODAY_JOURNEY_FARMER_ID = "farmerId";
     public static final String KEY_TODAY_JOURNEY_FARMER_CODE = "farmerCode";
+    public static final String KEY_TODAY_JOURNEY_FARMER_USERTYPE = "farmeruserType";
+    public static final String KEY_TODAY_JOURNEY_FARMER_AREA_CULTIVATION = "areacultivation";
+    public static final String KEY_TODAY_JOURNEY_FARMER_ACRAEGE = "farmeracerage";
     public static final String KEY_TODAY_JOURNEY_FARMER_NAME = "farmerName";
     public static final String KEY_TODAY_JOURNEY_FARMER_LATITUDE = "latitude";
     public static final String KEY_TODAY_JOURNEY_FARMER_LONGITUDE = "longtitude";
@@ -190,6 +193,9 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
             + KEY_TODAY_JOURNEY_FARMER_ID+ " TEXT,"
             + KEY_TODAY_JOURNEY_FARMER_JOURNEYPLAN_ID+ " TEXT,"
             + KEY_TODAY_JOURNEY_FARMER_CODE+ " TEXT,"
+            + KEY_TODAY_JOURNEY_FARMER_USERTYPE+ " TEXT,"
+            + KEY_TODAY_JOURNEY_FARMER_ACRAEGE+ " TEXT,"
+            + KEY_TODAY_JOURNEY_FARMER_AREA_CULTIVATION+ " TEXT,"
             + KEY_TODAY_JOURNEY_FARMER_LATITUDE+ " TEXT,"
             + KEY_TODAY_JOURNEY_FARMER_LONGITUDE+ " TEXT,"
             + KEY_TODAY_JOURNEY_FARMER_NAME+ " TEXT,"

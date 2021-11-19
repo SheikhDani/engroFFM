@@ -11,7 +11,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="no_farmer_available">Download farmer data for desired Sale Points and navigate back to this screen.</string>
-
+    <string name="noretention">No Data Found</string>
     <string name="action_settings">Settings</string>
     <string name="outlet_confirmation">Are you Sure to want to Checkout</string>
     <string name="save_farmer">Are you Sure to want to Save the Farmer</string>
