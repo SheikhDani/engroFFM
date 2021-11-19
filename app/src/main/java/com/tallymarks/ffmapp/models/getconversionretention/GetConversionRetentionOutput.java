@@ -86,6 +86,18 @@ public class GetConversionRetentionOutput {
     @Expose
     private String farmerName;
 
+    public String getFarmersalespointcode() {
+        return farmersalespointcode;
+    }
+
+    public void setFarmersalespointcode(String farmersalespointcode) {
+        this.farmersalespointcode = farmersalespointcode;
+    }
+
+    @SerializedName("farmerSalesPointCode")
+    @Expose
+    private String farmersalespointcode;
+
     public Integer getId() {
         return id;
     }

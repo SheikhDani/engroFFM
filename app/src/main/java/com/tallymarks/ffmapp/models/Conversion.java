@@ -6,6 +6,16 @@ public class Conversion {
     private String activityid,crop,product,zerkhaiz_user,total_farm_size,crop_Acerage,rec_dose,rec_acerage,rec_product_quantity;
     private String remarks;
 
+    public String getSalespointcode() {
+        return salespointcode;
+    }
+
+    public void setSalespointcode(String salespointcode) {
+        this.salespointcode = salespointcode;
+    }
+
+    private String salespointcode;
+
     public String getId() {
         return id;
     }

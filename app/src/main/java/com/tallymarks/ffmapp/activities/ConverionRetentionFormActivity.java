@@ -232,6 +232,9 @@ public class ConverionRetentionFormActivity extends AppCompatActivity {
                 auto_stauts.setBackgroundResource(R.drawable.eidttext_boader);
 
                 tvTargeAcragaeRent.setText(sHelper.getString(Constants.FARMER_CONVERSION_PARENT_RECOMMENDED_ACERAGE));
+                if(sHelper.getString(Constants.FARMER_CONVERSION_PARENT_SALES_POINT_CODE)!=null|| !sHelper.getString(Constants.FARMER_CONVERSION_PARENT_SALES_POINT_CODE).equals("")) {
+                    tvSalesPointData.setText(sHelper.getString(Constants.FARMER_CONVERSION_PARENT_SALES_POINT_CODE));
+                }
 
 
             }
@@ -298,6 +301,10 @@ public class ConverionRetentionFormActivity extends AppCompatActivity {
                     tvAcreagePercent.setText(sHelper.getString(Constants.FARMER_CONVERSION_PARENT_ACERAGE_RETENTION_PERCENT));
                     etReasoNDevaition.setText(sHelper.getString(Constants.FARMER_CONVERSION_PARENT_REASON));
                     btnSave.setVisibility(View.GONE);
+                    if(sHelper.getString(Constants.FARMER_CONVERSION_PARENT_SALES_POINT_CODE)!=null|| !sHelper.getString(Constants.FARMER_CONVERSION_PARENT_SALES_POINT_CODE).equals("")) {
+                        tvSalesPointData.setText(sHelper.getString(Constants.FARMER_CONVERSION_PARENT_SALES_POINT_CODE));
+                    }
+
 
 
                 }
