@@ -12,6 +12,20 @@ public class OtherProduct {
     @Expose
     private Integer productId;
 
+    public Integer getOtherPacksLiquidated() {
+        return otherPacksLiquidated;
+    }
+
+    public void setOtherPacksLiquidated(Integer otherPacksLiquidated) {
+        this.otherPacksLiquidated = otherPacksLiquidated;
+    }
+
+    @SerializedName("otherPacksLiquidated")
+    @Expose
+    private Integer otherPacksLiquidated;
+
+
+
 
 
     public Integer getProductId() {

@@ -342,7 +342,7 @@
                 android:id="@+id/linear_other_product"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+android:visibility="gone"
                 android:layout_marginTop="@dimen/p20"
                 android:orientation="horizontal"
                 android:weightSum="2">
@@ -393,6 +393,7 @@
                 android:layout_below="@+id/linear_main_prod"
                 android:layout_marginTop="@dimen/p20"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:weightSum="2">
 
                 <TextView
@@ -545,6 +546,89 @@
                     />
 
 
+            </LinearLayout>
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/p10"
+                android:background="@color/grey" />
+
+            <LinearLayout
+                android:id="@+id/therpacks"
+                android:layout_width="fill_parent"
+                android:layout_height="60dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/tv_other_packs"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/p10"
+                    android:layout_weight="1.8"
+                    android:padding="@dimen/p10"
+                    android:text="OTHER PACKS LIQUIDATION"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/ts16"
+
+
+                    />
+
+                <ImageView
+                    android:id="@+id/img_add_other_packs"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/p50"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+
+                    android:layout_margin="@dimen/p20"
+
+                    android:layout_weight="0.2"
+                    android:contentDescription="Icon"
+
+                    android:src="@drawable/plusgreen" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_table_other_packs"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/linear_bottom"
+
+                android:orientation="horizontal">
+
+                <ScrollView
+                    android:id="@+id/layoutotherpacks"
+                    android:layout_height="match_parent"
+                    android:scrollbars="horizontal|vertical"
+                    android:layout_width="match_parent"
+
+                    android:scrollbarStyle="outsideInset"
+                    android:fillViewport="true">
+                    <HorizontalScrollView
+                        android:id="@+id/horizontalViewotherpacks"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="horizontal|vertical"
+                        android:layout_width="wrap_content"
+                        >
+
+                        <TableLayout
+                            android:id="@+id/displayLinearptherpacks"
+                            android:layout_width="match_parent"
+                            android:divider="@color/grey"
+                            android:layout_height="match_parent"
+                            android:showDividers="middle"
+                            android:stretchColumns="*">
+
+
+
+                        </TableLayout>
+                    </HorizontalScrollView>
+                </ScrollView>
             </LinearLayout>
 
             <View

@@ -947,8 +947,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        MainActivity.this.deleteDatabase("FFMApplicationDataBasev2");
-                        MainActivity.this.deleteDatabase("FFMAppDb_Zohaib_v2");
+                        MainActivity.this.deleteDatabase("FFMApplicationDataBasev5");
+                        MainActivity.this.deleteDatabase("FFMAppDb_Zohaib_v5");
                         sHelper.clearPreferenceStore();
                         Toast.makeText(MainActivity.this, "Clear Data Successfully", Toast.LENGTH_SHORT).show();
                         Intent logout = new Intent(MainActivity.this, LoginActivity.class);
@@ -2377,7 +2377,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 activity.setCropAcreage(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_CROP_ACE))));
                 activity.setCustomerId(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_SERVINGDEALERID)));
                 activity.setPacksLiquidated(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_PACKS_LIQUIATED))));
-                activity.setOtherPacksLiquidated(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_OTHER_PRODUCT_LIQUIDATED))));
+               // activity.setOtherPacksLiquidated(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_OTHER_PRODUCT_LIQUIDATED))));
                 activity.setOtherProducts(loadotherProducts(thisfarmerId));
 
                 thisfarmerCheckIn.setActivity(activity);
@@ -2391,15 +2391,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ArrayList<OtherProduct> productsList = new ArrayList<>();
         HashMap<String, String> map = new HashMap<>();
 
-        map.put(mydb.KEY_TODAY_FARMER_OTHER_PRODUCT_ID, "");
+        map.put(mydb.KEY_TODAY_OTHER_PACKS_ID, "");
+        map.put(mydb.KEY_TODAY_OTHER_PACKS_LIQUIDATED, "");
         HashMap<String, String> filter = new HashMap<>();
         filter.put(mydb.KEY_TODAY_FARMMER_ID, farmerid);
-        Cursor cursor2 = mydb.getData(mydb.TODAY_FARMER_OTHER_PRODUCTS, map, filter);
+        Cursor cursor2 = mydb.getData(mydb.TODAY_FARMER_OTHERPACKS, map, filter);
         if (cursor2.getCount() > 0) {
             cursor2.moveToFirst();
             do {
                 OtherProduct prod = new OtherProduct();
-                prod.setProductId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_FARMER_OTHER_PRODUCT_ID))));
+                prod.setProductId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_OTHER_PACKS_ID))));
+                prod.setOtherPacksLiquidated(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_OTHER_PACKS_LIQUIDATED))));
                 productsList.add(prod);
 
             }

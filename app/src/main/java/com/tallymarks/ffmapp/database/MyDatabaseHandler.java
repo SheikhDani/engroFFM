@@ -20,7 +20,7 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
     /*Database Varaiables*/
     private static final int DATABASE_VERSION = 1;
     private static final String TAG = "DBAdapter";
-    private static final String DATABASE_NAME = "FFMAppDb_Zohaib_v4";
+    private static final String DATABASE_NAME = "FFMAppDb_Zohaib_v5";
     private Context mContext;
 
     //List of all tables
@@ -28,6 +28,7 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
     public static final String TODAY_FARMER_ACTIVITY = "TODAY_FARMER_ACTIVITY";
     public static final String DOWNLOADED_FARMER_DATA = "DOWNLOADED_FARMER_DATA";
     public static final String TODAY_FARMER_RECOMMENDATION = "TODAY_FARMER_RECOMMENDATION";
+    public static final String TODAY_FARMER_OTHERPACKS = "TODAY_FARMER_OTHERPACKS";
     public static final String TODAY_FARMER_OTHER_PRODUCTS = "TODAY_FARMER_OTHER_PRODUCTS";
     public static final String TODAY_FARMER_SAMPLING = "TODAY_FARMER_SAMPLING";
     public static final String TODAY_FARMER_CHECKIN = "TODAY_FARMER_CHECKIN";
@@ -140,6 +141,10 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_TODAY_BRAND_ID = "brandId";
     public static final String KEY_TODAY_DOSAGE = "dosage";
 
+    //Farmer Today  Other Product fields
+    public static final String KEY_TODAY_OTHER_PACKS_ID= "farmerTodayOtherProductID";
+    public static final String KEY_TODAY_OTHER_PACKS_LIQUIDATED= "farmerTodayOtherPacksLiquidated";
+
     // Farmer Today Other Product fields
     public static final String KEY_TODAY_FARMER_OTHER_PRODUCT_ID = "farmerOtherProductId";
 
@@ -251,6 +256,12 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
             + KEY_TODAY_DOSAGE + " TEXT,"
             + KEY_PLAN_TYPE+ " TEXT" + ")";
 
+    String TABLE_TODAY_FARMER_OTHERPACKS= "CREATE TABLE " + TODAY_FARMER_OTHERPACKS+ "("
+            + KEY_TODAY_FARMMER_ID+ " TEXT,"
+            + KEY_TODAY_OTHER_PACKS_ID +" TEXT,"
+            + KEY_TODAY_OTHER_PACKS_LIQUIDATED+ " TEXT,"
+            + KEY_PLAN_TYPE+ " TEXT" + ")";
+
     String TABLE_TODAY_FARMER_OTHER_PRODUCTS= "CREATE TABLE " + TODAY_FARMER_OTHER_PRODUCTS+ "("
             + KEY_TODAY_FARMMER_ID+ " TEXT,"
             + KEY_TODAY_FARMER_OTHER_PRODUCT_ID+ " TEXT,"
@@ -339,6 +350,7 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(TABLE_DOWNLAODED_FARMER_DATA);
         db.execSQL(TABLE_TODAY_FARMER_OTHER_PRODUCTS);
         db.execSQL(TABLE_TODAY_ENGRO_PRODUCTS);
+        db.execSQL(TABLE_TODAY_FARMER_OTHERPACKS);
 
     }
 
@@ -359,6 +371,8 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DOWNLOADED_FARMER_DATA);
         db.execSQL("DROP TABLE IF EXISTS " +TODAY_FARMER_OTHER_PRODUCTS);
         db.execSQL("DROP TABLE IF EXISTS " +ENGRO_DEALAERS_LIST);
+        db.execSQL("DROP TABLE IF EXISTS " +TODAY_FARMER_OTHERPACKS);
+
 
 
         onCreate(db);
