@@ -48,6 +48,12 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
                 time.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
 
             }
+            else if(from.equals("editfarmer")) {
+                member.setVisibility(View.VISIBLE);
+                distance.setVisibility(View.GONE);
+                time.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
+
+            }
             else if(from.equals("subordinate"))
             {
                 member.setVisibility(View.GONE);
@@ -92,7 +98,7 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         TodayPlan movie = planList.get(position);
         holder.title.setText(movie.getTitle());
-        if(!from.equals("subordinate")) {
+        if(!from.equals("subordinate") || !from.equals("editfarmer")) {
             if (movie.getMemebrship().equals("Visited")) {
                 holder.member.setBackgroundColor(Color.parseColor("#159356"));
                 holder.member.setText(movie.getMemebrship());
@@ -117,6 +123,18 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
                 holder.member.setBackgroundColor(Color.GRAY);
                 holder.member.setText(movie.getMemebrship());
             }
+        }
+        else if(from.equals("editfarmer")) {
+            holder.time.setText("Farmer ID: "+movie.getLocation());
+            holder.customecode.setText("Mobile Number: "+movie.getMobilenumber());
+            if (movie.getMemebrship().equals("Edited")) {
+                holder.member.setBackgroundColor(Color.parseColor("#159356"));
+                holder.member.setText(movie.getMemebrship());
+            } else {
+                holder.member.setBackgroundColor(Color.GRAY);
+                holder.member.setText(movie.getMemebrship());
+            }
+
         }
         else if(from.equals("subordinate"))
         {

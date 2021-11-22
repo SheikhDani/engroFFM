@@ -30,6 +30,17 @@
         android:id="@+id/nav_addfarmermeeting"
         android:icon="@mipmap/addfarmermeeeting"
         android:title="ADD FARMER MEETING" />
+    <item
+        android:id="@+id/nav_editfarmer"
+
+        android:icon="@drawable/ic_baseline_edit_24"
+        android:title="EDIT FARMER" />
+    <item
+        android:id="@+id/nav_conversion"
+
+        android:icon="@drawable/ic_baseline_supervised_user_circle_24"
+        android:title="CONVERSION RETENTION" />
+
 
 
 </menu>

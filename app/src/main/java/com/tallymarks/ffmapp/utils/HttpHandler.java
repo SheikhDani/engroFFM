@@ -77,6 +77,61 @@ public class HttpHandler {
             throw new Exception("Exception occured : " + e.getMessage());
         }
     }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public String httpPut(String requestUrl, HashMap<String, String> headerParams, HashMap<String, String> bodyParams, String jsonData) throws Exception {
+        try
+        {
+            URL url = new URL(requestUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod(Constants.PUT);
+
+            for (HashMap.Entry<String, String> entry : headerParams.entrySet())
+            {
+                conn.setRequestProperty(entry.getKey(),entry.getValue());
+            }
+            if(jsonData==null) {
+                if(bodyParams==null)
+                {
+                    conn.setRequestProperty(Constants.CONTENT_TYPE, Constants.CONTENT_TYPE_JSON);
+                }
+                else {
+                    conn.setRequestProperty(Constants.CONTENT_TYPE, Constants.CONTENT_TYPE_FORM_URL_ENCODED);
+                    byte[] postData = Helpers.urlParamBuilders(bodyParams).getBytes(StandardCharsets.UTF_8);
+                    DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());
+                    dataOutputStream.write(postData);
+                }
+            }
+            else
+            {
+                conn.setRequestProperty(Constants.CONTENT_TYPE, Constants.CONTENT_TYPE_JSON);
+                conn.setDoInput(true);
+                DataOutputStream dataOutputStream = new DataOutputStream(conn.getOutputStream());
+                dataOutputStream.writeBytes(jsonData);
+                dataOutputStream.flush();
+                dataOutputStream.close();
+            }
+
+            if(conn.getResponseCode()== HttpURLConnection.HTTP_OK)
+            {
+                InputStream inputStream=new BufferedInputStream(conn.getInputStream());
+                return convertStreamToString(inputStream);
+            }
+            else if(conn.getResponseCode()== HttpURLConnection.HTTP_CREATED)
+            {
+                InputStream inputStream=new BufferedInputStream(conn.getInputStream());
+                return convertStreamToString(inputStream);
+            }
+            else
+            {
+                InputStream inputStream = new BufferedInputStream(conn.getErrorStream());
+                return convertStreamToString(inputStream);
+            }
+        }
+        catch (Exception e) {
+            throw new Exception("Exception occured : " + e.getMessage());
+        }
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public String httpGet(String requestUrl, HashMap<String, String> headerParams) throws Exception {

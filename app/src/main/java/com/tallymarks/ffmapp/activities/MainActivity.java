@@ -70,6 +70,7 @@ import com.tallymarks.ffmapp.models.addfarmerinput.ServingDealer;
 import com.tallymarks.ffmapp.models.assignedsalespoint.AssignedSalesPointOutput;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Activity;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.FarmerCheckIn;
+import com.tallymarks.ffmapp.models.getallFarmersplanoutput.OtherProduct;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Recommendation;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Sampling;
 import com.tallymarks.ffmapp.models.getallcustomersplanoutput.GetAllCustomersOutput;
@@ -369,6 +370,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(salescall);
                 drawer.closeDrawers();
                 return true;
+            case R.id.nav_editfarmer:
+                Intent editfarmerdetail = new Intent(MainActivity.this, EditFarmerDetailActivity.class);
+                startActivity(editfarmerdetail);
+                drawer.closeDrawers();
+                return true;
+            case R.id.nav_conversion:
+
+                Intent conversionRetention= new Intent(MainActivity.this, ConversionRetentionActivity.class);
+                startActivity(conversionRetention);
+                drawer.closeDrawers();
+                return true;
+
 
             case R.id.nav_addfarmermeeting:
 
@@ -934,8 +947,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        MainActivity.this.deleteDatabase("FFMApplicationDataBasev2");
-                        MainActivity.this.deleteDatabase("FFMAppDb_Zohaib_v2");
+                        MainActivity.this.deleteDatabase("FFMApplicationDataBasev5");
+                        MainActivity.this.deleteDatabase("FFMAppDb_Zohaib_v5");
                         sHelper.clearPreferenceStore();
                         Toast.makeText(MainActivity.this, "Clear Data Successfully", Toast.LENGTH_SHORT).show();
                         Intent logout = new Intent(MainActivity.this, LoginActivity.class);
@@ -1428,6 +1441,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             headerParams.put(db.KEY_ADD_FARMER_CNIC_NUMBER, "");
             headerParams.put(db.KEY_ADD_FARMER_LANDLINE_NUMBER, "");
             headerParams.put(db.KEY_ADD_FARMER_LAST_NAME, "");
+            headerParams.put(db.KEY_FARMER_TRANSACTION_TYPE, "");
             headerParams.put(db.KEY_ADD_FARMER_EMAL, "");
             headerParams.put(db.KEY_ADD_FARMER_FIRST_NAME, "");
             HashMap<String, String> filter = new HashMap<>();
@@ -1437,6 +1451,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 cursor2.moveToFirst();
                 do {
                     AddFarmerInput inputParameters = new AddFarmerInput();
+                    inputParameters.setTransactionType(cursor2.getString(cursor2.getColumnIndex(db.KEY_FARMER_TRANSACTION_TYPE)));
                     inputParameters.setCnicNumber(cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_CNIC_NUMBER)));
                     inputParameters.setEmail(cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_EMAL)));
                     inputParameters.setFirstName("" + Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_FIRST_NAME))));
@@ -2160,7 +2175,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private ArrayList<CroppingPattern> loadlandprofileCropPattern(String mobileNumber) {
+    private ArrayList<CroppingPattern> loadlandprofileCropPattern(String mobileNumber,String salepointcode) {
         ArrayList<CroppingPattern> croppingPatternList = new ArrayList<>();
         HashMap<String, String> map = new HashMap<>();
 
@@ -2168,6 +2183,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         map.put(db.KEY_ADD_FARMER_LAND_PROFILE_CROPPING_PATTERN_LAND_HOLDING, "");
         HashMap<String, String> filter = new HashMap<>();
         filter.put(db.KEY_ADD_FARMER_MOBILE_NUMBER, mobileNumber);
+        filter.put(db.KEY_ADD_FARMER_LAND_PROFILE_SALES_POINT_CODE,salepointcode);
         Cursor cursor2 = db.getData(db.ADD_NEW_FARMER_LAND_PROFILE_CROPPING_PATTERN, map, filter);
         if (cursor2.getCount() > 0) {
             cursor2.moveToFirst();
@@ -2216,6 +2232,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ArrayList<LandProfile> landProfileList = new ArrayList<>();
         HashMap<String, String> map = new HashMap<>();
         int position;
+        String salePointCode = "";
 
         map.put(db.KEY_ADD_FARMER_LAND_PROFILE_SALES_POINT_NAME, "");
         map.put(db.KEY_ADD_FARMER_LAND_PROFILE_SIZE, "");
@@ -2238,9 +2255,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 land.setOwnership(cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_LAND_PROFILE_OWNERSHIP)));
                 land.setWaterSource(Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_LAND_PROFILE_WATERSOURCE))));
                 land.setSalesPointCode(cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_LAND_PROFILE_SALES_POINT_CODE)));
+                salePointCode = cursor2.getString(cursor2.getColumnIndex(db.KEY_ADD_FARMER_LAND_PROFILE_SALES_POINT_CODE));
                 landProfileList.add(land);
                 position = cursor2.getPosition();
-                landProfileList.get(position).setCroppingPatterns(loadlandprofileCropPattern(mobileNumber));
+                landProfileList.get(position).setCroppingPatterns(loadlandprofileCropPattern(mobileNumber,salePointCode));
                 inputParameters.setLandProfiles(landProfileList);
 
             }
@@ -2273,7 +2291,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 recommendation.setCropId(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_CROPID)));
                 recommendation.setFertAppTypeId(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_FERTTYPE_ID)));
                 recommendation.setBrandId(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_BRAND_ID)));
-                recommendation.setDosage(Double.valueOf(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_DOSAGE))));
+                recommendation.setDosage(Integer.parseInt(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_DOSAGE))));
                 recommendationList.add(recommendation);
             }
             while (cursorRecommendations.moveToNext());
@@ -2331,6 +2349,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapForActivity.put(mydb.KEY_TODAY_ADDRESS, "");
         mapForActivity.put(mydb.KEY_TODAY_MAIN_PRODUCT, "");
         mapForActivity.put(mydb.KEY_TODAY_REMARKS, "");
+        mapForActivity.put(mydb.KEY_TODAY_CROP_DEF, "");
+        mapForActivity.put(mydb.KEY_TODAY_CROP_ACE, "");
+        mapForActivity.put(mydb.KEY_TODAY_OTHER_PRODUCT_LIQUIDATED, "");
+        mapForActivity.put(mydb.KEY_TODAY_PACKS_LIQUIATED, "");
+        mapForActivity.put(mydb.KEY_TODAY_SERVINGDEALERID, "");
         mapForActivity.put(mydb.KEY_TODAY_LATITUTE, "");
         mapForActivity.put(mydb.KEY_TODAY_LONGITUTE, "");
 
@@ -2344,18 +2367,47 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             do {
                 // do for activity
 
-                activity.setCropId(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_CROPID)));
+                activity.setCropId(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_CROPID))));
                 activity.setAddress(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_ADDRESS)));
-                activity.setMainProduct(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_MAIN_PRODUCT)));
+                activity.setMainProduct(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_MAIN_PRODUCT))));
                 activity.setRemarks(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_REMARKS)));
-                activity.setLatitude(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_LATITUTE)));
-                activity.setLongitude(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_LONGITUTE)));
+                activity.setLatitude(Double.parseDouble(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_LATITUTE))));
+                activity.setLongitude(Double.parseDouble(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_LONGITUTE))));
+                activity.setCropDeficiency(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_CROP_DEF))));
+                activity.setCropAcreage(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_CROP_ACE))));
+                activity.setCustomerId(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_SERVINGDEALERID)));
+                activity.setPacksLiquidated(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_PACKS_LIQUIATED))));
+               // activity.setOtherPacksLiquidated(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_OTHER_PRODUCT_LIQUIDATED))));
+                activity.setOtherProducts(loadotherProducts(thisfarmerId));
+
                 thisfarmerCheckIn.setActivity(activity);
             }
             while (cursorActivity.moveToNext());
         }
 
         //return activity;
+    }
+    private ArrayList<OtherProduct> loadotherProducts(String farmerid) {
+        ArrayList<OtherProduct> productsList = new ArrayList<>();
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(mydb.KEY_TODAY_OTHER_PACKS_ID, "");
+        map.put(mydb.KEY_TODAY_OTHER_PACKS_LIQUIDATED, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(mydb.KEY_TODAY_FARMMER_ID, farmerid);
+        Cursor cursor2 = mydb.getData(mydb.TODAY_FARMER_OTHERPACKS, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                OtherProduct prod = new OtherProduct();
+                prod.setProductId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_OTHER_PACKS_ID))));
+                prod.setOtherPacksLiquidated(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_OTHER_PACKS_LIQUIDATED))));
+                productsList.add(prod);
+
+            }
+            while (cursor2.moveToNext());
+        }
+        return productsList;
     }
 
     private void loadLocationlastFarmer(FarmerCheckIn thisfarmerCheckIn, String thisfarmerId) {

@@ -386,6 +386,16 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
+                                        Constants.FARMER_ID = planList.get(position).getLocation();
+                                        Constants.JOURNEY_PLAN_ID = planList.get(position).getCustomercode();
+                                        sHelper.setString(Constants.S_FARMER_ID, planList.get(position).getLocation());
+                                        sHelper.setString(Constants.S_JOURNEY_PLAN_ID, planList.get(position).getCustomercode());
+                                        sHelper.setString(Constants.FARMER_NAME, planList.get(position).getFatherName());
+                                        sHelper.setString(Constants.MOBIL_NO, planList.get(position).getMobilenumber());
+                                        sHelper.setString(Constants.SALES_POINT, planList.get(position).getSalespoint());
+                                        sHelper.setString(Constants.FARMER_LAT, currentlat);
+                                        sHelper.setString(Constants.FARMER_LONG, currentlng);
+                                        sHelper.setString(Constants.PLAN_TYPE_FARMER, "TODAY");
                                         Intent i = new Intent(getActivity(), FarmersStartActivity.class);
                                         Bundle gameData = new Bundle();
                                         gameData.putString(Constants.PLAN_TYPE_FARMER, "TODAY");
@@ -461,16 +471,16 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                 }
 
                 // set farmers details
-                Constants.FARMER_ID = planList.get(position).getLocation();
-                Constants.JOURNEY_PLAN_ID = planList.get(position).getCustomercode();
-                sHelper.setString(Constants.S_FARMER_ID, planList.get(position).getLocation());
-                sHelper.setString(Constants.S_JOURNEY_PLAN_ID, planList.get(position).getCustomercode());
-                sHelper.setString(Constants.FARMER_NAME, planList.get(position).getFatherName());
-                sHelper.setString(Constants.MOBIL_NO, planList.get(position).getMobilenumber());
-                sHelper.setString(Constants.SALES_POINT, planList.get(position).getSalespoint());
-                sHelper.setString(Constants.FARMER_LAT, currentlat);
-                sHelper.setString(Constants.FARMER_LONG, currentlng);
-                sHelper.setString(Constants.PLAN_TYPE_FARMER, "TODAY");
+//                Constants.FARMER_ID = planList.get(position).getLocation();
+//                Constants.JOURNEY_PLAN_ID = planList.get(position).getCustomercode();
+//                sHelper.setString(Constants.S_FARMER_ID, planList.get(position).getLocation());
+//                sHelper.setString(Constants.S_JOURNEY_PLAN_ID, planList.get(position).getCustomercode());
+//                sHelper.setString(Constants.FARMER_NAME, planList.get(position).getFatherName());
+//                sHelper.setString(Constants.MOBIL_NO, planList.get(position).getMobilenumber());
+//                sHelper.setString(Constants.SALES_POINT, planList.get(position).getSalespoint());
+//                sHelper.setString(Constants.FARMER_LAT, currentlat);
+//                sHelper.setString(Constants.FARMER_LONG, currentlng);
+//                sHelper.setString(Constants.PLAN_TYPE_FARMER, "TODAY");
 
 //                Intent i = new Intent(getActivity(), FarmersStartActivity.class);
 //                Bundle gameData = new Bundle();

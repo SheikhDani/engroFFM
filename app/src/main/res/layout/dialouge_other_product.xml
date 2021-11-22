@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/l1"
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tv_option"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:padding="@dimen/p10"
+                android:gravity="center"
+
+                android:layout_weight="1.8"
+                android:text="Product List"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts18"
+
+
+                />
+
+            <ImageView
+                android:id="@+id/iv_Close"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/p50"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+
+                android:layout_margin="@dimen/p20"
+
+                android:layout_weight="0.2"
+                android:contentDescription="Icon"
+                android:src="@drawable/ic_baseline_cancel_24" />
+        </LinearLayout>
+
+
+
+
+        <LinearLayout
+            android:id="@+id/linear_table_recommendations"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_below="@+id/l1"
+
+            android:orientation="horizontal">
+
+
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/linear_add_sampling"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/p10"
+            android:layout_below="@+id/linear_table_recommendations"
+            android:gravity="center"
+            android:orientation="horizontal"
+            >
+
+            <Button
+                android:id="@+id/btn_add_other_product"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:drawablePadding="@dimen/p5"
+                android:textColor="@color/white"
+                android:drawableTint="@color/white"
+                android:backgroundTint="@color/green"
+                android:padding="@dimen/p10"
+                android:drawableRight="@drawable/addresizer"
+                android:background="@drawable/eidttext_boader"
+                android:text="add"
+
+
+                />
+
+
+
+        </LinearLayout>
+
+
+
+
+
+
+    </RelativeLayout>
+</FrameLayout>

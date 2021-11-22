@@ -20,7 +20,7 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
     /*Database Varaiables*/
     private static final int DATABASE_VERSION = 1;
     private static final String TAG = "DBAdapter";
-    private static final String DATABASE_NAME = "FFMAppDb_Zohaib_v2";
+    private static final String DATABASE_NAME = "FFMAppDb_Zohaib_v5";
     private Context mContext;
 
     //List of all tables
@@ -28,6 +28,8 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
     public static final String TODAY_FARMER_ACTIVITY = "TODAY_FARMER_ACTIVITY";
     public static final String DOWNLOADED_FARMER_DATA = "DOWNLOADED_FARMER_DATA";
     public static final String TODAY_FARMER_RECOMMENDATION = "TODAY_FARMER_RECOMMENDATION";
+    public static final String TODAY_FARMER_OTHERPACKS = "TODAY_FARMER_OTHERPACKS";
+    public static final String TODAY_FARMER_OTHER_PRODUCTS = "TODAY_FARMER_OTHER_PRODUCTS";
     public static final String TODAY_FARMER_SAMPLING = "TODAY_FARMER_SAMPLING";
     public static final String TODAY_FARMER_CHECKIN = "TODAY_FARMER_CHECKIN";
     public static final String ALL_FARMER_JOURNEY_PLAN = "ALL_FARMER_JOURNEY_PLAN";
@@ -37,6 +39,7 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
     public static final String ATTACHMETNS = "ATTACHMENTS";
     public static final String TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY = "TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY";
     public static final String TODAY_JOURNEY_PLAN_POST_DATA = "TODAY_JOURNEY_PLAN_POST_DATA";
+    public static final String ENGRO_DEALAERS_LIST = "ENGRO_DEALERS_LIST";
 
     // Post data fields
     //Today Journey Plan Post Data TableFields
@@ -49,6 +52,11 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
     // All farmer fields
     public static final String KEY_ALL_FARMER_JOURNEY_PLAN_SALES_POINT_CODE = "farmer_SALES_POINT_CODE";
     public static final String KEY_ALL_FARMER_JOURNEY_PLAN_SALES_POINT_NAME = "farmer_SALES_POINT_NAME";
+
+    // Engro Branch Table Field
+    public static final String KEY_ENGRO_PRODUCT_ID= "engrpRODUCTid";
+    public static final String KEY_ENGRO_PRODUCT_NAME = "engroPRODUCTNAME";
+    public static final String KEY_ENGRO_PRODUCT_CHECKED = "engrocHEKecekd";
 
     // Downloaded farmer fields
     public static final String KEY_DOWNLOADED_FARMER_SALES_POINT_CODE= "DOWNLOADED_FARMER_SALES_POINT_CODE";
@@ -96,7 +104,12 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
     // Farmer Today activity
     public static final String KEY_TODAY_FARMER_ID = "farmerId";
     public static final String KEY_TODAY_CROPID = "cropId";
+    public static final String KEY_TODAY_SERVINGDEALERID = "servingdealerId";
     public static final String KEY_TODAY_ADDRESS = "address";
+    public static final String KEY_TODAY_PACKS_LIQUIATED = "croppackliquiadted";
+    public static final String KEY_TODAY_CROP_DEF = "cropdef";
+    public static final String KEY_TODAY_CROP_ACE = "cropacre";
+    public static final String KEY_TODAY_OTHER_PRODUCT_LIQUIDATED= "otherprodcutliquiadetdid";
     public static final String KEY_TODAY_MAIN_PRODUCT = "mainProduct";
     public static final String KEY_TODAY_REMARKS = "remarks";
     public static final String KEY_TODAY_LATITUTE = "latitude";
@@ -106,6 +119,9 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
     // Farmer Today Journey Plan Table Fields
     public static final String KEY_TODAY_JOURNEY_FARMER_ID = "farmerId";
     public static final String KEY_TODAY_JOURNEY_FARMER_CODE = "farmerCode";
+    public static final String KEY_TODAY_JOURNEY_FARMER_USERTYPE = "farmeruserType";
+    public static final String KEY_TODAY_JOURNEY_FARMER_AREA_CULTIVATION = "areacultivation";
+    public static final String KEY_TODAY_JOURNEY_FARMER_ACRAEGE = "farmeracerage";
     public static final String KEY_TODAY_JOURNEY_FARMER_NAME = "farmerName";
     public static final String KEY_TODAY_JOURNEY_FARMER_LATITUDE = "latitude";
     public static final String KEY_TODAY_JOURNEY_FARMER_LONGITUDE = "longtitude";
@@ -113,6 +129,7 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_TODAY_JOURNEY_FARMER_JOURNEYPLAN_ID = "journeyPlanId";
     public static final String KEY_TODAY_JOURNEY_FARMER_SALES_POINT_NAME = "salesPoint";
     public static final String KEY_TODAY_FARMER_MOBILE_NO = "mobileNo";
+    public static final String KEY_TODAY_JOURNEY_IS_EDITED= "isVisitedTodayCustomerJourneyPlanIsEdited";
     public static final String KEY_TODAY_JOURNEY_IS_VISITED= "isVisitedTodayCustomerJourneyPlan";
     public static final String KEY_TODAY_JOURNEY_IS_POSTED= "isVisitedTodayCustomerJourneyPlanIsPosted";
     public static final String KEY_PLAN_TYPE= "planType";
@@ -123,6 +140,13 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_TODAY_FERTTYPE_ID = "fertAppTypeId";
     public static final String KEY_TODAY_BRAND_ID = "brandId";
     public static final String KEY_TODAY_DOSAGE = "dosage";
+
+    //Farmer Today  Other Product fields
+    public static final String KEY_TODAY_OTHER_PACKS_ID= "farmerTodayOtherProductID";
+    public static final String KEY_TODAY_OTHER_PACKS_LIQUIDATED= "farmerTodayOtherPacksLiquidated";
+
+    // Farmer Today Other Product fields
+    public static final String KEY_TODAY_FARMER_OTHER_PRODUCT_ID = "farmerOtherProductId";
 
     // Farmer Today Sampling fields
     public static final String KEY_TODAY_FARMMMER_ID = "farmerId";
@@ -174,12 +198,16 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
             + KEY_TODAY_JOURNEY_FARMER_ID+ " TEXT,"
             + KEY_TODAY_JOURNEY_FARMER_JOURNEYPLAN_ID+ " TEXT,"
             + KEY_TODAY_JOURNEY_FARMER_CODE+ " TEXT,"
+            + KEY_TODAY_JOURNEY_FARMER_USERTYPE+ " TEXT,"
+            + KEY_TODAY_JOURNEY_FARMER_ACRAEGE+ " TEXT,"
+            + KEY_TODAY_JOURNEY_FARMER_AREA_CULTIVATION+ " TEXT,"
             + KEY_TODAY_JOURNEY_FARMER_LATITUDE+ " TEXT,"
             + KEY_TODAY_JOURNEY_FARMER_LONGITUDE+ " TEXT,"
             + KEY_TODAY_JOURNEY_FARMER_NAME+ " TEXT,"
             + KEY_TODAY_FARMER_MOBILE_NO+ " TEXT,"
             + KEY_TODAY_JOURNEY_FARMER_SALES_POINT_NAME + " TEXT,"
             + KEY_TODAY_JOURNEY_IS_VISITED + " TEXT,"
+            + KEY_TODAY_JOURNEY_IS_EDITED + " TEXT,"
             + KEY_TODAY_JOURNEY_IS_POSTED + " TEXT,"
             + KEY_PLAN_TYPE + " TEXT" + ")";
 
@@ -208,6 +236,11 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
     String TABLE_TODAY_FARMER_ACTIVITY= "CREATE TABLE " + TODAY_FARMER_ACTIVITY+ "("
             + KEY_TODAY_FARMER_ID+ " TEXT,"
             + KEY_TODAY_CROPID+ " TEXT,"
+            + KEY_TODAY_SERVINGDEALERID+ " TEXT,"
+            + KEY_TODAY_CROP_ACE+ " TEXT,"
+            + KEY_TODAY_CROP_DEF+ " TEXT,"
+            + KEY_TODAY_OTHER_PRODUCT_LIQUIDATED+ " TEXT,"
+            + KEY_TODAY_PACKS_LIQUIATED+ " TEXT,"
             + KEY_TODAY_ADDRESS+ " TEXT,"
             + KEY_TODAY_MAIN_PRODUCT+ " TEXT,"
             + KEY_TODAY_REMARKS+ " TEXT,"
@@ -221,6 +254,24 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
             + KEY_TODAY_FERTTYPE_ID+ " TEXT,"
             + KEY_TODAY_BRAND_ID+ " TEXT,"
             + KEY_TODAY_DOSAGE + " TEXT,"
+            + KEY_PLAN_TYPE+ " TEXT" + ")";
+
+    String TABLE_TODAY_FARMER_OTHERPACKS= "CREATE TABLE " + TODAY_FARMER_OTHERPACKS+ "("
+            + KEY_TODAY_FARMMER_ID+ " TEXT,"
+            + KEY_TODAY_OTHER_PACKS_ID +" TEXT,"
+            + KEY_TODAY_OTHER_PACKS_LIQUIDATED+ " TEXT,"
+            + KEY_PLAN_TYPE+ " TEXT" + ")";
+
+    String TABLE_TODAY_FARMER_OTHER_PRODUCTS= "CREATE TABLE " + TODAY_FARMER_OTHER_PRODUCTS+ "("
+            + KEY_TODAY_FARMMER_ID+ " TEXT,"
+            + KEY_TODAY_FARMER_OTHER_PRODUCT_ID+ " TEXT,"
+            + KEY_PLAN_TYPE+ " TEXT" + ")";
+
+    String TABLE_TODAY_ENGRO_PRODUCTS= "CREATE TABLE " + ENGRO_DEALAERS_LIST+ "("
+            + KEY_TODAY_FARMMER_ID+ " TEXT,"
+            + KEY_ENGRO_PRODUCT_CHECKED+ " TEXT,"
+            + KEY_ENGRO_PRODUCT_NAME+ " TEXT,"
+            + KEY_ENGRO_PRODUCT_ID+ " TEXT,"
             + KEY_PLAN_TYPE+ " TEXT" + ")";
 
     String TABLE_TODAY_FARMER_SAMPLING= "CREATE TABLE " + TODAY_FARMER_SAMPLING+ "("
@@ -297,6 +348,9 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(TABLE_DEALERS);
         db.execSQL(TABLE_ATTACHMENTS);
         db.execSQL(TABLE_DOWNLAODED_FARMER_DATA);
+        db.execSQL(TABLE_TODAY_FARMER_OTHER_PRODUCTS);
+        db.execSQL(TABLE_TODAY_ENGRO_PRODUCTS);
+        db.execSQL(TABLE_TODAY_FARMER_OTHERPACKS);
 
     }
 
@@ -315,6 +369,10 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DEALERS);
         db.execSQL("DROP TABLE IF EXISTS " + ATTACHMETNS);
         db.execSQL("DROP TABLE IF EXISTS " + DOWNLOADED_FARMER_DATA);
+        db.execSQL("DROP TABLE IF EXISTS " +TODAY_FARMER_OTHER_PRODUCTS);
+        db.execSQL("DROP TABLE IF EXISTS " +ENGRO_DEALAERS_LIST);
+        db.execSQL("DROP TABLE IF EXISTS " +TODAY_FARMER_OTHERPACKS);
+
 
 
         onCreate(db);
