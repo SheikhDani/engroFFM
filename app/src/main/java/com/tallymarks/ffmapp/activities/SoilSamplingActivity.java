@@ -92,6 +92,7 @@ public class SoilSamplingActivity extends AppCompatActivity {
     String checkinlat;
     String checkinlong;
     ExtraHelper extraHelper;
+    String rolename="";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -213,6 +214,7 @@ public class SoilSamplingActivity extends AppCompatActivity {
 
 
         //getCropfromDatabase();
+        loadRoles();
         getDepthfromDatabase();
         loadCheckInLocation();
         if (isthisFarmerSamplingDataAlreadyExists()){
@@ -429,11 +431,18 @@ public class SoilSamplingActivity extends AppCompatActivity {
 
 
         iv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
             public void onClick(View view) {
-                Intent i = new Intent(SoilSamplingActivity.this, FarmVisitActivity.class);
-                startActivity(i);
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                if(rolename.equals("Field Force Team") || rolename.equals("FieldAssistant")) {
+                    Intent i = new Intent(SoilSamplingActivity.this, FarmVisitRoleWiseActivity.class);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                }
+                else
+                {
+                    Intent i = new Intent(SoilSamplingActivity.this, FarmVisitActivity.class);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                }
             }
         });
 
@@ -1077,6 +1086,31 @@ public class SoilSamplingActivity extends AppCompatActivity {
            /* }
             while (cursor.moveToNext());
         }*/
+
+    }
+    public void  loadRoles()
+    {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_ROLE_NAME, "");
+        HashMap<String, String> filters = new HashMap<>();
+        Cursor cursor = db.getData(db.ROLES, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                rolename = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_ROLE_NAME)));
+                while (cursor.moveToNext()) ;
+            }
+            while (cursor.moveToNext());
+
+
+        }
+        else
+        {
+            rolename =  extraHelper.getString(Constants.ROLE);
+
+
+        }
+
 
     }
     private void prepareRecommendationData() {

@@ -28,6 +28,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.util.Base64;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
@@ -135,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private GoogleApiClient googleApiClient;
     GpsTracker gpsTracker;
     String username = "";
+    String rolename="";
     DatabaseHandler db;
     MyDatabaseHandler mydb;
     List<MenuModel> headerList = new ArrayList<>();
@@ -174,6 +176,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         cartbadge.setVisibility(View.VISIBLE);
         iv_filter = findViewById(R.id.iv_notification);
         userName = findViewById(R.id.userName);
+
+
 
         txt_user_guide.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -288,6 +292,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // requestMultiplePermissions();
         loadLoginData();
         loadAllData();
+        loadRoles();
+        if(rolename.equals("Field Force Team"))
+        {
+
+            Menu nav_Menu = navigationView.getMenu();
+            nav_Menu.findItem(R.id.nav_conversion).setVisible(false);
+
+        }
+        else if(rolename.equals("CSD SK Farmer"))
+        {
+            Menu nav_Menu = navigationView.getMenu();
+            nav_Menu.findItem(R.id.nav_conversion).setVisible(true);
+            txt_soil_logs.setEnabled(false);
+            txt_soil_logs.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_baseline_lock_24, 0, 0,0);
+
+        }
+        else if(rolename.equals("FieldAssistant"))
+        {
+            Menu nav_Menu = navigationView.getMenu();
+            nav_Menu.findItem(R.id.nav_visitcustomer).setVisible(false);
+            nav_Menu.findItem(R.id.nav_customerlocation).setVisible(false);
+            nav_Menu.findItem(R.id.nav_supervisorsnapshot).setVisible(false);
+            nav_Menu.findItem(R.id.nav_addnewfarmer).setVisible(false);
+            nav_Menu.findItem(R.id.nav_addfarmermeeting).setVisible(false);
+            nav_Menu.findItem(R.id.nav_editfarmer).setVisible(false);
+            nav_Menu.findItem(R.id.nav_conversion).setVisible(false);
+            txt_farmer_Demo.setEnabled(false);
+            txt_farmer_Demo.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_baseline_lock_24, 0, 0,0);
+
+        }
 
 
         //new GetOutletStatus(MainActivity.this).execute();
@@ -473,6 +507,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkLoadAllCustomerJourneyPlan();
         checkFarmerAllJourneyPlan();
         checkFarmerTodayJourneyPlan();
+    }
+    public void  loadRoles()
+    {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_ROLE_NAME, "");
+        HashMap<String, String> filters = new HashMap<>();
+        Cursor cursor = db.getData(db.ROLES, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                rolename = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_ROLE_NAME)));
+                while (cursor.moveToNext()) ;
+            }
+            while (cursor.moveToNext());
+
+
+        }
+        else {
+
+            rolename = extraHelper.getString(Constants.ROLE);
+        }
+
+
+
+
     }
 
     public void loadLoginData() {
@@ -1655,7 +1714,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     farmerCheckIn.setMobileNo(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_FARMER_MOBILE_NO)));
 
-                    farmerCheckIn.setSalesPoint(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_SALES_POINT_NAME)));
+                    farmerCheckIn.setSalesPoint(Helpers.clean(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_SALES_POINT_NAME))));
                     //farmerCheckIn.setDistance(0);
 
                     if (Helpers.clean(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_IS_VISITED))).equals("Visited")) {
@@ -1663,8 +1722,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                         myloadStartActviiyResult(farmerCheckIn, farmerId);
                         loadLocationlastFarmer(farmerCheckIn, farmerId);
-                        loadActivity(farmerCheckIn, farmerId);
-                        loadSampling(farmerCheckIn, farmerId);
+                        if(rolename.equals("Field Force Team") || rolename.equals("FieldAssistant"))
+                        {
+                          loadActivityRoleWise(farmerCheckIn, farmerId);
+                        }
+                        else
+                        {
+                            loadActivity(farmerCheckIn, farmerId);
+                        }
+                        //loadActivity(farmerCheckIn, farmerId);
+                        if(rolename.equals("Field Force Team") ||rolename.equals("FieldAssistant") ) {
+                            loadSampling(farmerCheckIn, farmerId);
+                        }
                         loadRecommendations(farmerCheckIn, farmerId);
 
                     } else {
@@ -2380,6 +2449,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                // activity.setOtherPacksLiquidated(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_OTHER_PRODUCT_LIQUIDATED))));
                 activity.setOtherProducts(loadotherProducts(thisfarmerId));
 
+                thisfarmerCheckIn.setActivity(activity);
+            }
+            while (cursorActivity.moveToNext());
+        }
+
+        //return activity;
+    }
+
+    private void loadActivityRoleWise(FarmerCheckIn thisfarmerCheckIn, String thisfarmerId) {
+        HashMap<String, String> mapForActivity = new HashMap<>();
+        mapForActivity.put(mydb.KEY_TODAY_FARMMMER_ID, "");
+        mapForActivity.put(mydb.KEY_TODAY_CROPID, "");
+        mapForActivity.put(mydb.KEY_TODAY_ADDRESS, "");
+        mapForActivity.put(mydb.KEY_TODAY_MAIN_PRODUCT, "");
+        mapForActivity.put(mydb.KEY_TODAY_REMARKS, "");
+
+        mapForActivity.put(mydb.KEY_TODAY_LATITUTE, "");
+        mapForActivity.put(mydb.KEY_TODAY_LONGITUTE, "");
+
+        HashMap<String, String> filtersforActivity = new HashMap<>();
+        filtersforActivity.put(mydb.KEY_TODAY_FARMMMER_ID, thisfarmerId);
+
+        Cursor cursorActivity = mydb.getData(mydb.TODAY_FARMER_ACTIVITY, mapForActivity, filtersforActivity);
+        Activity activity = new Activity();
+        if (cursorActivity.getCount() > 0) {
+            cursorActivity.moveToFirst();
+            do {
+                // do for activity
+
+                activity.setCropId(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_CROPID))));
+                activity.setAddress(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_ADDRESS)));
+                activity.setMainProduct(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_MAIN_PRODUCT))));
+                activity.setRemarks(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_REMARKS)));
+                activity.setLatitude(Double.parseDouble(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_LATITUTE))));
+                activity.setLongitude(Double.parseDouble(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_LONGITUTE))));
                 thisfarmerCheckIn.setActivity(activity);
             }
             while (cursorActivity.moveToNext());

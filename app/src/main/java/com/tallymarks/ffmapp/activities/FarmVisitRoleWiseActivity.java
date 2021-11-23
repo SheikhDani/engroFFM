@@ -1,15 +1,11 @@
 package com.tallymarks.ffmapp.activities;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.location.Location;
 import android.os.Bundle;
-
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -34,7 +30,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -50,7 +45,6 @@ import com.tallymarks.ffmapp.models.DataModel;
 import com.tallymarks.ffmapp.models.OtherProduct;
 import com.tallymarks.ffmapp.models.Recommendations;
 import com.tallymarks.ffmapp.models.SaelsPoint;
-import com.tallymarks.ffmapp.models.farmerMeeting.local.Customer;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.GpsTracker;
 import com.tallymarks.ffmapp.utils.Helpers;
@@ -60,7 +54,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class FarmVisitActivity extends AppCompatActivity {
+public class FarmVisitRoleWiseActivity extends AppCompatActivity {
     private TextView tvTopHeader, txt_lat, txt_lng, txt_lcoation;
     private TableLayout mTableLayout,mTableLayoutotherproducts;
     EditText remarks, address, etpacks, etcropacre, etcropdef, etotherpacksliq;
@@ -72,11 +66,8 @@ public class FarmVisitActivity extends AppCompatActivity {
     DatabaseHandler db;
     MyDatabaseHandler mydb;
     SharedPrefferenceHelper sHelper;
-    Double checkoutlat = null, checkoutlng = null;
     GpsTracker gpsTracker;
     double farmvisitLat = 0.0;
-    String checkinlat;
-    String checkinlong;
     double farvisitLong = 0.0;
     String  rolename = "";
     String planType = "";
@@ -96,7 +87,7 @@ public class FarmVisitActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_farm_visit);
+        setContentView(R.layout.activity_farm_visit_rolewise);
         initView();
 
 
@@ -104,7 +95,7 @@ public class FarmVisitActivity extends AppCompatActivity {
 
     private void initView() {
         Bundle data = getIntent().getExtras();
-        sHelper = new SharedPrefferenceHelper(FarmVisitActivity.this);
+        sHelper = new SharedPrefferenceHelper(FarmVisitRoleWiseActivity.this);
 //        if (data != null) {
 //            planType = data.getString(Constants.PLAN_TYPE_FARMER);
 //
@@ -112,29 +103,29 @@ public class FarmVisitActivity extends AppCompatActivity {
         planType = sHelper.getString(Constants.PLAN_TYPE_FARMER);
         tvTopHeader = findViewById(R.id.tv_dashboard);
         auto_crop = findViewById(R.id.auto_crop);
-        auto_other_product = findViewById(R.id.auto_other_product);
-        auto_Serving_dealer = findViewById(R.id.auto_serving_dealer);
+      //  auto_other_product = findViewById(R.id.auto_other_product);
+       // auto_Serving_dealer = findViewById(R.id.auto_serving_dealer);
         btn_back = findViewById(R.id.back);
         btn_lcoation = findViewById(R.id.btn_lcoation);
         txtcrop = findViewById(R.id.txt_crop);
         txtmainproduct = findViewById(R.id.txt_main_prod);
         txtsavelocation = findViewById(R.id.txt_location);
 
-        txtpacks = findViewById(R.id.txt_pack);
-        txtcropAcre = findViewById(R.id.txt_crop_acre);
-        txtcropDef = findViewById(R.id.txt_crop_def);
-        txtotherProduct = findViewById(R.id.txt_other_product);
-        txtotherpacksliq = findViewById(R.id.txt_other_liquidated);
-        txtservingdealers = findViewById(R.id.txt_serving_dealer);
+        //txtpacks = findViewById(R.id.txt_pack);
+        //txtcropAcre = findViewById(R.id.txt_crop_acre);
+        //txtcropDef = findViewById(R.id.txt_crop_def);
+        //txtotherProduct = findViewById(R.id.txt_other_product);
+        //txtotherpacksliq = findViewById(R.id.txt_other_liquidated);
+        //txtservingdealers = findViewById(R.id.txt_serving_dealer);
         txt_lat = findViewById(R.id.txt_lat);
         txt_lng = findViewById(R.id.txt_lng);
         //txt_lcoation = findViewById(R.id.txt_location);
         remarks = findViewById(R.id.remarks);
         address = findViewById(R.id.address);
-        etpacks = findViewById(R.id.etPack);
-        etcropacre = findViewById(R.id.etCropAcre);
-        etcropdef = findViewById(R.id.etCropdef);
-        mydb = new MyDatabaseHandler(FarmVisitActivity.this);
+        //etpacks = findViewById(R.id.etPack);
+        //etcropacre = findViewById(R.id.etCropAcre);
+        //etcropdef = findViewById(R.id.etCropdef);
+        mydb = new MyDatabaseHandler(FarmVisitRoleWiseActivity.this);
 
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,7 +143,7 @@ public class FarmVisitActivity extends AppCompatActivity {
 //
 //                }
 
-                Intent i = new Intent(FarmVisitActivity.this, FarmersStartActivity.class);
+                Intent i = new Intent(FarmVisitRoleWiseActivity.this, FarmersStartActivity.class);
                 startActivity(i);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
@@ -162,7 +153,7 @@ public class FarmVisitActivity extends AppCompatActivity {
         btn_proceed = findViewById(R.id.btn_proceed);
         btn_skip = findViewById(R.id.btn_skip);
 
-        db = new DatabaseHandler(FarmVisitActivity.this);
+        db = new DatabaseHandler(FarmVisitRoleWiseActivity.this);
         auto_main_product = findViewById(R.id.auto_main_product);
         img_add_recommendations = findViewById(R.id.img_add_recommendations);
         img_add_recommendations.setOnClickListener(new View.OnClickListener() {
@@ -171,13 +162,13 @@ public class FarmVisitActivity extends AppCompatActivity {
                 addRecommendations();
             }
         });
-        img_add_other_packs = findViewById(R.id.img_add_other_packs);
-        img_add_other_packs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addOtherPacks();
-            }
-        });
+        //img_add_other_packs = findViewById(R.id.img_add_other_packs);
+//        img_add_other_packs.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                addOtherPacks();
+//            }
+//        });
         iv_menu = findViewById(R.id.iv_drawer);
         iv_back = findViewById(R.id.iv_back);
         iv_back.setVisibility(View.VISIBLE);
@@ -197,7 +188,7 @@ public class FarmVisitActivity extends AppCompatActivity {
 //
 //            }
 //        }
-        gpsTracker = new GpsTracker(FarmVisitActivity.this);
+        gpsTracker = new GpsTracker(FarmVisitRoleWiseActivity.this);
 
 //        if(sHelper!=null)
 //        {
@@ -219,9 +210,8 @@ public class FarmVisitActivity extends AppCompatActivity {
         //drawRecommendationTable();
         //  getCropfromDatabase();
         // getMainProductfromDatabase();
-        loadCheckInLocation();
         getFertTypeFromDatabase();
-        getServingDealersfromDatabase();
+        //getServingDealersfromDatabase();
 
 
         if (isthisFarmerDataAlreadyExists()) {
@@ -231,11 +221,6 @@ public class FarmVisitActivity extends AppCompatActivity {
 
             map.put(mydb.KEY_TODAY_CROPID, "");
             map.put(mydb.KEY_TODAY_MAIN_PRODUCT, "");
-            map.put(mydb.KEY_TODAY_SERVINGDEALERID, "");
-            map.put(mydb.KEY_TODAY_OTHER_PRODUCT_LIQUIDATED, "");
-            map.put(mydb.KEY_TODAY_PACKS_LIQUIATED, "");
-            map.put(mydb.KEY_TODAY_CROP_ACE, "");
-            map.put(mydb.KEY_TODAY_CROP_DEF, "");
             map.put(mydb.KEY_TODAY_REMARKS, "");
             map.put(mydb.KEY_TODAY_ADDRESS, "");
             HashMap<String, String> filters = new HashMap<>();
@@ -246,11 +231,11 @@ public class FarmVisitActivity extends AppCompatActivity {
                 do {
                     auto_crop.setText(getCropData(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_CROPID))));
                     auto_main_product.setText(getProductData(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_MAIN_PRODUCT))));
-                    auto_Serving_dealer.setText(getDealerData(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_SERVINGDEALERID))));
+                   // auto_Serving_dealer.setText(getDealerData(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_SERVINGDEALERID))));
                     //etotherpacksliq.setText(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_OTHER_PRODUCT_LIQUIDATED)));
-                    etcropdef.setText(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_CROP_DEF)));
-                    etcropacre.setText(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_CROP_ACE)));
-                    etpacks.setText(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_PACKS_LIQUIATED)));
+                   // etcropdef.setText(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_CROP_DEF)));
+                   // etcropacre.setText(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_CROP_ACE)));
+                   // etpacks.setText(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_PACKS_LIQUIATED)));
                     remarks.setText(Helpers.clean(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_REMARKS))));
                     address.setText(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_ADDRESS)));
                 }
@@ -293,27 +278,7 @@ public class FarmVisitActivity extends AppCompatActivity {
             drawRecommendationTable();
         }
 
-        if (isthisFarmerOtherProductDataAlreadyExists()) {
-            //fill the fields from database
-            HashMap<String, String> map = new HashMap<>();
-            map.put(mydb.KEY_TODAY_OTHER_PACKS_ID, "");
-            map.put(mydb.KEY_TODAY_OTHER_PACKS_LIQUIDATED, "");
-            HashMap<String, String> filters = new HashMap<>();
-            filters.put(mydb.KEY_TODAY_FARMER_ID, sHelper.getString(Constants.S_FARMER_ID));
-            Cursor cursor = mydb.getData(mydb.TODAY_FARMER_OTHERPACKS, map, filters);
-            if (cursor.getCount() > 0) {
-                cursor.moveToFirst();
-                do {
-                    OtherProduct myplan = new OtherProduct();
-                    myplan.setOtherproducts(getProductData(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_OTHER_PACKS_ID))));
-                    myplan.setOtherpacksliqudiated(cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_OTHER_PACKS_LIQUIDATED)));
-                    arraylistotherproduct.add(myplan);
 
-                }
-                while (cursor.moveToNext());
-            }
-            drawOtherProductsTable();
-        }
         final String arraylist[] = {"Male", "female", "other"};
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_list_item_1, arraylist);
@@ -325,38 +290,28 @@ public class FarmVisitActivity extends AppCompatActivity {
                 this, android.R.layout.simple_list_item_1, servingDealersArraylist);
         auto_crop.setAdapter(arrayAdapter1);
         auto_main_product.setAdapter(arrayAdapter2);
-        auto_Serving_dealer.setAdapter(arrayAdapter3);
+        //auto_Serving_dealer.setAdapter(arrayAdapter3);
 
         auto_crop.setCursorVisible(false);
         auto_main_product.setCursorVisible(false);
-        auto_Serving_dealer.setCursorVisible(false);
+        //auto_Serving_dealer.setCursorVisible(false);
 
 
         SpannableStringBuilder tvCrop = setStarToLabel("Crop");
         SpannableStringBuilder tvMainProduct = setStarToLabel("Main Product");
         SpannableStringBuilder tvSvelocation = setStarToLabel("Save Location");
-        SpannableStringBuilder tvPacks = setStarToLabel("Packs Liquidated");
-        SpannableStringBuilder tvCropAcre = setStarToLabel("Crop Acreage");
-        SpannableStringBuilder tvCropDef = setStarToLabel("Crop Deficiency");
-        SpannableStringBuilder tvOtherProduct = setStarToLabel("Other Product");
-        SpannableStringBuilder tvOtherliquidated = setStarToLabel("Other Packs Liquidated");
-        SpannableStringBuilder tvServignDealers = setStarToLabel("Serving Dealers");
+
         txtcrop.setText(tvCrop);
         txtsavelocation.setText(tvSvelocation);
         txtmainproduct.setText(tvMainProduct);
-        txtpacks.setText(tvPacks);
-        txtcropAcre.setText(tvCropAcre);
-        txtcropDef.setText(tvCropDef);
-        txtotherProduct.setText(tvOtherProduct);
-        txtotherpacksliq.setText(tvOtherliquidated);
-        txtservingdealers.setText(tvServignDealers);
+
 
 
         btn_lcoation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    Intent loc = new Intent(FarmVisitActivity.this, CustomMap.class);
+                    Intent loc = new Intent(FarmVisitRoleWiseActivity.this, CustomMap.class);
                     loc.putExtra("from", "farm");
                     startActivity(loc);
                     if (gpsTracker.canGetLocation()) {
@@ -440,7 +395,7 @@ public class FarmVisitActivity extends AppCompatActivity {
             @Override
             public void onClick(final View arg0) {
                 selectDialouge(auto_main_product, "product");
-               // final AlertDialog actions;
+                // final AlertDialog actions;
 //                DialogInterface.OnClickListener actionListener = new DialogInterface.OnClickListener() {
 //                    @Override
 //                    public void onClick(DialogInterface dialog, int which) {
@@ -474,42 +429,12 @@ public class FarmVisitActivity extends AppCompatActivity {
 //
 //            }
 //        });
-        auto_Serving_dealer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View arg0) {
-                selectDialouge(auto_Serving_dealer, "dealer");
-//                final AlertDialog actions;
-//                DialogInterface.OnClickListener actionListener = new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        //goto category list with which as the category
-//                        String selection = servingDealersArraylist.get(which);
-//                        map.put(mydb.KEY_TODAY_SERVINGDEALERID, servingDealersIDArraylist.get(which));
-//                        auto_Serving_dealer.setText(selection);
-//
-//                    }
-//                };
-//
-//                AlertDialog.Builder categoryAlert = new AlertDialog.Builder(FarmVisitActivity.this);
-//                categoryAlert.setTitle("Dealer List");
-//
-//                categoryAlert.setItems(servingDealersArraylist.toArray(new String[0]), actionListener);
-//                actions = categoryAlert.create();
-//                actions.show();
-//                auto_Serving_dealer.showDropDown();
-            }
-        });
-        auto_other_product.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openotherproduct();
 
-            }
-        });
+
         btn_skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent soil = new Intent(FarmVisitActivity.this, SoilSamplingActivity.class);
+                Intent soil = new Intent(FarmVisitRoleWiseActivity.this, SoilSamplingActivity.class);
                 Bundle data = new Bundle();
                 data.putString(Constants.PLAN_TYPE_FARMER, planType);
                 soil.putExtras(data);
@@ -527,122 +452,17 @@ public class FarmVisitActivity extends AppCompatActivity {
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(FarmVisitActivity.this, FarmersStartActivity.class);
+                Intent i = new Intent(FarmVisitRoleWiseActivity.this, FarmersStartActivity.class);
                 startActivity(i);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
     }
 
-    private void addOtherProducts(ArrayList<DataModel> dataModels) {
-        for (int i = 0; i < dataModels.size(); i++) {
-
-            if (dataModels.get(i).isChecked()) {
-                HashMap<String, String> headerParams = new HashMap<>();
-                headerParams.put(mydb.KEY_TODAY_FARMER_OTHER_PRODUCT_ID, dataModels.get(i).getId());
-                headerParams.put(mydb.KEY_TODAY_FARMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
-                headerParams.put(mydb.KEY_PLAN_TYPE, planType);
-                mydb.addData(mydb.TODAY_FARMER_OTHER_PRODUCTS, headerParams);
-            }
 
 
-            HashMap<String, String> headerParams2 = new HashMap<>();
-            if (dataModels.get(i).isChecked()) {
-                headerParams2.put(mydb.KEY_ENGRO_PRODUCT_CHECKED, "true");
-            } else {
-                headerParams2.put(mydb.KEY_ENGRO_PRODUCT_CHECKED, "false");
-            }
-
-            headerParams2.put(mydb.KEY_TODAY_FARMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
-            headerParams2.put(mydb.KEY_PLAN_TYPE, planType);
-            HashMap<String, String> filter2 = new HashMap<>();
-            filter2.put(mydb.KEY_ENGRO_PRODUCT_ID, dataModels.get(i).getId());
-            mydb.updateData(mydb.ENGRO_DEALAERS_LIST, headerParams2, filter2);
-
-        }
-    }
-
-    private void updateOtherProducts(ArrayList<DataModel> dataModels) {
-        for (int i = 0; i < dataModels.size(); i++) {
-            if (dataModels.get(i).isChecked()) {
-                HashMap<String, String> headerParams = new HashMap<>();
-                headerParams.put(mydb.KEY_TODAY_FARMER_OTHER_PRODUCT_ID, dataModels.get(i).getId());
-                HashMap<String, String> filter = new HashMap<>();
-                filter.put(mydb.KEY_TODAY_FARMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
-                filter.put(mydb.KEY_PLAN_TYPE, planType);
-                mydb.updateData(mydb.TODAY_FARMER_OTHER_PRODUCTS, headerParams, filter);
-            }
 
 
-            HashMap<String, String> headerParams2 = new HashMap<>();
-            if (dataModels.get(i).isChecked()) {
-                headerParams2.put(mydb.KEY_ENGRO_PRODUCT_CHECKED, "true");
-            } else {
-                headerParams2.put(mydb.KEY_ENGRO_PRODUCT_CHECKED, "false");
-            }
-
-            headerParams2.put(mydb.KEY_TODAY_FARMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
-            headerParams2.put(mydb.KEY_PLAN_TYPE, planType);
-            HashMap<String, String> filter2 = new HashMap<>();
-            filter2.put(mydb.KEY_ENGRO_PRODUCT_ID, dataModels.get(i).getId());
-            mydb.updateData(mydb.ENGRO_DEALAERS_LIST, headerParams2, filter2);
-
-
-        }
-    }
-
-    private void openotherproduct() {
-        LayoutInflater li = LayoutInflater.from(FarmVisitActivity.this);
-        View promptsView = li.inflate(R.layout.dialouge_other_product, null);
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitActivity.this);
-        alertDialogBuilder.setView(promptsView);
-        final AlertDialog alertDialog = alertDialogBuilder.create();
-        final ArrayList<DataModel> dataModels = new ArrayList<>();
-        final TextView title = promptsView.findViewById(R.id.tv_option);
-        final Button otherProduct = promptsView.findViewById(R.id.btn_add_other_product);
-        final ImageView ivClsoe = promptsView.findViewById(R.id.iv_Close);
-        final ListView listView = promptsView.findViewById(R.id.listView);
-        ivClsoe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alertDialog.dismiss();
-            }
-        });
-        otherProduct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (dataModels.size() > 0 && dataModels != null) {
-                    if (isthisFarmeOtherProductsAlreadyExists()) {
-                        updateOtherProducts(dataModels);
-                    } else {
-                        addOtherProducts(dataModels);
-                    }
-                    alertDialog.dismiss();
-                } else {
-                    Toast.makeText(FarmVisitActivity.this, "Please Select at least one Product", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
-        title.setText("Select Product");
-        prepareBrandData(dataModels);
-        final SalesCallAdapter adapter = new SalesCallAdapter(dataModels, getApplicationContext(), "farmvisit");
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView parent, View view, int position, long id) {
-
-                DataModel dataModel = dataModels.get(position);
-                dataModel.checked = !dataModel.checked;
-                adapter.notifyDataSetChanged();
-
-
-            }
-        });
-        //ImageView ivClose = promptsView.findViewById(R.id.iv_close);
-        alertDialogBuilder.setCancelable(true);
-        alertDialog.show();
-    }
 
     private boolean isFarmerCheckedSaved() {
         boolean flag = false;
@@ -662,55 +482,11 @@ public class FarmVisitActivity extends AppCompatActivity {
         return flag;
     }
 
-    private void prepareBrandData(ArrayList<DataModel> dataModels) {
-        String productName = "", productID = "", productChecked = "";
-        HashMap<String, String> map = new HashMap<>();
-        dataModels.clear();
-
-        map.put(mydb.KEY_ENGRO_PRODUCT_ID, "");
-        map.put(mydb.KEY_ENGRO_PRODUCT_NAME, "");
-        map.put(mydb.KEY_ENGRO_PRODUCT_CHECKED, "");
-        //map.put(db.KEY_IS_VALID_USER, "");
-        HashMap<String, String> filters = new HashMap<>();
-        if (isFarmerCheckedSaved()) {
-            filters.put(mydb.KEY_PLAN_TYPE, planType);
-            filters.put(mydb.KEY_TODAY_FARMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
-        }
-
-        Cursor cursor = mydb.getData(mydb.ENGRO_DEALAERS_LIST, map, filters);
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            do {
-                DataModel model = new DataModel();
-                productName = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(mydb.KEY_ENGRO_PRODUCT_NAME)));
-                productID = cursor.getString(cursor.getColumnIndex(mydb.KEY_ENGRO_PRODUCT_ID));
-                productChecked = cursor.getString(cursor.getColumnIndex(mydb.KEY_ENGRO_PRODUCT_CHECKED));
-                model.setName(productName);
-                model.setId(productID);
-                if (isFarmerCheckedSaved()) {
-                    if (productChecked.equals("false")) {
-                        model.setChecked(false);
-                    } else {
-                        model.setChecked(true);
-                    }
-                } else {
-                    model.setChecked(false);
-                }
-                dataModels.add(model);
-            }
-            while (cursor.moveToNext());
-        }
-
-
-        // notify adapter about data set changes
-        // so that it will render the list with new data
-
-    }
 
     public void selectDialouge(AutoCompleteTextView autoProduct, String from) {
-        LayoutInflater li = LayoutInflater.from(FarmVisitActivity.this);
+        LayoutInflater li = LayoutInflater.from(FarmVisitRoleWiseActivity.this);
         View promptsView = li.inflate(R.layout.dialouge_sales_point, null);
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitActivity.this);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitRoleWiseActivity.this);
         alertDialogBuilder.setView(promptsView);
         final AlertDialog alertDialog = alertDialogBuilder.create();
         final List<SaelsPoint> companyList = new ArrayList<>();
@@ -728,10 +504,6 @@ public class FarmVisitActivity extends AppCompatActivity {
         } else if (from.equals("product")) {
             title.setText("Select Product");
         }
-        else if(from.equals("dealer"))
-        {
-            title.setText("Select Dealer");
-        }
 
         final RecyclerView recyclerView = promptsView.findViewById(R.id.recyclerView);
         if (from.equals("crop")) {
@@ -739,9 +511,7 @@ public class FarmVisitActivity extends AppCompatActivity {
         } else if (from.equals("product")) {
             prepareProductData(companyList);
         }
-        else if (from.equals("dealer")) {
-            prepareDealerData(companyList);
-        }
+
         final SalesPointAdapter mAdapter = new SalesPointAdapter(companyList, "salescall");
 
         // vertical RecyclerView
@@ -764,10 +534,7 @@ public class FarmVisitActivity extends AppCompatActivity {
                 } else if (from.equals("product")) {
                     map.put(mydb.KEY_TODAY_MAIN_PRODUCT, companyname.getId());
                 }
-                else if(from.equals("dealer"))
-                {
-                    map.put(mydb.KEY_TODAY_SERVINGDEALERID, companyname.getId());
-                }
+
 
 
                 // Toast.makeText(getApplicationContext(), movie.getPoint() + " is selected!", Toast.LENGTH_SHORT).show();
@@ -805,9 +572,9 @@ public class FarmVisitActivity extends AppCompatActivity {
     }
 
     public void selectDialougeRecommendation(AutoCompleteTextView autoProduct, String from, Recommendations plan, HashMap<String, String> mapRecommendation) {
-        LayoutInflater li = LayoutInflater.from(FarmVisitActivity.this);
+        LayoutInflater li = LayoutInflater.from(FarmVisitRoleWiseActivity.this);
         View promptsView = li.inflate(R.layout.dialouge_sales_point, null);
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitActivity.this);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitRoleWiseActivity.this);
         alertDialogBuilder.setView(promptsView);
         final AlertDialog alertDialog = alertDialogBuilder.create();
         final List<SaelsPoint> companyList = new ArrayList<>();
@@ -889,81 +656,6 @@ public class FarmVisitActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    public void selectDialougeOtherProducts(AutoCompleteTextView autoProduct, OtherProduct plan, HashMap<String, String> mapRecommendation) {
-        LayoutInflater li = LayoutInflater.from(FarmVisitActivity.this);
-        View promptsView = li.inflate(R.layout.dialouge_sales_point, null);
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitActivity.this);
-        alertDialogBuilder.setView(promptsView);
-        final AlertDialog alertDialog = alertDialogBuilder.create();
-        final List<SaelsPoint> companyList = new ArrayList<>();
-        final TextView title = promptsView.findViewById(R.id.tv_option);
-        final EditText search = promptsView.findViewById(R.id.et_Search);
-        final ImageView ivClsoe = promptsView.findViewById(R.id.iv_Close);
-        ivClsoe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alertDialog.dismiss();
-            }
-        });
-
-        title.setText("Select Product");
-        final RecyclerView recyclerView = promptsView.findViewById(R.id.recyclerView);
-
-        prepareProductData(companyList);
-
-        final SalesPointAdapter mAdapter = new SalesPointAdapter(companyList, "salescall");
-
-        // vertical RecyclerView
-        // keep movie_list_row.xml width to `match_parent`
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                SaelsPoint companyname = companyList.get(position);
-                alertDialog.dismiss();
-                autoProduct.setText(companyname.getPoint());
-                plan.setOtherproducts(companyname.getPoint());
-                mapRecommendation.put(mydb.KEY_TODAY_OTHER_PACKS_ID, companyname.getId());
-
-
-                // Toast.makeText(getApplicationContext(), movie.getPoint() + " is selected!", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));
-        search.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                if (search.hasFocus()) {
-                    mAdapter.filter(cs.toString());
-                }
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-                // Toast.makeText(getApplicationContext(),"before text change",Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void afterTextChanged(Editable arg0) {
-                //Toast.makeText(getApplicationContext(),"after text change",Toast.LENGTH_LONG).show();
-            }
-        });
-
-        //ImageView ivClose = promptsView.findViewById(R.id.iv_close);
-
-        alertDialogBuilder.setCancelable(true);
-        alertDialog.show();
-    }
 
 
     private void prepareCropData(List<SaelsPoint> movieList) {
@@ -1016,28 +708,7 @@ public class FarmVisitActivity extends AppCompatActivity {
         return productName;
 
     }
-    private String getDealerData(String id)
-    {
 
-        String productName = "", productID = "";
-        HashMap<String, String> map = new HashMap<>();
-        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME, "");
-
-
-        HashMap<String, String> filters = new HashMap<>();
-        filters.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, id);
-        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            do {
-
-               productName = Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME)));
-
-            }
-            while (cursor.moveToNext());
-        }
-        return productName;
-    }
 
     private String getProductData(String productid) {
 
@@ -1091,28 +762,6 @@ public class FarmVisitActivity extends AppCompatActivity {
         // mAdapter.notifyDataSetChanged();
     }
 
-    private void prepareDealerData(List<SaelsPoint> movieList) {
-        movieList.clear();
-        String productName = "", productID = "";
-        HashMap<String, String> map = new HashMap<>();
-        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME, "");
-        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
-
-        HashMap<String, String> filters = new HashMap<>();
-        filters.put(db.KEY_TODAY_JOURNEY_TYPE, "all");
-        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            do {
-                SaelsPoint companyname = new SaelsPoint();
-                String customerName = Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME)));
-                String customerCode = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_ID));
-                companyname.setPoint(customerName);
-                companyname.setId(customerCode);
-                movieList.add(companyname);
-            }
-            while (cursor.moveToNext());
-        }
 
 
 
@@ -1121,21 +770,17 @@ public class FarmVisitActivity extends AppCompatActivity {
         // notify adapter about data set changes
         // so that it will render the list with new data
         // mAdapter.notifyDataSetChanged();
-    }
+
 
 
 
     private void validateInputs() {
         if (!(Helpers.isEmptyAutoTextview(getApplicationContext(), auto_crop))
-                        && !(Helpers.isEmptyAutoTextview(getApplicationContext(), auto_Serving_dealer)) &&
-                        !(Helpers.isEmpty(getApplicationContext(), etcropacre)) &&
-                        !(Helpers.isEmpty(getApplicationContext(), etcropdef)) &&
-                        !(Helpers.isEmpty(getApplicationContext(), etpacks))
-                        && !(Helpers.isEmptyAutoTextview(getApplicationContext(), auto_main_product))
-                        && !String.valueOf(farmvisitLat).equals("") && !String.valueOf(farvisitLong).equals("")
+                && !(Helpers.isEmptyAutoTextview(getApplicationContext(), auto_main_product))
+                && !String.valueOf(farmvisitLat).equals("") && !String.valueOf(farvisitLong).equals("")
         ) {
-            GpsTracker gpsTracker = new GpsTracker(FarmVisitActivity.this);
-            mydb = new MyDatabaseHandler(FarmVisitActivity.this);
+            GpsTracker gpsTracker = new GpsTracker(FarmVisitRoleWiseActivity.this);
+            mydb = new MyDatabaseHandler(FarmVisitRoleWiseActivity.this);
             try {
                 map.put(mydb.KEY_TODAY_FARMER_ID, sHelper.getString(Constants.S_FARMER_ID));
                 //map.put(mydb.KEY_TODAY_ADDRESS, txt_lcoation.getText().toString());
@@ -1145,26 +790,12 @@ public class FarmVisitActivity extends AppCompatActivity {
                 } else {
                     map.put(mydb.KEY_TODAY_REMARKS, "");
                 }
-                if (etpacks.getText().toString() != null || !etpacks.equals(null)) {
-                    map.put(mydb.KEY_TODAY_PACKS_LIQUIATED, etpacks.getText().toString());
-                } else {
-                    map.put(mydb.KEY_TODAY_PACKS_LIQUIATED, "");
-                }
+
 //                if (etotherpacksliq.getText().toString() != null || !etotherpacksliq.equals(null)) {
 //                    map.put(mydb.KEY_TODAY_OTHER_PRODUCT_LIQUIDATED, etotherpacksliq.getText().toString());
 //                } else {
 //                    map.put(mydb.KEY_TODAY_OTHER_PRODUCT_LIQUIDATED, "");
 //                }
-                if (etcropacre.getText().toString() != null || !etcropacre.equals(null)) {
-                    map.put(mydb.KEY_TODAY_CROP_ACE, etcropacre.getText().toString());
-                } else {
-                    map.put(mydb.KEY_TODAY_CROP_ACE, "");
-                }
-                if (etcropdef.getText().toString() != null || !etcropdef.equals(null)) {
-                    map.put(mydb.KEY_TODAY_CROP_DEF, etcropdef.getText().toString());
-                } else {
-                    map.put(mydb.KEY_TODAY_CROP_DEF, "");
-                }
 
 
                 if (address.getText().toString() != null || !address.equals(null)) {
@@ -1195,22 +826,14 @@ public class FarmVisitActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            addCheckOut();
-            updateOutletStatus("Visited");
 
-            Toast.makeText(getApplicationContext(), "Farmer Saved", Toast.LENGTH_SHORT).show();
-            //sHelper.clearPreferenceStore();
-
-            Intent farmvisit = new Intent(FarmVisitActivity.this, VisitFarmerActivity.class);
-            startActivity(farmvisit);
-//
-//            Intent soil = new Intent(FarmVisitActivity.this, SoilSamplingActivity.class);
-//            Bundle data = new Bundle();
-//            data.putString(Constants.PLAN_TYPE_FARMER, planType);
-//            soil.putExtras(data);
-//            startActivity(soil);
+            Intent soil = new Intent(FarmVisitRoleWiseActivity.this, SoilSamplingActivity.class);
+            Bundle data = new Bundle();
+            data.putString(Constants.PLAN_TYPE_FARMER, planType);
+            soil.putExtras(data);
+            startActivity(soil);
         } else {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitActivity.this);
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitRoleWiseActivity.this);
             alertDialogBuilder
                     .setMessage(getResources().getString(R.string.field_required_message))
                     .setCancelable(false)
@@ -1227,47 +850,9 @@ public class FarmVisitActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isthisFarmeOtherProductsAlreadyExists() {
-        boolean flag = false;
-        HashMap<String, String> map = new HashMap<>();
-        map.put(mydb.KEY_TODAY_FARMER_OTHER_PRODUCT_ID, "");
-        HashMap<String, String> filer = new HashMap<>();
-        filer.put(mydb.KEY_TODAY_FARMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
-        filer.put(mydb.KEY_PLAN_TYPE, planType);
-        Cursor cursor = mydb.getData(mydb.TODAY_FARMER_OTHER_PRODUCTS, map, filer);
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            do {
-                flag = true;
-            } while (cursor.moveToNext());
-        } else {
-            flag = false;
-        }
-        return flag;
-    }
 
-    public void getServingDealersfromDatabase() {
-        HashMap<String, String> map = new HashMap<>();
 
-        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
-        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME, "");
-        //map.put(db.KEY_IS_VALID_USER, "");
-        HashMap<String, String> filters = new HashMap<>();
-        filters.put(db.KEY_TODAY_JOURNEY_TYPE, "all");
-        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            do {
-                servingDealersArraylist.add(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME))));
-                servingDealersIDArraylist.add(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_ID)));
-            }
-            while (cursor.moveToNext());
-        }
-        for (int i = 0; i < servingDealersArraylist.size(); i++) {
-            servingDealersArraylist.get(i).replace("%20", " ");
-            servingDealersArraylist.set(i, servingDealersArraylist.get(i).replace("%20", " "));
-        }
-    }
+
 
     private boolean isthisFarmerDataAlreadyExists() {
         boolean flag = false;
@@ -1294,23 +879,6 @@ public class FarmVisitActivity extends AppCompatActivity {
         HashMap<String, String> filer = new HashMap<>();
         filer.put(mydb.KEY_TODAY_FARMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
         Cursor cursor = mydb.getData(mydb.TODAY_FARMER_RECOMMENDATION, map, filer);
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            do {
-                flag = true;
-            } while (cursor.moveToNext());
-        } else {
-            flag = false;
-        }
-        return flag;
-    }
-    private boolean isthisFarmerOtherProductDataAlreadyExists() {
-        boolean flag = false;
-        HashMap<String, String> map = new HashMap<>();
-        map.put(mydb.KEY_TODAY_FARMMER_ID, "");
-        HashMap<String, String> filer = new HashMap<>();
-        filer.put(mydb.KEY_TODAY_FARMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
-        Cursor cursor = mydb.getData(mydb.TODAY_FARMER_OTHERPACKS, map, filer);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             do {
@@ -1393,70 +961,12 @@ public class FarmVisitActivity extends AppCompatActivity {
         }
     }
 
-    public void addOtherPacks() {
-        LayoutInflater li = LayoutInflater.from(FarmVisitActivity.this);
-        View promptsView = li.inflate(R.layout.dialouge_add_other_packs, null);
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitActivity.this);
-        alertDialogBuilder.setView(promptsView);
-        final AlertDialog alertDialog = alertDialogBuilder.create();
 
-        OtherProduct plan = new OtherProduct();
-        HashMap<String, String> mapOtherProduct = new HashMap<>();
-
-        ImageView ivClose = promptsView.findViewById(R.id.imageView);
-        AutoCompleteTextView auto_other_product = promptsView.findViewById(R.id.auto_other_product);
-        ;
-        EditText et_packs_liquidated = promptsView.findViewById(R.id.et_packs_liquidated);
-
-
-        ivClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alertDialog.dismiss();
-            }
-        });
-
-        auto_other_product.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View arg0) {
-                selectDialougeOtherProducts(auto_other_product, plan, mapOtherProduct);
-
-
-            }
-        });
-
-
-        Button btnYes = promptsView.findViewById(R.id.btn_add_packs);
-        // ivClose.setVisibility(View.GONE);
-
-
-        btnYes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String packsLiquidated  = et_packs_liquidated.getText().toString();
-                mapOtherProduct.put(mydb.KEY_TODAY_FARMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
-                mapOtherProduct.put(mydb.KEY_PLAN_TYPE, planType);
-                mapOtherProduct.put(mydb.KEY_TODAY_OTHER_PACKS_LIQUIDATED, packsLiquidated);
-                plan.setOtherpacksliqudiated(packsLiquidated);
-                arraylistotherproduct.add(plan);
-                mydb.addData(mydb.TODAY_FARMER_OTHERPACKS, mapOtherProduct);
-                //drawRecommendationTable();
-                drawOtherProductsTable();
-                alertDialog.dismiss();
-
-            }
-
-
-        });
-        alertDialogBuilder.setCancelable(false);
-        alertDialog.show();
-
-    }
 
     public void addRecommendations() {
-        LayoutInflater li = LayoutInflater.from(FarmVisitActivity.this);
+        LayoutInflater li = LayoutInflater.from(FarmVisitRoleWiseActivity.this);
         View promptsView = li.inflate(R.layout.dialoige_add_recommednations, null);
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitActivity.this);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitRoleWiseActivity.this);
         alertDialogBuilder.setView(promptsView);
         final AlertDialog alertDialog = alertDialogBuilder.create();
 
@@ -1665,7 +1175,7 @@ public class FarmVisitActivity extends AppCompatActivity {
 //                startActivity(salescall);
 
         } else {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitActivity.this);
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitRoleWiseActivity.this);
             alertDialogBuilder
                     .setMessage(getResources().getString(R.string.field_required_message))
                     .setCancelable(false)
@@ -1681,85 +1191,7 @@ public class FarmVisitActivity extends AppCompatActivity {
             alertDialog2.show();
         }
     }
-    public void drawOtherProductsTable()
-    {
-        mTableLayoutotherproducts.removeAllViews();
-        TableRow row = new TableRow(this);
-        row.setGravity(Gravity.CENTER_HORIZONTAL);
-        row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-        TextView column1 = new TextView(this);
-        column1.setText("Other Product");
-        //column1.setBackgroundResource(R.drawable.table_row);
-        column1.setGravity(Gravity.CENTER);
-        column1.setTextSize(16);
-        column1.setPadding(2, 2, 2, 2);
-        column1.setTextColor(getResources().getColor(R.color.colorPrimary));
-        column1.setTypeface(Typeface.DEFAULT_BOLD);
-        column1.setBackgroundColor(getResources().getColor(R.color.green));
-        TextView column2 = new TextView(this);
-        column2.setText("Other Packs Liquidated");
-        column2.setTextSize(16);
-        column2.setGravity(Gravity.CENTER);
-        //column2.setBackgroundResource(R.drawable.table_row);
-        column2.setPadding(2, 2, 2, 2);
-        column2.setTextColor(getResources().getColor(R.color.colorPrimary));
-        column2.setTypeface(Typeface.DEFAULT_BOLD);
-        column2.setBackgroundColor(getResources().getColor(R.color.green));
 
-
-
-//        row.addView(column1);
-//        row.addView(column2);
-//        row.addView(column3);
-//        row.addView(column4);
-        row.addView(column1, new TableRow.LayoutParams(0, 100, 0.50f));
-        row.addView(column2, new TableRow.LayoutParams(0, 100, 0.50f));
-
-
-
-        mTableLayoutotherproducts.addView(row);
-
-        View vline = new View(this);
-        vline.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, 2));
-        mTableLayoutotherproducts.addView(vline);
-
-        for (int i = 0; i < arraylistotherproduct.size(); i++) {
-
-
-            TableRow row2 = new TableRow(this);
-
-            TextView otherproduct = new TextView(this);
-            otherproduct.setText(arraylistotherproduct.get(i).getOtherproducts());
-            otherproduct.setTextSize(16);
-            //startDate.setBackgroundResource(R.drawable.table_row);
-            otherproduct.setGravity(Gravity.CENTER);
-            otherproduct.setPadding(2, 2, 2, 2);
-            TextView packsliquidated = new TextView(this);
-            packsliquidated.setText(arraylistotherproduct.get(i).getOtherpacksliqudiated());
-            packsliquidated.setGravity(Gravity.CENTER);
-            packsliquidated.setTextSize(16);
-            //name.setBackgroundResource(R.drawable.table_row);
-            packsliquidated.setPadding(2, 2, 2, 2);
-
-
-
-//            row2.addView(srNo);
-//            row2.addView(name);
-//            row2.addView(startDate);
-//            row2.addView(status);
-            row2.addView(otherproduct, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.50f));
-            row2.addView(packsliquidated, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.50f));
-
-
-
-            mTableLayoutotherproducts.addView(row2);
-
-            vline = new View(this);
-            vline.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, 2));
-            mTableLayoutotherproducts.addView(vline);
-        }
-
-    }
 
     public void drawRecommendationTable() {
         int cursorIndex = 0;
@@ -1920,77 +1352,5 @@ public class FarmVisitActivity extends AppCompatActivity {
         int end = builder.length();
         builder.setSpan(new ForegroundColorSpan(Color.RED), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return builder;
-    }
-
-    private void updateOutletStatus(String visited) {
-        HashMap<String, String> params = new HashMap<>();
-        params.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, visited);
-        params.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "2");
-        HashMap<String, String> filter = new HashMap<>();
-        filter.put(mydb.KEY_TODAY_JOURNEY_FARMER_ID, sHelper.getString(Constants.S_FARMER_ID));
-        filter.put(mydb.KEY_PLAN_TYPE, sHelper.getString(Constants.PLAN_TYPE_FARMER));
-        mydb.updateData(mydb.TODAY_FARMER_JOURNEY_PLAN, params, filter);
-        mydb.close();
-    }
-
-    private void addCheckOut() {
-        mydb = new MyDatabaseHandler(FarmVisitActivity.this);
-
-        gpsTracker = new GpsTracker(FarmVisitActivity.this);
-        if (gpsTracker.canGetLocation()) {
-            if (ActivityCompat.checkSelfPermission(FarmVisitActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(FarmVisitActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            checkoutlat = gpsTracker.getLatitude();
-            checkoutlng = gpsTracker.getLongitude();
-        }
-
-        long time = System.currentTimeMillis();
-        HashMap<String, String> headerParams = new HashMap<>();
-        if(checkoutlat != null || checkoutlng != null){
-            headerParams.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LATITUDE, String.valueOf(checkoutlat));
-            headerParams.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LONGITUDE, String.valueOf(checkoutlng));
-            headerParams.put(mydb.KEY_TODAY_JOURNEY_FARMER_DISTANCE,String.valueOf(getMeterFromLatLong(Float.parseFloat(String.valueOf(checkoutlat)), Float.parseFloat(String.valueOf(checkoutlng)), Float.parseFloat(String.valueOf(checkinlat)), Float.parseFloat(String.valueOf(checkinlong)))));
-
-        }else{
-            headerParams.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LATITUDE, String.valueOf(0.0));
-            headerParams.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LONGITUDE, String.valueOf(0.0));
-            headerParams.put(mydb.KEY_TODAY_JOURNEY_FARMER_DISTANCE,String.valueOf(0));
-        }
-        //headerParams.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LATITUDE, String.valueOf(checkoutlat));
-        //headerParams.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LONGITUDE, String.valueOf(checkoutlng));
-        headerParams.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_TIMESTAMP, String.valueOf(time));
-        headerParams.put(mydb.KEY_TODAY_FARMER_ID, sHelper.getString(Constants.S_FARMER_ID));
-        //headerParams.put(mydb.KEY_TODAY_JOURNEY_FARMER_DISTANCE,String.valueOf(getMeterFromLatLong(Float.parseFloat(String.valueOf(checkoutlat)), Float.parseFloat(String.valueOf(checkoutlng)), Float.parseFloat(String.valueOf(checkinlat)), Float.parseFloat(String.valueOf(checkinlong)))));
-        headerParams.put(mydb.KEY_PLAN_TYPE,planType);
-        mydb.addData(mydb.TODAY_JOURNEY_PLAN_POST_DATA,headerParams);
-    }
-
-    public void loadCheckInLocation() {
-        HashMap<String, String> map = new HashMap<>();
-        map.put(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_LATITUDE, "");
-        map.put(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_LONGITUDE, "");
-        HashMap<String, String> filters = new HashMap<>();
-        filters.put(mydb.KEY_TODAY_FARMER_FARMER_ID, sHelper.getString(Constants.S_FARMER_ID));
-        Cursor cursor = mydb.getData(mydb.TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY, map, filters);
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            do {
-                checkinlat = cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_LATITUDE));
-                checkinlong = cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_LONGITUDE));
-
-            }
-            while (cursor.moveToNext());
-        }
-    }
-    public static float getMeterFromLatLong(float lat1, float lng1, float lat2, float lng2){
-        Location loc1 = new Location("");
-        loc1.setLatitude(lat1);
-        loc1.setLongitude(lng1);
-        Location loc2 = new Location("");
-        loc2.setLatitude(lat2);
-        loc2.setLongitude(lng2);
-        float distanceInMeters = loc1.distanceTo(loc2);
-        return distanceInMeters;
     }
 }

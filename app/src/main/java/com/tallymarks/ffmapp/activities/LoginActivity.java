@@ -242,6 +242,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 Log.e("Response", response);
                 LoginOutput logincode = new Gson().fromJson(response, LoginOutput.class);
                 if (logincode != null) {
+                    for(int i=0;i<logincode.getAuthorities().size();i++)
+                    {
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put(db.KEY_ROLE_NAME, "" +  logincode.getAuthorities().get(i) == null ||  logincode.getAuthorities().get(i).equals("") ? getString(R.string.not_applicable):  logincode.getAuthorities().get(i));
+                        db.addData(db.ROLES, map);
+                        extraHelper.setString(Constants.ROLE,logincode.getAuthorities().get(i));
+//                        logincode.getAuthorities().get(i);
+
+                    }
                     sHelper.setString(Constants.ACCESS_TOKEN,logincode.getAccessToken());
                     sHelper.setString(Constants.REFERSH_TOKEN,logincode.getRefreshToken());
                     sHelper.setString(Constants.TOKEN_TYPE,logincode.getTokenType());
@@ -250,6 +259,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     extraHelper.setString(Constants.TOKEN_TYPE,logincode.getTokenType());
                     extraHelper.setString(Constants.USER_NAME,logincode.getUsername());
                     extraHelper.setString(Constants.NAME,logincode.getName());
+
                     HashMap<String, String> map = new HashMap<>();
                     map.put(db.KEY_COMPANY_NAME, "" + logincode.getCompanyName() == null || logincode.getCompanyName().equals("") ? getString(R.string.not_applicable): logincode.getCompanyName());
                     map.put(db.KEY_USER_NAME, "" + logincode.getUsername() == null || logincode.getUsername().equals("") ? getString(R.string.not_applicable) : logincode.getUsername());

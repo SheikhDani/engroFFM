@@ -23,12 +23,15 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.dynamic.IFragmentWrapper;
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.TodayPlan;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.DialougeManager;
 import com.tallymarks.ffmapp.utils.GpsTracker;
+import com.tallymarks.ffmapp.utils.Helpers;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -49,6 +52,9 @@ public class FarmersStartActivity extends AppCompatActivity {
     String objective = "";
     String planType = "";
     String journeytype;
+    DatabaseHandler db;
+    String rolename = "";
+    ExtraHelper extraHelper;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +94,9 @@ public class FarmersStartActivity extends AppCompatActivity {
         tvTopHeader.setVisibility(View.VISIBLE);
         tvTopHeader.setText("START ACTIVITY");
         mydb = new MyDatabaseHandler(FarmersStartActivity.this);
+        db = new DatabaseHandler(FarmersStartActivity.this);
         sHelper = new SharedPrefferenceHelper(this);
+        extraHelper = new ExtraHelper(this);
         if(sHelper!=null)
         {
 
@@ -101,6 +109,7 @@ public class FarmersStartActivity extends AppCompatActivity {
                 journeytype = "ALL";
             }
         }
+        loadRoles();
         loadActivity();
 
         btn_next.setOnClickListener(new View.OnClickListener() {
@@ -124,13 +133,23 @@ public class FarmersStartActivity extends AppCompatActivity {
                     //    Intent n = new Intent(FarmersStartActivity.this, FloorStockActivity.class);
                     //    startActivity(n);
                     //    addDataInCheckInTable();
-
-                        Intent n = new Intent(FarmersStartActivity.this, FarmVisitActivity.class);
-                        Bundle data = new Bundle();
-                        data.putString(Constants.PLAN_TYPE_FARMER,planType);
-                        n.putExtras(data);
-                        startActivity(n);
-                        addDataInCheckInTable();
+                        if(rolename.equals("Field Force Team") || rolename.equals("FieldAssistant") ) {
+                            Intent n = new Intent(FarmersStartActivity.this, FarmVisitRoleWiseActivity.class);
+                            Bundle data = new Bundle();
+                            data.putString(Constants.PLAN_TYPE_FARMER, planType);
+                            n.putExtras(data);
+                            startActivity(n);
+                            addDataInCheckInTable();
+                        }
+                        else
+                        {
+                            Intent n = new Intent(FarmersStartActivity.this, FarmVisitActivity.class);
+                            Bundle data = new Bundle();
+                            data.putString(Constants.PLAN_TYPE_FARMER, planType);
+                            n.putExtras(data);
+                            startActivity(n);
+                            addDataInCheckInTable();
+                        }
                     }
                     else {
                         DialougeManager.gpsNotEnabledPopup(FarmersStartActivity.this);
@@ -434,6 +453,30 @@ public class FarmersStartActivity extends AppCompatActivity {
             flag = false;
         }
         return flag;
+    }
+    public void  loadRoles()
+    {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_ROLE_NAME, "");
+        HashMap<String, String> filters = new HashMap<>();
+        Cursor cursor = db.getData(db.ROLES, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                rolename = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_ROLE_NAME)));
+                while (cursor.moveToNext()) ;
+            }
+            while (cursor.moveToNext());
+
+
+        }
+        else
+        {
+            rolename =  extraHelper.getString(Constants.ROLE);
+        }
+
+
+
     }
 
     public void loadActivity(){
