@@ -19,13 +19,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private SQLiteDatabase db;
     /*Database Varaiables*/
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String TAG = "DBAdapter";
     private static final String DATABASE_NAME = "FFMApplicationDataBasev5";
     private Context mContext;
 
     //List of all tables
     public static final String LOGIN = "LOGIN";
+    public static final String ROLES = "ROLES";
     public static final String OUTLET_STATUSES = "OUTLET_STATUS";
     public static final String CROPS_LIST = "CROPS_LIST";
     public static final String FERT_TYPES = "FERT_TYPES";
@@ -70,6 +71,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //Outlet Statuses Table Fields
     public static final String KEY_OUTLET_ID = "outletID";
     public static final String KEY_OUTLET_STATUS = "outletName";
+
+    //Roles Table Fields
+    public static final String KEY_ROLE_NAME = "roleName";
+
 
     //GENder Table Fields
     public static final String KEY_GENDER_ID = "genderID";
@@ -303,6 +308,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String TABLE_OUTLET_STATUSES = "CREATE TABLE " + OUTLET_STATUSES + "("
                 + KEY_OUTLET_ID + " TEXT,"
                 + KEY_OUTLET_STATUS + " TEXT" + ")";
+
+
+        String TABLE_ROLES = "CREATE TABLE " + ROLES + "("
+                + KEY_ROLE_NAME + " TEXT" + ")";
+
 
 
         String TABLE_ADD_NEW_FARMER_POST_DATA = "CREATE TABLE " + ADD_NEW_FARMER_POST_DATA + "("
@@ -563,6 +573,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(TABLE_ADD_NEW_FARMER_LAND_PROFILE_CROPPING_PATTERN);
         db.execSQL(TABLE_ASSIGNED_SALES_POINT);
         db.execSQL(TABLE_MARKET_PLAYERS);
+        db.execSQL(TABLE_ROLES);
 
 
 
@@ -605,6 +616,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + ADD_NEW_FARMER_LAND_PROFILE);
         db.execSQL("DROP TABLE IF EXISTS " + MARKET_PLAYERS);
         db.execSQL("DROP TABLE IF EXISTS " + ASSIGNED_SALES_POINT);
+        db.execSQL("DROP TABLE IF EXISTS " + ROLES);
         onCreate(db);
 
     }

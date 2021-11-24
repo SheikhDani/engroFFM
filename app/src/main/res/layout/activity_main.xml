@@ -56,20 +56,20 @@
                             android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
                             <TextView
+                                android:id="@+id/userName"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_horizontal"
                                 android:paddingTop="@dimen/p30"
-                                android:id="@+id/userName"
-                                android:text="Danish Arif "
+                                android:text="Hafiz Muhammad Zeeshan  Abbas "
                                 android:textColor="@color/black"
-                                android:textSize="26sp" />
+                                android:textSize="20sp" />
                         </RelativeLayout>
 
                         <RelativeLayout
                             android:id="@+id/layoutBottom"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="550dp"
                             android:layout_below="@id/rel_top"
                             android:layout_alignParentBottom="true"
                             android:paddingTop="@dimen/p50"
@@ -80,6 +80,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@color/green"
+                                android:layout_marginTop="@dimen/p5"
                                 app:elevation="0dp"
                                 app:itemIconPadding="@dimen/p10"
                                 app:itemIconTint="@color/white"
@@ -96,7 +97,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginBottom="-40dp"
-                            android:scaleType="centerCrop"
+
                             android:src="@drawable/engrologo" />
                     </RelativeLayout>
 

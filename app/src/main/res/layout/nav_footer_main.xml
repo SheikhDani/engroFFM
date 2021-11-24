@@ -36,6 +36,7 @@
                 android:layout_marginBottom="@dimen/p4"
                 android:background="@color/yellow"
                 android:gravity="center"
+
                 android:text="PRODUCT\nDEMO"
                 android:textColor="@color/green" />
 
