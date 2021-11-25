@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/parent_actvity"
         android:layout_marginLeft="@dimen/p20"
-android:visibility="gone"
+android:visibility="visible"
         android:gravity="center_vertical"
         android:text="Activity No: COR-54316 "
         android:textSize="16sp" />

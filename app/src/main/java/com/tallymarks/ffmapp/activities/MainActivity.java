@@ -291,8 +291,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // requestMultiplePermissions();
         loadLoginData();
-        loadAllData();
         loadRoles();
+
+        loadAllData();
+
         if(rolename.equals("Field Force Team"))
         {
 
@@ -503,8 +505,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkStorageDepth();
         checkMarketPlayers();
         checkAssignedSalesPoint();
-        checkLoadTodayCustomerJourneyPlan();
-        checkLoadAllCustomerJourneyPlan();
+        if(!rolename.equals("FieldAssistant")) {
+            checkLoadTodayCustomerJourneyPlan();
+            checkLoadAllCustomerJourneyPlan();
+        }
         checkFarmerAllJourneyPlan();
         checkFarmerTodayJourneyPlan();
     }

@@ -79,6 +79,7 @@ public class ConversionRetentionAdapter extends RecyclerView.Adapter<ConversionR
         }
         holder.activitydate.setText("Date: "+movie.getDate());
         holder.parentactivity.setText("parent Activity: " + movie.getParentactivity());
+        holder.actvityno.setText("Activity No: "+movie.getActivityno());
 
 
     }

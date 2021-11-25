@@ -55,6 +55,7 @@ import com.tallymarks.ffmapp.models.farmerMeeting.local.Product;
 import com.tallymarks.ffmapp.models.farmerdetailoutput.FarmerDetailOutput;
 import com.tallymarks.ffmapp.models.supervisorsnapshotoutput.SuperVisorSnapShotOutput;
 import com.tallymarks.ffmapp.utils.Constants;
+import com.tallymarks.ffmapp.utils.DialougeManager;
 import com.tallymarks.ffmapp.utils.FarmerMeetingDbHelper;
 import com.tallymarks.ffmapp.utils.Helpers;
 import com.tallymarks.ffmapp.utils.HttpHandler;
@@ -85,7 +86,7 @@ public class ConverionRetentionFormActivity extends AppCompatActivity {
     MyDatabaseHandler mydb;
     DatabaseHandler db;
     TextView tvUserdata,tvSalesPointData;
-    TextView txtParent, txtFarmer,txtUser,txtActivity,txtCrop,txtProduct,txt_rec_dosage,txt_rec_Acereage;
+    TextView txtParent, txtFarmer,txtUser ,txtActivity,txtCrop,txtProduct,txt_rec_dosage,txt_rec_Acereage;
     TextView txtActivityDate, txtActivityNo;
     String farmerid = "";
     private String productID, cropID,activityID;
@@ -146,6 +147,8 @@ public class ConverionRetentionFormActivity extends AppCompatActivity {
         txtUser = findViewById(R.id.txt_user);
         txtActivity = findViewById(R.id.txt_activity);
         txtActivityDate = findViewById(R.id.txt_date);
+        txtActivityNo = findViewById(R.id.txt_activity_number);
+        tvActivityNo = findViewById(R.id.txt_activity_numer_data);
 
         btnSave = findViewById(R.id.btn_save);
         btnBack = findViewById(R.id.back);
@@ -174,6 +177,9 @@ public class ConverionRetentionFormActivity extends AppCompatActivity {
             et_actual_acre_data.setBackgroundResource(R.drawable.textview_grey_boader);
             etReasoNDevaition.setEnabled(false);
             etReasoNDevaition.setBackgroundResource(R.drawable.textview_grey_boader);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentDateandTime = sdf.format(new Date());
+            tvActivityNo.setText("FFMCOR"+ "-" + currentDateandTime);
 
         }
         else if(from.equals("edit")) {
@@ -235,6 +241,11 @@ public class ConverionRetentionFormActivity extends AppCompatActivity {
                 if(sHelper.getString(Constants.FARMER_CONVERSION_PARENT_SALES_POINT_CODE)!=null|| !sHelper.getString(Constants.FARMER_CONVERSION_PARENT_SALES_POINT_CODE).equals("")) {
                     tvSalesPointData.setText(sHelper.getString(Constants.FARMER_CONVERSION_PARENT_SALES_POINT_CODE));
                 }
+                if(sHelper.getString(Constants.FARMER_CONVERSION_PARENT_ACTIVITY_NO)!=null|| !sHelper.getString(Constants.FARMER_CONVERSION_PARENT_ACTIVITY_NO).equals("")) {
+                    tvActivityNo.setText(sHelper.getString(Constants.FARMER_CONVERSION_PARENT_ACTIVITY_NO));
+                }
+
+
 
 
             }
@@ -304,6 +315,9 @@ public class ConverionRetentionFormActivity extends AppCompatActivity {
                     if(sHelper.getString(Constants.FARMER_CONVERSION_PARENT_SALES_POINT_CODE)!=null|| !sHelper.getString(Constants.FARMER_CONVERSION_PARENT_SALES_POINT_CODE).equals("")) {
                         tvSalesPointData.setText(sHelper.getString(Constants.FARMER_CONVERSION_PARENT_SALES_POINT_CODE));
                     }
+                    if(sHelper.getString(Constants.FARMER_CONVERSION_PARENT_ACTIVITY_NO)!=null|| !sHelper.getString(Constants.FARMER_CONVERSION_PARENT_ACTIVITY_NO).equals("")) {
+                        tvActivityNo.setText(sHelper.getString(Constants.FARMER_CONVERSION_PARENT_ACTIVITY_NO));
+                    }
 
 
 
@@ -339,6 +353,7 @@ public class ConverionRetentionFormActivity extends AppCompatActivity {
         SpannableStringBuilder parentActivity = setStarToLabel("Parent Activity");
         SpannableStringBuilder farmer = setStarToLabel("Farmer");
         SpannableStringBuilder user = setStarToLabel("User");
+        SpannableStringBuilder activityNo = setStarToLabel("Activity No");
         SpannableStringBuilder activity = setStarToLabel("Activity");
         SpannableStringBuilder crop = setStarToLabel("Crop");
         SpannableStringBuilder product = setStarToLabel("Product");
@@ -355,6 +370,7 @@ public class ConverionRetentionFormActivity extends AppCompatActivity {
         txt_rec_dosage.setText(rec_dosage);
         txt_rec_Acereage.setText(rec_Acre);
         txtActivityDate.setText(activityDate);
+        txtActivityNo.setText(activityNo);
 
 
         loadFarmers(mydb);
@@ -362,25 +378,52 @@ public class ConverionRetentionFormActivity extends AppCompatActivity {
         auto_farmer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectDialouge(auto_farmer,"autofarmer");
+                if(farmerArrayList.size()>0) {
+                    selectDialouge(auto_farmer, "autofarmer");
+                }
+                else {
+                    DialougeManager.invalidCredentialsPopup(ConverionRetentionFormActivity.this,"",getResources().getString(R.string.no_farmer_available));
+
+                }
             }
         });
         autocrop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectDialouge(autocrop,"autocrop");
+                if(cropsArrayList.size()>0) {
+                    selectDialouge(autocrop,"autocrop");
+                }
+                else {
+                    DialougeManager.invalidCredentialsPopup(ConverionRetentionFormActivity.this,"","No Data Found");
+
+                }
+
             }
         });
         autoprod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectDialouge(autoprod,"autoproduct");
+                if(productArrayList.size()>0) {
+                    selectDialouge(autoprod,"autoproduct");
+                }
+                else {
+                    DialougeManager.invalidCredentialsPopup(ConverionRetentionFormActivity.this,"","No Data Found");
+
+                }
+
             }
         });
         autoActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectDialouge(autoActivity,"autoactivity");
+                if(activityArrayList.size()>0) {
+                    selectDialouge(autoActivity,"autoactivity");
+                }
+                else {
+                    DialougeManager.invalidCredentialsPopup(ConverionRetentionFormActivity.this,"","No Data Found");
+
+                }
+
             }
         });
 
@@ -974,6 +1017,7 @@ public class ConverionRetentionFormActivity extends AppCompatActivity {
                 && auto_farmer!=null
                 && !(Helpers.isEmptyTextview(getApplicationContext(),  tvDate))
                 && !(Helpers.isEmptyTextview(getApplicationContext(),  tvUserdata))
+                && !(Helpers.isEmptyTextview(getApplicationContext(),  tvActivityNo))
                 && !(Helpers.isEmpty(getApplicationContext(), et_rec_dose))
                 && !(Helpers.isEmpty(getApplicationContext(), et_Rec_Acreage))
                 && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  autoprod))
@@ -1052,9 +1096,22 @@ public class ConverionRetentionFormActivity extends AppCompatActivity {
            createConversion.setReasonForDeviation("");
            createConversion.setActivityId(activityID);
            createConversion.setAddress(etAddress.getText().toString());
-           createConversion.setCropAcreage(Double.parseDouble(tv_crop_Acer.getText().toString()));
+           if(!tv_crop_Acer.getText().toString().equals("")) {
+               createConversion.setCropAcreage(Double.parseDouble(tv_crop_Acer.getText().toString()));
+           }
+           else
+           {
+               createConversion.setCropAcreage(0.0);
+           }
            createConversion.setCropId(Integer.parseInt(cropID));
-           createConversion.setTotalFarmSize(Double.parseDouble(tv_total_farm_size.getText().toString()));
+            if(!tv_total_farm_size.getText().toString().equals("")) {
+                createConversion.setTotalFarmSize(Double.parseDouble(tv_total_farm_size.getText().toString()));
+            }
+            else
+            {
+                createConversion.setTotalFarmSize(0.0);
+            }
+
            createConversion.setCropName(autocrop.getText().toString());
            createConversion.setFarmerId(Integer.parseInt(farmerid));
            createConversion.setFarmerName(auto_farmer.getText().toString());
@@ -1067,6 +1124,7 @@ public class ConverionRetentionFormActivity extends AppCompatActivity {
            createConversion.setRemarks(et_remarks.getText().toString());
            createConversion.setStatus(auto_stauts.getText().toString());
            createConversion.setProductName(autoprod.getText().toString());
+           createConversion.setActivityCode(tvActivityNo.getText().toString());
 
            httpHandler = new HttpHandler();
             HashMap<String, String> headerParams2 = new HashMap<>();

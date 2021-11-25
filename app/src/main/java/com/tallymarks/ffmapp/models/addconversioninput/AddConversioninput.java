@@ -83,6 +83,18 @@ public class AddConversioninput {
     @Expose
     private String zarkhezUser;
 
+    public String getActivityCode() {
+        return activityCode;
+    }
+
+    public void setActivityCode(String activityCode) {
+        this.activityCode = activityCode;
+    }
+
+    @SerializedName("activityCode")
+    @Expose
+    private String activityCode;
+
     public Integer getAcreageForRetention() {
         return acreageForRetention;
     }

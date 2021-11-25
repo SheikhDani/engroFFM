@@ -57,7 +57,7 @@
                         android:layout_height="30dp"
 
                         android:layout_weight="1"
-
+                        android:textSize="@dimen/ts16"
                         android:background="@drawable/eidttext_boader"
                         android:clickable="true"
                         android:cursorVisible="false"
@@ -136,6 +136,7 @@
 
                         android:background="@drawable/eidttext_boader"
                         android:clickable="true"
+                        android:textSize="@dimen/ts16"
                         android:cursorVisible="false"
                         android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
                         android:dropDownHeight="155dp"
@@ -185,6 +186,7 @@
 
                         android:background="@drawable/eidttext_boader"
                         android:clickable="true"
+                        android:textSize="@dimen/ts16"
                         android:cursorVisible="false"
                         android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
                         android:dropDownHeight="155dp"
@@ -230,7 +232,7 @@
                         android:layout_height="30dp"
 
                         android:layout_weight="1"
-
+                        android:textSize="@dimen/ts16"
                         android:background="@drawable/eidttext_boader"
                         android:clickable="true"
                         android:cursorVisible="false"

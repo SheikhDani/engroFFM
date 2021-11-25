@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -704,14 +705,14 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 
             TextView prod = new TextView(this);
             prod.setText(arraylist.get(i).getProduct());
-            prod.setTextSize(14);
+            prod.setTextSize(12);
             //startDate.setBackgroundResource(R.drawable.table_row);
             prod.setGravity(Gravity.CENTER);
             prod.setPadding(2, 2, 2, 2);
             TextView quantity = new TextView(this);
             quantity.setText(arraylist.get(i).getQuantity());
             quantity.setGravity(Gravity.CENTER);
-            quantity.setTextSize(14);
+            quantity.setTextSize(12);
             //name.setBackgroundResource(R.drawable.table_row);
             quantity.setPadding(2, 2, 2, 2);
 
@@ -720,13 +721,13 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
             timeline.setText(Helpers.utcToAnyDateFormat(arraylist.get(i).getTimeline(),"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'","MMM d yyyy"));
             timeline.setGravity(Gravity.CENTER);
 
-            timeline.setTextSize(14);
+            timeline.setTextSize(12);
             //status.setBackgroundResource(R.drawable.table_row);
             timeline.setPadding(2, 2, 2, 2);
             TextView confirm = new TextView(this);
             confirm.setText(arraylist.get(i).getConfirmed());
             confirm.setGravity(Gravity.CENTER);
-            confirm.setTextSize(14);
+            confirm.setTextSize(12);
             //srNo.setBackgroundResource(R.drawable.table_row);
             confirm.setPadding(2, 2, 2, 2);
 
@@ -734,10 +735,10 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 //            row2.addView(name);
 //            row2.addView(startDate);
 //            row2.addView(status);
-            row2.addView(prod, new TableRow.LayoutParams(0, 150, 0.25f));
-            row2.addView(quantity, new TableRow.LayoutParams(0, 150, 0.25f));
-            row2.addView(timeline, new TableRow.LayoutParams(0, 150, 0.25f));
-            row2.addView(confirm, new TableRow.LayoutParams(0, 150, 0.25f));
+            row2.addView(prod, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.25f));
+            row2.addView(quantity, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.25f));
+            row2.addView(timeline, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.25f));
+            row2.addView(confirm, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.25f));
 
 
             mTableLayout.addView(row2);

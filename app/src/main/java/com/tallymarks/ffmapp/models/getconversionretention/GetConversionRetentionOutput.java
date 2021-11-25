@@ -86,6 +86,18 @@ public class GetConversionRetentionOutput {
     @Expose
     private String farmerName;
 
+    public String getActivityCode() {
+        return activityCode;
+    }
+
+    public void setActivityCode(String activityCode) {
+        this.activityCode = activityCode;
+    }
+
+    @SerializedName("activityCode")
+    @Expose
+    private String activityCode;
+
     public String getFarmersalespointcode() {
         return farmersalespointcode;
     }

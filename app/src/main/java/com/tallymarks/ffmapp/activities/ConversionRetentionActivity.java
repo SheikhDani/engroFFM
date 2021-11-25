@@ -194,6 +194,7 @@ public class ConversionRetentionActivity extends AppCompatActivity implements It
         sHelper.setString(Constants.FARMER_CONVERSION_PARENT_REASON,plan.getReason());
         sHelper.setString(Constants.FARMER_CONVERSION_ID,plan.getId());
         sHelper.setString(Constants.FARMER_CONVERSION_PARENT_SALES_POINT_CODE,plan.getSalespointcode());
+        sHelper.setString(Constants.FARMER_CONVERSION_PARENT_ACTIVITY_NO,plan.getActivityno());
         startActivity(addretention);
         //Toast.makeText(ConversionRetentionActivity.this, ""+plan.getFarmername(), Toast.LENGTH_SHORT).show();
     }
@@ -267,6 +268,7 @@ public class ConversionRetentionActivity extends AppCompatActivity implements It
                             c.setReason(journeycode.get(j).getReasonForDeviation() == null || journeycode.get(j).getReasonForDeviation().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getReasonForDeviation().toString());
                             c.setId(journeycode.get(j).getId() == null || journeycode.get(j).getId().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getId().toString());
                             c.setSalespointcode(journeycode.get(j).getFarmersalespointcode() == null || journeycode.get(j).getFarmersalespointcode().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getFarmersalespointcode().toString());
+                            c.setActivityno(journeycode.get(j).getActivityCode() == null || journeycode.get(j).getActivityCode().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getActivityCode().toString());
                             planList.add(c);
 
                         }

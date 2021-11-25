@@ -56,36 +56,34 @@
             android:background="@color/grey" />
 
 
-        <LinearLayout
-            android:id="@+id/linear_product"
+        <TextView
+            android:id="@+id/txt_product"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/l1"
+            android:layout_marginLeft="@dimen/p5"
+            android:layout_marginRight="@dimen/p5"
+            android:padding="@dimen/p10"
+            android:text="Product"
 
-            android:layout_marginTop="@dimen/p20"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts17" />
 
-            <TextView
 
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="@dimen/p20"
-android:id="@+id/txt_product"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="Product"
-                android:textColor="@color/black"
-
-                />
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/linear_product"
+            android:layout_marginLeft="@dimen/p10"
+            android:layout_below="@+id/txt_product"
+            android:layout_marginRight="@dimen/p10"
+            android:background="@drawable/borderd_view"
+            >
 
             <TextView
                 android:id="@+id/auto_product"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/p20"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
                 android:layout_weight="1"
                 android:background="@drawable/eidttext_boader"
                 android:clickable="true"
@@ -93,95 +91,104 @@ android:id="@+id/txt_product"
                 android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
                 android:dropDownHeight="155dp"
                 android:focusable="false"
-                android:gravity="center"
                 android:hint="Select Product"
                 android:inputType="none"
-                android:textAlignment="center"
+                android:maxLines="1"
+                android:textSize="@dimen/ts14"
+
+                android:paddingLeft="@dimen/p10"
+                android:paddingTop="@dimen/p5"
+                android:paddingRight="@dimen/p10"
+                android:paddingBottom="@dimen/p5"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
 
+                />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/linear_acres"
+        <TextView
+            android:id="@+id/txt_quantity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/linear_product"
-            android:layout_marginTop="@dimen/p20"
-            android:orientation="horizontal"
-            android:weightSum="2">
 
-            <TextView
+            android:layout_marginLeft="@dimen/p5"
+            android:layout_marginRight="@dimen/p5"
+            android:padding="@dimen/p10"
+            android:text="Quantity"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts17" />
 
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="@dimen/p20"
-                android:id="@+id/txt_quantity"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="Quantity"
-                android:textColor="@color/black"
 
-                />
+        <EditText
+            android:id="@+id/et_quantity"
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:layout_below="@+id/txt_quantity"
+            android:layout_marginLeft="@dimen/p10"
+            android:layout_marginTop="@dimen/p5"
+            android:layout_marginRight="@dimen/p10"
+            android:background="@drawable/borderd_view"
+            android:drawablePadding="@dimen/p10"
+            android:hint="Quantity (Bags)"
+            android:inputType="number"
+            android:maxLength="9"
 
-            <EditText
-                android:id="@+id/et_quantity"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/p20"
-                android:layout_weight="1"
-                android:background="@drawable/eidttext_boader"
-                 android:inputType="number"
-                android:maxLength="9"
-                android:gravity="center"
-                android:hint="Quantity (Bags)" />
+            android:paddingLeft="@dimen/p10"
+            android:paddingTop="@dimen/p5"
+            android:paddingRight="@dimen/p10"
+            android:paddingBottom="@dimen/p5"
+            android:singleLine="true"
+            android:textSize="@dimen/ts14" />
 
-        </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/linear_timeline"
+        <TextView
+
+            android:id="@+id/txt_timeline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/linear_acres"
-            android:layout_marginTop="@dimen/p20"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:layout_below="@+id/et_quantity"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/p5"
+            android:layout_marginRight="@dimen/p5"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:padding="@dimen/p10"
+            android:text="Timeline"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts17"
 
-            <TextView
+            />
 
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="@dimen/p20"
-                android:id="@+id/txt_timeline"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="Timeline"
-                android:textColor="@color/black"
+        <TextView
+            android:id="@+id/txt_date"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@+id/txt_timeline"
+            android:layout_marginLeft="@dimen/p10"
+            android:layout_marginTop="@dimen/p5"
+            android:layout_marginRight="@dimen/p10"
 
-                />
+            android:background="@drawable/eidttext_boader"
+            android:drawablePadding="@dimen/p10"
+            android:hint="Date"
 
-            <TextView
-                android:id="@+id/txt_date"
-                android:layout_width="0dp"
-                android:layout_height="25dp"
-                android:layout_marginRight="@dimen/p20"
-                android:layout_weight="1"
-                android:background="@drawable/eidttext_boader"
+            android:paddingLeft="@dimen/p10"
+            android:paddingTop="@dimen/p5"
+            android:paddingRight="@dimen/p10"
+            android:paddingBottom="@dimen/p5"
+            android:singleLine="true"
+            android:textSize="@dimen/ts14" />
 
-                android:gravity="center"
-                android:hint="Date" />
 
-        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linear_confirmed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/linear_timeline"
+            android:layout_below="@+id/txt_date"
             android:layout_marginTop="@dimen/p20"
             android:orientation="horizontal"
             android:weightSum="2">
@@ -198,8 +205,8 @@ android:id="@+id/txt_product"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/p20"
-                android:layout_marginLeft="@dimen/p20"
+                android:layout_marginStart="@dimen/p10"
+                android:layout_marginLeft="@dimen/p10"
 
 
 
@@ -211,7 +218,7 @@ android:id="@+id/txt_product"
                 android:layout_width="0dp"
                 android:layout_weight="0.7"
                 android:layout_height="40dp"
-                android:textSize="18sp"
+                android:textSize="@dimen/ts17"
                 android:paddingTop="@dimen/p2"
 
                 android:layout_toRightOf="@+id/checkBox"
