@@ -25,7 +25,7 @@
                 android:orientation="vertical">
                 <TextView
                     android:id="@+id/invoice_no"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
                     android:id="@+id/invoice_quanity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
+                    android:textSize="14sp"
                     android:text="Invocie Quanity : 4560"
                     android:padding="@dimen/p5"
                     android:textAllCaps="true" />
@@ -61,6 +61,7 @@
                     android:layout_height="wrap_content"
                     android:text="Dated: June 30,2021"
                     android:padding="@dimen/p5"
+                    android:textSize="14sp"
                     android:textAllCaps="true"
                     />
             </LinearLayout>

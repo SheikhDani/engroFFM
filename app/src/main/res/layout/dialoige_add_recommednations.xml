@@ -25,10 +25,10 @@
                 android:layout_gravity="center"
                 android:padding="@dimen/p10"
                 android:layout_margin="@dimen/p10"
-                android:layout_weight="1.8"
+                android:layout_weight="1.9"
                 android:text="ADD RECOMMENDATIONS"
                 android:textColor="@color/black"
-                android:textSize="@dimen/ts18"
+                android:textSize="@dimen/ts16"
 
 
                 />

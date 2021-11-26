@@ -78,8 +78,8 @@ public class SoilSamplingActivity extends AppCompatActivity {
     MyDatabaseHandler mydb;
     String planType = "";
     GpsTracker gps;
-    double soilSamplingLat = 0.0;
-    double soilSamplingLong = 0.0;
+    double soilSamplingLat ;
+    double soilSamplingLong ;
     SharedPrefferenceHelper sHelper;
     ArrayList<String> cropArraylist = new ArrayList<>();
     ArrayList<String> cropIDArraylist = new ArrayList<>();
@@ -492,7 +492,7 @@ public class SoilSamplingActivity extends AppCompatActivity {
                         && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_pre_rop))
                         && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_current_crop))
                         && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_depth))
-                        && !String.valueOf(soilSamplingLat).equals("") && !String.valueOf(soilSamplingLong).equals("")
+                        && soilSamplingLat!=0.0 && soilSamplingLong!=0.0
                 ) {
                     // Checkout logic here
 
@@ -681,8 +681,11 @@ public class SoilSamplingActivity extends AppCompatActivity {
                 && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_pre_rop))
                 && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_current_crop))
                 && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_depth))
-                && !String.valueOf(soilSamplingLat).equals("") && !String.valueOf(soilSamplingLong).equals("")
+                && soilSamplingLat!=0.0 && soilSamplingLong!=0.0
         ) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentDateandTime = sdf.format(new Date());
+            txt_reference.setText(getUsernamefromDatabase() + "-" + currentDateandTime);
             SoilSamplingCrops prod = new  SoilSamplingCrops();
 
             if(acres != null || !acres.equals(null)){
@@ -739,8 +742,10 @@ public class SoilSamplingActivity extends AppCompatActivity {
             mydb.addData(mydb.TODAY_FARMER_SAMPLING, soilhashmap);
 
             drawRecommendationTable();
-            txt_lat.setText("Selected Lat" +  "0.0");
-            txt_lng.setText("Selected Long" +  "0.0");
+            txt_lat.setText("Selected Lat" +  "");
+            txt_lng.setText("Selected Long" +  "");
+            acres.setText("");
+            blocks.setText("");
         } else {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SoilSamplingActivity.this);
             alertDialogBuilder
