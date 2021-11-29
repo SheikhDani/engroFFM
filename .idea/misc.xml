@@ -17,6 +17,7 @@
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/drawable/custom_checkbox.xml" value="0.1394736842105263" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/drawable/eidttext_boader.xml" value="0.17152777777777778" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/drawable/forwardresizer.xml" value="0.10526315789473684" />
+        <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/drawable/green_out_line.xml" value="0.13717105263157894" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/drawable/ic_baseline_arrow_downward_24.xml" value="0.1707236842105263" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/drawable/ic_baseline_keyboard_arrow_down_24.xml" value="0.1444078947368421" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/drawable/iconresizer.xml" value="0.10526315789473684" />
@@ -26,6 +27,7 @@
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/drawable/plusresizer.xml" value="0.1394736842105263" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/drawable/side_nav_bar.xml" value="0.1" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/drawable/textview_boarder.xml" value="0.1" />
+        <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/drawable/toggle_widget_background.xml" value="0.1667763157894737" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/drawable/unchecked.xml" value="0.1394736842105263" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/activity_add_new_farmer.xml" value="0.16" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/activity_customer_location.xml" value="0.12" />
@@ -33,6 +35,8 @@
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/activity_dashboard.xml" value="0.1253415300546448" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/activity_dashoard.xml" value="0.11543715846994536" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/activity_delears.xml" value="0.1598731884057971" />
+        <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/activity_edit_farmer.xml" value="0.1" />
+        <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/activity_editfarmer_list.xml" value="0.1" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/activity_famers.xml" value="0.176" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/activity_farm_visit.xml" value="0.2" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/activity_farmer_demo.xml" value="0.176" />
@@ -48,6 +52,7 @@
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/activity_sales_board.xml" value="0.1253415300546448" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/activity_sales_call.xml" value="0.12" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/activity_sales_plan.xml" value="0.1253415300546448" />
+        <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/activity_sales_plan_dashboard.xml" value="0.2" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/activity_salesorder_marketprice.xml" value="0.14407894736842106" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/activity_soil_analysis.xml" value="0.1253415300546448" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/activity_soil_sampling.xml" value="0.144" />
@@ -73,6 +78,8 @@
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/dialouge_stock_selling_summary.xml" value="0.16052631578947368" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/farmers_list_item.xml" value="0.2" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/fragment.xml" value="0.12056010928961748" />
+        <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/fragment_dashboard.xml" value="0.15443840579710144" />
+        <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/fragment_dashoard.xml" value="0.264" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/fragment_list.xml" value="0.1" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/list_child_item_customer_snapshot.xml" value="0.13223684210526315" />
         <entry key="..\:/WorkFolder/tmcwork/FFMApp/app/src/main/res/layout/list_child_item_supervisorsnapshot.xml" value="0.176" />

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
-import androidx.multidex.BuildConfig;
+import com.tallymarks.ffmapp.BuildConfig;
 
 
 public class LocationHelper

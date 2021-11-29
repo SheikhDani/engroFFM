@@ -10,7 +10,7 @@
     tools:openDrawer="end">
     <include
         android:id="@+id/dashboard"
-        layout="@layout/activity_dashboard"
+        layout="@layout/activity_sales_plan_dashboard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <com.google.android.material.navigation.NavigationView
