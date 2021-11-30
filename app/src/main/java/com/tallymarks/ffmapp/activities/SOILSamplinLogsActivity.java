@@ -87,7 +87,7 @@ public class SOILSamplinLogsActivity extends AppCompatActivity {
         iv_back.setVisibility(View.VISIBLE);
         iv_menu.setVisibility(View.GONE);
         tvTopHeader.setVisibility(View.VISIBLE);
-        tvTopHeader.setText("SOIL SAMPLLING LOGS");
+        tvTopHeader.setText("SOIL SAMPLING LOGS");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String currentDateandTime = sdf.format(new Date());
         txtDate.setText(currentDateandTime);
@@ -235,7 +235,7 @@ public class SOILSamplinLogsActivity extends AppCompatActivity {
             pDialog.dismiss();
             SOILSamplingLogsAdapter adapter = new SOILSamplingLogsAdapter(planList);
             recyclerView.setAdapter(adapter);
-            tvTotalSample.setText("TOTAL SAMPELS  " + planList.size());
+            tvTotalSample.setText("TOTAL SAMPLES  " + planList.size());
 
         }
     }

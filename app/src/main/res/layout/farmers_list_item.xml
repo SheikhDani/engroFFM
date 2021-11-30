@@ -41,19 +41,22 @@
     <Button
         android:id="@+id/forward_img"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="@dimen/p10"
+
         android:background="@color/green"
         android:contentDescription="Icon"
         android:drawableRight="@drawable/ic_baseline_arrow_downward_24"
-        android:drawablePadding="@dimen/p10"
+        android:drawablePadding="@dimen/p5"
         android:padding="@dimen/p10"
-        android:textSize="10sp"
         android:text="DOWNLOAD"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textSize="10sp" />
 
 
 </RelativeLayout>

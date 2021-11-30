@@ -200,7 +200,7 @@ public class FingerprintDialog extends DialogFragment
             if(extraHelper!=null)
             {
                 if(extraHelper.getString(Constants.ACCESS_TOKEN)!=null && !extraHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
-                    Toast.makeText(mContext.getApplicationContext(), "Auth success", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext.getApplicationContext(), "Fingerprint Recongnized Successfully!", Toast.LENGTH_LONG).show();
                     dismiss();
                     Log.e("keyaccess", String.valueOf(extraHelper.getString(Constants.ACCESS_TOKEN)));
                     Intent move = new Intent(mContext, MainActivity.class);
@@ -216,6 +216,7 @@ public class FingerprintDialog extends DialogFragment
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
+                                    dismiss();
                                     //new PostSyncOutlet().execute();
                                 }
                             });
@@ -227,7 +228,7 @@ public class FingerprintDialog extends DialogFragment
 
 
         } else
-            Toast.makeText(mContext.getApplicationContext(), "Auth failed", Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext.getApplicationContext(), "Fingerprint not recognized", Toast.LENGTH_LONG).show();
     }
 
     @Override

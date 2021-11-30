@@ -78,8 +78,8 @@ public class SoilSamplingActivity extends AppCompatActivity {
     MyDatabaseHandler mydb;
     String planType = "";
     GpsTracker gps;
-    double soilSamplingLat ;
-    double soilSamplingLong ;
+    double soilSamplingLat  = 0.0;
+    double soilSamplingLong =0.0;
     SharedPrefferenceHelper sHelper;
     ArrayList<String> cropArraylist = new ArrayList<>();
     ArrayList<String> cropIDArraylist = new ArrayList<>();
@@ -248,16 +248,16 @@ public class SoilSamplingActivity extends AppCompatActivity {
                 while (cursor.moveToNext());
             }
             drawRecommendationTable();
-            gps = new GpsTracker(SoilSamplingActivity.this);
-            if (gps.canGetLocation()) {
-                if (ActivityCompat.checkSelfPermission(SoilSamplingActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SoilSamplingActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                soilSamplingLat = gps.getLatitude();
-                soilSamplingLong = gps.getLongitude();
-            }
-            txt_lat.setText("Selected Lat: " +  soilSamplingLat);
-            txt_lng.setText("Selected Long: " +  soilSamplingLong);
+//            gps = new GpsTracker(SoilSamplingActivity.this);
+//            if (gps.canGetLocation()) {
+//                if (ActivityCompat.checkSelfPermission(SoilSamplingActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SoilSamplingActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                    return;
+//                }
+//                soilSamplingLat = gps.getLatitude();
+//                soilSamplingLong = gps.getLongitude();
+//            }
+//            txt_lat.setText("Selected Lat: " +  soilSamplingLat);
+//            txt_lng.setText("Selected Long: " +  soilSamplingLong);
         }
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_list_item_1, cropArraylist);
@@ -476,7 +476,45 @@ public class SoilSamplingActivity extends AppCompatActivity {
         btn_add_sampling.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                validateInputs();
+                if(isthisFarmerSamplingDataAlreadyExists())
+                {
+                    boolean flag = false;
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put(mydb.KEY_TODAY_LATITUTE, "");
+                    map.put(mydb.KEY_TODAY_LONGITUTE, "");
+                    HashMap<String, String> filters = new HashMap<>();
+                    filters.put(mydb.KEY_TODAY_FARMMMER_ID, sHelper.getString(Constants.S_FARMER_ID));
+                    Cursor cursor = mydb.getData(mydb.TODAY_FARMER_SAMPLING, map, filters);
+                    if (cursor.getCount() > 0) {
+                        cursor.moveToFirst();
+                        do {
+                            String previouslat = cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_LATITUTE));
+                            String previouslng  = cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_LONGITUTE));
+                            float distance = getMeterFromLatLong(Float.parseFloat(String.valueOf(soilSamplingLat)), Float.parseFloat(String.valueOf(soilSamplingLong)), Float.parseFloat(previouslat), Float.parseFloat(previouslng));
+                            float totaldistance = distance / 1000;
+                            String radius = "500";
+                            int totalmeters = (int) Math.round(distance);
+                            int totalb = (int) Math.round(totaldistance);
+                            int c = (int) Math.round(distance);
+                            boolean isWithinradius = c <= Integer.parseInt(radius) ;
+                            if (isWithinradius) {
+                                flag = true;
+                            }
+                        }
+                        while (cursor.moveToNext());
+                    }
+                    if(flag==false)
+                    {
+                        validateInputs();
+                    }
+                    else
+                    {
+                        Toast.makeText(SoilSamplingActivity.this, "Please Change your location to add Sampling", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+                    validateInputs();
+                }
 
 
             }
@@ -487,16 +525,18 @@ public class SoilSamplingActivity extends AppCompatActivity {
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!(Helpers.isEmptyTextview(getApplicationContext(), acres))
-                        && !(Helpers.isEmptyTextview(getApplicationContext(), blocks))
-                        && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_pre_rop))
-                        && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_current_crop))
-                        && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_depth))
-                        && soilSamplingLat!=0.0 && soilSamplingLong!=0.0
-                ) {
+//                if (!(Helpers.isEmptyTextview(getApplicationContext(), acres))
+//                        && !(Helpers.isEmptyTextview(getApplicationContext(), blocks))
+//                        && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_pre_rop))
+//                        && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_current_crop))
+//                        && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_depth))
+//                        && soilSamplingLat!=0.0 && soilSamplingLong!=0.0
+//                ) {
                     // Checkout logic here
 
                     // Mapping for activity
+                if(arraylistSoilSampling.size()>0)
+                {
                     mydb = new MyDatabaseHandler(getBaseContext());
                     long time = System.currentTimeMillis();
 
@@ -744,6 +784,8 @@ public class SoilSamplingActivity extends AppCompatActivity {
             drawRecommendationTable();
             txt_lat.setText("Selected Lat" +  "");
             txt_lng.setText("Selected Long" +  "");
+            soilSamplingLat = 0.0;
+            soilSamplingLong = 0.0;
             acres.setText("");
             blocks.setText("");
         } else {
@@ -1009,12 +1051,12 @@ public class SoilSamplingActivity extends AppCompatActivity {
 //        row.addView(column2);
 //        row.addView(column3);
 //        row.addView(column4);
-        row.addView(column1, new TableRow.LayoutParams(0, 150, 0.80f));
-        row.addView(column2, new TableRow.LayoutParams(0, 150, 0.80f));
-        row.addView(column3, new TableRow.LayoutParams(0, 150, 0.80f));
-        row.addView(column4, new TableRow.LayoutParams(0, 150, 0.40f));
-        row.addView(column5, new TableRow.LayoutParams(0, 150, 0.40f));
-        row.addView(column6, new TableRow.LayoutParams(0, 150, 0.40f));
+        row.addView(column1, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.80f));
+        row.addView(column2, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.80f));
+        row.addView(column3, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.80f));
+        row.addView(column4, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.40f));
+        row.addView(column5, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.40f));
+        row.addView(column6, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.40f));
 
 
         mTableLayout.addView(row);
@@ -1064,7 +1106,7 @@ public class SoilSamplingActivity extends AppCompatActivity {
             crop2.setPadding(2, 2, 2, 2);
 
             TextView depth= new TextView(this);
-            depth.setText(arraylistSoilSampling.get(i).getCrop2());
+            depth.setText(arraylistSoilSampling.get(i).getDepth());
             depth.setGravity(Gravity.CENTER);
             depth.setTextSize(12);
             //srNo.setBackgroundResource(R.drawable.table_row);

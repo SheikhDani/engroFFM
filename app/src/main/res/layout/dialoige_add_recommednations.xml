@@ -298,7 +298,7 @@
             android:id="@+id/linear_add_sampling"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/p30"
+            android:layout_marginTop="@dimen/p10"
             android:layout_below="@+id/divider"
             android:gravity="center"
             android:orientation="horizontal"
@@ -307,16 +307,18 @@
             <Button
                 android:id="@+id/btn_add_recommendations"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:drawablePadding="@dimen/p5"
                 android:textColor="@color/white"
                 android:drawableTint="@color/white"
                 android:backgroundTint="@color/green"
-                android:padding="@dimen/p10"
+                android:padding="@dimen/p5"
+                android:layout_marginBottom="@dimen/p10"
                 android:drawableRight="@drawable/addresizer"
                 android:background="@drawable/eidttext_boader"
                 android:text="add"
+
 
 
                 />

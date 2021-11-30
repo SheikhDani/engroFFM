@@ -115,6 +115,7 @@
                 android:drawableRight="@drawable/addresizer"
                 android:drawablePadding="@dimen/p5"
                 android:drawableTint="@color/white"
+                android:layout_marginBottom="@dimen/p10"
                 android:padding="@dimen/p10"
                 android:text="ADD"
                 android:textColor="@color/white"

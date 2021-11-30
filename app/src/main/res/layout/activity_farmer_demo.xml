@@ -22,151 +22,150 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/linear_status"
+            <TextView
+                android:id="@+id/txt_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:layout_below="@+id/linear_product"
 
-                <TextView
-                    android:id="@+id/txt_status"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-                    android:layout_weight="1.2"
-                    android:gravity="center_vertical"
-                    android:text="Status"
-                    android:textColor="@color/black"
+                android:layout_marginLeft="@dimen/p5"
+                android:layout_marginRight="@dimen/p5"
+                android:padding="@dimen/p10"
+                android:text="Status"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts17" />
 
-                    />
 
-                <TextView
-                    android:id="@+id/txt_pending"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="0.8"
+            <TextView
+                android:id="@+id/txt_pending"
+                android:layout_width="fill_parent"
+                android:layout_height="30dp"
+                android:layout_below="@+id/txt_quantity"
+                android:layout_marginLeft="@dimen/p10"
+                android:layout_marginTop="@dimen/p5"
+                android:layout_marginRight="@dimen/p10"
+                android:background="@drawable/borderd_view"
+                android:drawablePadding="@dimen/p10"
+                android:paddingLeft="@dimen/p10"
+                android:paddingTop="@dimen/p5"
+                android:paddingRight="@dimen/p10"
+                android:paddingBottom="@dimen/p5"
+                android:singleLine="true"
+                android:text="Pending"
+                android:textSize="@dimen/ts16" />
 
-                    android:gravity="left"
-                    android:text="Pending" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linear_date"
+            <TextView
+                android:id="@+id/txt_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_host"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:layout_below="@+id/linear_product"
 
-                <TextView
-                    android:id="@+id/txt_date"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
+                android:layout_marginLeft="@dimen/p5"
+                android:layout_marginRight="@dimen/p5"
+                android:padding="@dimen/p10"
+                android:text="Activity Date"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts17" />
 
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Activity Date"
-                    android:textColor="@color/black"
 
-                    />
+            <TextView
+                android:id="@+id/et_date"
+                android:layout_width="fill_parent"
+                android:layout_height="30dp"
+                android:layout_below="@+id/txt_quantity"
+                android:layout_marginLeft="@dimen/p10"
+                android:layout_marginTop="@dimen/p5"
+                android:layout_marginRight="@dimen/p10"
+                android:background="@drawable/borderd_view"
+                android:drawablePadding="@dimen/p10"
+                android:hint="Choose Date"
+                android:paddingLeft="@dimen/p10"
+                android:paddingTop="@dimen/p5"
+                android:paddingRight="@dimen/p10"
+                android:paddingBottom="@dimen/p5"
+                android:singleLine="true"
+                android:textSize="@dimen/ts16" />
 
-                <TextView
-                    android:id="@+id/et_date"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="1"
-                    android:background="@drawable/eidttext_boader"
-                    android:gravity="center"
-                    android:hint="Choose Date" />
 
-            </LinearLayout>
+            <TextView
+                android:id="@+id/txt_crop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_ac_crops"
+                android:layout_marginLeft="@dimen/p5"
+                android:layout_marginRight="@dimen/p5"
+                android:padding="@dimen/p10"
+                android:text="Crop"
+
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts17" />
+
 
             <LinearLayout
                 android:id="@+id/linear_crop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_date"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:layout_marginLeft="@dimen/p10"
 
-                <TextView
-                    android:id="@+id/txt_crop"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Crop"
-                    android:textColor="@color/black"
-
-                    />
+                android:layout_marginRight="@dimen/p10"
+                android:background="@drawable/borderd_view">
 
                 <AutoCompleteTextView
                     android:id="@+id/auto_crop"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="30dp"
-                    android:layout_marginRight="@dimen/p20"
                     android:layout_weight="1"
-
                     android:background="@drawable/eidttext_boader"
                     android:clickable="true"
                     android:cursorVisible="false"
                     android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
                     android:dropDownHeight="155dp"
                     android:focusable="false"
-                    android:gravity="center_horizontal"
                     android:hint="Select Crop"
                     android:inputType="none"
                     android:maxLines="1"
-                    android:textAlignment="center"
+                    android:paddingLeft="@dimen/p10"
+
+                    android:paddingTop="@dimen/p5"
+                    android:paddingRight="@dimen/p10"
+                    android:paddingBottom="@dimen/p5"
+                    android:textSize="@dimen/ts16"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
 
-
+                    />
             </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/txt_prod"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_ac_crops"
+                android:layout_marginLeft="@dimen/p5"
+                android:layout_marginRight="@dimen/p5"
+                android:padding="@dimen/p10"
+                android:text="Product"
+
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts17" />
+
 
             <LinearLayout
                 android:id="@+id/linear_prod"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_crop"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:layout_marginLeft="@dimen/p10"
 
-                <TextView
-                    android:id="@+id/txt_prod"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Product"
-                    android:textColor="@color/black"
-
-                    />
+                android:layout_marginRight="@dimen/p10"
+                android:background="@drawable/borderd_view">
 
                 <AutoCompleteTextView
                     android:id="@+id/auto_prod"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/p20"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
                     android:layout_weight="1"
                     android:background="@drawable/eidttext_boader"
                     android:clickable="true"
@@ -174,85 +173,85 @@
                     android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
                     android:dropDownHeight="155dp"
                     android:focusable="false"
-                    android:gravity="center_horizontal"
                     android:hint="Select Product"
                     android:inputType="none"
-                    android:textAlignment="center"
+                    android:maxLines="1"
+                    android:paddingLeft="@dimen/p10"
+
+                    android:paddingTop="@dimen/p5"
+                    android:paddingRight="@dimen/p10"
+                    android:paddingBottom="@dimen/p5"
+                    android:textSize="@dimen/ts16"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/linear_address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_prod"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/txt_address"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Address"
-                    android:textColor="@color/black"
+                    app:layout_constraintTop_toTopOf="parent"
 
                     />
-
-                <EditText
-                    android:id="@+id/et_address"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="1"
-                    android:background="@drawable/eidttext_boader"
-                    android:gravity="center"
-                    android:hint="Address" />
-
-
             </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/txt_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_product"
+
+                android:layout_marginLeft="@dimen/p5"
+                android:layout_marginRight="@dimen/p5"
+                android:padding="@dimen/p10"
+                android:text="Address"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts17" />
+
+
+            <EditText
+                android:id="@+id/et_address"
+                android:layout_width="fill_parent"
+                android:layout_height="30dp"
+                android:layout_below="@+id/txt_quantity"
+                android:layout_marginLeft="@dimen/p10"
+                android:layout_marginTop="@dimen/p5"
+                android:layout_marginRight="@dimen/p10"
+                android:background="@drawable/borderd_view"
+                android:drawablePadding="@dimen/p10"
+
+                android:hint="Address"
+                android:paddingLeft="@dimen/p10"
+                android:paddingTop="@dimen/p5"
+                android:paddingRight="@dimen/p10"
+                android:paddingBottom="@dimen/p5"
+                android:singleLine="true"
+                android:textSize="@dimen/ts16" />
+
+
+            <TextView
+                android:id="@+id/txt_objective"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_ac_crops"
+                android:layout_marginLeft="@dimen/p5"
+                android:layout_marginRight="@dimen/p5"
+                android:padding="@dimen/p10"
+                android:text="Objective of Demo"
+
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts17" />
 
 
             <LinearLayout
                 android:id="@+id/linear_objective"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_chief"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:layout_marginLeft="@dimen/p10"
 
-                <TextView
-                    android:id="@+id/txt_objective"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Objective of Demo"
-                    android:textColor="@color/black"
-
-                    />
-
+                android:layout_marginRight="@dimen/p10"
+                android:background="@drawable/borderd_view">
 
                 <AutoCompleteTextView
                     android:id="@+id/auto_ojective"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/p20"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
                     android:layout_weight="1"
                     android:background="@drawable/eidttext_boader"
                     android:clickable="true"
@@ -260,15 +259,21 @@
                     android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
                     android:dropDownHeight="155dp"
                     android:focusable="false"
-                    android:gravity="center_horizontal"
-                    android:hint="Objective of Demo"
+                    android:hint="Select Product"
                     android:inputType="none"
-                    android:textAlignment="center"
+                    android:maxLines="1"
+                    android:paddingLeft="@dimen/p10"
+
+                    android:paddingTop="@dimen/p5"
+                    android:paddingRight="@dimen/p10"
+                    android:paddingBottom="@dimen/p5"
+                    android:textSize="@dimen/ts16"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
 
+                    />
             </LinearLayout>
 
 

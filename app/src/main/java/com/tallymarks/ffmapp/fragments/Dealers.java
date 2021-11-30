@@ -7,15 +7,32 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.anychart.AnyChart;
+import com.anychart.AnyChartView;
+import com.anychart.chart.common.dataentry.DataEntry;
+import com.anychart.chart.common.dataentry.ValueDataEntry;
+import com.anychart.charts.Pie;
 import com.ekn.gruzer.gaugelibrary.HalfGauge;
 import com.ekn.gruzer.gaugelibrary.Range;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.MPPointF;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.utils.CustomSeekBar;
+import com.tallymarks.ffmapp.utils.MyDecimalFormator;
 import com.tallymarks.ffmapp.utils.ProgressItem;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Dealers extends Fragment {
     HalfGauge halfGauge;
@@ -30,13 +47,17 @@ public class Dealers extends Fragment {
     private ArrayList<ProgressItem> progressItemList;
     private ProgressItem mProgressItem;
 
+    private PieChart chart;
+    String[] products = {"Industry", "Urea"};
+    int[] percent = {60,40};
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(
                 R.layout.fragment_dashoard, container, false);
         return rootView;
-
 
 
     }
@@ -47,6 +68,7 @@ public class Dealers extends Fragment {
         halfGauge = (HalfGauge) view.findViewById(R.id.half);
         seekbar1 = ((CustomSeekBar) view.findViewById(R.id.seekBar0));
         seekbar2 = ((CustomSeekBar) view.findViewById(R.id.seekBar1));
+        chart = view.findViewById(R.id.piechart);
         com.ekn.gruzer.gaugelibrary.Range range = new Range();
         range.setColor(Color.parseColor("#ce0000"));
         range.setFrom(0.0);
@@ -63,8 +85,6 @@ public class Dealers extends Fragment {
         range3.setTo(150.0);
 
 
-
-
         //set min max and current value
         halfGauge.setMinValue(0.0);
         halfGauge.setMaxValue(150.0);
@@ -79,9 +99,49 @@ public class Dealers extends Fragment {
         seekbar1.setProgress(70);
         seekbar2.setProgress(80);
 
+        drawPieChart();
 
 
     }
+
+    private void drawPieChart() {
+        chart.setUsePercentValues(true);
+        chart.getDescription().setEnabled(false);
+        ArrayList<PieEntry> dataEntries = new ArrayList<>();
+        for (int i = 0; i < products.length; i++) {
+            dataEntries.add(new PieEntry(percent[i] , products[i]));
+        }
+        PieDataSet dataSet = new PieDataSet(dataEntries, "");
+        ArrayList<Integer> colors = new ArrayList<>();
+        colors.add(R.color.green);
+        colors.add(R.color.yellow);
+
+
+//        ArrayList percentEntries = new ArrayList();
+//        for (int i = 0; i < percent.length; i++) {
+//            percentEntries.add((percent[i]));
+//        }
+//
+//        dataSet.setColors(percentEntries);
+        PieData data = new PieData(dataSet);
+        data.setValueTextSize(12f);
+        chart.setData(data);
+        chart.setHoleRadius(45f);
+        chart.setTransparentCircleRadius(50f);
+        Legend l = chart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setDrawInside(false);
+        dataSet.setColors(new int[]{ContextCompat.getColor(getActivity(), R.color.green),
+                ContextCompat.getColor(getActivity(), R.color.yellow)});
+       // dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        chart.setDrawSliceText(false);
+
+        chart.animateXY(5000, 5000);
+
+    }
+
     private void initDataToSeekbar() {
         progressItemList = new ArrayList<ProgressItem>();
         // red span

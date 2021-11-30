@@ -13,7 +13,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/linear_divider"
+        android:layout_above="@+id/linear_bottom"
         android:layout_below="@+id/inc_common_header_colletion"
         android:fillViewport="true"
         android:scrollbars="vertical">
@@ -516,9 +516,8 @@
                 android:id="@+id/l1"
                 android:layout_width="fill_parent"
                 android:layout_height="60dp"
-                android:layout_below="@+id/listView"
+                android:layout_below="@+id/linear_reference"
                 android:background="@color/white"
-
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -546,7 +545,6 @@
                     android:drawableTint="@color/green"
                      android:visibility="gone"
                     android:layout_margin="@dimen/p20"
-
                     android:layout_weight="0.2"
                     android:contentDescription="Icon"
                     android:src="@drawable/ic_baseline_keyboard_arrow_down_24" />
@@ -555,6 +553,7 @@
                 android:id="@+id/linear_table_recommendations"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+
                 android:layout_above="@+id/linear_bottom"
                 android:orientation="horizontal">
 
@@ -592,19 +591,12 @@
         </LinearLayout>
     </ScrollView>
 
-    <View
-
-        android:id="@+id/linear_divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@+id/linear_bottom"
-        android:layout_marginBottom="@dimen/p10"
-        android:background="@color/grey" />
 
     <LinearLayout
         android:id="@+id/linear_bottom"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+
         android:layout_alignParentBottom="true"
         android:background="@color/white"
 

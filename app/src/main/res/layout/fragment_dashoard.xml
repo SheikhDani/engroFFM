@@ -300,6 +300,15 @@
 
 
             android:textColor="@color/green"></TextView>
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/piechart"
+            android:layout_below="@+id/txt_market_share"
+            android:layout_width="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_height="400dp" />
+
     </RelativeLayout>
 
 </RelativeLayout>

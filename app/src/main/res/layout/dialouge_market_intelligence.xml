@@ -23,9 +23,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:padding="@dimen/p10"
                 android:layout_margin="@dimen/p10"
                 android:layout_weight="1.8"
+                android:padding="@dimen/p10"
                 android:text="ADD MARKET INTELLIGENCE"
                 android:textColor="@color/black"
                 android:textSize="@dimen/ts16"
@@ -62,8 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/l1"
 
-            android:layout_marginTop="@dimen/p20"
-          >
+            android:layout_marginTop="@dimen/p20">
 
             <EditText
                 android:id="@+id/et_Remarks"
@@ -125,49 +124,46 @@
 
                 />
         </LinearLayout>
+
         <View
 
+            android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="@dimen/p10"
-            android:id="@+id/divider"
             android:layout_below="@+id/linear_confirmed"
+            android:layout_marginTop="@dimen/p10"
             android:background="@color/grey" />
-
-
 
 
         <LinearLayout
             android:id="@+id/linear_add_sampling"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/p30"
             android:layout_below="@+id/divider"
+            android:layout_marginTop="@dimen/p10"
             android:gravity="center"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btn_add"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
-                android:drawablePadding="@dimen/p5"
-                android:textColor="@color/white"
-                android:drawableTint="@color/white"
-                android:backgroundTint="@color/green"
-                android:padding="@dimen/p10"
-                android:drawableRight="@drawable/ic_baseline_arrow_forward_ios_24"
                 android:background="@drawable/eidttext_boader"
+                android:backgroundTint="@color/green"
+                android:drawableRight="@drawable/ic_baseline_arrow_forward_ios_24"
+                android:drawablePadding="@dimen/p5"
+                android:layout_marginBottom="@dimen/p10"
+                android:drawableTint="@color/white"
+                android:padding="@dimen/p10"
                 android:text="SUBMIT"
+                android:textColor="@color/white"
 
 
                 />
 
 
-
         </LinearLayout>
-
 
 
     </RelativeLayout>

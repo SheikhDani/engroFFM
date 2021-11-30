@@ -158,21 +158,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/divider"
-            android:layout_marginTop="@dimen/p30"
+            android:layout_marginTop="@dimen/p10"
             android:gravity="center"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btn_add_packs"
                 android:layout_width="wrap_content"
-                android:layout_height="36dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/eidttext_boader"
                 android:backgroundTint="@color/green"
                 android:drawableRight="@drawable/addresizer"
                 android:drawablePadding="@dimen/p5"
+                android:layout_marginBottom="@dimen/p10"
                 android:drawableTint="@color/white"
-                android:padding="@dimen/p10"
+                android:padding="@dimen/p5"
                 android:text="add"
                 android:textColor="@color/white"
 

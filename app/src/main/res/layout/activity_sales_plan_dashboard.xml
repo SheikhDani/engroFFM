@@ -41,6 +41,29 @@
 
             android:textColor="@color/green"></TextView>
 
+        <TextView
+            android:id="@+id/txt_alert"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/p10"
+            android:layout_marginLeft="@dimen/p10"
+            android:layout_marginTop="@dimen/p10"
+            android:layout_marginRight="@dimen/p10"
+            android:layout_marginBottom="@dimen/p10"
+
+
+            android:paddingLeft="@dimen/p10"
+            android:layout_toRightOf="@+id/txt_sales_plan"
+
+            android:paddingTop="@dimen/p10"
+            android:paddingRight="@dimen/p10"
+            android:paddingBottom="@dimen/p10"
+            android:text="*This is Dummy Data"
+
+
+            android:textColor="@color/red"></TextView>
+
         <Button
             android:id="@+id/btn_new_plan"
             android:layout_width="wrap_content"
