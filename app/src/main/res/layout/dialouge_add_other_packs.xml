@@ -23,9 +23,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:padding="@dimen/p10"
                 android:layout_margin="@dimen/p10"
                 android:layout_weight="1.8"
+                android:padding="@dimen/p10"
                 android:text="ADD OTHER PACKS LIQUIDATION "
                 android:textColor="@color/black"
                 android:textSize="@dimen/ts18"
@@ -54,126 +54,126 @@
             android:layout_below="@+id/l1"
 
             android:background="@color/grey" />
-        <LinearLayout
-            android:id="@+id/linear_other_product"
+
+        <TextView
+            android:id="@+id/other_product"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/l1"
 
-            android:layout_marginTop="@dimen/p20"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:layout_marginLeft="@dimen/p5"
+            android:layout_marginRight="@dimen/p5"
+            android:padding="@dimen/p10"
+            android:text="Other Product"
 
-            <TextView
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts17" />
 
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="@dimen/p20"
-                android:id="@+id/other_product"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="Other Product"
-                android:textColor="@color/black"
 
-                />
+        <LinearLayout
+            android:id="@+id/linear_other_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/other_product"
+            android:layout_marginLeft="@dimen/p10"
 
+            android:layout_marginRight="@dimen/p10"
+            android:background="@drawable/borderd_view">
 
             <AutoCompleteTextView
                 android:id="@+id/auto_other_product"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/p20"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
                 android:layout_weight="1"
                 android:background="@drawable/eidttext_boader"
                 android:clickable="true"
+                android:textSize="@dimen/ts14"
                 android:cursorVisible="false"
                 android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
                 android:dropDownHeight="155dp"
                 android:focusable="false"
-                android:gravity="center_horizontal"
                 android:hint="Select Product"
                 android:inputType="none"
-                android:textAlignment="center"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/p10"
+                android:paddingTop="@dimen/p5"
+                android:paddingRight="@dimen/p10"
+                android:paddingBottom="@dimen/p5"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
 
+                />
         </LinearLayout>
 
 
-
-
-        <LinearLayout
-            android:id="@+id/linear_packs_liquidated"
+        <TextView
+            android:id="@+id/txt_packs_liquidated"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/linear_other_product"
-            android:layout_marginTop="@dimen/p20"
-            android:orientation="horizontal"
-            android:weightSum="2">
 
-            <TextView
+            android:layout_marginLeft="@dimen/p5"
+            android:layout_marginRight="@dimen/p5"
+            android:padding="@dimen/p10"
+            android:text="Other Packs Liquidated"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts17" />
 
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="@dimen/p20"
-                android:id="@+id/txt_packs_liquidated"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="Other Packs Liquidated"
-                android:textColor="@color/black"
 
-                />
+        <EditText
+            android:id="@+id/et_packs_liquidated"
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:layout_below="@+id/txt_packs_liquidated"
+            android:layout_marginLeft="@dimen/p10"
+            android:layout_marginTop="@dimen/p5"
+            android:layout_marginRight="@dimen/p10"
+            android:background="@drawable/borderd_view"
+            android:drawablePadding="@dimen/p10"
+            android:hint="0"
+            android:inputType="number"
+            android:maxLength="9"
 
-            <EditText
-                android:id="@+id/et_packs_liquidated"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/p20"
-                android:layout_weight="1"
-                android:background="@drawable/eidttext_boader"
-                android:gravity="center"
-                android:maxLength="9"
-                android:inputType="number"
-                android:hint="0" />
+            android:paddingLeft="@dimen/p10"
+            android:paddingTop="@dimen/p5"
+            android:paddingRight="@dimen/p10"
+            android:paddingBottom="@dimen/p5"
+            android:singleLine="true"
+            android:textSize="@dimen/ts14" />
 
-        </LinearLayout>
         <View
 
+            android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_below="@+id/et_packs_liquidated"
             android:layout_marginTop="@dimen/p20"
-            android:id="@+id/divider"
-            android:layout_below="@+id/linear_packs_liquidated"
             android:background="@color/grey" />
-
-
 
 
         <LinearLayout
             android:id="@+id/linear_add_packs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/p30"
             android:layout_below="@+id/divider"
+            android:layout_marginTop="@dimen/p10"
             android:gravity="center"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btn_add_packs"
                 android:layout_width="wrap_content"
-                android:layout_height="36dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/eidttext_boader"
                 android:backgroundTint="@color/green"
                 android:drawableRight="@drawable/addresizer"
                 android:drawablePadding="@dimen/p5"
+                android:layout_marginBottom="@dimen/p10"
                 android:drawableTint="@color/white"
-                android:padding="@dimen/p10"
+                android:padding="@dimen/p5"
                 android:text="add"
                 android:textColor="@color/white"
 
@@ -181,9 +181,7 @@
                 />
 
 
-
         </LinearLayout>
-
 
 
     </RelativeLayout>

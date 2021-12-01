@@ -106,6 +106,7 @@ public class Constants {
     public static final String FARMER_CONVERSION_PARENT_REASON=  "farmerconversionparentreason";
     public static final String FARMER_CONVERSION_ID=  "farmerconversionID";
     public static final String FARMER_CONVERSION_PARENT_SALES_POINT_CODE=  "farmerconversionparentsalespointcode";
+    public static final String FARMER_CONVERSION_PARENT_ACTIVITY_NO=  "farmerconversionparentactivtyno";
 
 
 

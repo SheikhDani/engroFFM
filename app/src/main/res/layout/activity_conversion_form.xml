@@ -143,9 +143,10 @@
                 <TextView
                     android:id="@+id/txt_user_data"
                     android:layout_width="0dp"
-                    android:layout_height="30dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/p20"
                     android:layout_weight="1"
+                    android:padding="@dimen/p5"
                     android:textColor="@color/black"
                     android:background="@drawable/textview_grey_boader"
                     android:gravity="center"
@@ -668,6 +669,45 @@
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:hint="Date" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_activityNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_acres"
+                android:layout_marginTop="@dimen/p20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+
+                    android:id="@+id/txt_activity_number"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/p20"
+                    android:layout_weight="1"
+
+                    android:gravity="center_vertical"
+                    android:text="Activity No"
+                    android:textColor="@color/black"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txt_activity_numer_data"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/p20"
+                    android:layout_weight="1"
+                    android:padding="@dimen/p5"
+
+                    android:textSize="@dimen/ts14"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:background="@drawable/textview_grey_boader"
+                    android:hint="" />
 
             </LinearLayout>
 

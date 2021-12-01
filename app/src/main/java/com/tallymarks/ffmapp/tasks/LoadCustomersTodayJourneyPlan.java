@@ -175,7 +175,7 @@ public class LoadCustomersTodayJourneyPlan extends AsyncTask<String, Void, Void>
                 JSONObject json = null;
                 try {
                     json = new JSONObject(response);
-                    errorMessage = json.getString("message");
+                    errorMessage = json.getString("description");
                     String status = json.getString("success");
                     if (status.equals("false")) {
                         Helpers.displayMessage(mContext, true, errorMessage);

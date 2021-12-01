@@ -11,6 +11,7 @@ import android.content.IntentSender;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -25,17 +26,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.viewpager.widget.ViewPager;
 
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ekn.gruzer.gaugelibrary.HalfGauge;
+import com.ekn.gruzer.gaugelibrary.Range;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -47,6 +52,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.karumi.dexter.Dexter;
@@ -58,6 +64,8 @@ import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.ExpandableListAdapter;
+import com.tallymarks.ffmapp.adapters.SalesPlanViewPagerAdapter;
+import com.tallymarks.ffmapp.adapters.VisitCustomerViewPagerAdapter;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.MyDatabaseHandler;
@@ -146,6 +154,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String statuCustomer = "";
     String journeyType;
 
+    Button btn_add_plan;
+    TabLayout tabLayout;
+  HalfGauge halfGauge;
+    ViewPager viewPager;
+   SalesPlanViewPagerAdapter viewPagerAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,12 +184,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         txt_post_data = findViewById(R.id.txt_post);
         txt_refersh = findViewById(R.id.tvRefersh);
         txt_user_guide = findViewById(R.id.txt_user_guide);
-
+        btn_add_plan = findViewById(R.id.btn_new_plan);
         iv_Menu.setVisibility(View.VISIBLE);
         iv_Notification.setVisibility(View.VISIBLE);
         cartbadge.setVisibility(View.VISIBLE);
         iv_filter = findViewById(R.id.iv_notification);
         userName = findViewById(R.id.userName);
+
+        tabLayout = (TabLayout) findViewById(R.id.tabs_sales_plan);
+
+        viewPager = (ViewPager) findViewById(R.id.viewPager_sales_plan);
+        viewPagerAdapter = new SalesPlanViewPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(viewPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
+
+
+
+
 
 
 
@@ -291,8 +316,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // requestMultiplePermissions();
         loadLoginData();
-        loadAllData();
         loadRoles();
+
+        loadAllData();
+
         if(rolename.equals("Field Force Team"))
         {
 
@@ -503,8 +530,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkStorageDepth();
         checkMarketPlayers();
         checkAssignedSalesPoint();
-        checkLoadTodayCustomerJourneyPlan();
-        checkLoadAllCustomerJourneyPlan();
+        if(!rolename.equals("FieldAssistant")) {
+            checkLoadTodayCustomerJourneyPlan();
+            checkLoadAllCustomerJourneyPlan();
+        }
         checkFarmerAllJourneyPlan();
         checkFarmerTodayJourneyPlan();
     }

@@ -2,7 +2,20 @@ package com.tallymarks.ffmapp.models;
 
 public class Conversion {
 
-    private String parentactivity,date,farmername,status;
+    private String parentactivity;
+    private String date;
+    private String farmername;
+    private String status;
+
+    public String getActivityno() {
+        return activityno;
+    }
+
+    public void setActivityno(String activityno) {
+        this.activityno = activityno;
+    }
+
+    private String activityno;
     private String activityid,crop,product,zerkhaiz_user,total_farm_size,crop_Acerage,rec_dose,rec_acerage,rec_product_quantity;
     private String remarks;
 

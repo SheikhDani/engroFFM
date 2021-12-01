@@ -13,7 +13,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/linear_divider"
+        android:layout_above="@+id/linear_bottom"
         android:layout_below="@+id/inc_common_header_colletion"
         android:fillViewport="true"
         android:scrollbars="vertical">
@@ -55,78 +55,72 @@
                 android:layout_marginTop="@dimen/p20"
                 android:background="@color/grey" />
 
-            <LinearLayout
-                android:id="@+id/linear_acre"
+            <TextView
+                android:id="@+id/txt_acre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_host"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:layout_below="@+id/linear_product"
 
-                <TextView
-                    android:id="@+id/txt_acre"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
+                android:layout_marginLeft="@dimen/p5"
+                android:layout_marginRight="@dimen/p5"
+                android:padding="@dimen/p10"
+                android:text="Plot/Acre#"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts17" />
 
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Plot/Acre#"
-                    android:textColor="@color/black"
 
-                    />
+            <EditText
+                android:id="@+id/acres"
+                android:layout_width="fill_parent"
+                android:layout_height="30dp"
+                android:layout_below="@+id/txt_quantity"
+                android:layout_marginLeft="@dimen/p10"
+                android:layout_marginTop="@dimen/p5"
+                android:layout_marginRight="@dimen/p10"
+                android:background="@drawable/borderd_view"
+                android:drawablePadding="@dimen/p10"
+                android:inputType="number"
+                android:maxLength="9"
 
-                <EditText
-                    android:id="@+id/acres"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="1"
-                    android:background="@drawable/eidttext_boader"
-                    android:inputType="number"
-                    android:maxLength="9"
-                    android:gravity="center"
-                   />
-
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/linear_block"
+                android:paddingLeft="@dimen/p10"
+                android:paddingTop="@dimen/p5"
+                android:paddingRight="@dimen/p10"
+                android:paddingBottom="@dimen/p5"
+                android:singleLine="true"
+                android:textSize="@dimen/ts16" />
+            <TextView
+                android:id="@+id/txt_block"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_acre"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:layout_below="@+id/linear_product"
 
-                <TextView
-                    android:id="@+id/txt_block"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
+                android:layout_marginLeft="@dimen/p5"
+                android:layout_marginRight="@dimen/p5"
+                android:padding="@dimen/p10"
+                android:text="Block/Square#"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts17" />
 
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Block/Square#"
-                    android:textColor="@color/black"
 
-                    />
+            <EditText
+                android:id="@+id/blocks"
+                android:layout_width="fill_parent"
+                android:layout_height="30dp"
+                android:layout_below="@+id/txt_quantity"
+                android:layout_marginLeft="@dimen/p10"
+                android:layout_marginTop="@dimen/p5"
+                android:layout_marginRight="@dimen/p10"
+                android:background="@drawable/borderd_view"
+                android:drawablePadding="@dimen/p10"
+                android:inputType="number"
+                android:maxLength="9"
 
-                <EditText
-                    android:id="@+id/blocks"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/p20"
-                    android:layout_weight="1"
-                    android:background="@drawable/eidttext_boader"
-                    android:gravity="center"
-                    android:maxLength="9"
-                    android:inputType="number"
-                    />
-
-            </LinearLayout>
+                android:paddingLeft="@dimen/p10"
+                android:paddingTop="@dimen/p5"
+                android:paddingRight="@dimen/p10"
+                android:paddingBottom="@dimen/p5"
+                android:singleLine="true"
+                android:textSize="@dimen/ts16" />
             <View
 
                 android:layout_width="match_parent"
@@ -166,133 +160,135 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/p20"
                 android:background="@color/grey" />
+            <TextView
+                android:id="@+id/txt_prev_crop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_ac_crops"
+                android:layout_marginLeft="@dimen/p5"
+                android:layout_marginRight="@dimen/p5"
+                android:padding="@dimen/p10"
+                android:text="Previous Crop"
+
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts17" />
+
+
             <LinearLayout
                 android:id="@+id/linear_previous_crop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_ac_crops"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:layout_marginLeft="@dimen/p10"
 
-                <TextView
-                    android:id="@+id/txt_prev_crop"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Previous Crop"
-                    android:textColor="@color/black"
-
-                    />
+                android:layout_marginRight="@dimen/p10"
+                android:background="@drawable/borderd_view">
 
                 <AutoCompleteTextView
                     android:id="@+id/auto_pre_crop"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="30dp"
-                    android:layout_marginRight="@dimen/p20"
                     android:layout_weight="1"
-
                     android:background="@drawable/eidttext_boader"
                     android:clickable="true"
                     android:cursorVisible="false"
                     android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
                     android:dropDownHeight="155dp"
                     android:focusable="false"
-                    android:gravity="center_horizontal"
                     android:hint="Select Crop"
                     android:inputType="none"
                     android:maxLines="1"
-                    android:textAlignment="center"
+                    android:textSize="@dimen/ts16"
+
+                    android:paddingLeft="@dimen/p10"
+                    android:paddingTop="@dimen/p5"
+                    android:paddingRight="@dimen/p10"
+                    android:paddingBottom="@dimen/p5"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
 
-
+                    />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/txt_curr_crop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_ac_crops"
+                android:layout_marginLeft="@dimen/p5"
+                android:layout_marginRight="@dimen/p5"
+                android:padding="@dimen/p10"
+                android:text="Current Crop"
+
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts17" />
+
 
             <LinearLayout
                 android:id="@+id/linear_curr_crop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_previous_crop"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:layout_marginLeft="@dimen/p10"
 
-                <TextView
-                    android:id="@+id/txt_curr_crop"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Current Crop"
-                    android:textColor="@color/black"
-
-                    />
+                android:layout_marginRight="@dimen/p10"
+                android:background="@drawable/borderd_view">
 
                 <AutoCompleteTextView
                     android:id="@+id/auto_cr_crop"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="30dp"
-                    android:layout_marginRight="@dimen/p20"
                     android:layout_weight="1"
-
                     android:background="@drawable/eidttext_boader"
                     android:clickable="true"
                     android:cursorVisible="false"
                     android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
                     android:dropDownHeight="155dp"
                     android:focusable="false"
-                    android:gravity="center_horizontal"
                     android:hint="Select Crop"
                     android:inputType="none"
                     android:maxLines="1"
-                    android:textAlignment="center"
+                    android:textSize="@dimen/ts16"
+
+                    android:paddingLeft="@dimen/p10"
+                    android:paddingTop="@dimen/p5"
+                    android:paddingRight="@dimen/p10"
+                    android:paddingBottom="@dimen/p5"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
 
-
+                    />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/txt_current_crop_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_ac_crops"
+                android:layout_marginLeft="@dimen/p5"
+                android:layout_marginRight="@dimen/p5"
+                android:padding="@dimen/p10"
+                android:text="Current Crop2"
+
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts17" />
 
 
             <LinearLayout
                 android:id="@+id/linear_curr_crop_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_curr_crop"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:layout_marginLeft="@dimen/p10"
 
-                <TextView
-                    android:id="@+id/txt_current_crop_2"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Current Crop2"
-                    android:textColor="@color/black"
-
-                    />
+                android:layout_marginRight="@dimen/p10"
+                android:background="@drawable/borderd_view">
 
                 <AutoCompleteTextView
                     android:id="@+id/auto_current_crop_2"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="30dp"
-                    android:layout_marginRight="@dimen/p20"
                     android:layout_weight="1"
                     android:background="@drawable/eidttext_boader"
                     android:clickable="true"
@@ -300,49 +296,49 @@
                     android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
                     android:dropDownHeight="155dp"
                     android:focusable="false"
-                    android:gravity="center_horizontal"
                     android:hint="Select Crop"
                     android:inputType="none"
                     android:maxLines="1"
-                    android:textAlignment="center"
+                    android:textSize="@dimen/ts16"
+
+                    android:paddingLeft="@dimen/p10"
+                    android:paddingTop="@dimen/p5"
+                    android:paddingRight="@dimen/p10"
+                    android:paddingBottom="@dimen/p5"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
 
-
+                    />
             </LinearLayout>
+            <TextView
+                android:id="@+id/txt_depth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_ac_crops"
+                android:layout_marginLeft="@dimen/p5"
+                android:layout_marginRight="@dimen/p5"
+                android:padding="@dimen/p10"
+                android:text="Depth"
+
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts17" />
 
 
             <LinearLayout
                 android:id="@+id/linear_depth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_curr_crop_2"
-                android:layout_marginTop="@dimen/p20"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:layout_marginLeft="@dimen/p10"
 
-                <TextView
-                    android:id="@+id/txt_depth"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Depth"
-                    android:textColor="@color/black"
-
-                    />
-
+                android:layout_marginRight="@dimen/p10"
+                android:background="@drawable/borderd_view">
 
                 <AutoCompleteTextView
                     android:id="@+id/auto_depth"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="30dp"
-                    android:layout_marginRight="@dimen/p20"
                     android:layout_weight="1"
                     android:background="@drawable/eidttext_boader"
                     android:clickable="true"
@@ -350,17 +346,24 @@
                     android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
                     android:dropDownHeight="155dp"
                     android:focusable="false"
-                    android:gravity="center_horizontal"
                     android:hint="Select Depth"
                     android:inputType="none"
                     android:maxLines="1"
-                    android:textAlignment="center"
+                    android:textSize="@dimen/ts16"
+
+                    android:paddingLeft="@dimen/p10"
+                    android:paddingTop="@dimen/p5"
+                    android:paddingRight="@dimen/p10"
+                    android:paddingBottom="@dimen/p5"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
 
+                    />
             </LinearLayout>
+
+
             <LinearLayout
                 android:id="@+id/linear_locatio"
                 android:layout_width="match_parent"
@@ -372,14 +375,15 @@
                 <TextView
                     android:id="@+id/txt_location"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-
-                    android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/p10"
+                    android:padding="@dimen/p5"
+                    android:layout_weight="1.2"
                     android:gravity="center_vertical"
                     android:text="Save Location"
                     android:textColor="@color/black"
+                    android:textSize="@dimen/ts17"
 
                     />
 
@@ -387,20 +391,22 @@
                     android:id="@+id/btn_lcoation"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
-                    android:layout_marginRight="@dimen/p20"
+
+                    android:layout_marginRight="@dimen/p10"
                     android:layout_weight="0.8"
-                    android:drawableRight="@drawable/ic_baseline_location_on_24"
                     android:background="@drawable/eidttext_boader"
                     android:backgroundTint="@color/colorPrimaryDark"
+                    android:drawableRight="@drawable/ic_baseline_location_on_24"
                     android:gravity="center"
                     android:text="GET LOCATION"
                     android:textColor="@color/white" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/linear_selected_latlng"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/p10"
                 android:orientation="vertical"
                 android:weightSum="4">
@@ -410,8 +416,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
-                    android:layout_marginRight="@dimen/p20"
+                    android:layout_marginLeft="@dimen/p10"
+                    android:padding="@dimen/p5"
+                    android:layout_marginRight="@dimen/p10"
                     android:layout_weight="2"
                     android:gravity="center_vertical"
                     android:text="Selected Lat:"
@@ -419,14 +426,16 @@
 
 
                     />
+
                 <TextView
                     android:id="@+id/txt_lng"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/p20"
+                    android:layout_marginLeft="@dimen/p10"
+                    android:padding="@dimen/p5"
+                    android:layout_marginRight="@dimen/p10"
                     android:layout_weight="2"
-                    android:layout_marginRight="@dimen/p20"
                     android:gravity="center_vertical"
                     android:text="Selected Lng:"
                     android:textColor="@color/black"
@@ -507,9 +516,8 @@
                 android:id="@+id/l1"
                 android:layout_width="fill_parent"
                 android:layout_height="60dp"
-                android:layout_below="@+id/listView"
+                android:layout_below="@+id/linear_reference"
                 android:background="@color/white"
-
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -535,9 +543,8 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
                     android:drawableTint="@color/green"
-
+                     android:visibility="gone"
                     android:layout_margin="@dimen/p20"
-
                     android:layout_weight="0.2"
                     android:contentDescription="Icon"
                     android:src="@drawable/ic_baseline_keyboard_arrow_down_24" />
@@ -546,6 +553,7 @@
                 android:id="@+id/linear_table_recommendations"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+
                 android:layout_above="@+id/linear_bottom"
                 android:orientation="horizontal">
 
@@ -583,19 +591,12 @@
         </LinearLayout>
     </ScrollView>
 
-    <View
-
-        android:id="@+id/linear_divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@+id/linear_bottom"
-        android:layout_marginBottom="@dimen/p10"
-        android:background="@color/grey" />
 
     <LinearLayout
         android:id="@+id/linear_bottom"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+
         android:layout_alignParentBottom="true"
         android:background="@color/white"
 

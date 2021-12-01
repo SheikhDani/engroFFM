@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -451,14 +452,14 @@ public class MarketPricesActivity extends AppCompatActivity {
 
             TextView invoice = new TextView(this);
             invoice.setText(arrayList.get(i).getInvoice());
-            invoice.setTextSize(14);
+            invoice.setTextSize(12);
             //startDate.setBackgroundResource(R.drawable.table_row);
             invoice.setGravity(Gravity.CENTER);
             invoice.setPadding(2, 2, 2, 2);
             TextView product = new TextView(this);
             product.setText(arrayList.get(i).getProduct());
             product.setGravity(Gravity.CENTER);
-            product.setTextSize(14);
+            product.setTextSize(12);
             //name.setBackgroundResource(R.drawable.table_row);
             product.setPadding(2, 2, 2, 2);
 
@@ -466,13 +467,13 @@ public class MarketPricesActivity extends AppCompatActivity {
             quanitity.setText(arrayList.get(i).getQuanity());
             quanitity.setGravity(Gravity.CENTER);
 
-            quanitity.setTextSize(14);
+            quanitity.setTextSize(12);
             //status.setBackgroundResource(R.drawable.table_row);
             quanitity.setPadding(2, 2, 2, 2);
             TextView nsp = new TextView(this);
             nsp.setText(arrayList.get(i).getNetprice());
             nsp.setGravity(Gravity.CENTER);
-            nsp.setTextSize(14);
+            nsp.setTextSize(12);
             //srNo.setBackgroundResource(R.drawable.table_row);
             nsp.setPadding(2, 2, 2, 2);
 
@@ -480,10 +481,10 @@ public class MarketPricesActivity extends AppCompatActivity {
 //            row2.addView(name);
 //            row2.addView(startDate);
 //            row2.addView(status);
-            row2.addView(invoice, new TableRow.LayoutParams(0, 100, 0.25f));
-            row2.addView(product, new TableRow.LayoutParams(0, 100, 0.37f));
-            row2.addView(quanitity, new TableRow.LayoutParams(0, 100, 0.37f));
-            row2.addView(nsp, new TableRow.LayoutParams(0, 100, 0.25f));
+            row2.addView(invoice, new TableRow.LayoutParams(0, 120, 0.25f));
+            row2.addView(product, new TableRow.LayoutParams(0, 120, 0.37f));
+            row2.addView(quanitity, new TableRow.LayoutParams(0, 120, 0.37f));
+            row2.addView(nsp, new TableRow.LayoutParams(0,120, 0.25f));
 
 
             mTableLayout.addView(row2);
