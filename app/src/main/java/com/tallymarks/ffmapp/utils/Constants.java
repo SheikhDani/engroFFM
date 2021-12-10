@@ -108,6 +108,11 @@ public class Constants {
     public static final String FARMER_CONVERSION_PARENT_SALES_POINT_CODE=  "farmerconversionparentsalespointcode";
     public static final String FARMER_CONVERSION_PARENT_ACTIVITY_NO=  "farmerconversionparentactivtyno";
 
+    public static final String FARMER_TODAY_PLAN_NOT_FOUND=  "farmertodayplannotfound";
+    public static final String CUSTOMER_TODAY_PLAN_NOT_FOUND=  "customertodayplannotfound";
+    public static final String CUSTOMER_ALL_PLAN_NOT_FOUND=  "customerallplannotfound";
+    public static final String LAST_POSTED=  "lastposted";
+
 
 
     public static final String ACTIVITY_STATUS_FARMER = "statusFarmer";
@@ -161,6 +166,7 @@ public class Constants {
     public static final String FFM_GET_FARMER_TODAY_JOURNEY_PLAN=  FFM_BASE_URL + "/app/trans/getFarmersTodaysJourneyPlan";
     public static final String POST_TODAY_CUSTOMER_JOURNEY_PLAN=  FFM_BASE_URL + "/app/trans/checkInJourneyPlan";
     public static final String POST_CUSTOMER_CHANGE_LOACTION=  FFM_BASE_URL + "/app/trans/saveCustomerCorrection";
+    public static final String POST_FORGET_PASSWORD=  FFM_BASE_URL + "/global/services/requestPasswordResetToken";
     public static final String FFM_GET_SUPERVISOR_SNAPSHOT=  FFM_BASE_URL + "/global/lookup/listSubordinates";
     public static final String FFM_GET_ASSIGNED_CUSTOMER_SUPERVISOR=  FFM_BASE_URL + "/global/lookup/getAssignedCustomers";
     public static final String FFM_GET_PREVIOUS_SNAPSHOT_SUPERVISOR=  FFM_BASE_URL + "/app/trans/getPreviousStockSnapshot";

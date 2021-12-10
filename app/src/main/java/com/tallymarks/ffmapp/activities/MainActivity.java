@@ -5,6 +5,7 @@ import static com.tallymarks.ffmapp.database.MyDatabaseHandler.TODAY_FARMER_JOUR
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -33,6 +34,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -137,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SharedPrefferenceHelper sHelper;
     ExtraHelper extraHelper;
     NavigationView navigationView;
-    TextView userName,cartbadge;
+    TextView userName,cartbadge,lastPosted;
     ImageView iv_Menu, iv_Notification;
     ImageView iv_filter;
     final static int REQUEST_LOCATION = 199;
@@ -159,6 +161,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   HalfGauge halfGauge;
     ViewPager viewPager;
    SalesPlanViewPagerAdapter viewPagerAdapter;
+
+    GetCompanHeldBrandBasicList task1;
+    GetListofAllCrops task2;
+    GetlistofAllFertTypes task3;
+    GetAllProductBrandByCategory task4;
+    GetListofAllDepths task5;
+    GetListofallMarketPlayers task6;
+    GetAssignedSalesPoint task7;
+    LoadCustomersTodayJourneyPlan task8;
+    LoadCustomersAllJourneyPlan task9;
+    LoadFarmersAllJourneyPlan task10;
+    GetFatmerTodayJourneyPlan task11;
 
 
     @Override
@@ -190,13 +204,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         cartbadge.setVisibility(View.VISIBLE);
         iv_filter = findViewById(R.id.iv_notification);
         userName = findViewById(R.id.userName);
+        lastPosted = findViewById(R.id.lastPosted);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs_sales_plan);
-
         viewPager = (ViewPager) findViewById(R.id.viewPager_sales_plan);
-        viewPagerAdapter = new SalesPlanViewPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(viewPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
+        if(sHelper.getString(Constants.LAST_POSTED)!=null && !sHelper.getString(Constants.LAST_POSTED).equals(""))
+        {
+            lastPosted.setText("Last Posted on "+sHelper.getString(Constants.LAST_POSTED));
+        }
+
 
 
 
@@ -208,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://drive.google.com/file/d/10Hc6QYr5MizjKaaZ4FqukWo1DLeVnz16")); // only used based on your example.
+                intent.setData(Uri.parse("https://drive.google.com/drive/folders/1ZMYDz4-yls9tZVPsMVoBZwChhzuXYw0N")); // only used based on your example.
 
                 String title = "Open With";
 // Create intent to show the chooser dialog
@@ -248,6 +264,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     postCustomerData();
                     postAddFarmerData();
                     postFarmerData();
+
                 } else {
                     Helpers.noConnectivityPopUp(MainActivity.this);
                 }
@@ -278,6 +295,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 db.deleteData(db.TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT,filtersnapshot);
                 HashMap<String, String> filterstock = new HashMap<>();
                 db.deleteData(db.TODAY_JOURNEY_PLAN_PREVIOUS_STOCK,filterstock);
+                HashMap<String, String> filterdarmerdownalod = new HashMap<>();
+                mydb.deleteData(mydb.DOWNLOADED_FARMER_DATA,filterdarmerdownalod);
 
                 //farmer tables
                 HashMap<String, String> filter2 = new HashMap<>();
@@ -317,14 +336,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // requestMultiplePermissions();
         loadLoginData();
         loadRoles();
-
         loadAllData();
+//        if(task1!=null && task2!=null && task3!=null
+//                && task4!=null && task5!=null && task8!=null
+//                && task6!=null && task7!=null && task9!=null
+//                && task10!=null && task11!=null) {
+//            if (AsyncTask.Status.FINISHED == task1.getStatus() && AsyncTask.Status.FINISHED == task2.getStatus()
+//                    && AsyncTask.Status.FINISHED == task3.getStatus() && AsyncTask.Status.FINISHED == task4.getStatus()
+//                    && AsyncTask.Status.FINISHED == task5.getStatus() && AsyncTask.Status.FINISHED == task6.getStatus()
+//                    && AsyncTask.Status.FINISHED == task7.getStatus() && AsyncTask.Status.FINISHED == task8.getStatus()
+//                    && AsyncTask.Status.FINISHED == task9.getStatus() && AsyncTask.Status.FINISHED == task10.getStatus()
+//                    && AsyncTask.Status.FINISHED == task11.getStatus()) {
+//                viewPagerAdapter = new SalesPlanViewPagerAdapter(getSupportFragmentManager());
+//                viewPager.setAdapter(viewPagerAdapter);
+//                tabLayout.setupWithViewPager(viewPager);
+//            }
+//        }
+//        else
+//        {
+            viewPagerAdapter = new SalesPlanViewPagerAdapter(getSupportFragmentManager());
+            viewPager.setAdapter(viewPagerAdapter);
+            tabLayout.setupWithViewPager(viewPager);
+       // }
 
         if(rolename.equals("Field Force Team"))
         {
 
-            Menu nav_Menu = navigationView.getMenu();
-            nav_Menu.findItem(R.id.nav_conversion).setVisible(false);
+          //  Menu nav_Menu = navigationView.getMenu();
+           // nav_Menu.findItem(R.id.nav_conversion).setVisible(false);
 
         }
         else if(rolename.equals("CSD SK Farmer"))
@@ -344,7 +383,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             nav_Menu.findItem(R.id.nav_addnewfarmer).setVisible(false);
             nav_Menu.findItem(R.id.nav_addfarmermeeting).setVisible(false);
             nav_Menu.findItem(R.id.nav_editfarmer).setVisible(false);
-            nav_Menu.findItem(R.id.nav_conversion).setVisible(false);
+            //nav_Menu.findItem(R.id.nav_conversion).setVisible(false);
             txt_farmer_Demo.setEnabled(false);
             txt_farmer_Demo.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_baseline_lock_24, 0, 0,0);
 
@@ -474,7 +513,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             while (cursor.moveToNext());
         } else {
             if (Helpers.isNetworkAvailable(MainActivity.this)) {
-                new GetCompanHeldBrandBasicList(MainActivity.this).execute();
+               task1 =  new GetCompanHeldBrandBasicList(MainActivity.this);
+               task1.execute();
             } else {
                 Helpers.noConnectivityPopUp(MainActivity.this);
             }
@@ -502,7 +542,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             while (cursor.moveToNext());
         } else {
             if (Helpers.isNetworkAvailable(MainActivity.this)) {
-                new GetListofAllCrops(MainActivity.this).execute();
+               task2  =  new GetListofAllCrops(MainActivity.this);
+               task2.execute();
+
             } else {
                 Helpers.noConnectivityPopUp(MainActivity.this);
             }
@@ -531,11 +573,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkMarketPlayers();
         checkAssignedSalesPoint();
         if(!rolename.equals("FieldAssistant")) {
-            checkLoadTodayCustomerJourneyPlan();
-            checkLoadAllCustomerJourneyPlan();
+            if(sHelper.getString(Constants.CUSTOMER_TODAY_PLAN_NOT_FOUND).equals("2")) {
+                checkLoadTodayCustomerJourneyPlan();
+            }
+            if(sHelper.getString(Constants.CUSTOMER_ALL_PLAN_NOT_FOUND).equals("2")) {
+                checkLoadAllCustomerJourneyPlan();
+            }
+
         }
         checkFarmerAllJourneyPlan();
-        checkFarmerTodayJourneyPlan();
+        if(sHelper.getString(Constants.FARMER_TODAY_PLAN_NOT_FOUND).equals("2")) {
+            checkFarmerTodayJourneyPlan();
+        }
+
     }
     public void  loadRoles()
     {
@@ -685,7 +735,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             while (cursor.moveToNext());
         } else {
             if (Helpers.isNetworkAvailable(MainActivity.this)) {
-                new GetListofAllDepths(MainActivity.this).execute();
+               task5 =  new GetListofAllDepths(MainActivity.this);
+               task5.execute();
             } else {
                 Helpers.noConnectivityPopUp(MainActivity.this);
             }
@@ -711,7 +762,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             while (cursor.moveToNext());
         } else {
             if (Helpers.isNetworkAvailable(MainActivity.this)) {
-                new GetListofallMarketPlayers(MainActivity.this).execute();
+               task6 =  new GetListofallMarketPlayers(MainActivity.this);
+               task6.execute();
             } else {
                 Helpers.noConnectivityPopUp(MainActivity.this);
             }
@@ -738,7 +790,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             while (cursor.moveToNext());
         } else {
             if(Helpers.isNetworkAvailable(MainActivity.this)) {
-                new GetFatmerTodayJourneyPlan(MainActivity.this).execute();
+                task11 = new GetFatmerTodayJourneyPlan(MainActivity.this);
+                    task11.execute();
             }
             else
             {
@@ -765,7 +818,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             while (cursor.moveToNext());
         } else {
             if(Helpers.isNetworkAvailable(MainActivity.this)) {
-                new LoadFarmersAllJourneyPlan(MainActivity.this).execute();
+               task10 =  new LoadFarmersAllJourneyPlan(MainActivity.this);
+               task10.execute();
             }
             else
             {
@@ -793,7 +847,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             while (cursor.moveToNext());
         } else {
             if (Helpers.isNetworkAvailable(MainActivity.this)) {
-                new GetAssignedSalesPoint(MainActivity.this).execute();
+                task7 = new GetAssignedSalesPoint(MainActivity.this);
+                task7.execute();
             } else {
                 Helpers.noConnectivityPopUp(MainActivity.this);
             }
@@ -818,7 +873,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             while (cursor.moveToNext());
         } else {
             if (Helpers.isNetworkAvailable(MainActivity.this)) {
-                new GetAllProductBrandByCategory(MainActivity.this).execute();
+               task4  =  new GetAllProductBrandByCategory(MainActivity.this);
+               task4.execute();
             } else {
                 Helpers.noConnectivityPopUp(MainActivity.this);
             }
@@ -844,7 +900,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             while (cursor.moveToNext());
         } else {
             if (Helpers.isNetworkAvailable(MainActivity.this)) {
-                new GetlistofAllFertTypes(MainActivity.this).execute();
+               task3  =  new GetlistofAllFertTypes(MainActivity.this);
+               task3.execute();
+
             } else {
                 Helpers.noConnectivityPopUp(MainActivity.this);
             }
@@ -871,7 +929,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             while (cursor.moveToNext());
         } else {
             if (Helpers.isNetworkAvailable(MainActivity.this)) {
-                new LoadCustomersAllJourneyPlan(MainActivity.this).execute();
+               task9 =  new LoadCustomersAllJourneyPlan(MainActivity.this);
+               task9.execute();
             } else {
                 Helpers.noConnectivityPopUp(MainActivity.this);
             }
@@ -885,7 +944,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         boolean flag = false;
         HashMap<String, String> map = new HashMap<>();
-        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_ID, "");
+        map.put(MyDatabaseHandler.KEY_TODAY_JOURNEY_FARMER_ID, "");
         HashMap<String, String> filters = new HashMap<>();
         filters.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "Not Available"); // not visited means 0
         Cursor cursor = mydb.getData(mydb.TODAY_FARMER_JOURNEY_PLAN, map, filters);
@@ -961,7 +1020,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             while (cursor.moveToNext());
         } else {
             if (Helpers.isNetworkAvailable(MainActivity.this)) {
-                new LoadCustomersTodayJourneyPlan(MainActivity.this).execute();
+                task8 = new LoadCustomersTodayJourneyPlan(MainActivity.this);
+                task8.execute();
             } else {
                 Helpers.noConnectivityPopUp(MainActivity.this);
             }
@@ -1481,6 +1541,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+                                SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy hh:mm aaa");
+                                String currentDateandTime = sdf.format(new Date());
+                                sHelper.setString(Constants.LAST_POSTED,currentDateandTime);
+                                lastPosted.setText("Last Posted on "+sHelper.getString(Constants.LAST_POSTED));
                                 //new PostSyncOutlet().execute();
                             }
                         });
@@ -1634,6 +1698,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+                                SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy hh:mm aaa");
+                                String currentDateandTime = sdf.format(new Date());
+                                sHelper.setString(Constants.LAST_POSTED,currentDateandTime);
+                                lastPosted.setText("Last Posted on "+sHelper.getString(Constants.LAST_POSTED));
                                 //new PostSyncOutlet().execute();
                             }
                         });
@@ -1837,6 +1905,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+                                SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy hh:mm aaa");
+                                String currentDateandTime = sdf.format(new Date());
+                                sHelper.setString(Constants.LAST_POSTED,currentDateandTime);
+                                lastPosted.setText("Last Posted on "+sHelper.getString(Constants.LAST_POSTED));
                                 //new PostSyncOutlet().execute();
                             }
                         });

@@ -359,13 +359,23 @@ public class FarmVisitActivity extends AppCompatActivity {
                     Intent loc = new Intent(FarmVisitActivity.this, CustomMap.class);
                     loc.putExtra("from", "farm");
                     startActivity(loc);
-                    if (gpsTracker.canGetLocation()) {
+                    gpsTracker = new GpsTracker(FarmVisitActivity.this);
+                    if  (gpsTracker.canGetLocation()) {
+                        if (ActivityCompat.checkSelfPermission(FarmVisitActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(FarmVisitActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
                         farmvisitLat = gpsTracker.getLatitude();
                         farvisitLong = gpsTracker.getLongitude();
-                        txt_lat.setText("Selected Lat: " + farmvisitLat);
-                        txt_lng.setText("Selected Long: " + farvisitLong);
-
                     }
+                    txt_lat.setText("Selected Lat: " +  farmvisitLat);
+                    txt_lng.setText("Selected Long: " +  farvisitLong);
+//                    if (gpsTracker.canGetLocation()) {
+//                        farmvisitLat = gpsTracker.getLatitude();
+//                        farvisitLong = gpsTracker.getLongitude();
+//                        txt_lat.setText("Selected Lat: " + farmvisitLat);
+//                        txt_lng.setText("Selected Long: " + farvisitLong);
+//
+//                    }
 
                     //  GpsTracker gpsTracker = new GpsTracker(FarmVisitActivity.this);
 //

@@ -120,8 +120,16 @@ public class StartActivity extends AppCompatActivity {
                             } else {
                                 addActivity();
                             }
-                            Intent n = new Intent(StartActivity.this, FloorStockActivity.class);
-                            startActivity(n);
+                            if (shelper.getString(Constants.ACTIVITY_OBJECTIVE).equals("3") || shelper.getString(Constants.ACTIVITY_OBJECTIVE).equals("5")) {
+                                Intent n = new Intent(StartActivity.this, FloorStockActivity.class);
+                                startActivity(n);
+                            }
+                            else
+                            {
+                                Intent n = new Intent(StartActivity.this, QualityofSalesCallActivity.class);
+                                n.putExtra("startfrom", "start");
+                                startActivity(n);
+                            }
                         }
                         else {
                             DialougeManager.gpsNotEnabledPopup(StartActivity.this);

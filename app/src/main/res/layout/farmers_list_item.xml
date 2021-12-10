@@ -40,7 +40,7 @@
 
     <Button
         android:id="@+id/forward_img"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="40dp"
         android:layout_alignParentRight="true"
 
@@ -52,11 +52,11 @@
         android:background="@color/green"
         android:contentDescription="Icon"
         android:drawableRight="@drawable/ic_baseline_arrow_downward_24"
-        android:drawablePadding="@dimen/p5"
-        android:padding="@dimen/p10"
+        android:drawablePadding="@dimen/p2"
+        android:padding="@dimen/p5"
         android:text="DOWNLOAD"
         android:textColor="@color/white"
-        android:textSize="10sp" />
+        android:textSize="9sp" />
 
 
 </RelativeLayout>

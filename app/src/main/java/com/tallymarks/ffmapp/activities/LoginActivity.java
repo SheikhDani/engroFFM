@@ -3,6 +3,7 @@ package com.tallymarks.ffmapp.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -25,8 +26,11 @@ import androidx.core.hardware.fingerprint.FingerprintManagerCompat;
 
 
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -54,6 +58,8 @@ import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
+import com.tallymarks.ffmapp.models.changecustomerlocation.ChnageCustomerLocationinput;
+import com.tallymarks.ffmapp.models.forgetpasswordinput.ForgetPasswordInput;
 import com.tallymarks.ffmapp.models.loginoutput.LoginOutput;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.DialougeManager;
@@ -81,6 +87,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     ImageView sensorimg;
     Button btn_sumit;
     EditText et_username, et_password;
+    TextView txtForget;
     DatabaseHandler db;
     SharedPrefferenceHelper sHelper;
     ExtraHelper extraHelper;
@@ -104,6 +111,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         btn_sumit = findViewById(R.id.btn_submit);
         et_username = findViewById(R.id.et_username);
         et_password = findViewById(R.id.et_password);
+        txtForget = findViewById(R.id.txt_forget);
         db = new DatabaseHandler(LoginActivity.this);
         sHelper = new SharedPrefferenceHelper(LoginActivity.this);
         extraHelper = new ExtraHelper(LoginActivity.this);
@@ -137,6 +145,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 }
             }
         });
+        txtForget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openForgetPasswordDialouge();
+            }
+        });
         sensorimg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -163,6 +177,44 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         fragment.show(getSupportFragmentManager(), "");
 
 
+    }
+    private void openForgetPasswordDialouge() {
+
+        LayoutInflater li = LayoutInflater.from(LoginActivity.this);
+        View promptsView = li.inflate(R.layout.dialouge_forget_password, null);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(LoginActivity.this);
+        alertDialogBuilder.setView(promptsView);
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        EditText et_email= promptsView.findViewById(R.id.et_email);
+
+        ImageView ivClsoe = promptsView.findViewById(R.id.ivClose);
+        ivClsoe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+
+
+
+        Button btnYes = promptsView.findViewById(R.id.btn_add);
+        // ivClose.setVisibility(View.GONE);
+
+
+        btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               new ForgetPassword(et_email.getText().toString(),alertDialog).execute();
+               // alertDialog.dismiss();
+//                Intent salescall = new Intent(FarmVisitActivity.this,QualityofSalesCallActivity.class);
+//                startActivity(salescall);
+
+            }
+
+
+        });
+        alertDialogBuilder.setCancelable(true);
+        alertDialog.show();
     }
     private boolean checkForExistingUser() {
         HashMap<String, String> map = new HashMap<>();
@@ -201,6 +253,123 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    private class ForgetPassword extends AsyncTask<String, Void, Void> {
+
+        String response = null;
+        String status = "";
+        String message = "";
+        ProgressDialog pDialog;
+        private HttpHandler httpHandler;
+        String errorMessage = "";
+        String email = "";
+        AlertDialog alertDialog;
+
+        ForgetPassword(String email,AlertDialog alertDialog) {
+            this.email= email;
+            this.alertDialog = alertDialog;
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(LoginActivity.this);
+            pDialog.setMessage(getResources().getString(R.string.loading));
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        @Override
+        protected Void doInBackground(String... Url) {
+
+            //System.out.println("Post Outlet URl" + Constants.POST_TODAY_CUSTOMER_JOURNEY_PLAN);
+            Gson gson = new Gson();
+            ForgetPasswordInput inputParameters = new ForgetPasswordInput();
+            inputParameters.setEmail(email);
+            httpHandler = new HttpHandler();
+            HashMap<String, String> headerParams2 = new HashMap<>();
+//            if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+//                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+//            }
+//            else
+//            {
+//                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+//            }
+            // headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+            HashMap<String, String> bodyParams = new HashMap<>();
+            String jsonObject = new Gson().toJson(inputParameters, ForgetPasswordInput.class);
+            Log.e("postoutput", String.valueOf(jsonObject));
+            //output = gson.toJson(inputParameters, SaveWorkInput.class);
+            try {
+                response = httpHandler.httpPost(Constants.POST_FORGET_PASSWORD, headerParams2, bodyParams, jsonObject);
+                if (response != null) {
+                    try {
+                        JSONObject jsonObj = new JSONObject(response);
+                        status = String.valueOf(jsonObj.getString("success"));
+                        message = String.valueOf(jsonObj.getString("description"));
+                        if (status.equals("true")) {
+                            // updateOutletStatusById(Helpers.clean(JourneyPlanActivity.selectedOutletId));
+                            Helpers.displayMessage(LoginActivity.this, true, message);
+                        }
+                        else if(status.equals("false"))
+                        {
+                            Helpers.displayMessage(LoginActivity.this, true, message);
+                        }
+                    } catch (JSONException e) {
+                        if (response.equals("")) {
+                            Helpers.displayMessage(LoginActivity.this, true, e.getMessage());
+                            pDialog.dismiss();
+                            //showResponseDialog( mContext.getResources().getString(R.string.alert),exception.getMessage());
+                            //pDialog.dismiss();
+                        } else {
+                            JSONObject json = null;
+                            try {
+                                json = new JSONObject(response);
+                                errorMessage = json.getString("message");
+                                String status = json.getString("success");
+                                if (status.equals("false")) {
+                                    Helpers.displayMessage(LoginActivity.this, true, errorMessage);
+                                    pDialog.dismiss();
+                                }
+                            } catch (JSONException exception) {
+                                exception.printStackTrace();
+
+                            }
+                            //Helpers.displayMessage(LoginActivity.this, true, exception.getMessage());
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void args) {
+            pDialog.dismiss();
+            alertDialog.dismiss();
+//            if (status.equals("true")) {
+//                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(CustomerLocationActivity.this);
+//                alertDialogBuilder.setTitle(R.string.alert)
+//                        .setMessage(message)
+//                        .setCancelable(false)
+//                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                dialog.dismiss();
+//                                //new PostSyncOutlet().execute();
+//                            }
+//                        });
+//                AlertDialog alertDialog = alertDialogBuilder.create();
+//                alertDialog.show();
+//            }
+
+        }
     }
 
     private class LoginData extends AsyncTask<String, Void, String> {
@@ -269,6 +438,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     map.put(db.KEY_IS_LOGGED_IN, "1");
                     db.addData(db.LOGIN, map);
                     Helpers.displayMessage(LoginActivity.this, true, "Successfully Login");
+                    sHelper.setString(Constants.CUSTOMER_ALL_PLAN_NOT_FOUND,"2");
+                    sHelper.setString(Constants.FARMER_TODAY_PLAN_NOT_FOUND,"2");
+                    sHelper.setString(Constants.CUSTOMER_TODAY_PLAN_NOT_FOUND,"2");
                     Intent main = new Intent(LoginActivity.this, MainActivity.class);
                     main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -317,6 +489,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         @Override
         protected void onPostExecute(String result) {
             pDialog.dismiss();
+            View view = LoginActivity.this.getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
             if(error!=null && !error.equals(""))
             {
 

@@ -92,6 +92,16 @@ public class VisitFarmerActivity extends AppCompatActivity {
         tvTopHeader = findViewById(R.id.tv_dashboard);
         tvTopHeader.setVisibility(View.VISIBLE);
         tvTopHeader.setText("VISIT FARMERS");
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String value = extras.getString("from");
+            if (value.equals("TODAY")) {
+                viewPager.setCurrentItem(0);
+            } else {
+                viewPager.setCurrentItem(1);
+            }
+            //The key argument here must match that used in the other activity
+        }
         for (int i = 0; i < 4; i++){
             if(tabLayout.getTabAt(i).getText().toString().equals("FUTURE PLANS")) {
                 tabLayout.getTabAt(i).view.setEnabled(false);

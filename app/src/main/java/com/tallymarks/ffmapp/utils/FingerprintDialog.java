@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.activities.MainActivity;
 import com.tallymarks.ffmapp.database.ExtraHelper;
+import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -56,6 +57,7 @@ public class FingerprintDialog extends DialogFragment
     KeyStore mKeyStore = null;
     KeyGenerator mKeyGenerator = null;
     KeyguardManager mKeyguardManager;
+    SharedPrefferenceHelper sHelper;
 
     private Context mContext;
 
@@ -197,12 +199,16 @@ public class FingerprintDialog extends DialogFragment
     public void onAuthenticated(boolean b) {
         if (b) {
             extraHelper = new ExtraHelper(getActivity());
+            sHelper = new SharedPrefferenceHelper(getActivity());
             if(extraHelper!=null)
             {
                 if(extraHelper.getString(Constants.ACCESS_TOKEN)!=null && !extraHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
                     Toast.makeText(mContext.getApplicationContext(), "Fingerprint Recongnized Successfully!", Toast.LENGTH_LONG).show();
                     dismiss();
                     Log.e("keyaccess", String.valueOf(extraHelper.getString(Constants.ACCESS_TOKEN)));
+                    sHelper.setString(Constants.CUSTOMER_ALL_PLAN_NOT_FOUND,"2");
+                    sHelper.setString(Constants.FARMER_TODAY_PLAN_NOT_FOUND,"2");
+                    sHelper.setString(Constants.CUSTOMER_TODAY_PLAN_NOT_FOUND,"2");
                     Intent move = new Intent(mContext, MainActivity.class);
                     startActivity(move);
                 }

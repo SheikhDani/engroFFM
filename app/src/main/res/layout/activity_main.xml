@@ -51,7 +51,7 @@
                         <RelativeLayout
                             android:id="@+id/rel_top"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/nav_header_height"
+                            android:layout_height="120dp"
                             android:background="@color/yellow"
                             android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
@@ -59,11 +59,27 @@
                                 android:id="@+id/userName"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/p30"
+
+
                                 android:gravity="center_horizontal"
-                                android:paddingTop="@dimen/p30"
+
                                 android:text="Hafiz Muhammad Zeeshan  Abbas "
                                 android:textColor="@color/black"
-                                android:textSize="20sp" />
+                                android:textSize="16sp" />
+
+<!--                            <TextView-->
+<!--                                android:id="@+id/lastPosted"-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_marginTop="@dimen/p30"-->
+<!--                                android:text="danish"-->
+
+<!--                                android:gravity="center_horizontal"-->
+
+
+<!--                                android:textColor="@color/black"-->
+<!--                                android:textSize="12sp" />-->
                         </RelativeLayout>
 
                         <RelativeLayout
@@ -72,22 +88,33 @@
                             android:layout_height="550dp"
                             android:layout_below="@id/rel_top"
                             android:layout_alignParentBottom="true"
-                            android:paddingTop="@dimen/p50"
+                            android:paddingTop="@dimen/p20"
                             android:paddingBottom="@dimen/p50">
 
                             <com.google.android.material.navigation.NavigationView
                                 android:id="@+id/nav_view"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@color/green"
                                 android:layout_marginTop="@dimen/p5"
+                                android:background="@color/green"
                                 app:elevation="0dp"
                                 app:itemIconPadding="@dimen/p10"
                                 app:itemIconTint="@color/white"
                                 app:itemTextColor="@color/white"
                                 app:menu="@menu/menu_item"
                                 app:theme="@style/NavigationDrawerStyle"></com.google.android.material.navigation.NavigationView>
+
                         </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/lastPosted"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/layoutBottom"
+                            android:layout_marginBottom="20dp"
+                            android:gravity="center_horizontal"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/profile_image"

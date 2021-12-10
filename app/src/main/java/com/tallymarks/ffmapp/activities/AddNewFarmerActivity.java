@@ -58,10 +58,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class AddNewFarmerActivity extends AppCompatActivity {
-    private TextView tvTopHeader, tvSelectedMarket, tvLat,tvLong;
+    private TextView tvTopHeader, tvSelectedMarket, tvLat, tvLong;
     ImageView iv_menu, iv_back;
     ImageView img_add_serving, img_add_profile;
     LinearLayout linearLayoutList, LinearLayoutList2;
+    LinearLayout linear_crop;
     EditText et_firstname, et_lastname, et_email, et_mobile, et_landline, et_cnic;
     Button btn_back;
     AutoCompleteTextView auto_gender;
@@ -73,14 +74,16 @@ public class AddNewFarmerActivity extends AppCompatActivity {
     DatabaseHandler db;
     Button btnLocation;
     String currentlat = "", currentLng = "";
-    EditText auto_company;
+    EditText auto_company, auto_customer;
     EditText et_dealer;
     EditText et_size;
     TextView txt_selected_market;
     EditText et_land_holding;
     AutoCompleteTextView auto_crop;
-    String playerid = "", playerdescriptipn= "", playercompanyheld="", playerenaled="";
-    String saelspointcode= "", cropid= "" , farmersalespointcode="";
+    String playerid = "", playerdescriptipn = "", playercompanyheld = "", playerenaled = "";
+    String saelspointcode = "", cropid = "", farmersalespointcode = "";
+    String dealercount = "0";
+    String profilecount = "0";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +97,7 @@ public class AddNewFarmerActivity extends AppCompatActivity {
         tvSelectedMarket = findViewById(R.id.txt_selected_market);
         auto_gender = findViewById(R.id.auto_gender);
         tvLat = findViewById(R.id.txt_lat);
-        tvLong= findViewById(R.id.txt_lng);
+        tvLong = findViewById(R.id.txt_lng);
         db = new DatabaseHandler(AddNewFarmerActivity.this);
         et_email = findViewById(R.id.et_email);
         et_firstname = findViewById(R.id.et_firstname);
@@ -151,7 +154,7 @@ public class AddNewFarmerActivity extends AppCompatActivity {
             }
         });
 
-       // tvLatLng.setText("Selected Lat, Lng: " + currentlat + "," + currentLng);
+        // tvLatLng.setText("Selected Lat, Lng: " + currentlat + "," + currentLng);
         img_add_serving = findViewById(R.id.img_add_serving);
         img_add_profile = findViewById(R.id.img_add_profile);
         linearLayoutList = (LinearLayout) findViewById(R.id.linear_layout_dynamic_serving);
@@ -182,13 +185,33 @@ public class AddNewFarmerActivity extends AppCompatActivity {
         img_add_serving.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addView();
+                if (linearLayoutList.getChildCount() > 0) {
+                    if (auto_company != null && !auto_company.getText().toString().equals("")) {
+                        addView();
+                    } else {
+                        Toast.makeText(AddNewFarmerActivity.this, "please Enter Required Company Details ", Toast.LENGTH_SHORT).show();
+
+                    }
+                } else {
+                    addView();
+                }
+
             }
         });
         img_add_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addView2();
+                if (LinearLayoutList2.getChildCount() > 0) {
+                    if (txt_selected_market != null && !txt_selected_market.getText().toString().equals("")) {
+                        addView2();
+                    } else {
+                        Toast.makeText(AddNewFarmerActivity.this, "please Enter Required Profile Details ", Toast.LENGTH_SHORT).show();
+
+                    }
+                } else {
+                    addView2();
+                }
+
             }
         });
         btn_creat.setOnClickListener(new View.OnClickListener() {
@@ -232,22 +255,57 @@ public class AddNewFarmerActivity extends AppCompatActivity {
     private void addView() {
 
         final View addView = getLayoutInflater().inflate(R.layout.list_serving, null, false);
-       et_dealer = (EditText) addView.findViewById(R.id.et_dealer);
+
         auto_company = addView.findViewById(R.id.auto_select_company);
+        // auto_customer = addView.findViewById(R.id.auto_select_customer);
+        et_dealer = (EditText) addView.findViewById(R.id.et_dealer);
         TextView txt_company = (TextView) addView.findViewById(R.id.txt_select_company);
+        // TextView txt_dealer_name = (TextView) addView.findViewById(R.id.txt_select_customer);
         TextView txt_dealer = (TextView) addView.findViewById(R.id.txt_dealer);
         TextView txt_headr = (TextView) addView.findViewById(R.id.tv_option);
+        //LinearLayout dealer  =  addView.findViewById(R.id.linear_mobile_number);
+        //LinearLayout dealername  =  addView.findViewById(R.id.linear_customer);
+
         auto_company.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openSalesPoint(auto_company);
+                openSalesPoint(auto_company, "product");
+
             }
+
+        });
+
+
+//        auto_customer.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                openSalesPoint(auto_company,"customer");
+//            }
+//        });
+
+
+        et_dealer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (auto_company.getText().toString() != null && !auto_company.getText().toString().equals("")) {
+                    if (auto_company.getText().toString().startsWith("Engro")) {
+                        openSalesPoint(et_dealer, "customer");
+
+                    }
+                }
+            }
+
+
         });
         SpannableStringBuilder company = setStarToLabel("Select Company");
         txt_company.setText(company);
 
-        SpannableStringBuilder dealer = setStarToLabel("Dealer Name");
-        txt_dealer.setText(dealer);
+        SpannableStringBuilder strdealer = setStarToLabel("Dealer Name");
+        txt_dealer.setText(strdealer);
+
+//        SpannableStringBuilder strdealername = setStarToLabel("Dealer Name");
+//        txt_dealer_name.setText(strdealername);
+
 
         ImageView imgdel = (ImageView) addView.findViewById(R.id.img_commitment);
 
@@ -274,13 +332,15 @@ public class AddNewFarmerActivity extends AppCompatActivity {
         AutoCompleteTextView auto_water_source = addView.findViewById(R.id.auto_water_soruce);
         Button btn_cropping = addView.findViewById(R.id.btn_cropping_pattern);
         Button btn_sales_point = addView.findViewById(R.id.btn_sales_point);
-        final LinearLayout linear_crop = addView.findViewById(R.id.linear_layout_dynamic_cropping_pattern);
+        linear_crop = addView.findViewById(R.id.linear_layout_dynamic_cropping_pattern);
         TextView txt_size = (TextView) addView.findViewById(R.id.txt_size);
         TextView txt_water_source = (TextView) addView.findViewById(R.id.txt_water_Source);
         TextView txt_ownership = (TextView) addView.findViewById(R.id.txt_ownership);
         TextView txt_sales_point = (TextView) addView.findViewById(R.id.txt_sales_point);
         TextView txt_land_makr = (TextView) addView.findViewById(R.id.txt_landmarl);
         txt_selected_market = (TextView) addView.findViewById(R.id.txt_selected_market);
+
+        addView3();
 
         SpannableStringBuilder size = setStarToLabel("Size(Acre)");
         txt_size.setText(size);
@@ -345,7 +405,15 @@ public class AddNewFarmerActivity extends AppCompatActivity {
         btn_cropping.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addView3(linear_crop);
+                if (linear_crop.getChildCount() > 0) {
+                    if (auto_crop != null && !auto_crop.getText().toString().equals("")) {
+                        addView3();
+                    } else {
+                        Toast.makeText(AddNewFarmerActivity.this, "please Enter Required Crop Details ", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    addView3();
+                }
             }
         });
         btn_sales_point.setOnClickListener(new View.OnClickListener() {
@@ -361,7 +429,7 @@ public class AddNewFarmerActivity extends AppCompatActivity {
         LinearLayoutList2.removeView(v);
     }
 
-    private void addView3(final LinearLayout linear) {
+    private void addView3() {
 
         final View addView = getLayoutInflater().inflate(R.layout.list_cropping, null, false);
 
@@ -370,6 +438,7 @@ public class AddNewFarmerActivity extends AppCompatActivity {
         TextView txt_crop = (TextView) addView.findViewById(R.id.txt_crop);
         TextView txt_land_holding = (TextView) addView.findViewById(R.id.txt_land_holding);
         TextView txt_headr = (TextView) addView.findViewById(R.id.tv_option);
+
 
         SpannableStringBuilder crop = setStarToLabel("Crop");
         txt_crop.setText(crop);
@@ -388,17 +457,20 @@ public class AddNewFarmerActivity extends AppCompatActivity {
         imgdel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                removeView3(addView, linear);
+                removeView3(addView, linear_crop);
             }
         });
-        linear.addView(addView);
+
+        linear_crop.addView(addView);
+
+
     }
 
     private void removeView3(View v, LinearLayout linear) {
         linear.removeView(v);
     }
 
-    public void openSalesPoint(EditText auto) {
+    public void openSalesPoint(EditText auto, String from) {
         LayoutInflater li = LayoutInflater.from(AddNewFarmerActivity.this);
         View promptsView = li.inflate(R.layout.dialouge_sales_point, null);
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddNewFarmerActivity.this);
@@ -406,8 +478,12 @@ public class AddNewFarmerActivity extends AppCompatActivity {
         final AlertDialog alertDialog = alertDialogBuilder.create();
         final List<SaelsPoint> movieList = new ArrayList<>();
         final TextView title = promptsView.findViewById(R.id.tv_option);
+        if (from.equals("product")) {
 
-        title.setText("Select Company");
+            title.setText("Select Company");
+        } else {
+            title.setText("Select Customer");
+        }
         final EditText search = promptsView.findViewById(R.id.et_Search);
         final ImageView ivClsoe = promptsView.findViewById(R.id.iv_Close);
         ivClsoe.setOnClickListener(new View.OnClickListener() {
@@ -417,7 +493,13 @@ public class AddNewFarmerActivity extends AppCompatActivity {
             }
         });
         final RecyclerView recyclerView = promptsView.findViewById(R.id.recyclerView);
-        prepareSalesData(movieList);
+        if (from.equals("product")) {
+            prepareSalesData(movieList);
+
+        } else if (from.equals("customer")) {
+            prepareDealerData(movieList);
+        }
+
         final SalesPointAdapter mAdapter = new SalesPointAdapter(movieList, "farmerchild");
         // vertical RecyclerView
         // keep movie_list_row.xml width to `match_parent`
@@ -433,6 +515,19 @@ public class AddNewFarmerActivity extends AppCompatActivity {
                 SaelsPoint movie = movieList.get(position);
                 auto.setText(movie.getPoint());
                 alertDialog.dismiss();
+                if (from.equals("product")) {
+                    if (auto.getText().toString() != null && !auto.getText().toString().equals("")) {
+                        if (auto.getText().toString().startsWith("Engro")) {
+                            et_dealer.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_keyboard_arrow_down_24, 0);
+                            et_dealer.setHint("Select Customer");
+                            et_dealer.setCursorVisible(false);
+                        } else {
+                            et_dealer.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                            et_dealer.setHint("");
+                            et_dealer.setCursorVisible(true);
+                        }
+                    }
+                }
 
             }
 
@@ -466,6 +561,35 @@ public class AddNewFarmerActivity extends AppCompatActivity {
 
         alertDialogBuilder.setCancelable(false);
         alertDialog.show();
+    }
+
+    private void prepareDealerData(List<SaelsPoint> movieList) {
+        movieList.clear();
+        String productName = "", productID = "";
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME, "");
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
+
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE, "all");
+        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                SaelsPoint companyname = new SaelsPoint();
+                String customerName = Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME)));
+                String customerCode = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_ID));
+                companyname.setPoint(customerName);
+                companyname.setId(customerCode);
+                movieList.add(companyname);
+            }
+            while (cursor.moveToNext());
+        }
+
+
+        // notify adapter about data set changes
+        // so that it will render the list with new data
+        // mAdapter.notifyDataSetChanged();
     }
 
     public void openCrops(AutoCompleteTextView auto) {
@@ -582,18 +706,18 @@ public class AddNewFarmerActivity extends AppCompatActivity {
                 && !(Helpers.isEmpty(getApplicationContext(), et_mobile))
                 && !(Helpers.isEmptyTextview(getApplicationContext(), tvSelectedMarket))
                 && !currentlat.equals("") && !currentLng.equals("")
-                && et_dealer!=null
-                && auto_company!=null
-                && et_size!=null
-                && txt_selected_market!=null
-                && et_land_holding!=null
-                && auto_crop!=null
+                && et_dealer != null
+                && auto_company != null
+                && et_size != null
+                && txt_selected_market != null
+                && et_land_holding != null
+                && auto_crop != null
                 && !(Helpers.isEmpty(getApplicationContext(), et_dealer))
                 && !(Helpers.isEmpty(getApplicationContext(), auto_company))
-                && !(Helpers.isEmpty(getApplicationContext(),  et_size))
-                && !(Helpers.isEmptyTextview(getApplicationContext(),  txt_selected_market))
-                && !(Helpers.isEmpty(getApplicationContext(),  et_land_holding))
-                && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_crop))
+                && !(Helpers.isEmpty(getApplicationContext(), et_size))
+                && !(Helpers.isEmptyTextview(getApplicationContext(), txt_selected_market))
+                && !(Helpers.isEmpty(getApplicationContext(), et_land_holding))
+                && !(Helpers.isEmptyAutoTextview(getApplicationContext(), auto_crop))
 
         ) {
             customerSavedConfirmationPopUp();
@@ -614,6 +738,7 @@ public class AddNewFarmerActivity extends AppCompatActivity {
             alertDialog.show();
         }
     }
+
     public void customerSavedConfirmationPopUp() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddNewFarmerActivity.this);
         alertDialogBuilder
@@ -622,8 +747,8 @@ public class AddNewFarmerActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                     saveFarmer();
-                     clearInputs();
+                        saveFarmer();
+                        clearInputs();
 
                     }
                 }).setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -640,19 +765,19 @@ public class AddNewFarmerActivity extends AppCompatActivity {
 
     private void saveFarmer() {
         HashMap<String, String> headerParamsParent = new HashMap<>();
-        headerParamsParent.put(db.KEY_ADD_FARMER_FIRST_NAME,et_firstname.getText().toString());
-        headerParamsParent.put(db.KEY_FARMER_IS_POSTED,"0");
-        headerParamsParent.put(db.KEY_ADD_FARMER_EMAL,et_email.getText().toString());
-        headerParamsParent.put(db.KEY_ADD_FARMER_LAST_NAME,et_lastname.getText().toString());
-        headerParamsParent.put(db.KEY_ADD_FARMER_MOBILE_NUMBER,et_mobile.getText().toString());
-        headerParamsParent.put(db.KEY_ADD_FARMER_LANDLINE_NUMBER,et_landline.getText().toString());
-        headerParamsParent.put(db.KEY_ADD_FARMER_CNIC_NUMBER,et_cnic.getText().toString());
+        headerParamsParent.put(db.KEY_ADD_FARMER_FIRST_NAME, et_firstname.getText().toString());
+        headerParamsParent.put(db.KEY_FARMER_IS_POSTED, "0");
+        headerParamsParent.put(db.KEY_ADD_FARMER_EMAL, et_email.getText().toString());
+        headerParamsParent.put(db.KEY_ADD_FARMER_LAST_NAME, et_lastname.getText().toString());
+        headerParamsParent.put(db.KEY_ADD_FARMER_MOBILE_NUMBER, et_mobile.getText().toString());
+        headerParamsParent.put(db.KEY_ADD_FARMER_LANDLINE_NUMBER, et_landline.getText().toString());
+        headerParamsParent.put(db.KEY_ADD_FARMER_CNIC_NUMBER, et_cnic.getText().toString());
         headerParamsParent.put(db.KEY_ADD_FARMER_GENDER_ID, auto_gender.getText().toString());
         getFarmerSalesPointData(txt_selected_market.getText().toString());
-        headerParamsParent.put(db.KEY_ADD_FARMER_SALEPOINT_cODE,farmersalespointcode);
-        headerParamsParent.put(db.KEY_ADD_FARMER_LAT,currentlat);
-        headerParamsParent.put(db.KEY_FARMER_TRANSACTION_TYPE,"create");
-        headerParamsParent.put(db.KEY_ADD_FARMER_LNG,currentLng);
+        headerParamsParent.put(db.KEY_ADD_FARMER_SALEPOINT_cODE, farmersalespointcode);
+        headerParamsParent.put(db.KEY_ADD_FARMER_LAT, currentlat);
+        headerParamsParent.put(db.KEY_FARMER_TRANSACTION_TYPE, "create");
+        headerParamsParent.put(db.KEY_ADD_FARMER_LNG, currentLng);
         db.addData2(db.ADD_NEW_FARMER_POST_DATA, headerParamsParent);
 
 
@@ -666,21 +791,21 @@ public class AddNewFarmerActivity extends AppCompatActivity {
             headerParams.put(db.KEY_ADD_FARMER_MOBILE_NUMBER, et_mobile.getText().toString());
             headerParams.put(db.KEY_ADD_FARMER_SERVING_DEALER_CUSTOMER_NAME, et_dealer.getText().toString());
             //for (int j = 0; j < linearLayoutList.getChildCount(); j++) {
-   //             Log.d("Child Count: ", String.valueOf(linearLayoutList.getChildCount()));
-   //             View addView2 = linearLayoutList.getChildAt(j);
-                EditText auto_company = (EditText) addView.findViewById(R.id.auto_select_company);
-                HashMap<String, String> headerParams2 = new HashMap<>();
-                headerParams2.put(db.KEY_ADD_FARMER_EMAL, et_email.getText().toString());
-                headerParams2.put(db.KEY_ADD_FARMER_SERVING_DEALER_CUSTOMER_NAME,et_dealer.getText().toString());
-                headerParams2.put(db.KEY_ADD_FARMER_MOBILE_NUMBER, et_mobile.getText().toString());
-                headerParams2.put(db.KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_NAME, auto_company.getText().toString());
-                getPlayersData(auto_company.getText().toString());
-                headerParams2.put(db.KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_CODE, "");
-                headerParams2.put(db.KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_ID, playerid);
-                headerParams2.put(db.KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_DESCRIPTION, playerdescriptipn);
-                headerParams2.put(db.KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_COMPANY_HELD, playercompanyheld);
-                headerParams2.put(db.KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_ENABLED, playerenaled);
-                db.addData(db.ADD_NEW_FARMER_SERVING_DEALERS_MARKET_PLASYERS, headerParams2);
+            //             Log.d("Child Count: ", String.valueOf(linearLayoutList.getChildCount()));
+            //             View addView2 = linearLayoutList.getChildAt(j);
+            EditText auto_company = (EditText) addView.findViewById(R.id.auto_select_company);
+            HashMap<String, String> headerParams2 = new HashMap<>();
+            headerParams2.put(db.KEY_ADD_FARMER_EMAL, et_email.getText().toString());
+            headerParams2.put(db.KEY_ADD_FARMER_SERVING_DEALER_CUSTOMER_NAME, et_dealer.getText().toString());
+            headerParams2.put(db.KEY_ADD_FARMER_MOBILE_NUMBER, et_mobile.getText().toString());
+            headerParams2.put(db.KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_NAME, auto_company.getText().toString());
+            getPlayersData(auto_company.getText().toString());
+            headerParams2.put(db.KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_CODE, "");
+            headerParams2.put(db.KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_ID, playerid);
+            headerParams2.put(db.KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_DESCRIPTION, playerdescriptipn);
+            headerParams2.put(db.KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_COMPANY_HELD, playercompanyheld);
+            headerParams2.put(db.KEY_ADD_FARMER_SERVING_DEALER_MARKET_PLAYER_ENABLED, playerenaled);
+            db.addData(db.ADD_NEW_FARMER_SERVING_DEALERS_MARKET_PLASYERS, headerParams2);
             //}
             db.addData(db.ADD_NEW_FARMER_SERVING_DEALERS, headerParams);
         }
@@ -726,8 +851,8 @@ public class AddNewFarmerActivity extends AppCompatActivity {
 
 
     }
-    private void getPlayersData(String name)
-    {
+
+    private void getPlayersData(String name) {
 
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_MARKET_PLAYER_ID, "");
@@ -743,7 +868,7 @@ public class AddNewFarmerActivity extends AppCompatActivity {
             do {
                 playerid = cursor.getString(cursor.getColumnIndex(db.KEY_MARKET_PLAYER_ID));
                 playerdescriptipn = cursor.getString(cursor.getColumnIndex(db.KEY_MARKET_PLAYER_DESCRIPTION));
-                playercompanyheld= cursor.getString(cursor.getColumnIndex(db.KEY_MARKET_PLAYER_COMPANY_HELD));
+                playercompanyheld = cursor.getString(cursor.getColumnIndex(db.KEY_MARKET_PLAYER_COMPANY_HELD));
                 playerenaled = cursor.getString(cursor.getColumnIndex(db.KEY_MARKET_PLAYER_ENABLED));
 
 
@@ -752,8 +877,7 @@ public class AddNewFarmerActivity extends AppCompatActivity {
         }
     }
 
-    private void getLandProfileData(String name)
-    {
+    private void getLandProfileData(String name) {
 
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_ASSIGNED_SALESPOINT_CODE, "");
@@ -770,8 +894,7 @@ public class AddNewFarmerActivity extends AppCompatActivity {
         }
     }
 
-    private void getFarmerSalesPointData(String name)
-    {
+    private void getFarmerSalesPointData(String name) {
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_ASSIGNED_SALESPOINT_CODE, "");
         //map.put(db.KEY_IS_VALID_USER, "");
@@ -788,8 +911,7 @@ public class AddNewFarmerActivity extends AppCompatActivity {
     }
 
 
-    private void getCropData(String name)
-    {
+    private void getCropData(String name) {
 
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_CROP_ID, "");
@@ -808,8 +930,8 @@ public class AddNewFarmerActivity extends AppCompatActivity {
 
     private void clearInputs() {
         Toast.makeText(AddNewFarmerActivity.this, "Farmer Saved Successfully", Toast.LENGTH_SHORT).show();
-      Intent move = new Intent(AddNewFarmerActivity.this,MainActivity.class);
-      startActivity(move);
+        Intent move = new Intent(AddNewFarmerActivity.this, MainActivity.class);
+        startActivity(move);
 
     }
 

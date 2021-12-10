@@ -109,7 +109,7 @@ public class TodayPlanAdapter extends RecyclerView.Adapter<TodayPlanAdapter.MyVi
                 holder.member.setText(movie.getMemebrship());
             }
         }
-        holder.salespoint.setText("Sales Point: "+movie.getSalespoint());
+        holder.salespoint.setText(movie.getSalespoint());
         if(from.equals("farmers")) {
             holder.time.setText(movie.getLocation());
             holder.customecode.setText(movie.getMobilenumber());
@@ -128,7 +128,7 @@ public class TodayPlanAdapter extends RecyclerView.Adapter<TodayPlanAdapter.MyVi
         }
         else
         {
-            holder.customecode.setText("Customer Code: "+movie.getCustomercode());
+            holder.customecode.setText(movie.getCustomercode());
             holder.time.setText(movie.getTime());
             holder.distance.setText(movie.getDistance());
         }

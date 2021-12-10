@@ -1,7 +1,9 @@
 package com.tallymarks.ffmapp.activities;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -30,6 +32,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -314,13 +317,23 @@ public class FarmVisitRoleWiseActivity extends AppCompatActivity {
                     Intent loc = new Intent(FarmVisitRoleWiseActivity.this, CustomMap.class);
                     loc.putExtra("from", "farm");
                     startActivity(loc);
-                    if (gpsTracker.canGetLocation()) {
+                    gpsTracker = new GpsTracker(FarmVisitRoleWiseActivity.this);
+                    if  (gpsTracker.canGetLocation()) {
+                        if (ActivityCompat.checkSelfPermission(FarmVisitRoleWiseActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(FarmVisitRoleWiseActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
                         farmvisitLat = gpsTracker.getLatitude();
                         farvisitLong = gpsTracker.getLongitude();
-                        txt_lat.setText("Selected Lat: " + farmvisitLat);
-                        txt_lng.setText("Selected Long: " + farvisitLong);
-
                     }
+                    txt_lat.setText("Selected Lat: " +  farmvisitLat);
+                    txt_lng.setText("Selected Long: " +  farvisitLong);
+//                    if (gpsTracker.canGetLocation()) {
+//                        farmvisitLat = gpsTracker.getLatitude();
+//                        farvisitLong = gpsTracker.getLongitude();
+//                        txt_lat.setText("Selected Lat: " + farmvisitLat);
+//                        txt_lng.setText("Selected Long: " + farvisitLong);
+//
+//                    }
 
                     //  GpsTracker gpsTracker = new GpsTracker(FarmVisitActivity.this);
 //

@@ -116,9 +116,25 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(QualityofSalesCallActivity.this, SalesOrderMarketPriceActivity.class);
-                startActivity(i);
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                Bundle extras = getIntent().getExtras();
+                if (extras != null) {
+                    if(extras.containsKey("startfrom"))
+                    {
+                        if (extras.getString("startfrom").equals("start")) {
+                            Intent i = new Intent(QualityofSalesCallActivity.this, StartActivity.class);
+                            startActivity(i);
+                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                        }
+                    }
+                    // and get whatever type user account id is
+                }
+                else {
+                    Intent i = new Intent(QualityofSalesCallActivity.this, SalesOrderMarketPriceActivity.class);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+                }
+
 
             }
         });
@@ -140,9 +156,24 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(QualityofSalesCallActivity.this, SalesOrderMarketPriceActivity.class);
-                startActivity(i);
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                Bundle extras = getIntent().getExtras();
+                if (extras != null) {
+                    if(extras.containsKey("startfrom"))
+                    {
+                        if (extras.getString("startfrom").equals("start")) {
+                            Intent i = new Intent(QualityofSalesCallActivity.this, StartActivity.class);
+                            startActivity(i);
+                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                        }
+                    }
+                    // and get whatever type user account id is
+                }
+                else {
+                    Intent i = new Intent(QualityofSalesCallActivity.this, SalesOrderMarketPriceActivity.class);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+                }
             }
         });
         iv_commitment.setOnClickListener(new View.OnClickListener() {
@@ -270,6 +301,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
                             //addMarketIntel();
                             dialog.cancel();
                             Intent shift = new Intent(QualityofSalesCallActivity.this,VisitCustomerActivity.class);
+                            shift.putExtra("from",sHelper.getString(Constants.PLAN_TYPE));
                             startActivity(shift);
                         } else {
                             DialougeManager.gpsNotEnabledPopup(QualityofSalesCallActivity.this);
@@ -648,14 +680,14 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         column1.setText("Product");
         //column1.setBackgroundResource(R.drawable.table_row);
         column1.setGravity(Gravity.CENTER);
-        column1.setTextSize(16);
+        column1.setTextSize(12);
         column1.setPadding(2, 2, 2, 2);
         column1.setTextColor(getResources().getColor(R.color.colorPrimary));
         column1.setTypeface(Typeface.DEFAULT_BOLD);
         column1.setBackgroundColor(getResources().getColor(R.color.green));
         TextView column2 = new TextView(this);
         column2.setText("Quantity");
-        column2.setTextSize(16);
+        column2.setTextSize(12);
         column2.setGravity(Gravity.CENTER);
         //column2.setBackgroundResource(R.drawable.table_row);
         column2.setPadding(2, 2, 2, 2);
@@ -666,7 +698,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         TextView column3 = new TextView(this);
         column3.setText("Timeline");
         column3.setGravity(Gravity.CENTER);
-        column3.setTextSize(16);
+        column3.setTextSize(12);
         //column3.setBackgroundResource(R.drawable.table_row);
         column3.setPadding(2, 2, 2, 2);
         column3.setBackgroundColor(getResources().getColor(R.color.green));
@@ -674,7 +706,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         column3.setTypeface(Typeface.DEFAULT_BOLD);
         TextView column4 = new TextView(this);
         column4.setText("Confirmed");
-        column4.setTextSize(16);
+        column4.setTextSize(12);
         column4.setGravity(Gravity.CENTER);
         //column4.setBackgroundResource(R.drawable.table_row);
         column4.setPadding(2, 2, 2, 2);
@@ -686,10 +718,10 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 //        row.addView(column2);
 //        row.addView(column3);
 //        row.addView(column4);
-        row.addView(column1, new TableRow.LayoutParams(0, 150, 0.25f));
-        row.addView(column2, new TableRow.LayoutParams(0, 150, 0.25f));
-        row.addView(column3, new TableRow.LayoutParams(0, 150, 0.25f));
-        row.addView(column4, new TableRow.LayoutParams(0, 150, 0.25f));
+        row.addView(column1, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.25f));
+        row.addView(column2, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.25f));
+        row.addView(column3, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.25f));
+        row.addView(column4, new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.25f));
 
 
         mTableLayout.addView(row);
@@ -769,9 +801,27 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(QualityofSalesCallActivity.this, SalesOrderMarketPriceActivity.class);
-        startActivity(i);
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            if(extras.containsKey("startfrom"))
+            {
+                if (extras.getString("startfrom").equals("start")) {
+                    Intent i = new Intent(QualityofSalesCallActivity.this, StartActivity.class);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                }
+            }
+            // and get whatever type user account id is
+        }
+        else {
+            Intent i = new Intent(QualityofSalesCallActivity.this, SalesOrderMarketPriceActivity.class);
+            startActivity(i);
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+        }
+//        Intent i = new Intent(QualityofSalesCallActivity.this, SalesOrderMarketPriceActivity.class);
+//        startActivity(i);
+//        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
     }
 }

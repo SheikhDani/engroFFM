@@ -492,7 +492,7 @@ public class SoilSamplingActivity extends AppCompatActivity {
                             String previouslng  = cursor.getString(cursor.getColumnIndex(mydb.KEY_TODAY_LONGITUTE));
                             float distance = getMeterFromLatLong(Float.parseFloat(String.valueOf(soilSamplingLat)), Float.parseFloat(String.valueOf(soilSamplingLong)), Float.parseFloat(previouslat), Float.parseFloat(previouslng));
                             float totaldistance = distance / 1000;
-                            String radius = "500";
+                            String radius = "20";
                             int totalmeters = (int) Math.round(distance);
                             int totalb = (int) Math.round(totaldistance);
                             int c = (int) Math.round(distance);
@@ -556,6 +556,7 @@ public class SoilSamplingActivity extends AppCompatActivity {
                     //sHelper.clearPreferenceStore();
 
                     Intent farmvisit = new Intent(SoilSamplingActivity.this, VisitFarmerActivity.class);
+                    farmvisit.putExtra("from",sHelper.getString(Constants.PLAN_TYPE_FARMER));
                     startActivity(farmvisit);
                 }
                 else
@@ -1000,7 +1001,7 @@ public class SoilSamplingActivity extends AppCompatActivity {
         column1.setTypeface(Typeface.DEFAULT_BOLD);
         column1.setBackgroundColor(getResources().getColor(R.color.green));
         TextView column2 = new TextView(this);
-        column2.setText("Block/Square#");
+        column2.setText("Block#");
         column2.setTextSize(12);
         column2.setGravity(Gravity.CENTER);
         //column2.setBackgroundResource(R.drawable.table_row);
@@ -1010,7 +1011,7 @@ public class SoilSamplingActivity extends AppCompatActivity {
         column2.setBackgroundColor(getResources().getColor(R.color.green));
 
         TextView column3 = new TextView(this);
-        column3.setText("Previous Crop");
+        column3.setText("PreCrop");
         column3.setGravity(Gravity.CENTER);
         column3.setTextSize(12);
         //column3.setBackgroundResource(R.drawable.table_row);

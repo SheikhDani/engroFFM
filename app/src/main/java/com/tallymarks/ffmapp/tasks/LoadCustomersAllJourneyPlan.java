@@ -87,6 +87,7 @@ public class LoadCustomersAllJourneyPlan extends AsyncTask<String, Void, Void> {
             if (response != null) {
                 if (journeycode.size() > 0) {
                     for (int i = 0; i < journeycode.size(); i++) {
+                        sHelper.setString(Constants.CUSTOMER_ALL_PLAN_NOT_FOUND,"1");
                         HashMap<String, String> map = new HashMap<>();
                         map.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
                         map.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "0");
@@ -185,6 +186,7 @@ public class LoadCustomersAllJourneyPlan extends AsyncTask<String, Void, Void> {
                     errorMessage = json.getString("description");
                     String status = json.getString("success");
                     if (status.equals("false")) {
+                        sHelper.setString(Constants.CUSTOMER_ALL_PLAN_NOT_FOUND,"0");
                          Helpers.displayMessage(mContext, true, errorMessage);
                     }
                 } catch (JSONException e) {

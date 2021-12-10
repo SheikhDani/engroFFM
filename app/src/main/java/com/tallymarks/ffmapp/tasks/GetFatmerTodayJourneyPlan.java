@@ -91,6 +91,7 @@ public class GetFatmerTodayJourneyPlan extends AsyncTask<String, Void, Void> {
                 if (journeycode.size() > 0) {
                     HashMap<String, String> map = new HashMap<>();
                     for (int j = 0; j < journeycode.size(); j++) {
+                        sHelper.setString(Constants.FARMER_TODAY_PLAN_NOT_FOUND,"1");
                         map.put(db.KEY_TODAY_JOURNEY_FARMER_CODE, journeycode.get(j).getFarmerCode()== null || journeycode.get(j).getFarmerCode().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getFarmerCode().toString());
                         map.put(db.KEY_TODAY_JOURNEY_FARMER_ID, journeycode.get(j).getFarmerId()== null || journeycode.get(j).getFarmerId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getFarmerId().toString());
                         map.put(db.KEY_TODAY_JOURNEY_FARMER_NAME, journeycode.get(j).getFarmerName()== null || journeycode.get(j).getFarmerName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getFarmerName());
@@ -122,6 +123,7 @@ public class GetFatmerTodayJourneyPlan extends AsyncTask<String, Void, Void> {
                     String status = json.getString("success");
                     if (status.equals("false")) {
                         Helpers.displayMessage(mContext, true, errorMessage);
+                        sHelper.setString(Constants.FARMER_TODAY_PLAN_NOT_FOUND,"0");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

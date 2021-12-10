@@ -32,8 +32,9 @@ public class VisitCustomerActivity extends AppCompatActivity {
     private TextView tvTopHeader;
     GpsTracker gpsTracker;
     EditText et_search;
-    ImageView iv_menu,iv_back,iv_location;
+    ImageView iv_menu, iv_back, iv_location;
     SharedPrefferenceHelper sHelper;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visit_customers);
@@ -41,13 +42,14 @@ public class VisitCustomerActivity extends AppCompatActivity {
 
 
     }
-    private void initView()
-    {
+
+    private void initView() {
         iv_menu = findViewById(R.id.iv_drawer);
         iv_back = findViewById(R.id.iv_back);
         et_search = findViewById(R.id.et_Search);
         iv_back.setVisibility(View.VISIBLE);
         iv_menu.setVisibility(View.GONE);
+
 
         sHelper = new SharedPrefferenceHelper(VisitCustomerActivity.this);
         iv_location = findViewById(R.id.img_location);
@@ -114,29 +116,35 @@ public class VisitCustomerActivity extends AppCompatActivity {
         });
         tabLayout = (TabLayout) findViewById(R.id.tabs_sales_plan);
         viewPager = (ViewPager) findViewById(R.id.viewPager_sales_plan);
-        viewPagerAdapter = new VisitCustomerViewPagerAdapter(getSupportFragmentManager(),"customers",et_search);
+        viewPagerAdapter = new VisitCustomerViewPagerAdapter(getSupportFragmentManager(), "customers", et_search);
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
         tvTopHeader = findViewById(R.id.tv_dashboard);
         tvTopHeader.setVisibility(View.VISIBLE);
         tvTopHeader.setText("VISIT CUSTOMERS");
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String value = extras.getString("from");
+            if (value.equals("today")) {
+                viewPager.setCurrentItem(0);
+            } else {
+                viewPager.setCurrentItem(1);
+            }
+            //The key argument here must match that used in the other activity
+        }
 
 
-        for (int i = 0; i < 4; i++){
-            if(tabLayout.getTabAt(i).getText().toString().equals("FUTURE PLANS")) {
+        for (int i = 0; i < 4; i++) {
+            if (tabLayout.getTabAt(i).getText().toString().equals("FUTURE PLANS")) {
                 tabLayout.getTabAt(i).view.setEnabled(false);
                 tabLayout.getTabAt(i).view.setSelected(false);
                 tabLayout.getTabAt(i).setIcon(R.drawable.ic_action_lock_outline);
 
-            }
-            else if(tabLayout.getTabAt(i).getText().toString().equals("PAST PLANS"))
-            {
+            } else if (tabLayout.getTabAt(i).getText().toString().equals("PAST PLANS")) {
                 tabLayout.getTabAt(i).view.setEnabled(false);
                 tabLayout.getTabAt(i).view.setSelected(false);
                 tabLayout.getTabAt(i).setIcon(R.drawable.ic_action_lock_outline);
-            }
-            else
-            {
+            } else {
                 tabLayout.getTabAt(i).view.setEnabled(true);
             }
         }
@@ -150,7 +158,7 @@ public class VisitCustomerActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
 
-                if(position == 2 || position==3) {
+                if (position == 2 || position == 3) {
                     //To disable specific tab and set the previuos tab
                     viewPager.setCurrentItem(1); //We cannot provide the position in setSelected(boolean) now. This was missed in above solution
                 }

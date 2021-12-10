@@ -97,7 +97,7 @@
         android:layout_marginLeft="@dimen/p30"
         android:layout_toEndOf="@id/time"
         android:layout_toRightOf="@id/time"
-        android:drawableLeft="@drawable/lcoatioresizer"
+        android:drawableLeft="@drawable/ic_baseline_location_on_24"
         android:drawableTint="@color/black"
         android:gravity="center_vertical"
         android:text="105 KMS away"

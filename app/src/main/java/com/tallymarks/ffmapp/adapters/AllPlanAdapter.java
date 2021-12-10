@@ -112,7 +112,7 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
                 holder.member.setText(movie.getMemebrship());
             }
         }
-        holder.salespoint.setText("Sales Point: "+movie.getSalespoint());
+        holder.salespoint.setText(movie.getSalespoint());
         if(from.equals("farmers")) {
             holder.time.setText(movie.getLocation());
             holder.customecode.setText(movie.getMobilenumber());
@@ -125,8 +125,8 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
             }
         }
         else if(from.equals("editfarmer")) {
-            holder.time.setText("Farmer ID: "+movie.getLocation());
-            holder.customecode.setText("Mobile Number: "+movie.getMobilenumber());
+            holder.time.setText(movie.getLocation());
+            holder.customecode.setText(movie.getMobilenumber());
             if (movie.getMemebrship().equals("Edited")) {
                 holder.member.setBackgroundColor(Color.parseColor("#159356"));
                 holder.member.setText(movie.getMemebrship());
@@ -143,7 +143,7 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
         }
         else
         {
-            holder.customecode.setText("Customer Code: "+movie.getCustomercode());
+            holder.customecode.setText(movie.getCustomercode());
             holder.time.setText(movie.getTime());
             holder.distance.setText(movie.getDistance());
         }
