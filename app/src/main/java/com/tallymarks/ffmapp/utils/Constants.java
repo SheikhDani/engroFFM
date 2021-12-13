@@ -10,7 +10,7 @@ public class Constants {
     public static String LOGIN_PASSWORD = "";
     public static String LOGIN_GRANT_TYPE = "password";
     public static final String SCROLL_POSITION = "scrollposition";
-    public static final String ENVIRONMENT = "Development";
+//    public static final String ENVIRONMENT = "Development";
     public static final String DATE_FORMAT= "dd-MM-yyyy";
     public static final String GMT_TIME_FORMAT= "EE MMM dd HH:mm:ss zz yyy";
     public static final String AUTHORIZATION= "Authorization";
@@ -144,9 +144,14 @@ public class Constants {
     // public static String DRIVER_RATING="Driver_status";
 
 
+////PRD Details
+//    public static final String ENVIRONMENT = "Production";
+//    public static final String FFM_BASE_URL = "https://engro.mitracs.com:8080/mitracs";
 
-
+    //DEV Details
+    public static final String ENVIRONMENT = "Development";
     public static final String FFM_BASE_URL = "https://attendance.tallymarkscloud.com:8080/mitracs";
+
     public static final String FFM_LOGIN = FFM_BASE_URL + "/oauth/token";
     public static final String FFM_GET_ALL_CUSTOMERS= FFM_BASE_URL + "/global/lookup/getAssignedCustomersForCheckIn";
     public static final String FFM_GET_OUTLET_STATUS= FFM_BASE_URL + "/global/lookup/getOutletStatuses";

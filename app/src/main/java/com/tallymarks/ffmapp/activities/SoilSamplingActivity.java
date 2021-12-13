@@ -525,39 +525,24 @@ public class SoilSamplingActivity extends AppCompatActivity {
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (!(Helpers.isEmptyTextview(getApplicationContext(), acres))
-//                        && !(Helpers.isEmptyTextview(getApplicationContext(), blocks))
-//                        && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_pre_rop))
-//                        && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_current_crop))
-//                        && !(Helpers.isEmptyAutoTextview(getApplicationContext(),  auto_depth))
-//                        && soilSamplingLat!=0.0 && soilSamplingLong!=0.0
-//                ) {
-                    // Checkout logic here
 
-                    // Mapping for activity
+
                 if(arraylistSoilSampling.size()>0)
                 {
-                    mydb = new MyDatabaseHandler(getBaseContext());
-                    long time = System.currentTimeMillis();
-
-//                HashMap<String, String> map = new HashMap<>();
-//                map.put(mydb.KEY_TODAY_CHECKOUT_LATITUTE, String.valueOf(gps.getLatitude()));
-//                map.put(mydb.KEY_TODAY_CHECKOUT_LONGITUTE, String.valueOf(gps.getLongitude()));
-//                map.put(mydb.KEY_TODAY_CEHCKOUT_TIMESTMAP, String.valueOf(time));
+                    farmerSavedConfirmationPopUp();
+//                    mydb = new MyDatabaseHandler(getBaseContext());
+//                    long time = System.currentTimeMillis();
 //
-//                HashMap<String, String> filter = new HashMap<>();
-//                filter.put(mydb.KEY_TODAY_FARMER_FARMER_ID, Constants.FARMER_ID);
-//                mydb.updateData(mydb.TODAY_FARMER_CHECKIN, map, filter);
-
-                    addCheckOut();
-                    updateOutletStatus("Visited");
-
-                    Toast.makeText(getApplicationContext(), "Farmer Saved", Toast.LENGTH_SHORT).show();
-                    //sHelper.clearPreferenceStore();
-
-                    Intent farmvisit = new Intent(SoilSamplingActivity.this, VisitFarmerActivity.class);
-                    farmvisit.putExtra("from",sHelper.getString(Constants.PLAN_TYPE_FARMER));
-                    startActivity(farmvisit);
+//
+//                    addCheckOut();
+//                    updateOutletStatus("Visited");
+//
+//                    Toast.makeText(getApplicationContext(), "Farmer Saved", Toast.LENGTH_SHORT).show();
+//                    //sHelper.clearPreferenceStore();
+//
+//                    Intent farmvisit = new Intent(SoilSamplingActivity.this, VisitFarmerActivity.class);
+//                    farmvisit.putExtra("from",sHelper.getString(Constants.PLAN_TYPE_FARMER));
+//                    startActivity(farmvisit);
                 }
                 else
                 {
@@ -579,6 +564,45 @@ public class SoilSamplingActivity extends AppCompatActivity {
 
             }
         });
+    }
+    private void  farmerSavedConfirmationPopUp()
+    {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SoilSamplingActivity.this);
+        alertDialogBuilder
+                .setMessage(SoilSamplingActivity.this.getString(R.string.outlet_confirmation))
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mydb = new MyDatabaseHandler(getBaseContext());
+                        long time = System.currentTimeMillis();
+
+
+                        addCheckOut();
+                        updateOutletStatus("Visited");
+
+                        Toast.makeText(getApplicationContext(), "Farmer Saved", Toast.LENGTH_SHORT).show();
+                        //sHelper.clearPreferenceStore();
+
+                        Intent farmvisit = new Intent(SoilSamplingActivity.this, VisitFarmerActivity.class);
+                        farmvisit.putExtra("from",sHelper.getString(Constants.PLAN_TYPE_FARMER));
+                        startActivity(farmvisit);
+
+                    }
+                            //addMarketIntel();
+
+
+
+
+                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }
+        );
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
     private String getCropData(String cropid) {
 
