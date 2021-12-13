@@ -116,24 +116,24 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle extras = getIntent().getExtras();
-                if (extras != null) {
-                    if(extras.containsKey("startfrom"))
-                    {
-                        if (extras.getString("startfrom").equals("start")) {
-                            Intent i = new Intent(QualityofSalesCallActivity.this, StartActivity.class);
-                            startActivity(i);
-                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                        }
-                    }
-                    // and get whatever type user account id is
-                }
-                else {
+//                Bundle extras = getIntent().getExtras();
+//                if (extras != null) {
+//                    if(extras.containsKey("startfrom"))
+//                    {
+//                        if (extras.getString("startfrom").equals("start")) {
+//                            Intent i = new Intent(QualityofSalesCallActivity.this, StartActivity.class);
+//                            startActivity(i);
+//                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//                        }
+//                    }
+//                    // and get whatever type user account id is
+//                }
+//                else {
                     Intent i = new Intent(QualityofSalesCallActivity.this, SalesOrderMarketPriceActivity.class);
                     startActivity(i);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
-                }
+//                }
 
 
             }
@@ -157,23 +157,23 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Bundle extras = getIntent().getExtras();
-                if (extras != null) {
-                    if(extras.containsKey("startfrom"))
-                    {
-                        if (extras.getString("startfrom").equals("start")) {
-                            Intent i = new Intent(QualityofSalesCallActivity.this, StartActivity.class);
-                            startActivity(i);
-                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                        }
-                    }
-                    // and get whatever type user account id is
-                }
-                else {
+//                if (extras != null) {
+//                    if(extras.containsKey("startfrom"))
+//                    {
+//                        if (extras.getString("startfrom").equals("start")) {
+//                            Intent i = new Intent(QualityofSalesCallActivity.this, StartActivity.class);
+//                            startActivity(i);
+//                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//                        }
+//                    }
+//                    // and get whatever type user account id is
+//                }
+//                else {
                     Intent i = new Intent(QualityofSalesCallActivity.this, SalesOrderMarketPriceActivity.class);
                     startActivity(i);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
-                }
+//                }
             }
         });
         iv_commitment.setOnClickListener(new View.OnClickListener() {
@@ -801,24 +801,24 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            if(extras.containsKey("startfrom"))
-            {
-                if (extras.getString("startfrom").equals("start")) {
-                    Intent i = new Intent(QualityofSalesCallActivity.this, StartActivity.class);
-                    startActivity(i);
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                }
-            }
-            // and get whatever type user account id is
-        }
-        else {
+//        Bundle extras = getIntent().getExtras();
+//        if (extras != null) {
+//            if(extras.containsKey("startfrom"))
+//            {
+//                if (extras.getString("startfrom").equals("start")) {
+//                    Intent i = new Intent(QualityofSalesCallActivity.this, StartActivity.class);
+//                    startActivity(i);
+//                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//                }
+//            }
+//            // and get whatever type user account id is
+//        }
+//        else {
             Intent i = new Intent(QualityofSalesCallActivity.this, SalesOrderMarketPriceActivity.class);
             startActivity(i);
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-
-        }
+//
+//        }
 //        Intent i = new Intent(QualityofSalesCallActivity.this, SalesOrderMarketPriceActivity.class);
 //        startActivity(i);
 //        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);

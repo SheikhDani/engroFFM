@@ -127,7 +127,7 @@ public class StartActivity extends AppCompatActivity {
                             else
                             {
                                 Intent n = new Intent(StartActivity.this, QualityofSalesCallActivity.class);
-                                n.putExtra("startfrom", "start");
+                              //  n.putExtra("startfrom", "start");
                                 startActivity(n);
                             }
                         }

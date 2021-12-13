@@ -5,15 +5,35 @@
     android:layout_height="match_parent"
 
 
+
+
     >
 
     <include
         android:id="@+id/inc_common_header_colletion"
         layout="@layout/common_header" />
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/inc_common_header_colletion"
+        android:background="#ffffff">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            android:layout_marginLeft="@dimen/p100"
+            android:layout_marginRight="@dimen/p100"
+
+            android:src="@drawable/engrologo"
+            android:layout_gravity="center_vertical"
+            />
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/rel_field_sales"
         android:layout_width="fill_parent"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_below="@+id/inc_common_header_colletion"
         android:background="@color/white">
@@ -93,6 +113,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/rel_field_sales"
         android:background="@color/white"
+        android:visibility="gone"
         app:tabGravity="fill"
         app:tabInlineLabel="true"
         app:tabMode="fixed"
@@ -103,6 +124,7 @@
         android:id="@+id/viewPager_sales_plan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:layout_below="@+id/tabs_sales_plan"
         android:layout_marginBottom="@dimen/p5"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
