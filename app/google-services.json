@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "490187262785",
+    "project_id": "engroffm-b31c3",
+    "storage_bucket": "engroffm-b31c3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:490187262785:android:872526f572b9749a27efc0",
+        "android_client_info": {
+          "package_name": "com.tallymarks.ffmapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "490187262785-tbnde4njg489q7j4ug3fmfflt8kdhq1n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_z_LuAzjvmskFFJIaYEC6LesCxhOY8Aw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "490187262785-tbnde4njg489q7j4ug3fmfflt8kdhq1n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
