@@ -106,6 +106,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
     private void initView()
     {
+
         sensorimg = findViewById(R.id.icon);
         gpsTracker = new GpsTracker(LoginActivity.this);
         btn_sumit = findViewById(R.id.btn_submit);
@@ -169,6 +170,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             startActivity(i);
         }
         setAppInfo();
+
     }
     private void showFingerPrintDialog() {
 

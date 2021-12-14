@@ -388,11 +388,6 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 
             }
         });
-        if (ck_confirmed.isChecked()) {
-            checkedCommitement = "Yes";
-        } else {
-            checkedCommitement = "No";
-        }
 
 
         Button btnYes = promptsView.findViewById(R.id.btn_add_commitment);
@@ -402,6 +397,12 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (ck_confirmed.isChecked()) {
+                    checkedCommitement = "Yes";
+                } else {
+                    checkedCommitement = "No";
+                }
+
                 validateInputs(et_quantity , auto_Product , tv_Date,alertDialog);
 
 
