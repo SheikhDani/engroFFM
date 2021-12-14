@@ -442,13 +442,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 return true;
             case R.id.nav_downlaod_farmersdata:
-//                Intent downlaodFarmer = new Intent(MainActivity.this, DownloadFarmersDataActivity.class);
-//                startActivity(downlaodFarmer);
-//                drawer.closeDrawers();
-
-                Intent downlaodFarmer = new Intent(MainActivity.this, QualityofSalesCallActivity.class);
+                Intent downlaodFarmer = new Intent(MainActivity.this, DownloadFarmersDataActivity.class);
                 startActivity(downlaodFarmer);
                 drawer.closeDrawers();
+
+//                Intent downlaodFarmer = new Intent(MainActivity.this, QualityofSalesCallActivity.class);
+//                startActivity(downlaodFarmer);
+//                drawer.closeDrawers();
                 return true;
             case R.id.nav_customerlocation:
                 gpsTracker = new GpsTracker(MainActivity.this);
