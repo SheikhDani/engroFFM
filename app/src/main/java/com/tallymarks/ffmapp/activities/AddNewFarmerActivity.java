@@ -84,6 +84,9 @@ public class AddNewFarmerActivity extends AppCompatActivity {
     String saelspointcode = "", cropid = "", farmersalespointcode = "";
     String dealercount = "0";
     String profilecount = "0";
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

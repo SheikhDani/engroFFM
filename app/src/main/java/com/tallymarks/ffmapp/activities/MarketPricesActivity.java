@@ -52,6 +52,9 @@ public class MarketPricesActivity extends AppCompatActivity {
     SharedPrefferenceHelper sHelper;
     private String previousInvoiceNumber = "";
     String quanity ,netprice;
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

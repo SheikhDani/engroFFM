@@ -52,6 +52,9 @@ public class SubOrdinatesActivity extends AppCompatActivity {
     ArrayList<Subordinates> dataModels;
     SharedPrefferenceHelper sHelper;
     ExtraHelper extraHelper;
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

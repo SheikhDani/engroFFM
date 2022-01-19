@@ -55,6 +55,9 @@ public class FarmersStartActivity extends AppCompatActivity {
     DatabaseHandler db;
     String rolename = "";
     ExtraHelper extraHelper;
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

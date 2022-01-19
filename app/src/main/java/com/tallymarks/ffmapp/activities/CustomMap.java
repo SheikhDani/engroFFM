@@ -67,6 +67,9 @@ public class CustomMap extends AppCompatActivity implements OnMapReadyCallback, 
     private GoogleMap mMap;
     Button btnProceed;
     String from;
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {

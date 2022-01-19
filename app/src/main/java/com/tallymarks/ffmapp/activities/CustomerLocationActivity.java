@@ -80,6 +80,9 @@ public class CustomerLocationActivity extends AppCompatActivity implements OnMap
     EditText et_customercode;
 
     private GoogleMap mMap;
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

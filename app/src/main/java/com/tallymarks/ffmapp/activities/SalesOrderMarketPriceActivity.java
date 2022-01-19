@@ -50,7 +50,9 @@ public class SalesOrderMarketPriceActivity extends AppCompatActivity {
     private Parcelable mListState = null;
     private String orderNumber, productname, orderDate;
     Button btn_procced, btn_back;
-
+    static {
+        System.loadLibrary("native-lib");
+    }
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_salesorder_marketprice);

@@ -173,6 +173,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     LoadCustomersAllJourneyPlan task9;
     LoadFarmersAllJourneyPlan task10;
     GetFatmerTodayJourneyPlan task11;
+    static {
+        System.loadLibrary("native-lib");
+    }
+
 
 
     @Override

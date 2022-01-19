@@ -89,6 +89,9 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
     String forward = "0";
     String checkinlat="";
     String checkinlng="";
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -56,6 +56,9 @@ public class FloorStockActivity extends AppCompatActivity {
     final ArrayList<FloorStockChild> floorStockChild = new ArrayList<FloorStockChild>();
     private int count = 0;
     ScrollView scroll;
+    static {
+        System.loadLibrary("native-lib");
+    }
 
 
     protected void onCreate(Bundle savedInstanceState) {

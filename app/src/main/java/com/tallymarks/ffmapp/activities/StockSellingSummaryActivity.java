@@ -52,6 +52,9 @@ public class StockSellingSummaryActivity extends AppCompatActivity {
     ArrayList<StockSellingSummary> arraylist = new ArrayList<StockSellingSummary>();
     SharedPrefferenceHelper sHelper;
     ExtraHelper extraHelper;
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

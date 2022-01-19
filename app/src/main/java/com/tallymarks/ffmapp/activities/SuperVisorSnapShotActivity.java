@@ -56,6 +56,9 @@ public class SuperVisorSnapShotActivity extends AppCompatActivity {
     SharedPrefferenceHelper sHelper;
     ExpandableListView elv;
     ExtraHelper extraHelper;
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

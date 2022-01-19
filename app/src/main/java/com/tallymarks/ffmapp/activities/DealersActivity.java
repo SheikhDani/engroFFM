@@ -44,6 +44,9 @@ public class DealersActivity extends AppCompatActivity {
     ArrayList<String> selectedCustomerCode = new ArrayList<>();
     ArrayList<String> selectedCustomerName = new ArrayList<>();
     Button back;
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
