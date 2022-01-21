@@ -39,6 +39,9 @@ public class DownloadFarmersDataActivity extends AppCompatActivity {
     private EditText et_Search;
     ImageView iv_menu,iv_back;
     MyDatabaseHandler mydb;
+    static {
+        System.loadLibrary("native-lib");
+    }
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_famers);

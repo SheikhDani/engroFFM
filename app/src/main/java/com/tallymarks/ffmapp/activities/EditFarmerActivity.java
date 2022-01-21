@@ -90,7 +90,9 @@ public class EditFarmerActivity extends AppCompatActivity {
     String playerid = "", playerdescriptipn = "", playercompanyheld = "", playerenaled = "";
     String saelspointcode = "", cropid = "", farmersalespointcode = "";
     LinearLayout linear_crop;
-
+    static {
+        System.loadLibrary("native-lib");
+    }
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_farmer);

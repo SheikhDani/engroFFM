@@ -38,6 +38,9 @@ public class CustomerSnapShotActivity extends AppCompatActivity {
     DatabaseHandler db;
     final ArrayList<CustomerSnapShotParent> customerStock = new ArrayList<CustomerSnapShotParent>();
     SharedPrefferenceHelper sHelper;
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -81,6 +81,9 @@ public class FarmerDemoActivity extends AppCompatActivity {
     int ProductId;
     int cropId;
     TextView tvCrop , tvProduct , tvDate , tvAddress, tvObjective;
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

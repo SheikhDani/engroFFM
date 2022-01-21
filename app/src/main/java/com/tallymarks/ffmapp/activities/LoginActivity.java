@@ -94,6 +94,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     final static int REQUEST_LOCATION = 199;
     private GoogleApiClient googleApiClient;
     GpsTracker gpsTracker;
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

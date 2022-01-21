@@ -92,6 +92,9 @@ public class FarmerMeetingActivity extends AppCompatActivity {
     private ArrayList<Farmer> farmerArrayList;
     private String activityDate, hostFarmerID, dealerID, dealerName, productID, cropID;
     private ArrayList<String> attachments = new ArrayList<>();
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -104,6 +104,9 @@ public class ConverionRetentionFormActivity extends AppCompatActivity {
     int actualacre = 0;
     Calendar myCalendar;
     String targetDate = "";
+    static {
+        System.loadLibrary("native-lib");
+    }
 
 
     protected void onCreate(Bundle savedInstanceState) {

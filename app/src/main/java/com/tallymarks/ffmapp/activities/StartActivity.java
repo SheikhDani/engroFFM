@@ -45,6 +45,9 @@ public class StartActivity extends AppCompatActivity {
     double checkinlat;
     double checkinlng;
     String journeytype = "";
+    static {
+        System.loadLibrary("native-lib");
+    }
 
 
     protected void onCreate(Bundle savedInstanceState) {

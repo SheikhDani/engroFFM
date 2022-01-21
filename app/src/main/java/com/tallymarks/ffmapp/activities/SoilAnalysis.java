@@ -26,6 +26,9 @@ public class SoilAnalysis extends AppCompatActivity implements AdapterView.OnIte
     List<String> categories;
     RecyclerView recyclerView;
     private List<com.tallymarks.ffmapp.models.SoilAnalysis> planList = new ArrayList<>();
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

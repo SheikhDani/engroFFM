@@ -55,6 +55,9 @@ public class ConversionRetentionActivity extends AppCompatActivity implements It
     TextView txt_no_data;
     ConversionRetentionAdapter adapter;
     ExtraHelper extraHelper;
+    static {
+        System.loadLibrary("native-lib");
+    }
 
 
     protected void onCreate(Bundle savedInstanceState) {

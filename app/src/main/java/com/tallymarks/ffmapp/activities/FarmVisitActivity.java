@@ -93,6 +93,9 @@ public class FarmVisitActivity extends AppCompatActivity {
     ArrayList<String> fertTypeIDArraylist = new ArrayList<>();
     HashMap<String, String> map = new HashMap<>();
     String otherproductid;
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

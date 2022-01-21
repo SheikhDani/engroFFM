@@ -57,6 +57,9 @@ public class SubordinatListActivity extends AppCompatActivity implements ItemCli
     ExtraHelper extraHelper;
     EditText et_Search;
     TodayPlanAdapter adapter;
+    static {
+        System.loadLibrary("native-lib");
+    }
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subordinates_list);

@@ -11,6 +11,10 @@ import com.tallymarks.ffmapp.R;
 public class SpalshScreenActivity extends Activity {
 
     private static int SPLASH_TIME_OUT = 3000;
+    static {
+        System.loadLibrary("native-lib");
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

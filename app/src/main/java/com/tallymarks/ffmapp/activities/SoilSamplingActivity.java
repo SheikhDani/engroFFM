@@ -93,6 +93,9 @@ public class SoilSamplingActivity extends AppCompatActivity {
     String checkinlong;
     ExtraHelper extraHelper;
     String rolename="";
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

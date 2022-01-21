@@ -29,6 +29,9 @@ public class VisitFarmerActivity extends AppCompatActivity {
     GpsTracker gpsTracker;
     EditText et_search;
     SharedPrefferenceHelper sHelper;
+    static {
+        System.loadLibrary("native-lib");
+    }
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visit_customers);

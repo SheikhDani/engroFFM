@@ -69,6 +69,9 @@ public class MapActivity  extends AppCompatActivity implements OnMapReadyCallbac
     private GpsTracker gpsTracker;
     Button btnProceed;
     String from ;
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     private GoogleMap mMap;
     @Override

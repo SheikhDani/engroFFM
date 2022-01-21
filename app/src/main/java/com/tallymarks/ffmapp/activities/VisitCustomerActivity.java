@@ -34,6 +34,9 @@ public class VisitCustomerActivity extends AppCompatActivity {
     EditText et_search;
     ImageView iv_menu, iv_back, iv_location;
     SharedPrefferenceHelper sHelper;
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

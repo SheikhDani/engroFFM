@@ -60,6 +60,9 @@ public class SOILSamplinLogsActivity extends AppCompatActivity {
     Calendar myCalendar;
     String targetDate = "";
     ExtraHelper extraHelper;
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
