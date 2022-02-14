@@ -64,7 +64,7 @@ public class GetAssignedSalesPoint extends AsyncTask<String, Void, Void> {
         String assignedSalesPoint = Constants.FFM_GET_ASSIGNED_SAELS_POINT;
         System.out.println("OUtlet Status URL : " + assignedSalesPoint);
         try {
-            httpHandler = new HttpHandler();
+            httpHandler = new HttpHandler(mContext);
             HashMap<String, String> headerParams = new HashMap<>();
             if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
                 headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));

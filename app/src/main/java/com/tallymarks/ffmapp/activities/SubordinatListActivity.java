@@ -198,7 +198,7 @@ public class SubordinatListActivity extends AppCompatActivity implements ItemCli
             String getsupervsorsnapshot = Constants.FFM_GET_ASSIGNED_CUSTOMER_SUPERVISOR + "?subordinateId=" + sHelper.getString(Constants.SUBORDINATE_ID) ;
             System.out.println("OUtlet Status URL : " + getsupervsorsnapshot);
             try {
-                httpHandler = new HttpHandler();
+                httpHandler = new HttpHandler(SubordinatListActivity.this);
                 HashMap<String, String> headerParams = new HashMap<>();
                 if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
                     headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));

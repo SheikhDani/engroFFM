@@ -70,7 +70,7 @@ public class LoadAssignedFarmerFromSalesPoint extends AsyncTask<String, Void, Vo
         String journeyPlanUrl = Constants.FFM_GET_ASSIGNED_FARMERS + "?salePointCode=" + salesPointCode + "&enabled=true";
         System.out.println("JourneyPlan URL : " + journeyPlanUrl);
         try {
-            httpHandler = new HttpHandler();
+            httpHandler = new HttpHandler(mContext);
             HashMap<String, String> headerParams = new HashMap<>();
             if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
                 headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));

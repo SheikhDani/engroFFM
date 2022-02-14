@@ -1,9 +1,13 @@
 package com.tallymarks.ffmapp.utils;
 
+import android.content.Context;
+import android.content.res.AssetManager;
 import android.os.Build;
 
 
 import androidx.annotation.RequiresApi;
+
+import com.tallymarks.ffmapp.R;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -14,14 +18,29 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.util.HashMap;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 
 
 public class HttpHandler {
+    private Context mContext;
+    FingerprintDialog dialog;
 
-    public HttpHandler() {
-       HTTPSTrustManager.allowAllSSL();
+    public HttpHandler(Context c) {
+        this.mContext = c;
+        //HTTPSTrustManager.allowAllSSL();
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public String httpPost(String requestUrl, HashMap<String, String> headerParams, HashMap<String, String> bodyParams, String jsonData) throws Exception {
@@ -29,6 +48,10 @@ public class HttpHandler {
         {
             URL url = new URL(requestUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            if (conn instanceof HttpsURLConnection) {
+                ((HttpsURLConnection) conn).setSSLSocketFactory(trustCert().getSocketFactory());
+            }
+
             conn.setRequestMethod(Constants.POST);
 
             for (HashMap.Entry<String, String> entry : headerParams.entrySet())
@@ -83,6 +106,10 @@ public class HttpHandler {
         {
             URL url = new URL(requestUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            if (conn instanceof HttpsURLConnection) {
+                ((HttpsURLConnection) conn).setSSLSocketFactory(trustCert().getSocketFactory());
+            }
+
             conn.setRequestMethod(Constants.PUT);
 
             for (HashMap.Entry<String, String> entry : headerParams.entrySet())
@@ -139,6 +166,10 @@ public class HttpHandler {
         {
             URL url = new URL(requestUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            if (conn instanceof HttpsURLConnection) {
+                ((HttpsURLConnection) conn).setSSLSocketFactory(trustCert().getSocketFactory());
+            }
+
             for (HashMap.Entry<String, String> entry : headerParams.entrySet())
             {
                 conn.setRequestProperty(entry.getKey(),entry.getValue());
@@ -182,5 +213,27 @@ public class HttpHandler {
             }
         }
         return sb.toString();
+    }
+    private SSLContext trustCert() throws CertificateException,IOException, KeyStoreException,
+            NoSuchAlgorithmException, KeyManagementException {
+        //AssetManager assetManager = mContext.getAssets();
+       CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        Certificate ca;
+        ca = cf.generateCertificate(mContext.getResources().openRawResource(R.raw.tallymarkscloud));
+        // Create a KeyStore containing our trusted CAs
+        String keyStoreType = KeyStore.getDefaultType();
+        KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+        keyStore.load(null, null);
+        keyStore.setCertificateEntry("ca", ca);
+
+        // Create a TrustManager that trusts the CAs in our KeyStore
+        String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+        tmf.init(keyStore);
+
+        // Create an SSLContext that uses our TrustManager
+        SSLContext context = SSLContext.getInstance("TLS");
+        context.init(null, tmf.getTrustManagers(), null);
+        return context;
     }
 }

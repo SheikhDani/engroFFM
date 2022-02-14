@@ -501,4 +501,10 @@ public class StartActivity extends AppCompatActivity {
         headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_TIMESTAMP,String.valueOf(time));
         db.addData(db.TODAY_JOURNEY_PLAN_POST_DATA,headerParams);
     }
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(StartActivity.this, VisitCustomerActivity.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
 }

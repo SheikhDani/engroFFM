@@ -1,10 +1,12 @@
 package com.tallymarks.ffmapp.utils;
 
 import android.app.KeyguardManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.fingerprint.FingerprintManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.security.keystore.KeyGenParameterSpec;
@@ -13,19 +15,29 @@ import android.security.keystore.KeyProperties;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.activities.LoginActivity;
 import com.tallymarks.ffmapp.activities.MainActivity;
+import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.ExtraHelper;
+import com.tallymarks.ffmapp.database.MyHelper;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
+import com.tallymarks.ffmapp.models.loginoutput.LoginOutput;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -36,6 +48,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.Base64;
+import java.util.HashMap;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -49,7 +63,8 @@ public class FingerprintDialog extends DialogFragment
     Button mCancelButton;
     public static final String DEFAULT_KEY_NAME = "default_key";
     FingerprintManager mFingerprintManager;
-    ExtraHelper extraHelper;
+   MyHelper myHelper;
+   ExtraHelper extraHelper;
 
     private FingerprintManager.CryptoObject mCryptoObject;
     private FingerprintHelper mFingerprintHelper;
@@ -58,6 +73,7 @@ public class FingerprintDialog extends DialogFragment
     KeyGenerator mKeyGenerator = null;
     KeyguardManager mKeyguardManager;
     SharedPrefferenceHelper sHelper;
+    DatabaseHandler db;
 
     private Context mContext;
 
@@ -199,18 +215,18 @@ public class FingerprintDialog extends DialogFragment
     public void onAuthenticated(boolean b) {
         if (b) {
             extraHelper = new ExtraHelper(getActivity());
+            myHelper = new MyHelper(getActivity());
             sHelper = new SharedPrefferenceHelper(getActivity());
-            if(extraHelper!=null)
+            db = new DatabaseHandler(getActivity());
+            if(myHelper!=null)
             {
-                if(extraHelper.getString(Constants.ACCESS_TOKEN)!=null && !extraHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
-                    Toast.makeText(mContext.getApplicationContext(), "Fingerprint Recongnized Successfully!", Toast.LENGTH_LONG).show();
+                if(myHelper.getString(Constants.REFERSH_TOKEN)!=null && !myHelper.getString(Constants.REFERSH_TOKEN).equals("")) {
                     dismiss();
-                    Log.e("keyaccess", String.valueOf(extraHelper.getString(Constants.ACCESS_TOKEN)));
-                    sHelper.setString(Constants.CUSTOMER_ALL_PLAN_NOT_FOUND,"2");
-                    sHelper.setString(Constants.FARMER_TODAY_PLAN_NOT_FOUND,"2");
-                    sHelper.setString(Constants.CUSTOMER_TODAY_PLAN_NOT_FOUND,"2");
-                    Intent move = new Intent(mContext, MainActivity.class);
-                    startActivity(move);
+                    new FingerLoginData().execute();
+                   // Toast.makeText(mContext.getApplicationContext(), "Fingerprint Recongnized Successfully!", Toast.LENGTH_LONG).show();
+
+                   // Log.e("keyaccess", String.valueOf(extraHelper.getString(Constants.ACCESS_TOKEN)));
+
                 }
                 else
                 {
@@ -245,5 +261,141 @@ public class FingerprintDialog extends DialogFragment
     @Override
     public void onHelp(String s) {
         Toast.makeText(mContext.getApplicationContext(), "Auth help message:" + s, Toast.LENGTH_LONG).show();
+    }
+    private class FingerLoginData extends AsyncTask<String, Void, String> {
+
+        private HttpHandler httpHandler;
+        ProgressDialog pDialog;
+        String message = "";
+        String status = "";
+        String error = "";
+        String errorMessage = "";
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage(getResources().getString(R.string.loading));
+            pDialog.setIndeterminate(false);
+            pDialog.show();
+            pDialog.setCancelable(false);
+        }
+
+
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        @Override
+        protected String doInBackground(String... Url) {
+            String response = "";
+            String basicAuth= "";
+            String auth = Constants.LOGIN_USERNAME + ":" + Constants.LOGIN_PASSWORD;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                basicAuth = "Basic " + new String(Base64.getEncoder().encode(auth.getBytes()));
+            }
+            String loginUrl = Constants.FFM_FINGER_LOGIN+ "?refresh_token=" + myHelper.getString(Constants.REFERSH_TOKEN)+ "&grant_type=" + Constants.REFERSH_GRANT_TYPE;
+            try {
+                httpHandler = new HttpHandler(mContext);
+                HashMap<String, String> headerParams = new HashMap<>();
+                headerParams.put(Constants.AUTHORIZATION,Constants.BASIC);
+                HashMap<String, String> bodyParams = new HashMap<>();
+                response = httpHandler.httpPost(loginUrl,headerParams,bodyParams,null);
+                Log.e("lOGIN Url", loginUrl);
+                Log.e("Response", response);
+                LoginOutput logincode = new Gson().fromJson(response, LoginOutput.class);
+                if (logincode != null) {
+                    for(int i=0;i<logincode.getAuthorities().size();i++)
+                    {
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put(db.KEY_ROLE_NAME, "" +  logincode.getAuthorities().get(i) == null ||  logincode.getAuthorities().get(i).equals("") ? getString(R.string.not_applicable):  logincode.getAuthorities().get(i));
+                        db.addData(db.ROLES, map);
+                        extraHelper.setString(Constants.ROLE,logincode.getAuthorities().get(i));
+//                        logincode.getAuthorities().get(i);
+
+                    }
+                    sHelper.setString(Constants.ACCESS_TOKEN,logincode.getAccessToken());
+                    sHelper.setString(Constants.REFERSH_TOKEN,logincode.getRefreshToken());
+                    sHelper.setString(Constants.TOKEN_TYPE,logincode.getTokenType());
+                    extraHelper.setString(Constants.ACCESS_TOKEN,logincode.getAccessToken());
+                    extraHelper.setString(Constants.REFERSH_TOKEN,logincode.getRefreshToken());
+                    extraHelper.setString(Constants.TOKEN_TYPE,logincode.getTokenType());
+                    extraHelper.setString(Constants.USER_NAME,logincode.getUsername());
+                    extraHelper.setString(Constants.NAME,logincode.getName());
+                    myHelper.setString(Constants.REFERSH_TOKEN,logincode.getRefreshToken());
+
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put(db.KEY_COMPANY_NAME, "" + logincode.getCompanyName() == null || logincode.getCompanyName().equals("") ? getString(R.string.not_applicable): logincode.getCompanyName());
+                    map.put(db.KEY_USER_NAME, "" + logincode.getUsername() == null || logincode.getUsername().equals("") ? getString(R.string.not_applicable) : logincode.getUsername());
+                    map.put(db.KEY_NAME, logincode.getName()== null || logincode.getName().equals("") ? getString(R.string.not_applicable) : logincode.getName());
+                    map.put(db.KEY_USER_DESIGNATION, logincode.getDesignation() == null || logincode.getDesignation().equals("") ? getString(R.string.not_applicable) : logincode.getDesignation());
+                    map.put(db.KEY_USER_EMAIL ,logincode.getEmail() == null || logincode.getEmail().equals("") ? getString(R.string.not_applicable) : logincode.getEmail());
+                    map.put(db.KEY_IS_LOGGED_IN, "1");
+                    db.addData(db.LOGIN, map);
+                    Helpers.displayMessage(mContext, true, "Fingerprint Recongnized Successfully!");
+                    sHelper.setString(Constants.CUSTOMER_ALL_PLAN_NOT_FOUND,"2");
+                    sHelper.setString(Constants.FARMER_TODAY_PLAN_NOT_FOUND,"2");
+                    sHelper.setString(Constants.CUSTOMER_TODAY_PLAN_NOT_FOUND,"2");
+                    Intent main = new Intent(mContext, MainActivity.class);
+                   // main.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    mContext.startActivity(main);
+                    ((LoginActivity)getActivity()).finish();
+
+
+
+                }
+                else {
+                    try {
+                        JSONObject jsonObj = new JSONObject(response);
+                        status = String.valueOf(jsonObj.getString("success"));
+                        message = String.valueOf(jsonObj.getString("message"));
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                //Helpers.displayMessage(LoginActivity.this, true, getResources().getString(R.string.invalid_credentials_message));
+
+
+                //  return response.toString();
+            } catch (Exception exception) {
+                if (response.equals("")) {
+                    Helpers.displayMessage(getActivity(), true, exception.getMessage());
+                    //showResponseDialog( mContext.getResources().getString(R.string.alert),exception.getMessage());
+                    //pDialog.dismiss();
+                } else {
+                    JSONObject json = null;
+                    try {
+                        json = new JSONObject(response);
+                        errorMessage = json.getString("error_description");
+                        error = json.getString("error");
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+
+                    }
+                    //Helpers.displayMessage(LoginActivity.this, true, exception.getMessage());
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            pDialog.dismiss();
+
+            if(error!=null && !error.equals(""))
+            {
+
+                DialougeManager.invalidCredentialsPopup(getActivity(),"",errorMessage);
+
+            }
+
+
+//            parseErrorResponse(result);
+        }
+
+
     }
 }

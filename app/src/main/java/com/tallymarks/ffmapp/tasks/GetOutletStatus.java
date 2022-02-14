@@ -66,7 +66,7 @@ public class GetOutletStatus extends AsyncTask<String, Void, Void> {
         String journeyPlanUrl = Constants.FFM_GET_OUTLET_STATUS;
         System.out.println("OUtlet Status URL : " + journeyPlanUrl);
         try {
-            httpHandler = new HttpHandler();
+            httpHandler = new HttpHandler(mContext);
             HashMap<String, String> headerParams = new HashMap<>();
             if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
                 headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));

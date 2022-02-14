@@ -2006,4 +2006,10 @@ public class FarmVisitActivity extends AppCompatActivity {
         float distanceInMeters = loc1.distanceTo(loc2);
         return distanceInMeters;
     }
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(FarmVisitActivity.this, FarmersStartActivity.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
 }

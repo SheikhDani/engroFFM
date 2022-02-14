@@ -205,7 +205,7 @@ public class SuperVisorSnapShotActivity extends AppCompatActivity {
             String getsupervsorsnapshot = Constants.FFM_GET_PREVIOUS_SNAPSHOT_SUPERVISOR + "?customerId=" + sHelper.getString(Constants.SUBORDINATE_CUSTOMER_ID);
             System.out.println("OUtlet Status URL : " + getsupervsorsnapshot);
             try {
-                httpHandler = new HttpHandler();
+                httpHandler = new HttpHandler(SuperVisorSnapShotActivity.this);
                 HashMap<String, String> headerParams = new HashMap<>();
                 if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
                     headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));

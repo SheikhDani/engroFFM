@@ -70,7 +70,7 @@ public class ConversionRetentionActivity extends AppCompatActivity implements It
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         txt_no_data = findViewById(R.id.empty_view);
         sHelper = new SharedPrefferenceHelper(ConversionRetentionActivity.this);
-        extraHelper = new ExtraHelper(ConversionRetentionActivity.this);
+      extraHelper = new ExtraHelper(ConversionRetentionActivity.this);
         tvTopHeader = findViewById(R.id.tv_dashboard);
         tvTopHeader.setVisibility(View.VISIBLE);
         et_Search = findViewById(R.id.et_Search);
@@ -227,7 +227,7 @@ public class ConversionRetentionActivity extends AppCompatActivity implements It
             String getsupervsorsnapshot = Constants.FFM_FARMER_GET_CONVERSION_RETENTION;
             System.out.println("OUtlet Status URL : " + getsupervsorsnapshot);
             try {
-                httpHandler = new HttpHandler();
+                httpHandler = new HttpHandler(ConversionRetentionActivity.this);
                 HashMap<String, String> headerParams = new HashMap<>();
                 if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
                     headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
@@ -324,6 +324,13 @@ public class ConversionRetentionActivity extends AppCompatActivity implements It
 
 
         }
+    }
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(ConversionRetentionActivity.this, MainActivity.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
     }
 
 }

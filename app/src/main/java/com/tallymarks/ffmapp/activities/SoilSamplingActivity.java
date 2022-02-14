@@ -1217,4 +1217,18 @@ public class SoilSamplingActivity extends AppCompatActivity {
         builder.setSpan(new ForegroundColorSpan(Color.RED), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return builder;
     }
+    @Override
+    public void onBackPressed() {
+        if(rolename.equals("Field Force Team") || rolename.equals("FieldAssistant")) {
+            Intent i = new Intent(SoilSamplingActivity.this, FarmVisitRoleWiseActivity.class);
+            startActivity(i);
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        }
+        else
+        {
+            Intent i = new Intent(SoilSamplingActivity.this, FarmVisitActivity.class);
+            startActivity(i);
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        }
+    }
 }

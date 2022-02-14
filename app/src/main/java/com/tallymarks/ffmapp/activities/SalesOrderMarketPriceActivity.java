@@ -295,4 +295,10 @@ public class SalesOrderMarketPriceActivity extends AppCompatActivity {
     private SalesOrderHeader createCategory(String no, String date, String product, String quantity) {
         return new SalesOrderHeader(no, date, product, quantity);
     }
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(SalesOrderMarketPriceActivity.this, FloorStockActivity.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
 }

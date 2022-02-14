@@ -175,7 +175,7 @@ public class SOILSamplinLogsActivity extends AppCompatActivity {
             String getsupervsorsnapshot = Constants.FFM_GET_SOIL_SAMPLING_LOGS + "?dateFrom=" + date + "&dateTo=" + date;
             System.out.println("OUtlet Status URL : " + getsupervsorsnapshot);
             try {
-                httpHandler = new HttpHandler();
+                httpHandler = new HttpHandler(SOILSamplinLogsActivity.this);
                 HashMap<String, String> headerParams = new HashMap<>();
                 if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
                     headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
@@ -270,4 +270,10 @@ public class SOILSamplinLogsActivity extends AppCompatActivity {
 
 
     };
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(SOILSamplinLogsActivity.this, MainActivity.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
 }

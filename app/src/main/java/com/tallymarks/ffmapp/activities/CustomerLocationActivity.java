@@ -316,7 +316,7 @@ public class CustomerLocationActivity extends AppCompatActivity implements OnMap
             inputParameters.setLatitude(currentlat);
             inputParameters.setLongitude(currentlng);
 
-            httpHandler = new HttpHandler();
+            httpHandler = new HttpHandler(CustomerLocationActivity.this);
             HashMap<String, String> headerParams2 = new HashMap<>();
             if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
                 headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
@@ -393,4 +393,11 @@ public class CustomerLocationActivity extends AppCompatActivity implements OnMap
 
     }
 }
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(CustomerLocationActivity.this, MainActivity.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+    }
 }

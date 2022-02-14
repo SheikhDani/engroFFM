@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config xmlns:tools="http://schemas.android.com/tools">
+    <domain-config>
+        <domain includeSubdomains="true">attendance.tallymarkscloud.com</domain>
+        <pin-set>
+            <pin digest="SHA-256">Oe/ubS012+WcASU2W+kxnQP/2CnaIMZ3yUefDmF+vec=</pin>
+        </pin-set>
+    </domain-config>
+</network-security-config>
