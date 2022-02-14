@@ -219,5 +219,11 @@ public class CustomerSnapShotActivity extends AppCompatActivity {
 
         return allTeams;
     }
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(CustomerSnapShotActivity.this, FloorStockActivity.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
 }
 

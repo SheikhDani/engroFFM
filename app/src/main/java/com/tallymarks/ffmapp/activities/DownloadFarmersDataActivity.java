@@ -196,4 +196,10 @@ public class DownloadFarmersDataActivity extends AppCompatActivity {
         // so that it will render the list with new data
         mAdapter = new FarmersAdapter(movieList,DownloadFarmersDataActivity.this);
     }
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(DownloadFarmersDataActivity.this, MainActivity.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
 }

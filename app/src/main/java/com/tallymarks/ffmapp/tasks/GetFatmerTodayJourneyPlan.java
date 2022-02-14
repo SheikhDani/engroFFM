@@ -69,7 +69,7 @@ public class GetFatmerTodayJourneyPlan extends AsyncTask<String, Void, Void> {
         String journeyPlanUrl = Constants.FFM_GET_FARMER_TODAY_JOURNEY_PLAN;
         System.out.println("JourneyPlan URL : " + journeyPlanUrl);
         try {
-            httpHandler = new HttpHandler();
+            httpHandler = new HttpHandler(mContext);
             db = new MyDatabaseHandler(mContext);
             HashMap<String, String> headerParams = new HashMap<>();
             if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {

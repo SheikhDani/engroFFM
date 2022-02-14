@@ -685,7 +685,7 @@ public class ConverionRetentionFormActivity extends AppCompatActivity {
             String getsupervsorsnapshot = Constants.FFM_FARMER_DETAIL_DATA + "?farmerId=" + farmerid+ "&parentActivity=" + parentactivity ;
             System.out.println("OUtlet Status URL : " + getsupervsorsnapshot);
             try {
-                httpHandler = new HttpHandler();
+                httpHandler = new HttpHandler(ConverionRetentionFormActivity.this);
                 HashMap<String, String> headerParams = new HashMap<>();
                 if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
                     headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
@@ -1129,7 +1129,7 @@ public class ConverionRetentionFormActivity extends AppCompatActivity {
            createConversion.setProductName(autoprod.getText().toString());
            createConversion.setActivityCode(tvActivityNo.getText().toString());
 
-           httpHandler = new HttpHandler();
+           httpHandler = new HttpHandler(ConverionRetentionFormActivity.this);
             HashMap<String, String> headerParams2 = new HashMap<>();
             if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
                 headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
@@ -1230,7 +1230,7 @@ public class ConverionRetentionFormActivity extends AppCompatActivity {
             createConversion.setAddress(etAddress.getText().toString());
             createConversion.setRemarks(et_remarks.getText().toString());
             createConversion.setStatus(auto_stauts.getText().toString());
-            httpHandler = new HttpHandler();
+            httpHandler = new HttpHandler(ConverionRetentionFormActivity.this);
             HashMap<String, String> headerParams2 = new HashMap<>();
             if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
                 headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
@@ -1290,6 +1290,13 @@ public class ConverionRetentionFormActivity extends AppCompatActivity {
             }
 
         }
+    }
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(ConverionRetentionFormActivity.this, ConversionRetentionActivity.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
     }
 
 }

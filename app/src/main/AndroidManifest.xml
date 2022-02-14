@@ -29,6 +29,7 @@
 
         <activity
             android:name="com.tallymarks.ffmapp.activities.LoginActivity"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
@@ -47,156 +48,188 @@
         <activity
             android:name=".activities.MainActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.DownloadFarmersDataActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.StartActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.VisitCustomerActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.AddNewFarmerActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.FarmerMeetingActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.CustomerSnapShotActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
+            android:taskAffinity=""
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.MarketPricesActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.FloorStockActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".activities.FarmVisitActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.QualityofSalesCallActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.FarmerDemoActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.SoilAnalysis"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.SoilSamplingActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.VisitFarmerActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.SalesOrderMarketPriceActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.MapActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.FarmersStartActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.CustomerLocationActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.SubOrdinatesActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.SOILSamplinLogsActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.CustomMap"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.SubordinatListActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.SuperVisorSnapShotActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.StockSellingSummaryActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
 
         <activity
             android:name=".activities.DealersActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".activities.EditFarmerActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.EditFarmerDetailActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activities.ConversionRetentionActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".activities.ConverionRetentionFormActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".activities.FarmVisitRoleWiseActivity"
             android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
+
 
     </application>
 

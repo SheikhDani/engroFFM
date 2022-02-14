@@ -762,7 +762,7 @@ public class EditFarmerActivity extends AppCompatActivity {
             }
 
             inputCollection.add(inputParameters);
-            httpHandler = new HttpHandler();
+            httpHandler = new HttpHandler(EditFarmerActivity.this);
             HashMap<String, String> headerParams2 = new HashMap<>();
             headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
             HashMap<String, String> bodyParams = new HashMap<>();
@@ -1214,5 +1214,11 @@ public class EditFarmerActivity extends AppCompatActivity {
             // so that it will render the list with new data
             // mAdapter.notifyDataSetChanged();
         }
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(EditFarmerActivity.this, EditFarmerDetailActivity.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
 
     }

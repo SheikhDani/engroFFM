@@ -198,7 +198,7 @@ public class FarmerMeetingActivity extends AppCompatActivity {
                     Toast.makeText(FarmerMeetingActivity.this, getResources().getString(R.string.meeting_address_required), Toast.LENGTH_LONG).show();
                 } else {
                     if (NetworkManager.isNetworkAvailable(FarmerMeetingActivity.this)) {
-                        String accessToken ;
+                        String accessToken = "" ;
 
                         if(sharedPrefferenceHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sharedPrefferenceHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
                              accessToken = sharedPrefferenceHelper.getString(Constants.ACCESS_TOKEN);
@@ -722,5 +722,9 @@ public class FarmerMeetingActivity extends AppCompatActivity {
         int end = builder.length();
         builder.setSpan(new ForegroundColorSpan(Color.RED), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return builder;
+    }
+    @Override
+    public void onBackPressed() {
+       goBack();
     }
 }

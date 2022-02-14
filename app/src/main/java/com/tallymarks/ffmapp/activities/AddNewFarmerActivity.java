@@ -1094,7 +1094,13 @@ public class AddNewFarmerActivity extends AppCompatActivity {
         // so that it will render the list with new data
         // mAdapter.notifyDataSetChanged();
     }
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(AddNewFarmerActivity.this, MainActivity.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
+    }
 
 }
 

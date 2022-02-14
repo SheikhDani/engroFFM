@@ -9,11 +9,13 @@ public class Constants {
     public static String LOGIN_USERNAME = "";
     public static String LOGIN_PASSWORD = "";
     public static String LOGIN_GRANT_TYPE = "password";
+    public static String REFERSH_GRANT_TYPE = "refresh_token";
     public static final String SCROLL_POSITION = "scrollposition";
 //    public static final String ENVIRONMENT = "Development";
     public static final String DATE_FORMAT= "dd-MM-yyyy";
     public static final String GMT_TIME_FORMAT= "EE MMM dd HH:mm:ss zz yyy";
     public static final String AUTHORIZATION= "Authorization";
+    public static final String BASIC= "Basic dGFsbHlzaXNhcHA6c2VjcmV0";
     public static final String YEAR_DATE_FORMAT= "yyyy-MM-dd";
     public static final String BEARER= "Bearer";
 
@@ -153,6 +155,7 @@ public class Constants {
     public static final String FFM_BASE_URL = "https://attendance.tallymarkscloud.com:8080/mitracs";
 
     public static final String FFM_LOGIN = FFM_BASE_URL + "/oauth/token";
+    public static final String FFM_FINGER_LOGIN = FFM_BASE_URL + "/oauth/token";
     public static final String FFM_GET_ALL_CUSTOMERS= FFM_BASE_URL + "/global/lookup/getAssignedCustomersForCheckIn";
     public static final String FFM_GET_OUTLET_STATUS= FFM_BASE_URL + "/global/lookup/getOutletStatuses";
     public static final String FFM_GET_TODAY_CUSTOMERS= FFM_BASE_URL + "/app/trans/getCustomersTodaysJourneyPlan";
@@ -177,6 +180,7 @@ public class Constants {
     public static final String FFM_GET_PREVIOUS_SNAPSHOT_SUPERVISOR=  FFM_BASE_URL + "/app/trans/getPreviousStockSnapshot";
     public static final String FFM_GET_LAST_VISIT_STOCK_SALE=  FFM_BASE_URL + "/app/trans/getLastVisitStockSale";
     public static final String POST_NEW_FARMER=  FFM_BASE_URL + "/app/trans/createAppFarmer";
+    public static final String FFM_LOGOUT=  FFM_BASE_URL + "/oauth/logout";
 
     public static final String FFM_POST_FARMER_TODAY_JOURNEY_PLAN=  FFM_BASE_URL + "/app/trans/checkInJourneyPlan";
     public static final String FFM_POST_FARMER_DEMO=  FFM_BASE_URL + "/app/trans/createProductDemo";
@@ -189,6 +193,7 @@ public class Constants {
     public static final String FFM_FARMER_ADD_CONVERSION_RETENTION= FFM_BASE_URL +"/app/trans/createConversionRetention";
     public static final String FFM_FARMER_GET_CONVERSION_RETENTION= FFM_BASE_URL +"/app/trans/getAllConversionRetention";
     public static final String FFM_FARMER_EDIT_CONVERSION_RETENTION= FFM_BASE_URL +"/app/trans/editConversionRetention";
+    public static final String FFM_POST_DEVICE_TOKEN=  FFM_BASE_URL + "/global/lookup/store-token";
 
 
 

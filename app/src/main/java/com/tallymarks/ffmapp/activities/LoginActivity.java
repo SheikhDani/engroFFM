@@ -46,6 +46,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -57,8 +60,10 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.ExtraHelper;
+import com.tallymarks.ffmapp.database.MyHelper;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.changecustomerlocation.ChnageCustomerLocationinput;
+import com.tallymarks.ffmapp.models.devicetokeninput.DeviceTokenInput;
 import com.tallymarks.ffmapp.models.forgetpasswordinput.ForgetPasswordInput;
 import com.tallymarks.ffmapp.models.loginoutput.LoginOutput;
 import com.tallymarks.ffmapp.utils.Constants;
@@ -81,7 +86,7 @@ import java.util.List;
 
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener  {
+        GoogleApiClient.OnConnectionFailedListener {
 
     FingerprintManagerCompat managerCompat;
     ImageView sensorimg;
@@ -91,9 +96,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     DatabaseHandler db;
     SharedPrefferenceHelper sHelper;
     ExtraHelper extraHelper;
+    MyHelper myHelper;
     final static int REQUEST_LOCATION = 199;
     private GoogleApiClient googleApiClient;
     GpsTracker gpsTracker;
+
     static {
         System.loadLibrary("native-lib");
     }
@@ -105,10 +112,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         initView();
 
 
-
     }
-    private void initView()
-    {
+
+    private void initView() {
 
         sensorimg = findViewById(R.id.icon);
         gpsTracker = new GpsTracker(LoginActivity.this);
@@ -119,6 +125,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         db = new DatabaseHandler(LoginActivity.this);
         sHelper = new SharedPrefferenceHelper(LoginActivity.this);
         extraHelper = new ExtraHelper(LoginActivity.this);
+        myHelper = new MyHelper(LoginActivity.this);
         requestMultiplePermissions();
         btn_sumit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,7 +134,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 //startActivity(main);
                 Constants.LOGIN_USERNAME = et_username.getText().toString();
                 Constants.LOGIN_PASSWORD = et_password.getText().toString();
-                if(Helpers.isNetworkAvailable(LoginActivity.this)) {
+                if (Helpers.isNetworkAvailable(LoginActivity.this)) {
                     gpsTracker = new GpsTracker(LoginActivity.this);
                     if (gpsTracker.canGetLocation()) {
                         if (Constants.LOGIN_USERNAME != null && Constants.LOGIN_PASSWORD != null
@@ -136,15 +143,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                             new LoginData().execute();
                         } else {
-                          DialougeManager.invalidCredentialsPopup(LoginActivity.this,"",getResources().getString(R.string.usercredential));
+                            DialougeManager.invalidCredentialsPopup(LoginActivity.this, "", getResources().getString(R.string.usercredential));
 
                         }
                     } else {
                         DialougeManager.gpsNotEnabledPopup(LoginActivity.this);
                     }
-                }
-                else
-                {
+                } else {
                     Helpers.noConnectivityPopUp(LoginActivity.this);
                 }
             }
@@ -158,23 +163,27 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         sensorimg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              managerCompat = FingerprintManagerCompat.from(LoginActivity.this);
-              if (managerCompat.isHardwareDetected() && managerCompat.hasEnrolledFingerprints()) {
-                   showFingerPrintDialog();
+                managerCompat = FingerprintManagerCompat.from(LoginActivity.this);
+                if (managerCompat.isHardwareDetected() && managerCompat.hasEnrolledFingerprints()) {
+                    showFingerPrintDialog();
                 } else {
-                   Toast.makeText(getApplicationContext(), "Fingerprint not supported", Toast.LENGTH_SHORT).show();
-               }
+                    Toast.makeText(getApplicationContext(), "Fingerprint not supported", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         if (checkForExistingUser()) {
-            Intent i = new Intent(LoginActivity.this,MainActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            Intent i = new Intent(LoginActivity.this, MainActivity.class);
+
+            // i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
+            finish();
         }
         setAppInfo();
 
+
     }
+
     private void showFingerPrintDialog() {
 
         FingerprintDialog fragment = new FingerprintDialog();
@@ -183,6 +192,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
     }
+
     private void openForgetPasswordDialouge() {
 
         LayoutInflater li = LayoutInflater.from(LoginActivity.this);
@@ -190,7 +200,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(LoginActivity.this);
         alertDialogBuilder.setView(promptsView);
         final AlertDialog alertDialog = alertDialogBuilder.create();
-        EditText et_email= promptsView.findViewById(R.id.et_email);
+        EditText et_email = promptsView.findViewById(R.id.et_email);
 
         ImageView ivClsoe = promptsView.findViewById(R.id.ivClose);
         ivClsoe.setOnClickListener(new View.OnClickListener() {
@@ -201,7 +211,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         });
 
 
-
         Button btnYes = promptsView.findViewById(R.id.btn_add);
         // ivClose.setVisibility(View.GONE);
 
@@ -209,8 +218,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               new ForgetPassword(et_email.getText().toString(),alertDialog).execute();
-               // alertDialog.dismiss();
+                new ForgetPassword(et_email.getText().toString(), alertDialog).execute();
+                // alertDialog.dismiss();
 //                Intent salescall = new Intent(FarmVisitActivity.this,QualityofSalesCallActivity.class);
 //                startActivity(salescall);
 
@@ -221,6 +230,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         alertDialogBuilder.setCancelable(true);
         alertDialog.show();
     }
+
     private boolean checkForExistingUser() {
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_IS_LOGGED_IN, "");
@@ -271,8 +281,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         String email = "";
         AlertDialog alertDialog;
 
-        ForgetPassword(String email,AlertDialog alertDialog) {
-            this.email= email;
+        ForgetPassword(String email, AlertDialog alertDialog) {
+            this.email = email;
             this.alertDialog = alertDialog;
         }
 
@@ -295,7 +305,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             Gson gson = new Gson();
             ForgetPasswordInput inputParameters = new ForgetPasswordInput();
             inputParameters.setEmail(email);
-            httpHandler = new HttpHandler();
+            httpHandler = new HttpHandler(LoginActivity.this);
             HashMap<String, String> headerParams2 = new HashMap<>();
 //            if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
 //                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
@@ -319,9 +329,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         if (status.equals("true")) {
                             // updateOutletStatusById(Helpers.clean(JourneyPlanActivity.selectedOutletId));
                             Helpers.displayMessage(LoginActivity.this, true, message);
-                        }
-                        else if(status.equals("false"))
-                        {
+                        } else if (status.equals("false")) {
                             Helpers.displayMessage(LoginActivity.this, true, message);
                         }
                     } catch (JSONException e) {
@@ -385,6 +393,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         String status = "";
         String error = "";
         String errorMessage = "";
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -400,74 +409,78 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         @Override
         protected String doInBackground(String... Url) {
             String response = "";
-            String basicAuth= "";
+            String basicAuth = "";
             String auth = Constants.LOGIN_USERNAME + ":" + Constants.LOGIN_PASSWORD;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 basicAuth = "Basic " + new String(Base64.getEncoder().encode(auth.getBytes()));
             }
-            String loginUrl = Constants.FFM_LOGIN + "?username=" + Constants.LOGIN_USERNAME + "&password=" + Constants.LOGIN_PASSWORD+ "&grant_type=" + Constants.LOGIN_GRANT_TYPE;
+            String loginUrl = Constants.FFM_LOGIN + "?username=" + Constants.LOGIN_USERNAME + "&password=" + Constants.LOGIN_PASSWORD + "&grant_type=" + Constants.LOGIN_GRANT_TYPE;
             try {
-                httpHandler = new HttpHandler();
+                httpHandler = new HttpHandler(LoginActivity.this);
                 HashMap<String, String> headerParams = new HashMap<>();
-                headerParams.put(Constants.AUTHORIZATION,"Basic dGFsbHlzaXNhcHA6c2VjcmV0");
+                headerParams.put(Constants.AUTHORIZATION, Constants.BASIC);
                 HashMap<String, String> bodyParams = new HashMap<>();
-                response = httpHandler.httpPost(loginUrl,headerParams,bodyParams,null);
+                response = httpHandler.httpPost(loginUrl, headerParams, bodyParams, null);
                 Log.e("lOGIN Url", loginUrl);
                 Log.e("Response", response);
                 LoginOutput logincode = new Gson().fromJson(response, LoginOutput.class);
                 if (logincode != null) {
-                    for(int i=0;i<logincode.getAuthorities().size();i++)
-                    {
+                    for (int i = 0; i < logincode.getAuthorities().size(); i++) {
                         HashMap<String, String> map = new HashMap<>();
-                        map.put(db.KEY_ROLE_NAME, "" +  logincode.getAuthorities().get(i) == null ||  logincode.getAuthorities().get(i).equals("") ? getString(R.string.not_applicable):  logincode.getAuthorities().get(i));
+                        map.put(db.KEY_ROLE_NAME, "" + logincode.getAuthorities().get(i) == null || logincode.getAuthorities().get(i).equals("") ? getString(R.string.not_applicable) : logincode.getAuthorities().get(i));
                         db.addData(db.ROLES, map);
-                        extraHelper.setString(Constants.ROLE,logincode.getAuthorities().get(i));
+                        extraHelper.setString(Constants.ROLE, logincode.getAuthorities().get(i));
 //                        logincode.getAuthorities().get(i);
 
                     }
-                    sHelper.setString(Constants.ACCESS_TOKEN,logincode.getAccessToken());
-                    sHelper.setString(Constants.REFERSH_TOKEN,logincode.getRefreshToken());
-                    sHelper.setString(Constants.TOKEN_TYPE,logincode.getTokenType());
-                    extraHelper.setString(Constants.ACCESS_TOKEN,logincode.getAccessToken());
-                    extraHelper.setString(Constants.REFERSH_TOKEN,logincode.getRefreshToken());
-                    extraHelper.setString(Constants.TOKEN_TYPE,logincode.getTokenType());
-                    extraHelper.setString(Constants.USER_NAME,logincode.getUsername());
-                    extraHelper.setString(Constants.NAME,logincode.getName());
+                    sHelper.setString(Constants.ACCESS_TOKEN, logincode.getAccessToken());
+                    sHelper.setString(Constants.REFERSH_TOKEN, logincode.getRefreshToken());
+                    sHelper.setString(Constants.TOKEN_TYPE, logincode.getTokenType());
+                    extraHelper.setString(Constants.ACCESS_TOKEN, logincode.getAccessToken());
+                    extraHelper.setString(Constants.REFERSH_TOKEN, logincode.getRefreshToken());
+                    extraHelper.setString(Constants.TOKEN_TYPE, logincode.getTokenType());
+                    extraHelper.setString(Constants.USER_NAME, logincode.getUsername());
+                    extraHelper.setString(Constants.NAME, logincode.getName());
+                    myHelper.setString(Constants.REFERSH_TOKEN, logincode.getRefreshToken());
 
                     HashMap<String, String> map = new HashMap<>();
-                    map.put(db.KEY_COMPANY_NAME, "" + logincode.getCompanyName() == null || logincode.getCompanyName().equals("") ? getString(R.string.not_applicable): logincode.getCompanyName());
+                    map.put(db.KEY_COMPANY_NAME, "" + logincode.getCompanyName() == null || logincode.getCompanyName().equals("") ? getString(R.string.not_applicable) : logincode.getCompanyName());
                     map.put(db.KEY_USER_NAME, "" + logincode.getUsername() == null || logincode.getUsername().equals("") ? getString(R.string.not_applicable) : logincode.getUsername());
-                    map.put(db.KEY_NAME, logincode.getName()== null || logincode.getName().equals("") ? getString(R.string.not_applicable) : logincode.getName());
+                    map.put(db.KEY_NAME, logincode.getName() == null || logincode.getName().equals("") ? getString(R.string.not_applicable) : logincode.getName());
                     map.put(db.KEY_USER_DESIGNATION, logincode.getDesignation() == null || logincode.getDesignation().equals("") ? getString(R.string.not_applicable) : logincode.getDesignation());
-                    map.put(db.KEY_USER_EMAIL ,logincode.getEmail() == null || logincode.getEmail().equals("") ? getString(R.string.not_applicable) : logincode.getEmail());
+                    map.put(db.KEY_USER_EMAIL, logincode.getEmail() == null || logincode.getEmail().equals("") ? getString(R.string.not_applicable) : logincode.getEmail());
                     map.put(db.KEY_IS_LOGGED_IN, "1");
                     db.addData(db.LOGIN, map);
+
+                    sHelper.setString(Constants.CUSTOMER_ALL_PLAN_NOT_FOUND, "2");
+                    sHelper.setString(Constants.FARMER_TODAY_PLAN_NOT_FOUND, "2");
+                    sHelper.setString(Constants.CUSTOMER_TODAY_PLAN_NOT_FOUND, "2");
                     Helpers.displayMessage(LoginActivity.this, true, "Successfully Login");
-                    sHelper.setString(Constants.CUSTOMER_ALL_PLAN_NOT_FOUND,"2");
-                    sHelper.setString(Constants.FARMER_TODAY_PLAN_NOT_FOUND,"2");
-                    sHelper.setString(Constants.CUSTOMER_TODAY_PLAN_NOT_FOUND,"2");
                     Intent main = new Intent(LoginActivity.this, MainActivity.class);
-                    main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    // main.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(main);
-                }
-                       else {
-                        try {
-                            JSONObject jsonObj = new JSONObject(response);
-                            status = String.valueOf(jsonObj.getString("success"));
-                            message = String.valueOf(jsonObj.getString("message"));
+                    finish();
+                   // getDeviceToken(pDialog);
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                } else {
+                    pDialog.dismiss();
+                    try {
+                        JSONObject jsonObj = new JSONObject(response);
+                        status = String.valueOf(jsonObj.getString("success"));
+                        message = String.valueOf(jsonObj.getString("message"));
 
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
 
-                    //Helpers.displayMessage(LoginActivity.this, true, getResources().getString(R.string.invalid_credentials_message));
+                }
+
+                //Helpers.displayMessage(LoginActivity.this, true, getResources().getString(R.string.invalid_credentials_message));
 
 
                 //  return response.toString();
             } catch (Exception exception) {
+                pDialog.dismiss();
                 if (response.equals("")) {
                     Helpers.displayMessage(LoginActivity.this, true, exception.getMessage());
                     //showResponseDialog( mContext.getResources().getString(R.string.alert),exception.getMessage());
@@ -476,7 +489,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     JSONObject json = null;
                     try {
                         json = new JSONObject(response);
-                       errorMessage = json.getString("error_description");
+                        errorMessage = json.getString("error_description");
                         error = json.getString("error");
 
 
@@ -493,16 +506,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         @Override
         protected void onPostExecute(String result) {
-            pDialog.dismiss();
+             pDialog.dismiss();
             View view = LoginActivity.this.getCurrentFocus();
             if (view != null) {
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
-            if(error!=null && !error.equals(""))
-            {
+            if (error != null && !error.equals("")) {
 
-                    DialougeManager.invalidCredentialsPopup(LoginActivity.this,"",errorMessage);
+                DialougeManager.invalidCredentialsPopup(LoginActivity.this, "", errorMessage);
 
             }
 
@@ -512,10 +524,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
     }
+
     @Override
     public void onBackPressed() {
         exitPopup();
     }
+
     private void exitPopup() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(LoginActivity.this);
         alertDialogBuilder
@@ -542,6 +556,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         alertDialog.show();
 
     }
+
     private void requestMultiplePermissions() {
 
         Dexter.withActivity(this)
@@ -585,6 +600,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .onSameThread()
                 .check();
     }
+
     private void enableLoc() {
         if (googleApiClient == null) {
             googleApiClient = new GoogleApiClient.Builder(LoginActivity.this).addApi(LocationServices.API).addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
@@ -646,8 +662,31 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             });
         }
     }
-    public void setAppInfo(){
-        TextView appinfo = (TextView)findViewById(R.id.tv_appinfo);
+
+    public void getDeviceToken(ProgressDialog progressDialog) {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            // Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+
+                        new SendDeviceToekntoServer(token, progressDialog).execute();
+                        // Log and toast
+                        // String msg = getString(R.string.msg_token_fmt, token);
+                        // Log.d(TAG, msg);
+                        //Toast.makeText(LoginActivity.this, token, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    public void setAppInfo() {
+        TextView appinfo = (TextView) findViewById(R.id.tv_appinfo);
         PackageInfo pInfo = null;
         try {
             pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -663,6 +702,129 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         appinfo.setTextSize(13);
         appinfo.setTypeface(null, Typeface.ITALIC);
         appinfo.setText(sb.toString());
+    }
+
+    private class SendDeviceToekntoServer extends AsyncTask<String, Void, Void> {
+
+        String response = null;
+        String status = "";
+        String message = "";
+        ProgressDialog pDialog;
+        private HttpHandler httpHandler;
+        String errorMessage = "";
+        String token = "";
+
+
+        SendDeviceToekntoServer(String token, ProgressDialog progressDialog) {
+            this.token = token;
+            this.pDialog = progressDialog;
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            pDialog = new ProgressDialog(LoginActivity.this);
+//            pDialog.setMessage(getResources().getString(R.string.loading));
+//            pDialog.setIndeterminate(false);
+//            pDialog.setCancelable(false);
+//            pDialog.show();
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        @Override
+        protected Void doInBackground(String... Url) {
+
+            //System.out.println("Post Outlet URl" + Constants.POST_TODAY_CUSTOMER_JOURNEY_PLAN);
+            Gson gson = new Gson();
+            DeviceTokenInput inputParameters = new DeviceTokenInput();
+            inputParameters.setToken(token);
+            httpHandler = new HttpHandler(LoginActivity.this);
+            HashMap<String, String> headerParams2 = new HashMap<>();
+            if (sHelper.getString(Constants.ACCESS_TOKEN) != null && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+            }
+//            if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+//                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+//            }
+//            else
+//            {
+//                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+//            }
+            // headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+            HashMap<String, String> bodyParams = new HashMap<>();
+            String jsonObject = new Gson().toJson(inputParameters, DeviceTokenInput.class);
+            Log.e("postoutput", String.valueOf(jsonObject));
+            //output = gson.toJson(inputParameters, SaveWorkInput.class);
+            try {
+                response = httpHandler.httpPost(Constants.FFM_POST_DEVICE_TOKEN, headerParams2, bodyParams, jsonObject);
+                if (response != null) {
+                    try {
+                        JSONObject jsonObj = new JSONObject(response);
+                        status = String.valueOf(jsonObj.getString("success"));
+                        message = String.valueOf(jsonObj.getString("description"));
+                        if (status.equals("true")) {
+                            FirebaseMessaging.getInstance().subscribeToTopic("ffm")
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            String msg = "ffm";
+                                            if (!task.isSuccessful()) {
+                                                msg = "failed";
+                                            } else {
+                                                pDialog.dismiss();
+                                                Helpers.displayMessage(LoginActivity.this, true, "Successfully Login");
+                                                Intent main = new Intent(LoginActivity.this, MainActivity.class);
+                                                // main.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                startActivity(main);
+                                                finish();
+                                            }
+                                            //Log.d(TAG, msg);
+                                            //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+                            // updateOutletStatusById(Helpers.clean(JourneyPlanActivity.selectedOutletId));
+                            //Helpers.displayMessage(LoginActivity.this, true, message);
+                        } else if (status.equals("false")) {
+                            Helpers.displayMessage(LoginActivity.this, true, message);
+                        }
+                    } catch (JSONException e) {
+                        if (response.equals("")) {
+                            Helpers.displayMessage(LoginActivity.this, true, e.getMessage());
+                            pDialog.dismiss();
+                            //showResponseDialog( mContext.getResources().getString(R.string.alert),exception.getMessage());
+                            //pDialog.dismiss();
+                        } else {
+                            JSONObject json = null;
+                            try {
+                                json = new JSONObject(response);
+                                errorMessage = json.getString("message");
+                                String status = json.getString("success");
+                                if (status.equals("false")) {
+                                    Helpers.displayMessage(LoginActivity.this, true, errorMessage);
+                                    pDialog.dismiss();
+                                }
+                            } catch (JSONException exception) {
+                                exception.printStackTrace();
+
+                            }
+                            //Helpers.displayMessage(LoginActivity.this, true, exception.getMessage());
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void args) {
+            //  pDialog.dismiss();
+
+
+        }
     }
 
 }

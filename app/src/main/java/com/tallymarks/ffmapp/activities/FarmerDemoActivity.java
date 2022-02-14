@@ -673,7 +673,7 @@ public class FarmerDemoActivity extends AppCompatActivity {
             createProductDemo.setStatus(pending.getText().toString());
             farmerDemoCollection.add(createProductDemo);
 
-                 httpHandler = new HttpHandler();
+                 httpHandler = new HttpHandler(FarmerDemoActivity.this);
                 HashMap<String, String> headerParams2 = new HashMap<>();
             if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
                 headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
@@ -747,6 +747,12 @@ public class FarmerDemoActivity extends AppCompatActivity {
         int end = builder.length();
         builder.setSpan(new ForegroundColorSpan(Color.RED), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return builder;
+    }
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(FarmerDemoActivity.this, MainActivity.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
 }

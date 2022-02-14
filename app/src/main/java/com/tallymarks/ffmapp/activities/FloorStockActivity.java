@@ -364,6 +364,12 @@ public class FloorStockActivity extends AppCompatActivity {
 
 //        return allTeams;
     }
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(FloorStockActivity.this, StartActivity.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
 
 
 }

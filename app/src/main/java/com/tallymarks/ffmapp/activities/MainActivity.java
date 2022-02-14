@@ -29,7 +29,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -79,6 +78,7 @@ import com.tallymarks.ffmapp.models.addfarmerinput.LandProfile;
 import com.tallymarks.ffmapp.models.addfarmerinput.MarketPlayer;
 import com.tallymarks.ffmapp.models.addfarmerinput.ServingDealer;
 import com.tallymarks.ffmapp.models.assignedsalespoint.AssignedSalesPointOutput;
+import com.tallymarks.ffmapp.models.forgetpasswordinput.ForgetPasswordInput;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Activity;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.FarmerCheckIn;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.OtherProduct;
@@ -86,6 +86,7 @@ import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Recommendation;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Sampling;
 import com.tallymarks.ffmapp.models.getallcustomersplanoutput.GetAllCustomersOutput;
 import com.tallymarks.ffmapp.models.listofallcrops.ListofallCropsOutput;
+import com.tallymarks.ffmapp.models.loginoutput.LoginOutput;
 import com.tallymarks.ffmapp.models.outletstatusesoutput.OutletStatusOutput;
 import com.tallymarks.ffmapp.models.todayjourneyplaninput.Commitment;
 import com.tallymarks.ffmapp.models.todayjourneyplaninput.Invoice;
@@ -126,6 +127,7 @@ import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1103,12 +1105,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        MainActivity.this.deleteDatabase("FFMApplicationDataBasev5");
-                        MainActivity.this.deleteDatabase("FFMAppDb_Zohaib_v5");
-                        sHelper.clearPreferenceStore();
-                        Toast.makeText(MainActivity.this, "Clear Data Successfully", Toast.LENGTH_SHORT).show();
-                        Intent logout = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(logout);
+                        new Logout().execute();
+                       // Toast.makeText(MainActivity.this, "Clear Data Successfully", Toast.LENGTH_SHORT).show();
+
 
                     }
                 }).setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -1479,7 +1478,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 }
                 while (cursor2.moveToNext());
-                httpHandler = new HttpHandler();
+                httpHandler = new HttpHandler(MainActivity.this);
                 HashMap<String, String> headerParams2 = new HashMap<>();
                 if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
                     headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
@@ -1635,7 +1634,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 }
                 while (cursor2.moveToNext());
-                httpHandler = new HttpHandler();
+                httpHandler = new HttpHandler(MainActivity.this);
                 HashMap<String, String> headerParams2 = new HashMap<>();
                 if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
                     headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
@@ -1854,7 +1853,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 }
                 while (cursor2.moveToNext());
-                httpHandler = new HttpHandler();
+                httpHandler = new HttpHandler(MainActivity.this);
                 HashMap<String, String> headerParams2 = new HashMap<>();
                 if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
                     headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
@@ -2732,4 +2731,109 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
     }
-}
+    private class Logout extends AsyncTask<String, Void, Void> {
+
+        String response = null;
+        String status = "";
+        String message = "";
+        ProgressDialog pDialog;
+        private HttpHandler httpHandler;
+        String errorMessage = "";
+        String email = "";
+        //AlertDialog alertDialog;
+
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(MainActivity.this);
+            pDialog.setMessage(getResources().getString(R.string.loading));
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        @Override
+        protected Void doInBackground(String... Url) {
+
+            //System.out.println("Post Outlet URl" + Constants.POST_TODAY_CUSTOMER_JOURNEY_PLAN);
+            Gson gson = new Gson();
+            ForgetPasswordInput inputParameters = new ForgetPasswordInput();
+            inputParameters.setEmail(email);
+            httpHandler = new HttpHandler(MainActivity.this);
+            HashMap<String, String> headerParams2 = new HashMap<>();
+            if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+            }
+            else
+            {
+                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+            }
+            //headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+            HashMap<String, String> bodyParams = new HashMap<>();
+            //String jsonObject = new Gson().toJson(inputParameters, ForgetPasswordInput.class);
+           // Log.e("postoutput", String.valueOf(jsonObject));
+            //output = gson.toJson(inputParameters, SaveWorkInput.class);
+            try {
+                response = httpHandler.httpPost(Constants.FFM_LOGOUT, headerParams2, bodyParams, null);
+                if (response != null) {
+                    try {
+                        JSONObject jsonObj = new JSONObject(response);
+                        status = String.valueOf(jsonObj.getString("success"));
+                        message = String.valueOf(jsonObj.getString("message"));
+                        if (status.equals("true")) {
+                            MainActivity.this.deleteDatabase("FFMApplicationDataBasev5");
+                            MainActivity.this.deleteDatabase("FFMAppDb_Zohaib_v5");
+                            sHelper.clearPreferenceStore();
+                            extraHelper.clearPreferenceStore();
+                            Helpers.displayMessage(MainActivity.this, true, message);
+                            Intent logout = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(logout);
+                        }
+                        else if(status.equals("false"))
+                        {
+                            Helpers.displayMessage(MainActivity.this, true, message);
+                        }
+                    } catch (JSONException e) {
+                        if (response.equals("")) {
+                            Helpers.displayMessage(MainActivity.this, true, e.getMessage());
+                            pDialog.dismiss();
+                            //showResponseDialog( mContext.getResources().getString(R.string.alert),exception.getMessage());
+                            //pDialog.dismiss();
+                        } else {
+                            JSONObject json = null;
+                            try {
+                                json = new JSONObject(response);
+                                errorMessage = json.getString("message");
+                                String status = json.getString("success");
+                                if (status.equals("false")) {
+                                    Helpers.displayMessage(MainActivity.this, true, errorMessage);
+                                    pDialog.dismiss();
+                                }
+                            } catch (JSONException exception) {
+                                exception.printStackTrace();
+
+                            }
+                            //Helpers.displayMessage(LoginActivity.this, true, exception.getMessage());
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void args) {
+            pDialog.dismiss();
+            //alertDialog.dismiss();
+
+
+        }
+    }
+
+
+    }

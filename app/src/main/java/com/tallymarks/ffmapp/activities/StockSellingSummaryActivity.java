@@ -296,7 +296,7 @@ public class StockSellingSummaryActivity extends AppCompatActivity {
             String getsupervsorsnapshot = Constants.FFM_GET_LAST_VISIT_STOCK_SALE + "?subordinateId=" + sHelper.getString(Constants.SUBORDINATE_ID) ;
             System.out.println("OUtlet Status URL : " + getsupervsorsnapshot);
             try {
-                httpHandler = new HttpHandler();
+                httpHandler = new HttpHandler(StockSellingSummaryActivity.this);
                 HashMap<String, String> headerParams = new HashMap<>();
                 if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
                     headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
@@ -361,4 +361,5 @@ public class StockSellingSummaryActivity extends AppCompatActivity {
             drawRecommendationTable();
         }
     }
+
 }

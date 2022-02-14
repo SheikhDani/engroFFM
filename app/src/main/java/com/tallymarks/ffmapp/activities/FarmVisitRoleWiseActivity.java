@@ -1369,4 +1369,10 @@ public class FarmVisitRoleWiseActivity extends AppCompatActivity {
         builder.setSpan(new ForegroundColorSpan(Color.RED), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return builder;
     }
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(FarmVisitRoleWiseActivity.this, FarmersStartActivity.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
 }

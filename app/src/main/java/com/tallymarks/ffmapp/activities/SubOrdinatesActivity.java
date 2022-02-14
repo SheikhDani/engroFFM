@@ -191,7 +191,7 @@ public class SubOrdinatesActivity extends AppCompatActivity {
             String getsupervsorsnapshot = Constants.FFM_GET_SUPERVISOR_SNAPSHOT + "?fromWeekNo=" + fromweek + "&toWeekNo=" + toweek + "&fromYear=" + fromyear + "&toYear=" + fromyear;
             System.out.println("OUtlet Status URL : " + getsupervsorsnapshot);
             try {
-                httpHandler = new HttpHandler();
+                httpHandler = new HttpHandler(SubOrdinatesActivity.this);
                 HashMap<String, String> headerParams = new HashMap<>();
                 if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
                     headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
@@ -260,5 +260,12 @@ public class SubOrdinatesActivity extends AppCompatActivity {
             }
 
         }
+    }
+    @Override
+    public void onBackPressed() {
+
+        Intent i = new Intent(SubOrdinatesActivity.this, MainActivity.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }

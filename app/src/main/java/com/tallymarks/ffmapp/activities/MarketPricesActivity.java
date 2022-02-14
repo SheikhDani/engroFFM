@@ -501,5 +501,11 @@ public class MarketPricesActivity extends AppCompatActivity {
         }*/
 
     }
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(MarketPricesActivity.this, SalesOrderMarketPriceActivity.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
 
 }
