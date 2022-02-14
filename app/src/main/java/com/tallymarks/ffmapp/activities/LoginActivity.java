@@ -455,12 +455,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     sHelper.setString(Constants.CUSTOMER_ALL_PLAN_NOT_FOUND, "2");
                     sHelper.setString(Constants.FARMER_TODAY_PLAN_NOT_FOUND, "2");
                     sHelper.setString(Constants.CUSTOMER_TODAY_PLAN_NOT_FOUND, "2");
-                    Helpers.displayMessage(LoginActivity.this, true, "Successfully Login");
-                    Intent main = new Intent(LoginActivity.this, MainActivity.class);
-                    // main.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(main);
-                    finish();
-                   // getDeviceToken(pDialog);
+//                    Helpers.displayMessage(LoginActivity.this, true, "Successfully Login");
+//                    Intent main = new Intent(LoginActivity.this, MainActivity.class);
+//                    // main.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                    startActivity(main);
+//                    finish();
+                   getDeviceToken(pDialog);
 
                 } else {
                     pDialog.dismiss();
@@ -506,7 +506,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         @Override
         protected void onPostExecute(String result) {
-             pDialog.dismiss();
+            // pDialog.dismiss();
             View view = LoginActivity.this.getCurrentFocus();
             if (view != null) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
