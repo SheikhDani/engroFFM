@@ -186,6 +186,15 @@ public class Helpers {
         return simpleDateFormat.format(calendar.getTime());
 
     }
+    public static String getDatefromMilis2(String date)
+    {
+        long num = Long.parseLong(date);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(num);
+        return simpleDateFormat.format(calendar.getTime());
+
+    }
 //    public static String getDatefromDateString(String dateString)
 //    {
 //        if (!dateString.equals("") || !(dateString == null)) {

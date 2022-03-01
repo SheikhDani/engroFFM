@@ -1,0 +1,84 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <include
+        android:id="@+id/inc_common_header_colletion"
+        layout="@layout/common_header" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/inc_common_header_colletion"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></fragment>
+
+        </FrameLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linear_bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+
+        android:orientation="horizontal">
+
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <TextView
+                android:id="@+id/txt_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+
+                android:padding="@dimen/p20"
+                android:text="Distance : 0 km"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+
+                />
+
+            <Button
+                android:id="@+id/btnProceed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="@dimen/p10"
+                android:layout_marginLeft="@dimen/p10"
+                android:layout_marginTop="@dimen/p10"
+                android:layout_marginEnd="@dimen/p10"
+                android:layout_marginRight="@dimen/p10"
+                android:layout_marginBottom="@dimen/p10"
+                android:background="@drawable/eidttext_boader"
+                android:backgroundTint="@color/green"
+                android:drawableRight="@drawable/forwardresizer"
+                android:paddingLeft="@dimen/p20"
+                android:text="PROCEED"
+                android:textColor="@color/white" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

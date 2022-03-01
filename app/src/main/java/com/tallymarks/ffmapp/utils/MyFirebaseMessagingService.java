@@ -17,7 +17,9 @@ import com.tallymarks.ffmapp.activities.MainActivity;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
-
+    static {
+        System.loadLibrary("native-lib");
+    }
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         if (remoteMessage.getData()!= null && remoteMessage.getData().size()>0) {

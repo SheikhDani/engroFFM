@@ -64,7 +64,7 @@ public class VisitCustomerActivity extends AppCompatActivity {
                     String tabText = tabLayout.getTabAt(tabLayout.getSelectedTabPosition()).getText().toString();
                     if (tabText.equals("TODAY PLANS")) {
                         sHelper.setString(Constants.PLAN_TYPE_MAP, "today");
-                        Intent loc = new Intent(VisitCustomerActivity.this, MapActivity.class);
+                        Intent loc = new Intent(VisitCustomerActivity.this, TodayCustomerMap.class);
                         loc.putExtra("from", "customer");
                         startActivity(loc);
                     } else if (tabText.equals("ALL PLANS")) {

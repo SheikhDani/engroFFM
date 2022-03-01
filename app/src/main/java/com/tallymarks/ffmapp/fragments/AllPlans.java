@@ -177,7 +177,7 @@ public class AllPlans extends Fragment implements ItemClickListener {
     }
     private void getAllCustomerJourneyPlan()
     {
-        String  customerCode="" , customerName="" , customerLat="", customerLng="" ,customersalesPoint="" , customerVisit="", customerID= "",customerDayid="",custoemrjourneyplanID="";
+        String  customerCode="" , customerName="" , customerLat="", customerLng="" ,customersalesPoint="" , customerVisit="", customerID= "",customerDayid="",custoemrjourneyplanID="",locationStatus="";
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CODE, "");
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
@@ -188,6 +188,7 @@ public class AllPlans extends Fragment implements ItemClickListener {
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID, "");
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE, "");
         map.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "");
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LOCATION_STATUS, "");
         //map.put(db.KEY_IS_VALID_USER, "");
         HashMap<String, String> filters = new HashMap<>();
         filters.put(db.KEY_TODAY_JOURNEY_TYPE, "all");
@@ -205,10 +206,12 @@ public class AllPlans extends Fragment implements ItemClickListener {
                 customerVisit = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_IS_VISITED)));
                 customerLat = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE));
                 customerLng = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE));
+                locationStatus = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LOCATION_STATUS));
                 plan.setCustomercode(customerCode);
                 plan.setMemebrship(customerVisit);
                 plan.setTitle(customerName);
                 plan.setSalespoint(customersalesPoint);
+                plan.setLocationStauts(locationStatus);
                 plan.setTime("9:00 AM");
                 plan.setCustomerJourneyPlanID(custoemrjourneyplanID);
                 plan.setCustomerDayID(customerDayid);

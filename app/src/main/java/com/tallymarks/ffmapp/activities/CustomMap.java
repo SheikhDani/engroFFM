@@ -64,9 +64,15 @@ public class CustomMap extends AppCompatActivity implements OnMapReadyCallback, 
     private GpsTracker gpsTracker;
     private String currentlng = "";
     private String currentlat = "";
+    private String shoplng = "";
+    private String shoplat = "";
+    private String shopoldlng = "";
+    private String shopoldlat = "";
+    private String shopname = "";
     private GoogleMap mMap;
     Button btnProceed;
     String from;
+
     static {
         System.loadLibrary("native-lib");
     }
@@ -101,22 +107,26 @@ public class CustomMap extends AppCompatActivity implements OnMapReadyCallback, 
             //            currentlat = String.valueOf(gpsTracker.getLatitude());
             currentlng = String.valueOf(gpsTracker.getLongitude());
             currentlat = String.valueOf(gpsTracker.getLatitude());
-            if(from.equals("soil")) {
+            if (from.equals("soil")) {
                 sHelper.setString(Constants.CUSTOM_LAT_SOIL, currentlat);
                 sHelper.setString(Constants.CUSTOM_LNG_SOIL, currentlng);
-            }
-            else if(from.equals("farm"))
-            {
+            } else if (from.equals("farm")) {
                 sHelper.setString(Constants.CUSTOM_LAT_FARM, currentlat);
                 sHelper.setString(Constants.CUSTOM_LNG_FARM, currentlng);
             }
 
             // mMap.addMarker(new MarkerOptions().position(new LatLng(gpsTracker.getLatitude(),gpsTracker.getLongitude())).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Current Location"));
             //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), 17.0f));
+            if (from.equals("changecordinates")) {
+                LatLng location = new LatLng(Double.parseDouble(shoplat), Double.parseDouble(shoplng));
+                mMap.addMarker(new MarkerOptions().position(location).title(shopname)).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(shoplat), Double.parseDouble(shoplng)), 10));
+            } else {
+                LatLng location = new LatLng(Double.parseDouble(currentlat), Double.parseDouble(currentlng));
+                mMap.addMarker(new MarkerOptions().position(location).title("Current Location")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(currentlat), Double.parseDouble(currentlng)), 10));
 
-            LatLng location = new LatLng(Double.parseDouble(currentlat), Double.parseDouble(currentlng));
-            mMap.addMarker(new MarkerOptions().position(location).title("Current Location")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(currentlat), Double.parseDouble(currentlng)), 10));
+            }
         } else {
             enableLoc();
             // DialougeManager.gpsNotEnabledPopup(ProjectDetailActivity.this);
@@ -146,6 +156,10 @@ public class CustomMap extends AppCompatActivity implements OnMapReadyCallback, 
         tvTopHeader.setText("MAP Activity");
         Intent intent = getIntent();
         from = intent.getExtras().getString("from");
+        shoplat = intent.getExtras().getString("shoplat");
+        shopoldlat = intent.getExtras().getString("shoplat");
+        shopname = intent.getExtras().getString("shopname");
+        shoplng = intent.getExtras().getString("shoplng");
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -169,8 +183,8 @@ public class CustomMap extends AppCompatActivity implements OnMapReadyCallback, 
             @Override
             public void onClick(View view) {
                 if (from.equals("soil")) {
-                    sHelper.setString(Constants.CUSTOM_LAT_SOIL,currentlat);
-                    sHelper.setString(Constants.CUSTOM_LNG_SOIL,currentlng);
+                    sHelper.setString(Constants.CUSTOM_LAT_SOIL, currentlat);
+                    sHelper.setString(Constants.CUSTOM_LNG_SOIL, currentlng);
                     onBackPressed();
 ////                    Intent i = new Intent(CustomMap.this, SoilSamplingActivity.class);
 ////                    i.putExtra("soillat", currentlat);
@@ -178,12 +192,15 @@ public class CustomMap extends AppCompatActivity implements OnMapReadyCallback, 
 //                    startActivity(i);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 } else if (from.equals("farm")) {
-                    sHelper.setString(Constants.CUSTOM_LAT_FARM,currentlat);
-                    sHelper.setString(Constants.CUSTOM_LNG_FARM,currentlng);
+                    sHelper.setString(Constants.CUSTOM_LAT_FARM, currentlat);
+                    sHelper.setString(Constants.CUSTOM_LNG_FARM, currentlng);
 //                    Intent i = new Intent(CustomMap.this, FarmVisitActivity.class);
 //                    i.putExtra("farmlat", currentlat);
 //                    i.putExtra("farmlng", currentlng);
 //                    startActivity(i);
+                    onBackPressed();
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                } else if (from.equals("changecordinates")) {
                     onBackPressed();
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 }
@@ -270,6 +287,7 @@ public class CustomMap extends AppCompatActivity implements OnMapReadyCallback, 
             });
         }
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

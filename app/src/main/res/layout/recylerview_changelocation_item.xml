@@ -64,44 +64,43 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/sale_point"
+        android:id="@+id/latitude"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/customer_lcoation_status"
+        android:visibility="gone"
+        android:layout_below="@+id/creation_date"
 
         android:layout_toEndOf="@id/imageView"
         android:layout_toRightOf="@id/imageView"
         android:gravity="center_vertical"
-        android:text="Sales Point: Kot Ghulam Muhammad "
+        android:text="Latitude : 32.121312312313"
         android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/time"
-        android:layout_width="wrap_content"
+        android:id="@+id/longitude"
+        android:layout_width="300dp"
+        android:visibility="gone"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/sale_point"
+        android:layout_below="@+id/latitude"
+
         android:layout_toEndOf="@id/imageView"
         android:layout_toRightOf="@id/imageView"
-        android:drawableLeft="@drawable/ic_baseline_access_time_24"
-        android:drawablePadding="@dimen/p5"
-        android:drawableTint="@color/black"
         android:gravity="center_vertical"
-        android:text="9:00 am"
+        android:text="Longitude: 32.121312312313"
         android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/distance"
-        android:layout_width="wrap_content"
+        android:id="@+id/reason"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/sale_point"
-        android:layout_marginLeft="@dimen/p30"
-        android:layout_toEndOf="@id/time"
-        android:layout_toRightOf="@id/time"
-        android:drawableLeft="@drawable/ic_baseline_location_on_24"
-        android:drawableTint="@color/black"
+        android:layout_below="@+id/longitude"
+
+        android:layout_toEndOf="@id/imageView"
+        android:layout_toRightOf="@id/imageView"
         android:gravity="center_vertical"
-        android:text="105 KMS away"
+        android:text="This is Test"
         android:textSize="16sp" />
+
 
     <TextView
         android:id="@+id/customer_code"
@@ -115,8 +114,9 @@
 
         android:text="Customer Code: 8103214"
         android:textSize="16sp" />
+
     <TextView
-        android:id="@+id/customer_lcoation_status"
+        android:id="@+id/creation_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
@@ -126,9 +126,8 @@
         android:layout_toRightOf="@id/imageView"
         android:gravity="center_vertical"
 
-        android:text="Location: Verified"
+        android:text="Creation Date : 12-02-2022"
         android:textSize="16sp" />
-
 
     <View
         android:layout_width="match_parent"

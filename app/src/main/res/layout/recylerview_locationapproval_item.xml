@@ -64,44 +64,55 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/sale_point"
+        android:id="@+id/latitude"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/customer_lcoation_status"
+        android:layout_below="@+id/creation_date"
+        android:layout_toEndOf="@id/imageView"
+
+        android:layout_toRightOf="@id/imageView"
+        android:gravity="center_vertical"
+        android:text="Latitude : 32.121312312313"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/longitude"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/latitude"
+        android:layout_toEndOf="@id/imageView"
+
+        android:layout_toRightOf="@id/imageView"
+        android:gravity="center_vertical"
+        android:text="Longitude: 32.121312312313"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/reason"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/longitude"
 
         android:layout_toEndOf="@id/imageView"
         android:layout_toRightOf="@id/imageView"
         android:gravity="center_vertical"
-        android:text="Sales Point: Kot Ghulam Muhammad "
+        android:text="This is Test"
         android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/time"
-        android:layout_width="wrap_content"
+        android:id="@+id/lastvisitcount"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/sale_point"
+        android:layout_below="@+id/reason"
+
         android:layout_toEndOf="@id/imageView"
         android:layout_toRightOf="@id/imageView"
-        android:drawableLeft="@drawable/ic_baseline_access_time_24"
-        android:drawablePadding="@dimen/p5"
-        android:drawableTint="@color/black"
         android:gravity="center_vertical"
-        android:text="9:00 am"
+        android:text="Last Visit Count : 3"
         android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/distance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/sale_point"
-        android:layout_marginLeft="@dimen/p30"
-        android:layout_toEndOf="@id/time"
-        android:layout_toRightOf="@id/time"
-        android:drawableLeft="@drawable/ic_baseline_location_on_24"
-        android:drawableTint="@color/black"
-        android:gravity="center_vertical"
-        android:text="105 KMS away"
-        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/customer_code"
@@ -115,8 +126,9 @@
 
         android:text="Customer Code: 8103214"
         android:textSize="16sp" />
+
     <TextView
-        android:id="@+id/customer_lcoation_status"
+        android:id="@+id/creation_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
@@ -126,9 +138,50 @@
         android:layout_toRightOf="@id/imageView"
         android:gravity="center_vertical"
 
-        android:text="Location: Verified"
+        android:text="Creation Date : 12-02-2022"
         android:textSize="16sp" />
 
+    <LinearLayout
+        android:id="@+id/layout_approve"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lastvisitcount"
+        android:layout_marginTop="@dimen/p5"
+        android:layout_toEndOf="@id/imageView"
+        android:layout_toRightOf="@id/imageView"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/textView_approve"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/p10"
+            android:layout_toEndOf="@id/imageView"
+            android:layout_toRightOf="@id/imageView"
+            android:layout_weight="1.5"
+            android:background="@drawable/textview_boarder"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/p10"
+            android:padding="@dimen/p2"
+            android:text="Approve"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/textView_reject"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/p10"
+            android:layout_marginBottom="@dimen/p10"
+            android:layout_toRightOf="@id/textView_name"
+            android:layout_weight="1.5"
+            android:background="@drawable/textview_boarder"
+            android:gravity="center"
+
+            android:padding="@dimen/p2"
+            android:text="Reject"
+            android:textColor="@color/white" />
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"

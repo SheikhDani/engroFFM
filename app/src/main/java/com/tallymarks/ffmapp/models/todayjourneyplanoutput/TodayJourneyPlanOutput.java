@@ -12,6 +12,18 @@ public class TodayJourneyPlanOutput {
     @SerializedName("customerId")
     @Expose
     private String customerId;
+
+    public String getLocationStatus() {
+        return locationStatus;
+    }
+
+    public void setLocationStatus(String locationStatus) {
+        this.locationStatus = locationStatus;
+    }
+
+    @SerializedName("locationStatus")
+    @Expose
+    private String locationStatus;
     @SerializedName("customerCode")
     @Expose
     private String customerCode;

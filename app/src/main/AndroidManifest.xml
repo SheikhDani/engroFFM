@@ -27,6 +27,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA1VAuoEBO2B85WWcQTHkjRqgUay3emHwY" />
 
+
         <activity
             android:name="com.tallymarks.ffmapp.activities.LoginActivity"
             android:taskAffinity=""
@@ -229,6 +230,37 @@
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".activities.ChangeCustomerLocationListActivity"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".activities.SupervisorLocationApprovalListActivity"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".activities.ChangeCoordinatesMapActivity"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".activities.NotificationActivity"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".activities.LocationChangeRequestActivity"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".activities.TodayCustomerMap"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"></activity>
+
 
         <service
             android:name="com.tallymarks.ffmapp.utils.MyFirebaseMessagingService"

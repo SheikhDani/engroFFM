@@ -19,6 +19,14 @@
         android:icon="@mipmap/customerlocation"
         android:title="CUSTOMER'S LOCATION" />
     <item
+        android:id="@+id/nav_locationchangerequest"
+        android:icon="@mipmap/customerlocation"
+        android:title="CHANGE CUSTOMER LOCATION" />
+    <item
+        android:id="@+id/nav_locationapproval"
+        android:icon="@mipmap/customerlocation"
+        android:title="CUSTOMER LOCATION APPROVAL" />
+    <item
         android:id="@+id/nav_supervisorsnapshot"
         android:icon="@mipmap/snapshotsueprvisor"
         android:title="SUPERVISOR SNAPSHOT" />

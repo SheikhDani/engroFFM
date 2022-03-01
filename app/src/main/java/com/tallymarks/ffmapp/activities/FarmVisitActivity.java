@@ -1,6 +1,7 @@
 package com.tallymarks.ffmapp.activities;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,6 +9,8 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.text.Editable;
@@ -32,6 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -40,10 +44,12 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.SalesCallAdapter;
 import com.tallymarks.ffmapp.adapters.SalesPointAdapter;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.DataModel;
@@ -51,12 +57,22 @@ import com.tallymarks.ffmapp.models.OtherProduct;
 import com.tallymarks.ffmapp.models.Recommendations;
 import com.tallymarks.ffmapp.models.SaelsPoint;
 import com.tallymarks.ffmapp.models.farmerMeeting.local.Customer;
+import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Activity;
+import com.tallymarks.ffmapp.models.getallFarmersplanoutput.FarmerCheckIn;
+import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Recommendation;
+import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Sampling;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.GpsTracker;
 import com.tallymarks.ffmapp.utils.Helpers;
+import com.tallymarks.ffmapp.utils.HttpHandler;
 import com.tallymarks.ffmapp.utils.RecyclerTouchListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -72,7 +88,9 @@ public class FarmVisitActivity extends AppCompatActivity {
     DatabaseHandler db;
     MyDatabaseHandler mydb;
     SharedPrefferenceHelper sHelper;
+    ExtraHelper extraHelper;
     Double checkoutlat = null, checkoutlng = null;
+    String journeyType;
     GpsTracker gpsTracker;
     double farmvisitLat = 0.0;
     String checkinlat;
@@ -108,6 +126,7 @@ public class FarmVisitActivity extends AppCompatActivity {
     private void initView() {
         Bundle data = getIntent().getExtras();
         sHelper = new SharedPrefferenceHelper(FarmVisitActivity.this);
+        extraHelper = new ExtraHelper(FarmVisitActivity.this);
 //        if (data != null) {
 //            planType = data.getString(Constants.PLAN_TYPE_FARMER);
 //
@@ -223,6 +242,7 @@ public class FarmVisitActivity extends AppCompatActivity {
         //  getCropfromDatabase();
         // getMainProductfromDatabase();
         loadCheckInLocation();
+        loadRoles();
         getFertTypeFromDatabase();
         getServingDealersfromDatabase();
 
@@ -1208,14 +1228,22 @@ public class FarmVisitActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            addCheckOut();
-            updateOutletStatus("Visited");
+         if (Helpers.isNetworkAvailable(FarmVisitActivity.this))
+         {
+             addCheckOut();
+             updateOutletStatus("Visited","1");
+             new PostSyncFarmer().execute();
+         }
+         else {
+             addCheckOut();
+             updateOutletStatus("Visited","0");
 
-            Toast.makeText(getApplicationContext(), "Farmer Saved", Toast.LENGTH_SHORT).show();
-            //sHelper.clearPreferenceStore();
+             Toast.makeText(getApplicationContext(), "Farmer Saved", Toast.LENGTH_SHORT).show();
+             //sHelper.clearPreferenceStore();
 
-            Intent farmvisit = new Intent(FarmVisitActivity.this, VisitFarmerActivity.class);
-            startActivity(farmvisit);
+             Intent farmvisit = new Intent(FarmVisitActivity.this, VisitFarmerActivity.class);
+             startActivity(farmvisit);
+         }
 //
 //            Intent soil = new Intent(FarmVisitActivity.this, SoilSamplingActivity.class);
 //            Bundle data = new Bundle();
@@ -1935,9 +1963,10 @@ public class FarmVisitActivity extends AppCompatActivity {
         return builder;
     }
 
-    private void updateOutletStatus(String visited) {
+    private void updateOutletStatus(String visited,String interentstatus) {
         HashMap<String, String> params = new HashMap<>();
         params.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, visited);
+        params.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED_INTERNET_AVAILALE, interentstatus);
         params.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "2");
         HashMap<String, String> filter = new HashMap<>();
         filter.put(mydb.KEY_TODAY_JOURNEY_FARMER_ID, sHelper.getString(Constants.S_FARMER_ID));
@@ -2011,5 +2040,445 @@ public class FarmVisitActivity extends AppCompatActivity {
         Intent i = new Intent(FarmVisitActivity.this, FarmersStartActivity.class);
         startActivity(i);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+    private class PostSyncFarmer extends AsyncTask<String, Void, Void> {
+
+        String response = null;
+        String status = "";
+        String message = "";
+        String discription = "";
+        ProgressDialog pDialog;
+        String jsonObject = "";
+        private HttpHandler httpHandler;
+        String farmerId = "";
+        String visitStatus;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(FarmVisitActivity.this);
+            pDialog.setMessage(getResources().getString(R.string.loading));
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        @Override
+        protected Void doInBackground(String... Url) {
+
+            String farmerIdToupdate = "";
+            mydb = new MyDatabaseHandler(FarmVisitActivity.this);
+
+            System.out.println("Post Outlet URl" + Constants.FFM_POST_FARMER_TODAY_JOURNEY_PLAN);
+            ArrayList<FarmerCheckIn> inputCollection = new ArrayList<>();
+            Gson gson = new Gson();
+            HashMap<String, String> map = new HashMap<>();
+            map.put(mydb.KEY_TODAY_JOURNEY_FARMER_ID, "");
+            map.put(mydb.KEY_TODAY_JOURNEY_FARMER_JOURNEYPLAN_ID, "");
+            map.put(mydb.KEY_TODAY_JOURNEY_FARMER_NAME, "");
+            map.put(mydb.KEY_TODAY_FARMER_MOBILE_NO, "");
+            map.put(mydb.KEY_TODAY_JOURNEY_FARMER_SALES_POINT_NAME, "");
+            map.put(mydb.KEY_TODAY_JOURNEY_FARMER_CODE, "");
+            map.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "");
+            map.put(mydb.KEY_TODAY_JOURNEY_FARMER_DAY_ID, "");
+            map.put(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE, "");
+            map.put(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE, "");
+            HashMap<String, String> filters = new HashMap<>();
+            filters.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "2");
+            Cursor cursor2 = mydb.getData(mydb.TODAY_FARMER_JOURNEY_PLAN, map, filters);
+            if (cursor2.getCount() > 0) {
+                cursor2.moveToFirst();
+                do {
+
+                    FarmerCheckIn farmerCheckIn = new FarmerCheckIn();
+                    farmerCheckIn.setFarmerId(Integer.valueOf(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_ID))));
+                    farmerIdToupdate = cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_ID)); // to update status of record
+                    farmerId = cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_ID));
+                    if (!cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_DAY_ID)).equals("NA")) {
+                        farmerCheckIn.setDayId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_DAY_ID))));
+                    } else {
+                        farmerCheckIn.setDayId(0);
+                    }
+
+                    if (!cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_JOURNEYPLAN_ID)).equals("NA")) {
+                        farmerCheckIn.setJourneyPlanId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_JOURNEYPLAN_ID))));
+                    } else {
+                        farmerCheckIn.setJourneyPlanId(null);
+                    }
+
+                    farmerCheckIn.setFarmerName(Helpers.clean(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_NAME))));
+
+                    if (!cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE)).equals("NA") && !cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE)).equals("null")) {
+                        farmerCheckIn.setLatitude(Double.parseDouble(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LATITUDE))));
+                    } else {
+                        farmerCheckIn.setLatitude(0.0);
+                    }
+                    if (!cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE)).equals("NA") && !cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE)).equals("null")) {
+                        farmerCheckIn.setLongtitude(Double.parseDouble(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_LONGITUDE))));
+                    } else {
+                        farmerCheckIn.setLongtitude(0.0);
+                    }
+
+                    farmerCheckIn.setMobileNo(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_FARMER_MOBILE_NO)));
+
+                    farmerCheckIn.setSalesPoint(Helpers.clean(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_SALES_POINT_NAME))));
+                    //farmerCheckIn.setDistance(0);
+
+                    if (Helpers.clean(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_IS_VISITED))).equals("Visited")) {
+
+
+                        myloadStartActviiyResult(farmerCheckIn, farmerId);
+                        loadLocationlastFarmer(farmerCheckIn, farmerId);
+                        if(rolename.equals("Field Force Team") || rolename.equals("FieldAssistant"))
+                        {
+                            loadActivityRoleWise(farmerCheckIn, farmerId);
+                        }
+                        else
+                        {
+                            loadActivity(farmerCheckIn, farmerId);
+                        }
+                        //loadActivity(farmerCheckIn, farmerId);
+                        if(rolename.equals("Field Force Team") ||rolename.equals("FieldAssistant") ) {
+                            loadSampling(farmerCheckIn, farmerId);
+                        }
+                        loadRecommendations(farmerCheckIn, farmerId);
+
+                    }
+
+                    //farmerCheckIn.setCheckOutLatitude("");
+                    //farmerCheckIn.setCheckOutLongitude("");
+                    farmerId = cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_ID));
+                    inputCollection.add(farmerCheckIn);
+
+                }
+                while (cursor2.moveToNext());
+                httpHandler = new HttpHandler(FarmVisitActivity.this);
+                HashMap<String, String> headerParams2 = new HashMap<>();
+                if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                    headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                }
+                else
+                {
+                    headerParams2.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+                }
+                // headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                HashMap<String, String> bodyParams = new HashMap<>();
+                String output = gson.toJson(inputCollection);
+                //output = gson.toJson(inputParameters, SaveWorkInput.class);
+                try {
+                    response = httpHandler.httpPost(Constants.FFM_POST_FARMER_TODAY_JOURNEY_PLAN, headerParams2, bodyParams, output);
+                    if (response != null) {
+                        try {
+                            JSONObject jsonObj = new JSONObject(response);
+                            status = String.valueOf(jsonObj.getString("success"));
+                            message = String.valueOf(jsonObj.getString("message"));
+                            //discription = String.valueOf(jsonObj.getString("description"));
+
+                            // Helpers.displayMessage(MainActivity.this, true, status);
+                            System.out.println(status + " ---- " + message);
+                            System.out.println(output);
+
+                            //Toast.makeText(getApplicationContext(), status +" "+ message, Toast.LENGTH_SHORT).show();
+                            if (status.equals("true")) {
+                                //updateOutletStatus();
+                                myUpdateOutletStatus();
+                                // Helpers.displayMessage(MainActivity.this, true, message);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+            //Helpers.displayMessage(MainActivity.this, true, "No Data Available");
+
+            mydb.close();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void args) {
+            pDialog.dismiss();
+            if (status.equals("true")) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitActivity.this);
+                alertDialogBuilder.setTitle(R.string.alert)
+                        .setMessage("Data Posted Successfully")
+                        .setCancelable(false)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                Intent farmvisit = new Intent(FarmVisitActivity.this, VisitFarmerActivity.class);
+                                startActivity(farmvisit);
+                                //new PostSyncOutlet().execute();
+                            }
+                        });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            }
+
+        }
+    }
+    private void myUpdateOutletStatus() {
+        HashMap<String, String> params = new HashMap<>();
+        params.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "1");
+        HashMap<String, String> filter = new HashMap<>();
+        //filter.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+        filter.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "2");
+        mydb.updateData(mydb.TODAY_FARMER_JOURNEY_PLAN, params, filter);
+    }
+    private void loadActivity(FarmerCheckIn thisfarmerCheckIn, String thisfarmerId) {
+        HashMap<String, String> mapForActivity = new HashMap<>();
+        mapForActivity.put(mydb.KEY_TODAY_FARMMMER_ID, "");
+        mapForActivity.put(mydb.KEY_TODAY_CROPID, "");
+        mapForActivity.put(mydb.KEY_TODAY_ADDRESS, "");
+        mapForActivity.put(mydb.KEY_TODAY_MAIN_PRODUCT, "");
+        mapForActivity.put(mydb.KEY_TODAY_REMARKS, "");
+        mapForActivity.put(mydb.KEY_TODAY_CROP_DEF, "");
+        mapForActivity.put(mydb.KEY_TODAY_CROP_ACE, "");
+        mapForActivity.put(mydb.KEY_TODAY_OTHER_PRODUCT_LIQUIDATED, "");
+        mapForActivity.put(mydb.KEY_TODAY_PACKS_LIQUIATED, "");
+        mapForActivity.put(mydb.KEY_TODAY_SERVINGDEALERID, "");
+        mapForActivity.put(mydb.KEY_TODAY_LATITUTE, "");
+        mapForActivity.put(mydb.KEY_TODAY_LONGITUTE, "");
+
+        HashMap<String, String> filtersforActivity = new HashMap<>();
+        filtersforActivity.put(mydb.KEY_TODAY_FARMMMER_ID, thisfarmerId);
+
+        Cursor cursorActivity = mydb.getData(mydb.TODAY_FARMER_ACTIVITY, mapForActivity, filtersforActivity);
+        Activity activity = new Activity();
+        if (cursorActivity.getCount() > 0) {
+            cursorActivity.moveToFirst();
+            do {
+                // do for activity
+
+                activity.setCropId(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_CROPID))));
+                activity.setAddress(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_ADDRESS)));
+                activity.setMainProduct(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_MAIN_PRODUCT))));
+                activity.setRemarks(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_REMARKS)));
+                activity.setLatitude(Double.parseDouble(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_LATITUTE))));
+                activity.setLongitude(Double.parseDouble(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_LONGITUTE))));
+                activity.setCropDeficiency(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_CROP_DEF))));
+                activity.setCropAcreage(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_CROP_ACE))));
+                activity.setCustomerId(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_SERVINGDEALERID)));
+                activity.setPacksLiquidated(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_PACKS_LIQUIATED))));
+                // activity.setOtherPacksLiquidated(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_OTHER_PRODUCT_LIQUIDATED))));
+                activity.setOtherProducts(loadotherProducts(thisfarmerId));
+
+                thisfarmerCheckIn.setActivity(activity);
+            }
+            while (cursorActivity.moveToNext());
+        }
+
+        //return activity;
+    }
+    private ArrayList<com.tallymarks.ffmapp.models.getallFarmersplanoutput.OtherProduct> loadotherProducts(String farmerid) {
+        ArrayList<com.tallymarks.ffmapp.models.getallFarmersplanoutput.OtherProduct> productsList = new ArrayList<>();
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(mydb.KEY_TODAY_OTHER_PACKS_ID, "");
+        map.put(mydb.KEY_TODAY_OTHER_PACKS_LIQUIDATED, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(mydb.KEY_TODAY_FARMMER_ID, farmerid);
+        Cursor cursor2 = mydb.getData(mydb.TODAY_FARMER_OTHERPACKS, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                com.tallymarks.ffmapp.models.getallFarmersplanoutput.OtherProduct prod = new com.tallymarks.ffmapp.models.getallFarmersplanoutput.OtherProduct();
+                prod.setProductId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_OTHER_PACKS_ID))));
+                prod.setOtherPacksLiquidated(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_OTHER_PACKS_LIQUIDATED))));
+                productsList.add(prod);
+
+            }
+            while (cursor2.moveToNext());
+        }
+        return productsList;
+    }
+    private void loadRecommendations(FarmerCheckIn thisFarmerCheckIn, String thisFarmerId) {
+        // Mapping for recommendation
+        //mydb = new MyDatabaseHandler(MainActivity.this);
+        HashMap<String, String> mapForRecommendation = new HashMap<>();
+        mapForRecommendation.put(mydb.KEY_TODAY_FARMMMER_ID, "");
+        mapForRecommendation.put(mydb.KEY_TODAY_CROPID, "");
+        mapForRecommendation.put(mydb.KEY_TODAY_FERTTYPE_ID, "");
+        mapForRecommendation.put(mydb.KEY_TODAY_BRAND_ID, "");
+        mapForRecommendation.put(mydb.KEY_TODAY_DOSAGE, "");
+
+        HashMap<String, String> filtersforRecommendation = new HashMap<>();
+        filtersforRecommendation.put(mydb.KEY_TODAY_FARMMMER_ID, thisFarmerId);
+
+        ArrayList<Recommendation> recommendationList = new ArrayList<>();
+
+        // for recommendations
+        Cursor cursorRecommendations = mydb.getData(mydb.TODAY_FARMER_RECOMMENDATION, mapForRecommendation, filtersforRecommendation);
+        if (cursorRecommendations.getCount() > 0) {
+            cursorRecommendations.moveToFirst();
+            do {
+                // do for recommendation
+                Recommendation recommendation = new Recommendation();
+                recommendation.setCropId(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_CROPID)));
+                recommendation.setFertAppTypeId(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_FERTTYPE_ID)));
+                recommendation.setBrandId(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_BRAND_ID)));
+                recommendation.setDosage(Integer.parseInt(cursorRecommendations.getString(cursorRecommendations.getColumnIndex(mydb.KEY_TODAY_DOSAGE))));
+                recommendationList.add(recommendation);
+            }
+            while (cursorRecommendations.moveToNext());
+        }
+
+        thisFarmerCheckIn.setRecommendations(recommendationList);
+        //return recommendationList;
+    }
+    private void loadSampling(FarmerCheckIn thisFarmerCheckIn, String thisFarmerId) {
+        // Mapping for sampling
+        HashMap<String, String> mapForSampleing = new HashMap<>();
+        mapForSampleing.put(mydb.KEY_TODAY_FARMMMER_ID, "");
+        mapForSampleing.put(mydb.KEY_TODAY_PREVIOUSCROP_ID, "");
+        mapForSampleing.put(mydb.KEY_TODAY_DEPTH_ID, "");
+        mapForSampleing.put(mydb.KEY_TODAY_CROP1_ID, "");
+        mapForSampleing.put(mydb.KEY_TODAY_CROP2_ID, "");
+        mapForSampleing.put(mydb.KEY_TODAY_PLOT_NUMBER, "");
+        mapForSampleing.put(mydb.KEY_TODAY_BLOCK_NUMBER, "");
+        mapForSampleing.put(mydb.KEY_TODAY_LATITUTE, "");
+        mapForSampleing.put(mydb.KEY_TODAY_LONGITUTE, "");
+        mapForSampleing.put(mydb.KEY_TODAY_REFRENCE, "");
+        HashMap<String, String> filtersforSampling = new HashMap<>();
+        filtersforSampling.put(mydb.KEY_TODAY_FARMMMER_ID, thisFarmerId);
+        Sampling sampling;
+        ArrayList<Sampling> samplingList = new ArrayList<>();
+        Cursor cursorSampling = mydb.getData(mydb.TODAY_FARMER_SAMPLING, mapForSampleing, filtersforSampling);
+        if (cursorSampling.getCount() > 0) {
+            cursorSampling.moveToFirst();
+            do {
+                // do for sampling
+                sampling = new Sampling();
+                sampling.setPreviousCropId(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_PREVIOUSCROP_ID)));
+                sampling.setDepthId(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_DEPTH_ID)));
+                sampling.setCrop1Id(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_CROP1_ID)));
+                sampling.setCrop2Id(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_CROP2_ID)));
+                sampling.setPlotNumber(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_PLOT_NUMBER)));
+                sampling.setBlockNumber(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_BLOCK_NUMBER)));
+                sampling.setLatitude(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_LATITUTE)));
+                sampling.setLongitude(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_LONGITUTE)));
+                sampling.setReference(Helpers.clean(cursorSampling.getString(cursorSampling.getColumnIndex(mydb.KEY_TODAY_REFRENCE))));
+                samplingList.add(sampling);
+            }
+            while (cursorSampling.moveToNext());
+        }
+
+        thisFarmerCheckIn.setSampling(samplingList);
+        //return samplingList;
+    }
+    private void loadActivityRoleWise(FarmerCheckIn thisfarmerCheckIn, String thisfarmerId) {
+        HashMap<String, String> mapForActivity = new HashMap<>();
+        mapForActivity.put(mydb.KEY_TODAY_FARMMMER_ID, "");
+        mapForActivity.put(mydb.KEY_TODAY_CROPID, "");
+        mapForActivity.put(mydb.KEY_TODAY_ADDRESS, "");
+        mapForActivity.put(mydb.KEY_TODAY_MAIN_PRODUCT, "");
+        mapForActivity.put(mydb.KEY_TODAY_REMARKS, "");
+
+        mapForActivity.put(mydb.KEY_TODAY_LATITUTE, "");
+        mapForActivity.put(mydb.KEY_TODAY_LONGITUTE, "");
+
+        HashMap<String, String> filtersforActivity = new HashMap<>();
+        filtersforActivity.put(mydb.KEY_TODAY_FARMMMER_ID, thisfarmerId);
+
+        Cursor cursorActivity = mydb.getData(mydb.TODAY_FARMER_ACTIVITY, mapForActivity, filtersforActivity);
+        Activity activity = new Activity();
+        if (cursorActivity.getCount() > 0) {
+            cursorActivity.moveToFirst();
+            do {
+                // do for activity
+
+                activity.setCropId(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_CROPID))));
+                activity.setAddress(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_ADDRESS)));
+                activity.setMainProduct(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_MAIN_PRODUCT))));
+                activity.setRemarks(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_REMARKS)));
+                activity.setLatitude(Double.parseDouble(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_LATITUTE))));
+                activity.setLongitude(Double.parseDouble(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_LONGITUTE))));
+                thisfarmerCheckIn.setActivity(activity);
+            }
+            while (cursorActivity.moveToNext());
+        }
+
+        //return activity;
+    }
+    private void loadLocationlastFarmer(FarmerCheckIn thisfarmerCheckIn, String thisfarmerId) {
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LATITUDE, "");
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LONGITUDE, "");
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_TIMESTAMP, "");
+        map.put(mydb.KEY_TODAY_JOURNEY_FARMER_DISTANCE, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(mydb.KEY_TODAY_FARMER_ID, thisfarmerId);
+        Cursor cursor2 = mydb.getData(mydb.TODAY_JOURNEY_PLAN_POST_DATA, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                thisfarmerCheckIn.setCheckOutLatitude(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LATITUDE)));
+                thisfarmerCheckIn.setCheckOutLongitude(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_LONGITUDE)));
+                thisfarmerCheckIn.setCheckOutTimeStamp(Long.parseLong(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_CHECKOUT_TIMESTAMP))));
+                thisfarmerCheckIn.setDistance(Double.parseDouble(cursor2.getString(cursor2.getColumnIndex(mydb.KEY_TODAY_JOURNEY_FARMER_DISTANCE))));
+            }
+            while (cursor2.moveToNext());
+        }
+
+    }
+    private void myloadStartActviiyResult(FarmerCheckIn thisfarmerCheckIn, String thisfarmerId) {
+        HashMap<String, String> mapForActivityResult = new HashMap<>();
+        mapForActivityResult.put(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_TIME, "");
+
+        mapForActivityResult.put(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_STATUS, "");
+        mapForActivityResult.put(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_OBJECTIVE, "");
+        mapForActivityResult.put(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_LATITUDE, "");
+        mapForActivityResult.put(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_LONGITUDE, "");
+        mapForActivityResult.put(mydb.KEY_PLAN_TYPE, "");
+
+        HashMap<String, String> filtersforActivityResult = new HashMap<>();
+        filtersforActivityResult.put(mydb.KEY_TODAY_FARMER_FARMER_ID, thisfarmerId);
+
+        Cursor cursorActivity = mydb.getData(mydb.TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY, mapForActivityResult, filtersforActivityResult);
+        if (cursorActivity.getCount() > 0) {
+            cursorActivity.moveToFirst();
+            do {
+                journeyType = cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_PLAN_TYPE));
+                thisfarmerCheckIn.setVisitObjective(Helpers.clean(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_OBJECTIVE))));
+                thisfarmerCheckIn.setStatus(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_STATUS))));
+                thisfarmerCheckIn.setOutletStatusId(Integer.parseInt(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_STATUS))));
+                thisfarmerCheckIn.setCheckInTimeStamp(Long.parseLong(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_TIME))));
+                thisfarmerCheckIn.setCheckInLatitude(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_LATITUDE)));
+                thisfarmerCheckIn.setCheckInLongitude(cursorActivity.getString(cursorActivity.getColumnIndex(mydb.KEY_TODAY_FARMER_JOURNEY_PLAN_START_ACTIVITY_LONGITUDE)));
+
+            }
+            while (cursorActivity.moveToNext());
+        }
+    }
+    public void  loadRoles()
+    {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_ROLE_NAME, "");
+        HashMap<String, String> filters = new HashMap<>();
+        Cursor cursor = db.getData(db.ROLES, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                rolename = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_ROLE_NAME)));
+                while (cursor.moveToNext()) ;
+            }
+            while (cursor.moveToNext());
+
+
+        }
+        else
+        {
+            rolename =  extraHelper.getString(Constants.ROLE);
+
+
+        }
+
+
     }
 }

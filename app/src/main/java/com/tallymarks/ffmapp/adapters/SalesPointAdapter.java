@@ -55,7 +55,10 @@ public class SalesPointAdapter extends RecyclerView.Adapter<SalesPointAdapter.My
         SaelsPoint movie = moviesList.get(position);
         if (activity.equals("farmer")) {
             holder.title.setText(movie.getId()+"-"+movie.getPoint());
-        } else {
+        }
+        else if (activity.equals("changelocation")) {
+            holder.title.setText(movie.getCode()+"-"+movie.getPoint());
+        }else {
             holder.title.setText(movie.getPoint());
         }
 

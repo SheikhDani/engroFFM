@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         btn_add_plan = findViewById(R.id.btn_new_plan);
         iv_Menu.setVisibility(View.VISIBLE);
         iv_Notification.setVisibility(View.VISIBLE);
-        cartbadge.setVisibility(View.VISIBLE);
+        cartbadge.setVisibility(View.GONE);
         iv_filter = findViewById(R.id.iv_notification);
         userName = findViewById(R.id.userName);
         lastPosted = findViewById(R.id.lastPosted);
@@ -218,6 +218,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             lastPosted.setText("Last Posted on "+sHelper.getString(Constants.LAST_POSTED));
         }
+
+        iv_Notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent notification = new Intent(MainActivity.this, NotificationActivity.class);
+                startActivity(notification );
+            }
+        });
 
 
 
@@ -367,6 +375,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if(rolename.equals("Field Force Team"))
         {
+            Menu nav_Menu = navigationView.getMenu();
+
+            nav_Menu.findItem(R.id.nav_customerlocation).setVisible(false);
+
 
           //  Menu nav_Menu = navigationView.getMenu();
            // nav_Menu.findItem(R.id.nav_conversion).setVisible(false);
@@ -376,6 +388,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             Menu nav_Menu = navigationView.getMenu();
             nav_Menu.findItem(R.id.nav_conversion).setVisible(true);
+            nav_Menu.findItem(R.id.nav_customerlocation).setVisible(false);
             txt_soil_logs.setEnabled(false);
             txt_soil_logs.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_baseline_lock_24, 0, 0,0);
 
@@ -461,6 +474,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (gpsTracker.canGetLocation()) {
                     Intent farmerdemo = new Intent(MainActivity.this, CustomerLocationActivity.class);
                     startActivity(farmerdemo);
+                } else {
+                    DialougeManager.gpsNotEnabledPopup(MainActivity.this);
+                }
+
+
+                drawer.closeDrawers();
+                return true;
+
+            case R.id.nav_locationchangerequest:
+                gpsTracker = new GpsTracker(MainActivity.this);
+                if (gpsTracker.canGetLocation()) {
+                    Intent locationchange = new Intent(MainActivity.this, ChangeCustomerLocationListActivity.class);
+                    startActivity(locationchange);
+                } else {
+                    DialougeManager.gpsNotEnabledPopup(MainActivity.this);
+                }
+
+
+                drawer.closeDrawers();
+                return true;
+            case R.id.nav_locationapproval:
+                gpsTracker = new GpsTracker(MainActivity.this);
+                if (gpsTracker.canGetLocation()) {
+                    Intent locationchange = new Intent(MainActivity.this, SupervisorLocationApprovalListActivity.class);
+                    startActivity(locationchange);
                 } else {
                     DialougeManager.gpsNotEnabledPopup(MainActivity.this);
                 }
@@ -691,6 +729,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
         HashMap<String, String> filters = new HashMap<>();
         filters.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Visited");
+        filters.put(db.KEY_TODAY_JOURNEY_IS_POSTED_INTERNET_AVAILALE, "0");
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -713,6 +752,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
         HashMap<String, String> filters = new HashMap<>();
         filters.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Not Available");
+        filters.put(db.KEY_TODAY_JOURNEY_IS_POSTED_INTERNET_AVAILALE, "0");
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -957,6 +997,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         map.put(MyDatabaseHandler.KEY_TODAY_JOURNEY_FARMER_ID, "");
         HashMap<String, String> filters = new HashMap<>();
         filters.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "Not Available"); // not visited means 0
+        filters.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED_INTERNET_AVAILALE, "0");
         Cursor cursor = mydb.getData(mydb.TODAY_FARMER_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -980,6 +1021,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         map.put(mydb.KEY_TODAY_JOURNEY_FARMER_ID, "");
         HashMap<String, String> filters = new HashMap<>();
         filters.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "Visited");
+        filters.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED_INTERNET_AVAILALE, "0");
         Cursor cursor = mydb.getData(mydb.TODAY_FARMER_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -1041,12 +1083,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    public void postFarmerData() {
-        if (isMyUnpostedDataExist()) {
-            if (isMyDataSaved() || isMyDataSavedNotAvailable())
-                new PostSyncFarmer(statuCustomer).execute();
-        }
-    }
 
 
     public void postAddFarmerData() {
@@ -1054,6 +1090,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             new PostAddFarmer().execute();
         }
     }
+    public void postFarmerData() {
+        if (isMyUnpostedDataExist()) {
+            if (isMyDataSaved() || isMyDataSavedNotAvailable())
+                new PostSyncFarmer(statuCustomer).execute();
+        }
+    }
+
 
     public void postCustomerData() {
         if (isUnpostedDataExist()) {

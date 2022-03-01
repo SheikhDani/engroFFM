@@ -2,6 +2,7 @@ package com.tallymarks.ffmapp.activities;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,6 +10,8 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.text.Editable;
@@ -35,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -43,23 +47,34 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.SalesCallAdapter;
 import com.tallymarks.ffmapp.adapters.SalesPointAdapter;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
+import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.Commitment;
 import com.tallymarks.ffmapp.models.CustomerSnapShot;
 import com.tallymarks.ffmapp.models.DataModel;
 import com.tallymarks.ffmapp.models.Recommendations;
 import com.tallymarks.ffmapp.models.SaelsPoint;
+import com.tallymarks.ffmapp.models.todayjourneyplaninput.MarketIntel;
+import com.tallymarks.ffmapp.models.todayjourneyplaninput.StockSnapshot;
+import com.tallymarks.ffmapp.models.todayjourneyplaninput.StockSold__1;
+import com.tallymarks.ffmapp.models.todayjourneyplaninput.TodayCustomerPostInput;
 import com.tallymarks.ffmapp.tasks.GetCompanHeldBrandBasicList;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.DialougeManager;
 import com.tallymarks.ffmapp.utils.GpsTracker;
 import com.tallymarks.ffmapp.utils.Helpers;
+import com.tallymarks.ffmapp.utils.HttpHandler;
 import com.tallymarks.ffmapp.utils.RecyclerTouchListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -87,8 +102,11 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
     double checkoutlng;
     String productID;
     String forward = "0";
-    String checkinlat="";
-    String checkinlng="";
+    String checkinlat = "";
+    String checkinlng = "";
+    ExtraHelper extraHelper;
+    String journeyType;
+
     static {
         System.loadLibrary("native-lib");
     }
@@ -105,6 +123,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         mTableLayout = (TableLayout) findViewById(R.id.displayLinear);
         db = new DatabaseHandler(QualityofSalesCallActivity.this);
         sHelper = new SharedPrefferenceHelper(QualityofSalesCallActivity.this);
+        extraHelper = new ExtraHelper(QualityofSalesCallActivity.this);
         btnCheckout = findViewById(R.id.btn_checkout);
         btnCheckout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,9 +151,9 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 //                    // and get whatever type user account id is
 //                }
 //                else {
-                    Intent i = new Intent(QualityofSalesCallActivity.this, SalesOrderMarketPriceActivity.class);
-                    startActivity(i);
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                Intent i = new Intent(QualityofSalesCallActivity.this, SalesOrderMarketPriceActivity.class);
+                startActivity(i);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
 //                }
 
@@ -172,9 +191,9 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 //                    // and get whatever type user account id is
 //                }
 //                else {
-                    Intent i = new Intent(QualityofSalesCallActivity.this, SalesOrderMarketPriceActivity.class);
-                    startActivity(i);
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                Intent i = new Intent(QualityofSalesCallActivity.this, SalesOrderMarketPriceActivity.class);
+                startActivity(i);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
 //                }
             }
@@ -200,7 +219,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 //        dataModels.add(new DataModel("Zarkhez Khas(MOP)", false));
 //        dataModels.add(new DataModel("EFERT Agritrade Zingro", false));
 
-        adapter = new SalesCallAdapter(dataModels, getApplicationContext(),"quality");
+        adapter = new SalesCallAdapter(dataModels, getApplicationContext(), "quality");
 
 
         listView.setAdapter(adapter);
@@ -228,27 +247,28 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
             }
         }
     }
-    private void addMarketIntel(String review , String forward)
-    {
+
+    private void addMarketIntel(String review, String forward) {
         HashMap<String, String> headerParams = new HashMap<>();
         headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTEL_FORWARD, forward);
         headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTETL_COMMENT, review);
         headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
         headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
-        db.addData(db.TODAY_JOURNEY_PLAN_MARKET_INTEL,headerParams);
+        db.addData(db.TODAY_JOURNEY_PLAN_MARKET_INTEL, headerParams);
     }
-    private void addCheckoutLocation(int distance)
-    {
+
+    private void addCheckoutLocation(int distance) {
         long time = System.currentTimeMillis();
         HashMap<String, String> headerParams = new HashMap<>();
         headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LATITUDE, String.valueOf(checkoutlat));
         headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LONGITUDE, String.valueOf(checkoutlng));
         headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
         headerParams.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
-        headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_TIMESTAMP,String.valueOf(time));
-        headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_DISTANCE,String.valueOf(distance));
-        db.addData(db.TODAY_JOURNEY_PLAN_POST_DATA,headerParams);
+        headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_TIMESTAMP, String.valueOf(time));
+        headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_DISTANCE, String.valueOf(distance));
+        db.addData(db.TODAY_JOURNEY_PLAN_POST_DATA, headerParams);
     }
+
     private void addCommitment() {
         for (int i = 0; i < arraylist.size(); i++) {
 
@@ -257,13 +277,14 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
             headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
             headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_CONFIRMED, arraylist.get(i).getConfirmed());
             headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_DELIVERY_DATE, arraylist.get(i).getTimeline());
-            headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_QUANITY,arraylist.get(i).getQuantity());
-            headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_RAND_ID,arraylist.get(i).getProductid());
-            db.addData(db.TODAY_JOURNEY_PLAN_COMMITMENT_RECEIVED,headerParams);
+            headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_QUANITY, arraylist.get(i).getQuantity());
+            headerParams.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_RAND_ID, arraylist.get(i).getProductid());
+            db.addData(db.TODAY_JOURNEY_PLAN_COMMITMENT_RECEIVED, headerParams);
 
+        }
     }
-    }
-    public static float getMeterFromLatLong(float lat1, float lng1, float lat2, float lng2){
+
+    public static float getMeterFromLatLong(float lat1, float lng1, float lat2, float lng2) {
         Location loc1 = new Location("");
         loc1.setLatitude(lat1);
         loc1.setLongitude(lng1);
@@ -282,32 +303,66 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        int totalb = 0;
-                        gps = new GpsTracker(QualityofSalesCallActivity.this);
-                        if (gps.canGetLocation()) {
-                            if (ActivityCompat.checkSelfPermission(QualityofSalesCallActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(QualityofSalesCallActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                return;
+                        if (Helpers.isNetworkAvailable(QualityofSalesCallActivity.this)) {
+                            int totalb = 0;
+                            gps = new GpsTracker(QualityofSalesCallActivity.this);
+                            if (gps.canGetLocation()) {
+                                if (ActivityCompat.checkSelfPermission(QualityofSalesCallActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(QualityofSalesCallActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                    return;
+                                }
+                                checkoutlat = gps.getLatitude();
+                                checkoutlng = gps.getLongitude();
+                                if (checkoutlat > 0 && checkoutlng > 0) {
+                                    float distance = getMeterFromLatLong(Float.parseFloat(String.valueOf(checkoutlat)), Float.parseFloat(String.valueOf(checkoutlng)), Float.parseFloat(checkinlat), Float.parseFloat(checkinlng));
+                                    float totaldistance = distance / 1000;
+                                    totalb = (int) Math.round(totaldistance);
+                                }
+                                totalb = 0;
+                                addProductDiscussed();
+                                addCommitment();
+                                addCheckoutLocation(totalb);
+                                updateOutletStatus("Visited", "1");
+                               // Toast.makeText(QualityofSalesCallActivity.this, "Data Saved Successfully", Toast.LENGTH_SHORT).show();
+                                //addMarketIntel();
+                                dialog.cancel();
+                                if (isUnpostedDataExist()) {
+                                    if (isDataSaved()) {
+                                        new PostSyncCustomer().execute();
+                                    }
+                                }
                             }
-                            checkoutlat = gps.getLatitude();
-                            checkoutlng = gps.getLongitude();
-                            if(checkoutlat>0 && checkoutlng>0) {
-                            float distance = getMeterFromLatLong(Float.parseFloat(String.valueOf(checkoutlat)), Float.parseFloat(String.valueOf(checkoutlng)), Float.parseFloat(checkinlat), Float.parseFloat(checkinlng));
-                            float totaldistance = distance / 1000;
-                            totalb = (int) Math.round(totaldistance);
+                        }
+
+
+                        else {
+                            int totalb = 0;
+                            gps = new GpsTracker(QualityofSalesCallActivity.this);
+                            if (gps.canGetLocation()) {
+                                if (ActivityCompat.checkSelfPermission(QualityofSalesCallActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(QualityofSalesCallActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                    return;
+                                }
+                                checkoutlat = gps.getLatitude();
+                                checkoutlng = gps.getLongitude();
+                                if (checkoutlat > 0 && checkoutlng > 0) {
+                                    float distance = getMeterFromLatLong(Float.parseFloat(String.valueOf(checkoutlat)), Float.parseFloat(String.valueOf(checkoutlng)), Float.parseFloat(checkinlat), Float.parseFloat(checkinlng));
+                                    float totaldistance = distance / 1000;
+                                    totalb = (int) Math.round(totaldistance);
+                                }
+                                totalb = 0;
+                                addProductDiscussed();
+                                addCommitment();
+                                addCheckoutLocation(totalb);
+                                updateOutletStatus("Visited","0");
+                                Toast.makeText(QualityofSalesCallActivity.this, "Data Saved Successfully", Toast.LENGTH_SHORT).show();
+                                //addMarketIntel();
+                                dialog.cancel();
+                                Intent shift = new Intent(QualityofSalesCallActivity.this, VisitCustomerActivity.class);
+                                shift.putExtra("from", sHelper.getString(Constants.PLAN_TYPE));
+                                startActivity(shift);
+
+                            } else {
+                                DialougeManager.gpsNotEnabledPopup(QualityofSalesCallActivity.this);
                             }
-                            totalb = 0;
-                            addProductDiscussed();
-                            addCommitment();
-                            addCheckoutLocation(totalb);
-                            updateOutletStatus("Visited");
-                            Toast.makeText(QualityofSalesCallActivity.this, "Data Saved Successfully", Toast.LENGTH_SHORT).show();
-                            //addMarketIntel();
-                            dialog.cancel();
-                            Intent shift = new Intent(QualityofSalesCallActivity.this,VisitCustomerActivity.class);
-                            shift.putExtra("from",sHelper.getString(Constants.PLAN_TYPE));
-                            startActivity(shift);
-                        } else {
-                            DialougeManager.gpsNotEnabledPopup(QualityofSalesCallActivity.this);
                         }
 
                     }
@@ -322,15 +377,65 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         alertDialog.show();
 
     }
-    private void updateOutletStatus(String status) {
+
+    private void updateOutletStatus(String status,String internetstatus) {
         HashMap<String, String> params = new HashMap<>();
         params.put(db.KEY_TODAY_JOURNEY_IS_VISITED, status);
         params.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "2");
+        params.put(db.KEY_TODAY_JOURNEY_IS_POSTED_INTERNET_AVAILALE, internetstatus);
         HashMap<String, String> filter = new HashMap<>();
         filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
         filter.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
         db.updateData(db.TODAY_JOURNEY_PLAN, params, filter);
     }
+    private void updateOutletStatus() {
+        HashMap<String, String> params = new HashMap<>();
+        params.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "1");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "2");
+        db.updateData(db.TODAY_JOURNEY_PLAN, params, filter);
+    }
+    private boolean isDataSaved() {
+
+        boolean flag = false;
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Visited");
+        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                flag = true;
+                //   statuCustomer = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_IS_VISITED));;
+            }
+            while (cursor.moveToNext());
+        } else {
+            flag = false;
+        }
+        return flag;
+
+    }
+    private boolean isUnpostedDataExist() {
+
+        boolean flag = false;
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "2");
+        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                flag = true;
+            }
+            while (cursor.moveToNext());
+        } else {
+            flag = false;
+        }
+        return flag;
+    }
+
     @NonNull
     private SpannableStringBuilder setStarToLabel(String text) {
         String simple = text;
@@ -343,6 +448,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         builder.setSpan(new ForegroundColorSpan(Color.RED), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return builder;
     }
+
     private void openCommitment() {
         LayoutInflater li = LayoutInflater.from(QualityofSalesCallActivity.this);
         View promptsView = li.inflate(R.layout.dialouge_add_commitment, null);
@@ -406,7 +512,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
                     checkedCommitement = "No";
                 }
 
-                validateInputs(et_quantity , auto_Product , tv_Date,alertDialog);
+                validateInputs(et_quantity, auto_Product, tv_Date, alertDialog);
 
 
             }
@@ -450,12 +556,12 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 
     };
 
-    private void validateInputs(EditText quanity , TextView product , TextView date,AlertDialog alertDialog) {
-        if (    quanity!=null
-                && product!=null
-                && date!=null
-                && !(Helpers.isEmptyTextview(getApplicationContext(),  date))
-                && !(Helpers.isEmptyTextview(getApplicationContext(),  product))
+    private void validateInputs(EditText quanity, TextView product, TextView date, AlertDialog alertDialog) {
+        if (quanity != null
+                && product != null
+                && date != null
+                && !(Helpers.isEmptyTextview(getApplicationContext(), date))
+                && !(Helpers.isEmptyTextview(getApplicationContext(), product))
                 && !(Helpers.isEmpty(getApplicationContext(), quanity))
         ) {
             prepareRecommendationData(product.getText().toString(), quanity.getText().toString(), date.getText().toString(), checkedCommitement);
@@ -479,6 +585,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
             alertDialog2.show();
         }
     }
+
     private void openMarketintelligence() {
 
         LayoutInflater li = LayoutInflater.from(QualityofSalesCallActivity.this);
@@ -497,13 +604,10 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
                 alertDialog.dismiss();
             }
         });
-        if(ck_forward.isChecked())
-        {
+        if (ck_forward.isChecked()) {
             forward = "1";
-        }
-        else
-        {
-            forward="0";
+        } else {
+            forward = "0";
         }
 
 
@@ -526,24 +630,25 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         alertDialogBuilder.setCancelable(true);
         alertDialog.show();
     }
-      public void loadCurrentLocation() {
-          HashMap<String, String> map = new HashMap<>();
-          map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE, "");
-          map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE, "");
-          HashMap<String, String> filters = new HashMap<>();
-          filters.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
-          filters.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
-          Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN_START_ACTIVITY, map, filters);
-          if (cursor.getCount() > 0) {
-              cursor.moveToFirst();
-              do {
-                  checkinlat = cursor.getString(cursor.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE));
-                  checkinlng = cursor.getString(cursor.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE));
 
-              }
-              while (cursor.moveToNext());
-          }
-      }
+    public void loadCurrentLocation() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE, "");
+        map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, sHelper.getString(Constants.CUSTOMER_ID));
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE));
+        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN_START_ACTIVITY, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                checkinlat = cursor.getString(cursor.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE));
+                checkinlng = cursor.getString(cursor.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE));
+
+            }
+            while (cursor.moveToNext());
+        }
+    }
 
     public void selectProductDialouge(TextView autoProduct) {
         LayoutInflater li = LayoutInflater.from(QualityofSalesCallActivity.this);
@@ -564,7 +669,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         title.setText("Select Company");
         final RecyclerView recyclerView = promptsView.findViewById(R.id.recyclerView);
         prepareCompanyData(companyList);
-        final SalesPointAdapter mAdapter = new SalesPointAdapter(companyList,"salescall");
+        final SalesPointAdapter mAdapter = new SalesPointAdapter(companyList, "salescall");
 
         // vertical RecyclerView
         // keep movie_list_row.xml width to `match_parent`
@@ -594,7 +699,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                if(search.hasFocus()) {
+                if (search.hasFocus()) {
                     mAdapter.filter(cs.toString());
                 }
             }
@@ -642,7 +747,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 
         // notify adapter about data set changes
         // so that it will render the list with new data
-       // mAdapter.notifyDataSetChanged();
+        // mAdapter.notifyDataSetChanged();
     }
 
     private void prepareBrandData(ArrayList<DataModel> dataModels) {
@@ -754,7 +859,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 
             TextView timeline = new TextView(this);
 
-            timeline.setText(Helpers.utcToAnyDateFormat(arraylist.get(i).getTimeline(),"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'","MMM d yyyy"));
+            timeline.setText(Helpers.utcToAnyDateFormat(arraylist.get(i).getTimeline(), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "MMM d yyyy"));
             timeline.setGravity(Gravity.CENTER);
 
             timeline.setTextSize(12);
@@ -794,7 +899,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         prod.setProduct(product);
         prod.setQuantity(quantity);
         prod.setProductid(productID);
-        prod.setTimeline(Helpers.utcToAnyDateFormat(time,"MMM d yyyy","yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
+        prod.setTimeline(Helpers.utcToAnyDateFormat(time, "MMM d yyyy", "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
         prod.setConfirmed(confirm);
         arraylist.add(prod);
 
@@ -803,6 +908,7 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
         // so that it will render the list with new data
 
     }
+
     @Override
     public void onBackPressed() {
 //        Bundle extras = getIntent().getExtras();
@@ -818,14 +924,373 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
 //            // and get whatever type user account id is
 //        }
 //        else {
-            Intent i = new Intent(QualityofSalesCallActivity.this, SalesOrderMarketPriceActivity.class);
-            startActivity(i);
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        Intent i = new Intent(QualityofSalesCallActivity.this, SalesOrderMarketPriceActivity.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 //
 //        }
 //        Intent i = new Intent(QualityofSalesCallActivity.this, SalesOrderMarketPriceActivity.class);
 //        startActivity(i);
 //        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+    }
+
+    private class PostSyncCustomer extends AsyncTask<String, Void, Void> {
+
+        String response = null;
+        String status = "";
+        String message = "";
+        String errorMessage = "";
+        ProgressDialog pDialog;
+        private HttpHandler httpHandler;
+        String customerId = "";
+        String visitStatus;
+
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(QualityofSalesCallActivity.this);
+            pDialog.setMessage(getResources().getString(R.string.loading));
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        @Override
+        protected Void doInBackground(String... Url) {
+
+            System.out.println("Post Outlet URl" + Constants.POST_TODAY_CUSTOMER_JOURNEY_PLAN);
+            ArrayList<TodayCustomerPostInput> inputCollection = new ArrayList<>();
+            Gson gson = new Gson();
+            HashMap<String, String> headerParams = new HashMap<>();
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CODE, "");
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME, "");
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE, "");
+            headerParams.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "");
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE, "");
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID, "");
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID, "");
+            headerParams.put(db.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME, "");
+            HashMap<String, String> filter = new HashMap<>();
+            filter.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "2");
+            Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN, headerParams, filter);
+            if (cursor2.getCount() > 0) {
+                cursor2.moveToFirst();
+                do {
+                    TodayCustomerPostInput inputParameters = new TodayCustomerPostInput();
+                    inputParameters.setCustomerCode(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_CODE)));
+                    inputParameters.setCustomerId(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_ID)));
+                    inputParameters.setCustomerName("" + Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME))));
+                    inputParameters.setLatitude(Double.parseDouble(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE))));
+                    inputParameters.setLongtitude(Double.parseDouble(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE))));
+
+                    if (!cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID)).equals("NA")) {
+                        inputParameters.setJourneyPlanId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID))));
+                    } else {
+                        inputParameters.setJourneyPlanId(null);
+                    }
+                    if (!cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID)).equals("NA")) {
+                        inputParameters.setDayId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID))));
+                    } else {
+                        inputParameters.setDayId(null);
+                    }
+                    inputParameters.setSalePointName("" + Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME))));
+                    customerId = cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_ID));
+                    if (Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_IS_VISITED))).equals("Visited")) {
+                        loadStartActviiyResult(inputParameters, customerId);
+                        //LoadOrderforPosting(inputParameters, customerId);
+                        // LoadPreviousSnapShotforPosting(inputParameters, customerId);
+                        loadFloorStockforPosting(inputParameters, customerId);
+                        loadLocationlast(inputParameters, customerId);
+                        loadFloorStockSold(inputParameters, customerId);
+                        loadMarketIntel(inputParameters, customerId);
+                        loadCommitments(inputParameters, customerId);
+                        loadProductDicussed(inputParameters, customerId);
+                    }
+                    inputCollection.add(inputParameters);
+
+                }
+                while (cursor2.moveToNext());
+                httpHandler = new HttpHandler(QualityofSalesCallActivity.this);
+                HashMap<String, String> headerParams2 = new HashMap<>();
+                if (sHelper.getString(Constants.ACCESS_TOKEN) != null && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+                    headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                } else {
+                    headerParams2.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+                }
+                //headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+                HashMap<String, String> bodyParams = new HashMap<>();
+                String output = gson.toJson(inputCollection);
+                Log.e("postoutput", String.valueOf(output));
+                //output = gson.toJson(inputParameters, SaveWorkInput.class);
+                try {
+                    response = httpHandler.httpPost(Constants.POST_TODAY_CUSTOMER_JOURNEY_PLAN, headerParams2, bodyParams, output);
+                    if (response != null) {
+                        try {
+                            JSONObject jsonObj = new JSONObject(response);
+                            status = String.valueOf(jsonObj.getString("success"));
+                            message = String.valueOf(jsonObj.getString("message"));
+                            if (status.equals("true")) {
+                                updateOutletStatus();
+                                // updateOutletStatusById(Helpers.clean(JourneyPlanActivity.selectedOutletId));
+                                // Helpers.displayMessage(MainActivity.this, true, message);
+                            }
+                        } catch (JSONException e) {
+                            if (response.equals("")) {
+                                Helpers.displayMessage(QualityofSalesCallActivity.this, true, e.getMessage());
+                                //showResponseDialog( mContext.getResources().getString(R.string.alert),exception.getMessage());
+                                //pDialog.dismiss();
+                            } else {
+                                JSONObject json = null;
+                                try {
+                                    json = new JSONObject(response);
+                                    errorMessage = json.getString("message");
+                                    String status = json.getString("success");
+                                    if (status.equals("false")) {
+                                        Helpers.displayMessage(QualityofSalesCallActivity.this, true, errorMessage);
+                                    }
+                                } catch (JSONException exception) {
+                                    exception.printStackTrace();
+
+                                }
+                                //Helpers.displayMessage(LoginActivity.this, true, exception.getMessage());
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void args) {
+            pDialog.dismiss();
+            if (status.equals("true")) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(QualityofSalesCallActivity.this);
+                alertDialogBuilder.setTitle(R.string.alert)
+                        .setMessage("Data Posted Successfully")
+                        .setCancelable(false)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                Intent shift = new Intent(QualityofSalesCallActivity.this, VisitCustomerActivity.class);
+                                shift.putExtra("from", sHelper.getString(Constants.PLAN_TYPE));
+                                startActivity(shift);
+//                                SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy hh:mm aaa");
+//                                String currentDateandTime = sdf.format(new Date());
+//                                sHelper.setString(Constants.LAST_POSTED, currentDateandTime);
+                               // lastPosted.setText("Last Posted on " + sHelper.getString(Constants.LAST_POSTED));
+                                //new PostSyncOutlet().execute();
+                            }
+                        });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            }
+
+        }
+    }
+    private void loadCommitments(TodayCustomerPostInput inputParameters, String customerid) {
+        HashMap<String, String> map = new HashMap<>();
+
+        ArrayList<com.tallymarks.ffmapp.models.todayjourneyplaninput.Commitment> commitmentList = new ArrayList<>();
+        map.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_CONFIRMED, "");
+        map.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_DELIVERY_DATE, "");
+        map.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_QUANITY, "");
+        map.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_RAND_ID, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_COMMITMENT_RECEIVED, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                com.tallymarks.ffmapp.models.todayjourneyplaninput.Commitment commitment = new com.tallymarks.ffmapp.models.todayjourneyplaninput.Commitment();
+                commitment.setBrandId(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_RAND_ID)));
+                commitment.setQuantity(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_QUANITY)));
+                commitment.setDeliveryDate(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_DELIVERY_DATE)));
+                if (cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_COMMITMENT_CONFIRMED)).equals("1")) {
+                    commitment.setConfirmed(true);
+                } else {
+                    commitment.setConfirmed(false);
+                }
+                commitmentList.add(commitment);
+                inputParameters.setCommitments(commitmentList);
+            }
+            while (cursor2.moveToNext());
+        }
+
+    }
+
+    private void loadProductDicussed(TodayCustomerPostInput inputParameters, String customerid) {
+        HashMap<String, String> map = new HashMap<>();
+
+        ArrayList<Integer> dicussedList = new ArrayList<>();
+        map.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED_ID, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                dicussedList.add(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_PRODUCT_DICUSSED_ID))));
+                inputParameters.setProductsDiscussed(dicussedList);
+            }
+            while (cursor2.moveToNext());
+        }
+
+    }
+
+    private void loadLocationlast(TodayCustomerPostInput inputParameters, String customerid) {
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LATITUDE, "");
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LONGITUDE, "");
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_TIMESTAMP, "");
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_DISTANCE, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_POST_DATA, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                inputParameters.setCheckOutLatitude(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LATITUDE)));
+                inputParameters.setCheckOutLongitude(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_LONGITUDE)));
+                inputParameters.setCheckOutTimeStamp(Long.parseLong(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_CHECKOUT_TIMESTAMP))));
+                inputParameters.setDistance(Double.parseDouble(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_DISTANCE))));
+            }
+            while (cursor2.moveToNext());
+        }
+
+    }
+    private void loadFloorStockSold(TodayCustomerPostInput inputParameters, String customerid) {
+        HashMap<String, String> map = new HashMap<>();
+
+        ArrayList<StockSold__1> stocksoldList = new ArrayList<>();
+        map.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_QUANITYSOLD, "");
+        map.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_NETSELLINGPRICE, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_NUMBER, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER, "");
+        map.put(db.KEY_TODAY_JOURNEY_ORDER_BRAND_NAME, "");
+        map.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_SAMEINVOCIEE, "");
+        map.put(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_OLD, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_MARKETPRICE_STOCK_SOLD, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                StockSold__1 stock = new StockSold__1();
+                stock.setQuantitySold(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_QUANITYSOLD)));
+                stock.setNetSellingPrice(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_NETSELLINGPRICE)));
+                stock.setOrderNumber(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_NUMBER)));
+                stock.setInvoiceNumber(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_INVOICE_NUMBER)));
+                stock.setProductName("" + Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_ORDER_BRAND_NAME))));
+                if (cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_SAMEINVOCIEE)).equals("1")) {
+                    stock.setSameInvoice(true);
+                } else {
+                    stock.setSameInvoice(false);
+                }
+                if (cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_MARKETPRICE_STOCK_SOLD_OLD)).equals("1")) {
+                    stock.setOld(true);
+                } else {
+                    stock.setOld(false);
+                }
+
+
+                stocksoldList.add(stock);
+                inputParameters.setStockSold(stocksoldList);
+            }
+            while (cursor2.moveToNext());
+        }
+
+    }
+
+    private void loadMarketIntel(TodayCustomerPostInput inputParameters, String customerid) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTEL_FORWARD, "");
+        map.put(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTETL_COMMENT, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_MARKET_INTEL, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                MarketIntel marketIntel = new MarketIntel();
+                marketIntel.setComments(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTETL_COMMENT)));
+                if (cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_JOURNEY_PLAN_MARKET_INTEL_FORWARD)).equals("1")) {
+                    marketIntel.setDoForward(true);
+                } else {
+                    marketIntel.setDoForward(false);
+                }
+
+                inputParameters.setMarketIntel(marketIntel);
+            }
+            while (cursor2.moveToNext());
+        }
+
+    }
+    private void loadStartActviiyResult(TodayCustomerPostInput inputParameters, String customerid) {
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_TIME, "");
+        map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS, "");
+        map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_OBjECTIVE, "");
+        map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE, "");
+        map.put(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE, "");
+        map.put(db.KEY_TODAY_JOURNEY_TYPE, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_START_ACTIVITY, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                journeyType = cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOURNEY_TYPE));
+                inputParameters.setCheckInLatitude(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LATITUDE)));
+                inputParameters.setCheckInLongitude(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_LONGITUDE)));
+                inputParameters.setCheckInTimeStamp(Long.parseLong(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_TIME))));
+                inputParameters.setStatus(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS))));
+                inputParameters.setVisitObjective("" + Helpers.clean(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_OBjECTIVE))));
+                inputParameters.setOutletStatusId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_CUSTOMER_TODAY_PLAN_STARTACTIVITY_STATUS))));
+
+            }
+            while (cursor2.moveToNext());
+        }
+
+    }
+    private void loadFloorStockforPosting(TodayCustomerPostInput inputParameters, String customerid) {
+        HashMap<String, String> map = new HashMap<>();
+
+        ArrayList<StockSnapshot> floorstockList = new ArrayList<>();
+        map.put(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDID, "");
+        map.put(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY, "");
+        HashMap<String, String> filter = new HashMap<>();
+        filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, customerid);
+        Cursor cursor2 = db.getData(db.TODAY_JOURNEY_PLAN_FLOOR_STOCK_INPUT, map, filter);
+        if (cursor2.getCount() > 0) {
+            cursor2.moveToFirst();
+            do {
+                StockSnapshot stock = new StockSnapshot();
+                stock.setBrandId(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDID))));
+                Log.e("Quanity", String.valueOf(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY))));
+                if (cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY)) != null && !cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY)).equals("")) {
+                    stock.setQuantity(Integer.parseInt(cursor2.getString(cursor2.getColumnIndex(db.KEY_TODAY_JOUNREY_PLAN_FLOOR_STOCK_INPUT_BRANDQUANTITY))));
+                } else {
+                    stock.setQuantity(0);
+                }
+                floorstockList.add(stock);
+                inputParameters.setStockSnapshot(floorstockList);
+            }
+            while (cursor2.moveToNext());
+        }
 
     }
 

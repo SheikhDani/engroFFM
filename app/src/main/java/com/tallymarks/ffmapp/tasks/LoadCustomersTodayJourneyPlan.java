@@ -90,7 +90,9 @@ public class LoadCustomersTodayJourneyPlan extends AsyncTask<String, Void, Void>
                         HashMap<String, String> map = new HashMap<>();
                         map.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
                         map.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+                        map.put(db.KEY_TODAY_JOURNEY_IS_POSTED_INTERNET_AVAILALE, "0");
                         map.put(db.KEY_TODAY_JOURNEY_TYPE, "today");
+                        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LOCATION_STATUS, journeycode.get(i).getLocationStatus() == null || journeycode.get(i).getLocationStatus().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getLocationStatus());
                         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CODE, journeycode.get(i).getCustomerCode() == null || journeycode.get(i).getCustomerCode().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getCustomerCode());
                         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, journeycode.get(i).getCustomerId() == null || journeycode.get(i).getCustomerId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getCustomerId());
                         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME, journeycode.get(i).getCustomerName() == null || journeycode.get(i).getCustomerName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getCustomerName());

@@ -103,6 +103,7 @@ public class GetFatmerTodayJourneyPlan extends AsyncTask<String, Void, Void> {
                         map.put(db.KEY_TODAY_FARMER_MOBILE_NO, journeycode.get(j).getMobileNo()== null || journeycode.get(j).getMobileNo().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getMobileNo());
                         map.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
                         map.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+                        map.put(db.KEY_TODAY_JOURNEY_IS_VISITED_INTERNET_AVAILALE, "0");
                         map.put(db.KEY_PLAN_TYPE, "TODAY");
 
                         db.addData(TODAY_FARMER_JOURNEY_PLAN , map);

@@ -29,7 +29,7 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener  {
-        public TextView title, member, customecode, salespoint, time,distance;
+        public TextView title, member, customecode, salespoint, time,distance,locationstatus;
         ImageView image;
 
         public MyViewHolder(View view) {
@@ -41,9 +41,11 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
             salespoint = (TextView) view.findViewById(R.id.sale_point);
             time = (TextView) view.findViewById(R.id.time);
             distance = (TextView) view.findViewById(R.id.distance);
+            locationstatus = (TextView) view.findViewById(R.id.customer_lcoation_status);
 
             if(from.equals("farmers")) {
                 member.setVisibility(View.VISIBLE);
+                locationstatus.setVisibility(View.GONE);
                 distance.setVisibility(View.GONE);
                 time.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
 
@@ -51,6 +53,7 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
             else if(from.equals("editfarmer")) {
                 member.setVisibility(View.VISIBLE);
                 distance.setVisibility(View.GONE);
+                locationstatus.setVisibility(View.GONE);
                 time.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
 
             }
@@ -58,12 +61,14 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
             {
                 member.setVisibility(View.GONE);
                 distance.setVisibility(View.GONE);
+                locationstatus.setVisibility(View.GONE);
                 time.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
             }
             else
             {
                 member.setVisibility(View.VISIBLE);
                 distance.setVisibility(View.VISIBLE);
+                locationstatus.setVisibility(View.VISIBLE);
             }
 
             itemView.setTag(itemView);
@@ -146,6 +151,7 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
             holder.customecode.setText(movie.getCustomercode());
             holder.time.setText(movie.getTime());
             holder.distance.setText(movie.getDistance());
+            holder.locationstatus.setText("Location: "+movie.getLocationStauts());
         }
     }
 

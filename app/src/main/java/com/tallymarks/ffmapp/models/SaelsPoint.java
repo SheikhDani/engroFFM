@@ -22,6 +22,16 @@ public class SaelsPoint {
     public String id;
     public String acerage;
 
+    public String getLocationstatus() {
+        return locationstatus;
+    }
+
+    public void setLocationstatus(String locationstatus) {
+        this.locationstatus = locationstatus;
+    }
+
+    public String locationstatus;
+
     public String getAcerage() {
         return acerage;
     }
@@ -57,5 +67,34 @@ public class SaelsPoint {
     public String usertype;
     public String areacultivation;
 
+    public String getLat() {
+        return lat;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLng() {
+        return lng;
+    }
+
+    public void setLng(String lng) {
+        this.lng = lng;
+    }
+
+    public String lat;
+    public String lng;
+
     public String salespoint;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String code;
 }

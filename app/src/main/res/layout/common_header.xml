@@ -78,19 +78,20 @@
 
     <TextView
         android:id="@+id/cart_badge"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
+        android:layout_width="20dp"
+
+        android:layout_height="20dp"
         android:layout_centerVertical="true"
         android:layout_marginEnd="3dp"
         android:layout_marginRight="3dp"
         android:layout_toLeftOf="@+id/ly_badges"
         android:background="@drawable/notificaiton_badge"
         android:gravity="center"
-        android:visibility="gone"
+        android:text="1000"
 
-        android:text="0"
         android:textColor="@android:color/white"
-        android:textSize="8sp" />
+        android:textSize="8sp"
+        android:visibility="gone" />
     <!--<LinearLayout-->
     <!--android:layout_width="wrap_content"-->
     <!--android:layout_height="wrap_content"-->
