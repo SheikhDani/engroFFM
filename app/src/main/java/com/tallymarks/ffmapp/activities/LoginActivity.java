@@ -63,7 +63,7 @@ import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.MyHelper;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.changecustomerlocation.ChnageCustomerLocationinput;
-import com.tallymarks.ffmapp.models.devicetokeninput.DeviceTokenInput;
+
 import com.tallymarks.ffmapp.models.forgetpasswordinput.ForgetPasswordInput;
 import com.tallymarks.ffmapp.models.loginoutput.LoginOutput;
 import com.tallymarks.ffmapp.utils.Constants;
@@ -652,7 +652,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             }
                             break;
                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                            // Location settings are not satisfied. However, we have no way to fix the
+                            // Loc ation settings are not satisfied. However, we have no way to fix the
                             // settings so we won't show the dialog.
                             //...
                             break;
@@ -676,7 +676,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         // Get new FCM registration token
                         String token = task.getResult();
 
-                        new SendDeviceToekntoServer(token, progressDialog).execute();
+                     //   new SendDeviceToekntoServer(token, progressDialog).execute();
                         // Log and toast
                         // String msg = getString(R.string.msg_token_fmt, token);
                         // Log.d(TAG, msg);
@@ -704,127 +704,127 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         appinfo.setText(sb.toString());
     }
 
-    private class SendDeviceToekntoServer extends AsyncTask<String, Void, Void> {
-
-        String response = null;
-        String status = "";
-        String message = "";
-        ProgressDialog pDialog;
-        private HttpHandler httpHandler;
-        String errorMessage = "";
-        String token = "";
-
-
-        SendDeviceToekntoServer(String token, ProgressDialog progressDialog) {
-            this.token = token;
-            this.pDialog = progressDialog;
-        }
-
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-//            pDialog = new ProgressDialog(LoginActivity.this);
-//            pDialog.setMessage(getResources().getString(R.string.loading));
-//            pDialog.setIndeterminate(false);
-//            pDialog.setCancelable(false);
-//            pDialog.show();
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.M)
-        @Override
-        protected Void doInBackground(String... Url) {
-
-            //System.out.println("Post Outlet URl" + Constants.POST_TODAY_CUSTOMER_JOURNEY_PLAN);
-            Gson gson = new Gson();
-            DeviceTokenInput inputParameters = new DeviceTokenInput();
-            inputParameters.setToken(token);
-            httpHandler = new HttpHandler(LoginActivity.this);
-            HashMap<String, String> headerParams2 = new HashMap<>();
-            if (sHelper.getString(Constants.ACCESS_TOKEN) != null && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
-                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
-            }
-//            if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+//    private class SendDeviceToekntoServer extends AsyncTask<String, Void, Void> {
+//
+//        String response = null;
+//        String status = "";
+//        String message = "";
+//        ProgressDialog pDialog;
+//        private HttpHandler httpHandler;
+//        String errorMessage = "";
+//        String token = "";
+//
+//
+//        SendDeviceToekntoServer(String token, ProgressDialog progressDialog) {
+//            this.token = token;
+//            this.pDialog = progressDialog;
+//        }
+//
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+////            pDialog = new ProgressDialog(LoginActivity.this);
+////            pDialog.setMessage(getResources().getString(R.string.loading));
+////            pDialog.setIndeterminate(false);
+////            pDialog.setCancelable(false);
+////            pDialog.show();
+//        }
+//
+//        @RequiresApi(api = Build.VERSION_CODES.M)
+//        @Override
+//        protected Void doInBackground(String... Url) {
+//
+//            //System.out.println("Post Outlet URl" + Constants.POST_TODAY_CUSTOMER_JOURNEY_PLAN);
+//            Gson gson = new Gson();
+//            DeviceTokenInput inputParameters = new DeviceTokenInput();
+//            inputParameters.setToken(token);
+//            httpHandler = new HttpHandler(LoginActivity.this);
+//            HashMap<String, String> headerParams2 = new HashMap<>();
+//            if (sHelper.getString(Constants.ACCESS_TOKEN) != null && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
 //                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
 //            }
-//            else
-//            {
-//                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+////            if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+////                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+////            }
+////            else
+////            {
+////                headerParams2.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
+////            }
+//            // headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
+//            HashMap<String, String> bodyParams = new HashMap<>();
+//            String jsonObject = new Gson().toJson(inputParameters, DeviceTokenInput.class);
+//            Log.e("postoutput", String.valueOf(jsonObject));
+//            //output = gson.toJson(inputParameters, SaveWorkInput.class);
+//            try {
+//                response = httpHandler.httpPost(Constants.FFM_POST_DEVICE_TOKEN, headerParams2, bodyParams, jsonObject);
+//                if (response != null) {
+//                    try {
+//                        JSONObject jsonObj = new JSONObject(response);
+//                        status = String.valueOf(jsonObj.getString("success"));
+//                        message = String.valueOf(jsonObj.getString("description"));
+//                        if (status.equals("true")) {
+//                            FirebaseMessaging.getInstance().subscribeToTopic("ffm")
+//                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                        @Override
+//                                        public void onComplete(@NonNull Task<Void> task) {
+//                                            String msg = "ffm";
+//                                            if (!task.isSuccessful()) {
+//                                                msg = "failed";
+//                                            } else {
+//                                                pDialog.dismiss();
+//                                                Helpers.displayMessage(LoginActivity.this, true, "Successfully Login");
+//                                                Intent main = new Intent(LoginActivity.this, MainActivity.class);
+//                                                // main.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                                                startActivity(main);
+//                                                finish();
+//                                            }
+//                                            //Log.d(TAG, msg);
+//                                            //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    });
+//
+//                            // updateOutletStatusById(Helpers.clean(JourneyPlanActivity.selectedOutletId));
+//                            //Helpers.displayMessage(LoginActivity.this, true, message);
+//                        } else if (status.equals("false")) {
+//                            Helpers.displayMessage(LoginActivity.this, true, message);
+//                        }
+//                    } catch (JSONException e) {
+//                        if (response.equals("")) {
+//                            Helpers.displayMessage(LoginActivity.this, true, e.getMessage());
+//                            pDialog.dismiss();
+//                            //showResponseDialog( mContext.getResources().getString(R.string.alert),exception.getMessage());
+//                            //pDialog.dismiss();
+//                        } else {
+//                            JSONObject json = null;
+//                            try {
+//                                json = new JSONObject(response);
+//                                errorMessage = json.getString("message");
+//                                String status = json.getString("success");
+//                                if (status.equals("false")) {
+//                                    Helpers.displayMessage(LoginActivity.this, true, errorMessage);
+//                                    pDialog.dismiss();
+//                                }
+//                            } catch (JSONException exception) {
+//                                exception.printStackTrace();
+//
+//                            }
+//                            //Helpers.displayMessage(LoginActivity.this, true, exception.getMessage());
+//                        }
+//                    }
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
 //            }
-            // headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
-            HashMap<String, String> bodyParams = new HashMap<>();
-            String jsonObject = new Gson().toJson(inputParameters, DeviceTokenInput.class);
-            Log.e("postoutput", String.valueOf(jsonObject));
-            //output = gson.toJson(inputParameters, SaveWorkInput.class);
-            try {
-                response = httpHandler.httpPost(Constants.FFM_POST_DEVICE_TOKEN, headerParams2, bodyParams, jsonObject);
-                if (response != null) {
-                    try {
-                        JSONObject jsonObj = new JSONObject(response);
-                        status = String.valueOf(jsonObj.getString("success"));
-                        message = String.valueOf(jsonObj.getString("description"));
-                        if (status.equals("true")) {
-                            FirebaseMessaging.getInstance().subscribeToTopic("ffm")
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            String msg = "ffm";
-                                            if (!task.isSuccessful()) {
-                                                msg = "failed";
-                                            } else {
-                                                pDialog.dismiss();
-                                                Helpers.displayMessage(LoginActivity.this, true, "Successfully Login");
-                                                Intent main = new Intent(LoginActivity.this, MainActivity.class);
-                                                // main.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                startActivity(main);
-                                                finish();
-                                            }
-                                            //Log.d(TAG, msg);
-                                            //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-
-                            // updateOutletStatusById(Helpers.clean(JourneyPlanActivity.selectedOutletId));
-                            //Helpers.displayMessage(LoginActivity.this, true, message);
-                        } else if (status.equals("false")) {
-                            Helpers.displayMessage(LoginActivity.this, true, message);
-                        }
-                    } catch (JSONException e) {
-                        if (response.equals("")) {
-                            Helpers.displayMessage(LoginActivity.this, true, e.getMessage());
-                            pDialog.dismiss();
-                            //showResponseDialog( mContext.getResources().getString(R.string.alert),exception.getMessage());
-                            //pDialog.dismiss();
-                        } else {
-                            JSONObject json = null;
-                            try {
-                                json = new JSONObject(response);
-                                errorMessage = json.getString("message");
-                                String status = json.getString("success");
-                                if (status.equals("false")) {
-                                    Helpers.displayMessage(LoginActivity.this, true, errorMessage);
-                                    pDialog.dismiss();
-                                }
-                            } catch (JSONException exception) {
-                                exception.printStackTrace();
-
-                            }
-                            //Helpers.displayMessage(LoginActivity.this, true, exception.getMessage());
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void args) {
-            //  pDialog.dismiss();
-
-
-        }
-    }
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Void args) {
+//            //  pDialog.dismiss();
+//
+//
+//        }
+//    }
 
 }

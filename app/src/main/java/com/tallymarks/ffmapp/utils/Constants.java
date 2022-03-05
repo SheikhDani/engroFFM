@@ -147,12 +147,12 @@ public class Constants {
 
 
 ////PRD Details
-//    public static final String ENVIRONMENT = "Production";
-//    public static final String FFM_BASE_URL = "https://engro.mitracs.com:8080/mitracs";
+    public static final String ENVIRONMENT = "Production";
+    public static final String FFM_BASE_URL = "https://engro.mitracs.com:8080/mitracs";
 
     //DEV Details
-    public static final String ENVIRONMENT = "Development";
-    public static final String FFM_BASE_URL = "https://attendance.tallymarkscloud.com:8080/mitracs";
+//    public static final String ENVIRONMENT = "Development";
+//    public static final String FFM_BASE_URL = "https://attendance.tallymarkscloud.com:8080/mitracs";
 
     public static final String FFM_LOGIN = FFM_BASE_URL + "/oauth/token";
     public static final String FFM_FINGER_LOGIN = FFM_BASE_URL + "/oauth/token";
