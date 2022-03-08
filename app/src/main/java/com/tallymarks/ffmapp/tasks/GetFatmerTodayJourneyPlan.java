@@ -11,12 +11,10 @@ import androidx.annotation.RequiresApi;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
-import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.getFarmerTodayJourneyPlan.FarmerTodayJourneyPlan;
-import com.tallymarks.ffmapp.models.getallcustomersplanoutput.GetAllCustomersOutput;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.Helpers;
 import com.tallymarks.ffmapp.utils.HttpHandler;
@@ -103,6 +101,7 @@ public class GetFatmerTodayJourneyPlan extends AsyncTask<String, Void, Void> {
                         map.put(db.KEY_TODAY_FARMER_MOBILE_NO, journeycode.get(j).getMobileNo()== null || journeycode.get(j).getMobileNo().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getMobileNo());
                         map.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
                         map.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+                        map.put(db.KEY_TODAY_JOURNEY_IS_VISITED_INTERNET_AVAILALE, "0");
                         map.put(db.KEY_PLAN_TYPE, "TODAY");
 
                         db.addData(TODAY_FARMER_JOURNEY_PLAN , map);

@@ -1,18 +1,12 @@
 package com.tallymarks.ffmapp.activities;
 
 
-import static com.tallymarks.ffmapp.database.MyDatabaseHandler.TODAY_FARMER_JOURNEY_PLAN;
-
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -33,7 +27,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -41,7 +34,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ekn.gruzer.gaugelibrary.HalfGauge;
-import com.ekn.gruzer.gaugelibrary.Range;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -55,7 +47,6 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -66,7 +57,6 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.ExpandableListAdapter;
 import com.tallymarks.ffmapp.adapters.SalesPlanViewPagerAdapter;
-import com.tallymarks.ffmapp.adapters.VisitCustomerViewPagerAdapter;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.MyDatabaseHandler;
@@ -77,17 +67,12 @@ import com.tallymarks.ffmapp.models.addfarmerinput.CroppingPattern;
 import com.tallymarks.ffmapp.models.addfarmerinput.LandProfile;
 import com.tallymarks.ffmapp.models.addfarmerinput.MarketPlayer;
 import com.tallymarks.ffmapp.models.addfarmerinput.ServingDealer;
-import com.tallymarks.ffmapp.models.assignedsalespoint.AssignedSalesPointOutput;
 import com.tallymarks.ffmapp.models.forgetpasswordinput.ForgetPasswordInput;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Activity;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.FarmerCheckIn;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.OtherProduct;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Recommendation;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Sampling;
-import com.tallymarks.ffmapp.models.getallcustomersplanoutput.GetAllCustomersOutput;
-import com.tallymarks.ffmapp.models.listofallcrops.ListofallCropsOutput;
-import com.tallymarks.ffmapp.models.loginoutput.LoginOutput;
-import com.tallymarks.ffmapp.models.outletstatusesoutput.OutletStatusOutput;
 import com.tallymarks.ffmapp.models.todayjourneyplaninput.Commitment;
 import com.tallymarks.ffmapp.models.todayjourneyplaninput.Invoice;
 import com.tallymarks.ffmapp.models.todayjourneyplaninput.MarketIntel;
@@ -100,17 +85,11 @@ import com.tallymarks.ffmapp.models.todayjourneyplaninput.TodayCustomerPostInput
 import com.tallymarks.ffmapp.tasks.GetAllProductBrandByCategory;
 import com.tallymarks.ffmapp.tasks.GetAssignedSalesPoint;
 import com.tallymarks.ffmapp.tasks.GetCompanHeldBrandBasicList;
-import com.tallymarks.ffmapp.tasks.GetCustomerFarmerHierarchy;
 import com.tallymarks.ffmapp.tasks.GetFatmerTodayJourneyPlan;
-import com.tallymarks.ffmapp.tasks.GetListofAllBrands;
 import com.tallymarks.ffmapp.tasks.GetListofAllCrops;
 import com.tallymarks.ffmapp.tasks.GetListofAllDepths;
 import com.tallymarks.ffmapp.tasks.GetListofallMarketPlayers;
-import com.tallymarks.ffmapp.tasks.GetListofallProductCategories;
-import com.tallymarks.ffmapp.tasks.GetOutletStatus;
-import com.tallymarks.ffmapp.tasks.GetlistofAllDistrict;
 import com.tallymarks.ffmapp.tasks.GetlistofAllFertTypes;
-import com.tallymarks.ffmapp.tasks.GetlistofallGenders;
 import com.tallymarks.ffmapp.tasks.LoadCustomersAllJourneyPlan;
 import com.tallymarks.ffmapp.tasks.LoadCustomersTodayJourneyPlan;
 import com.tallymarks.ffmapp.tasks.LoadFarmersAllJourneyPlan;
@@ -123,11 +102,8 @@ import com.tallymarks.ffmapp.utils.HttpHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -207,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         btn_add_plan = findViewById(R.id.btn_new_plan);
         iv_Menu.setVisibility(View.VISIBLE);
         iv_Notification.setVisibility(View.VISIBLE);
-        cartbadge.setVisibility(View.VISIBLE);
+        cartbadge.setVisibility(View.GONE);
         iv_filter = findViewById(R.id.iv_notification);
         userName = findViewById(R.id.userName);
         lastPosted = findViewById(R.id.lastPosted);
@@ -218,6 +194,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             lastPosted.setText("Last Posted on "+sHelper.getString(Constants.LAST_POSTED));
         }
+
+        iv_Notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent notification = new Intent(MainActivity.this, NotificationActivity.class);
+                startActivity(notification );
+            }
+        });
 
 
 
@@ -310,8 +294,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 filter2.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "0");
                 mydb.deleteData(mydb.TODAY_FARMER_JOURNEY_PLAN,filter2);
                 loadrefereshdata();
+
                // loadCustomerData();
-               // loadFarmerData();
+               //loadFarmerData();
 
 
             }
@@ -367,6 +352,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if(rolename.equals("Field Force Team"))
         {
+            Menu nav_Menu = navigationView.getMenu();
+
+            nav_Menu.findItem(R.id.nav_customerlocation).setVisible(false);
+
 
           //  Menu nav_Menu = navigationView.getMenu();
            // nav_Menu.findItem(R.id.nav_conversion).setVisible(false);
@@ -376,6 +365,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             Menu nav_Menu = navigationView.getMenu();
             nav_Menu.findItem(R.id.nav_conversion).setVisible(true);
+            nav_Menu.findItem(R.id.nav_customerlocation).setVisible(false);
             txt_soil_logs.setEnabled(false);
             txt_soil_logs.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_baseline_lock_24, 0, 0,0);
 
@@ -469,6 +459,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 drawer.closeDrawers();
                 return true;
 
+            case R.id.nav_locationchangerequest:
+                gpsTracker = new GpsTracker(MainActivity.this);
+                if (gpsTracker.canGetLocation()) {
+                    Intent locationchange = new Intent(MainActivity.this, ChangeCustomerLocationListActivity.class);
+                    startActivity(locationchange);
+                } else {
+                    DialougeManager.gpsNotEnabledPopup(MainActivity.this);
+                }
+
+
+                drawer.closeDrawers();
+                return true;
+            case R.id.nav_locationapproval:
+                gpsTracker = new GpsTracker(MainActivity.this);
+                if (gpsTracker.canGetLocation()) {
+                    Intent locationchange = new Intent(MainActivity.this, SupervisorLocationApprovalListActivity.class);
+                    startActivity(locationchange);
+                } else {
+                    DialougeManager.gpsNotEnabledPopup(MainActivity.this);
+                }
+
+
+                drawer.closeDrawers();
+                return true;
+
             case R.id.nav_supervisorsnapshot:
                 Intent soilsampling = new Intent(MainActivity.this, SubOrdinatesActivity.class);
                 startActivity(soilsampling);
@@ -533,6 +548,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     }
+    public void loadrefereshdata()
+    {
+        if (Helpers.isNetworkAvailable(MainActivity.this)) {
+            new LoadCustomersTodayJourneyPlan(MainActivity.this).execute();
+            new LoadCustomersAllJourneyPlan(MainActivity.this).execute();
+            new LoadFarmersAllJourneyPlan(MainActivity.this).execute();
+            new GetFatmerTodayJourneyPlan(MainActivity.this).execute();
+        } else {
+            Helpers.noConnectivityPopUp(MainActivity.this);
+        }
+
+    }
 
     public void checkStorageCrops() {
 
@@ -561,18 +588,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
 
-
-    }
-    public void loadrefereshdata()
-    {
-        if (Helpers.isNetworkAvailable(MainActivity.this)) {
-           new LoadCustomersTodayJourneyPlan(MainActivity.this).execute();
-           new LoadCustomersAllJourneyPlan(MainActivity.this).execute();
-            new LoadFarmersAllJourneyPlan(MainActivity.this).execute();
-            new GetFatmerTodayJourneyPlan(MainActivity.this).execute();
-        } else {
-            Helpers.noConnectivityPopUp(MainActivity.this);
-        }
 
     }
     public void loadCustomerData()
@@ -703,6 +718,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
         HashMap<String, String> filters = new HashMap<>();
         filters.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Visited");
+        filters.put(db.KEY_TODAY_JOURNEY_IS_POSTED_INTERNET_AVAILALE, "0");
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -725,6 +741,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
         HashMap<String, String> filters = new HashMap<>();
         filters.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Not Available");
+        filters.put(db.KEY_TODAY_JOURNEY_IS_POSTED_INTERNET_AVAILALE, "0");
         Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -969,6 +986,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         map.put(MyDatabaseHandler.KEY_TODAY_JOURNEY_FARMER_ID, "");
         HashMap<String, String> filters = new HashMap<>();
         filters.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "Not Available"); // not visited means 0
+        filters.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED_INTERNET_AVAILALE, "0");
         Cursor cursor = mydb.getData(mydb.TODAY_FARMER_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -992,6 +1010,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         map.put(mydb.KEY_TODAY_JOURNEY_FARMER_ID, "");
         HashMap<String, String> filters = new HashMap<>();
         filters.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "Visited");
+        filters.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED_INTERNET_AVAILALE, "0");
         Cursor cursor = mydb.getData(mydb.TODAY_FARMER_JOURNEY_PLAN, map, filters);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -1053,12 +1072,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    public void postFarmerData() {
-        if (isMyUnpostedDataExist()) {
-            if (isMyDataSaved() || isMyDataSavedNotAvailable())
-                new PostSyncFarmer(statuCustomer).execute();
-        }
-    }
 
 
     public void postAddFarmerData() {
@@ -1066,6 +1079,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             new PostAddFarmer().execute();
         }
     }
+    public void postFarmerData() {
+        if (isMyUnpostedDataExist()) {
+            if (isMyDataSaved() || isMyDataSavedNotAvailable())
+                new PostSyncFarmer(statuCustomer).execute();
+        }
+    }
+
 
     public void postCustomerData() {
         if (isUnpostedDataExist()) {

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
@@ -105,6 +104,7 @@ public class LoadAssignedFarmerFromSalesPoint extends AsyncTask<String, Void, Vo
                         map.put(mydb.KEY_TODAY_JOURNEY_FARMER_AREA_CULTIVATION, journeycode.get(j).getAreaCultivation()== null || journeycode.get(j).getAreaCultivation().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(j).getAreaCultivation().toString());
                         map.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
                         map.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+                        map.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED_INTERNET_AVAILALE, "0");
                         map.put(mydb.KEY_TODAY_JOURNEY_IS_EDITED, "Not Edited");
                         map.put(mydb.KEY_PLAN_TYPE, "ALL");
                         mydb.addData(mydb.TODAY_FARMER_JOURNEY_PLAN , map);

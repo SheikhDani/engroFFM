@@ -5,15 +5,12 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
-import com.tallymarks.ffmapp.activities.MainActivity;
-import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
@@ -31,7 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.tallymarks.ffmapp.database.MyDatabaseHandler.ALL_FARMER_JOURNEY_PLAN;
-import static com.tallymarks.ffmapp.database.MyDatabaseHandler.TODAY_FARMER_JOURNEY_PLAN;
 
 public class LoadFarmersAllJourneyPlan extends AsyncTask<String, Void, Void> {
 

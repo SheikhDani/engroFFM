@@ -1,8 +1,6 @@
 package com.tallymarks.ffmapp.adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,25 +12,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 
 import com.tallymarks.ffmapp.R;
-import com.tallymarks.ffmapp.activities.MarketPricesActivity;
-import com.tallymarks.ffmapp.activities.QualityofSalesCallActivity;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
-import com.tallymarks.ffmapp.models.CustomerSnapShotParent;
-import com.tallymarks.ffmapp.models.Farmes;
 import com.tallymarks.ffmapp.models.FloorStockChild;
-import com.tallymarks.ffmapp.models.FloorStockParent;
 import com.tallymarks.ffmapp.utils.Constants;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 

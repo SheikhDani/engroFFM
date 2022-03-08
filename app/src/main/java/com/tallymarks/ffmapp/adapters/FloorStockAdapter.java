@@ -5,10 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
@@ -17,15 +15,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tallymarks.ffmapp.R;
-import com.tallymarks.ffmapp.activities.FloorStockActivity;
-import com.tallymarks.ffmapp.models.CustomerSnapShot;
-import com.tallymarks.ffmapp.models.CustomerSnapShotParent;
 import com.tallymarks.ffmapp.models.FloorStockChild;
 import com.tallymarks.ffmapp.models.FloorStockParent;
-import com.tallymarks.ffmapp.utils.Constants;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class FloorStockAdapter extends BaseExpandableListAdapter {
 

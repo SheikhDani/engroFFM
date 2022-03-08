@@ -43,6 +43,16 @@ public class TodayPlan {
 
     private String title;
 
+    public String getLocationStauts() {
+        return locationStauts;
+    }
+
+    public void setLocationStauts(String locationStauts) {
+        this.locationStauts = locationStauts;
+    }
+
+    private String locationStauts;
+
 
     public String getFatherName() {
         return fatherName;

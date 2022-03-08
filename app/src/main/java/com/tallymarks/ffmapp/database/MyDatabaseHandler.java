@@ -18,7 +18,7 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
 
     private SQLiteDatabase db;
     /*Database Varaiables*/
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static final String TAG = "DBAdapter";
     private static final String DATABASE_NAME = "FFMAppDb_Zohaib_v5";
     private Context mContext;
@@ -133,6 +133,7 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
     public static final String KEY_TODAY_JOURNEY_IS_VISITED= "isVisitedTodayCustomerJourneyPlan";
     public static final String KEY_TODAY_JOURNEY_IS_POSTED= "isVisitedTodayCustomerJourneyPlanIsPosted";
     public static final String KEY_PLAN_TYPE= "planType";
+    public static final String KEY_TODAY_JOURNEY_IS_VISITED_INTERNET_AVAILALE= "isVisitedTodayCustomerJourneyPlanInternetAvailable";
 
 
     // Farmer Today Recommendation fields
@@ -209,6 +210,7 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
             + KEY_TODAY_JOURNEY_IS_VISITED + " TEXT,"
             + KEY_TODAY_JOURNEY_IS_EDITED + " TEXT,"
             + KEY_TODAY_JOURNEY_IS_POSTED + " TEXT,"
+            + KEY_TODAY_JOURNEY_IS_VISITED_INTERNET_AVAILALE + " TEXT,"
             + KEY_PLAN_TYPE + " TEXT" + ")";
 
 

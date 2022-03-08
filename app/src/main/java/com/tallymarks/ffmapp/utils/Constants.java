@@ -147,15 +147,18 @@ public class Constants {
 
 
 ////PRD Details
-    public static final String ENVIRONMENT = "Production";
-    public static final String FFM_BASE_URL = "https://engro.mitracs.com:8080/mitracs";
+//    public static final String ENVIRONMENT = "Production";
+//    public static final String FFM_BASE_URL = "https://engro.mitracs.com:8080/mitracs";
 
     //DEV Details
-//    public static final String ENVIRONMENT = "Development";
-//    public static final String FFM_BASE_URL = "https://attendance.tallymarkscloud.com:8080/mitracs";
+    public static final String ENVIRONMENT = "Development";
+    public static final String FFM_BASE_URL = "https://attendance.tallymarkscloud.com:8080/mitracs";
 
     public static final String FFM_LOGIN = FFM_BASE_URL + "/oauth/token";
     public static final String FFM_FINGER_LOGIN = FFM_BASE_URL + "/oauth/token";
+    public static final String FFM_GET_NOTIFICATIONS= FFM_BASE_URL + "/global/lookup/dbnotifications/";
+    public static final String FFM_GET_SUPERVISOR_LOCATIONS= FFM_BASE_URL + "/app/trans/customerLocations/subordinate";
+    public static final String FFM_GET_ALL_CUSTOMERS_LOCATIONS= FFM_BASE_URL + "/app/trans/customerLocations";
     public static final String FFM_GET_ALL_CUSTOMERS= FFM_BASE_URL + "/global/lookup/getAssignedCustomersForCheckIn";
     public static final String FFM_GET_OUTLET_STATUS= FFM_BASE_URL + "/global/lookup/getOutletStatuses";
     public static final String FFM_GET_TODAY_CUSTOMERS= FFM_BASE_URL + "/app/trans/getCustomersTodaysJourneyPlan";
@@ -194,6 +197,9 @@ public class Constants {
     public static final String FFM_FARMER_GET_CONVERSION_RETENTION= FFM_BASE_URL +"/app/trans/getAllConversionRetention";
     public static final String FFM_FARMER_EDIT_CONVERSION_RETENTION= FFM_BASE_URL +"/app/trans/editConversionRetention";
     public static final String FFM_POST_DEVICE_TOKEN=  FFM_BASE_URL + "/global/lookup/store-token";
+    public static final String POST_CUSTOMER_LOACTION=  FFM_BASE_URL + "/app/trans/customerLocationChangeRequest";
+    public static final String FFM_SUPERVISOR_LOCATION_APPROVAL= FFM_BASE_URL +"/app/trans/customerLocation/update";
+    public static final String FFM_LAST_VISIT_COUNT= FFM_BASE_URL +"/global/lookup/visitCount";
 
 
 

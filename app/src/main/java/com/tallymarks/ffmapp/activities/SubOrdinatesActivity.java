@@ -1,7 +1,6 @@
 package com.tallymarks.ffmapp.activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -19,14 +18,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
-import com.tallymarks.ffmapp.adapters.SalesCallAdapter;
 import com.tallymarks.ffmapp.adapters.SubOrdinatesAdapter;
 import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
-import com.tallymarks.ffmapp.models.DataModel;
 import com.tallymarks.ffmapp.models.Subordinates;
-import com.tallymarks.ffmapp.models.SuperVisorSnapShotChild;
-import com.tallymarks.ffmapp.models.assignedsalespoint.AssignedSalesPointOutput;
 import com.tallymarks.ffmapp.models.supervisorsnapshotoutput.SuperVisorSnapShotOutput;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.Helpers;

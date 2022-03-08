@@ -2,19 +2,16 @@ package com.tallymarks.ffmapp.adapters;
 
 
 
-import android.content.Context;
 import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.fragments.AllPlans;
 import com.tallymarks.ffmapp.fragments.FuturePlan;
 import com.tallymarks.ffmapp.fragments.PastPlan;
 import com.tallymarks.ffmapp.fragments.TodaysPlan;
-import com.tallymarks.ffmapp.utils.Constants;
 
 public class VisitCustomerViewPagerAdapter extends FragmentPagerAdapter {
     String activity;

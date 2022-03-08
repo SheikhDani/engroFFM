@@ -27,12 +27,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA1VAuoEBO2B85WWcQTHkjRqgUay3emHwY" />
 
-        <activity
-            android:name="com.tallymarks.ffmapp.activities.LoginActivity"
-            android:taskAffinity=""
-            android:theme="@style/AppTheme.NoActionBar">
 
-        </activity>
         <activity
             android:name=".activities.SpalshScreenActivity"
             android:screenOrientation="portrait"
@@ -45,12 +40,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.MainActivity"
-            android:screenOrientation="portrait"
-            android:taskAffinity=""
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.DownloadFarmersDataActivity"
             android:screenOrientation="portrait"
@@ -229,8 +218,53 @@
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".activities.ChangeCustomerLocationListActivity"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".activities.SupervisorLocationApprovalListActivity"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".activities.ChangeCoordinatesMapActivity"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".activities.NotificationActivity"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".activities.LocationChangeRequestActivity"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".activities.TodayCustomerMap"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"></activity>
 
 
+        <service
+            android:name="com.tallymarks.ffmapp.utils.MyFirebaseMessagingService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/engrosmall" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorPrimaryDark" />
     </application>
 
 </manifest>

@@ -3,24 +3,18 @@ package com.tallymarks.ffmapp.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.icu.text.UnicodeSetSpanner;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.models.Farmes;
-import com.tallymarks.ffmapp.models.FloorStockChild;
-import com.tallymarks.ffmapp.models.TodayPlan;
-import com.tallymarks.ffmapp.models.farmerMeeting.local.Farmer;
-import com.tallymarks.ffmapp.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;

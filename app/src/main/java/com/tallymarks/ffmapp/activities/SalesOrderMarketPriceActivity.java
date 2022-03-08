@@ -2,31 +2,24 @@ package com.tallymarks.ffmapp.activities;
 
 import static com.tallymarks.ffmapp.utils.Helpers.getDatefromMilis;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Parcelable;
 
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.SalesOrderMarketPriceAdapter;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
-import com.tallymarks.ffmapp.models.FloorStockChild;
 import com.tallymarks.ffmapp.models.SalesOrderChild;
 import com.tallymarks.ffmapp.models.SalesOrderHeader;
 import com.tallymarks.ffmapp.utils.Constants;

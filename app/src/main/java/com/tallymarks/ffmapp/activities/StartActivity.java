@@ -10,7 +10,6 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -485,6 +484,7 @@ public class StartActivity extends AppCompatActivity {
         HashMap<String, String> params = new HashMap<>();
         params.put(db.KEY_TODAY_JOURNEY_IS_VISITED, status);
         params.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "2");
+        params.put(db.KEY_TODAY_JOURNEY_IS_POSTED_INTERNET_AVAILALE, "0");
         HashMap<String, String> filter = new HashMap<>();
         filter.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, shelper.getString(Constants.CUSTOMER_ID));
         filter.put(db.KEY_TODAY_JOURNEY_TYPE, journeytype);

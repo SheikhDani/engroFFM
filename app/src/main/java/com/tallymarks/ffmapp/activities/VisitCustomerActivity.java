@@ -3,14 +3,9 @@ package com.tallymarks.ffmapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,7 +59,7 @@ public class VisitCustomerActivity extends AppCompatActivity {
                     String tabText = tabLayout.getTabAt(tabLayout.getSelectedTabPosition()).getText().toString();
                     if (tabText.equals("TODAY PLANS")) {
                         sHelper.setString(Constants.PLAN_TYPE_MAP, "today");
-                        Intent loc = new Intent(VisitCustomerActivity.this, MapActivity.class);
+                        Intent loc = new Intent(VisitCustomerActivity.this, TodayCustomerMap.class);
                         loc.putExtra("from", "customer");
                         startActivity(loc);
                     } else if (tabText.equals("ALL PLANS")) {

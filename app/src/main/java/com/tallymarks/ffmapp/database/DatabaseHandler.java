@@ -19,7 +19,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private SQLiteDatabase db;
     /*Database Varaiables*/
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 4;
     private static final String TAG = "DBAdapter";
     private static final String DATABASE_NAME = "FFMApplicationDataBasev5";
     private Context mContext;
@@ -233,10 +233,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //Today Journey Plan Table Fields
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_ID = "todayCustomerID";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_CODE = "todayCustomerCode";
+    public static final String KEY_TODAY_JOURNEY_CUSTOMER_LOCATION_STATUS= "todayCustomerLocationStatus";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_NAME = "todayCustomerName";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE = "todayCustomerLatitude";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE = "todayCustomerLongitude";
     public static final String KEY_TODAY_JOURNEY_IS_VISITED= "isVisitedTodayCustomerJourneyPlan";
+    public static final String KEY_TODAY_JOURNEY_IS_POSTED_INTERNET_AVAILALE= "isVisitedTodayCustomerInternetAvailable";
     public static final String KEY_TODAY_JOURNEY_TYPE= "journeyPlanType";
     public static final String KEY_TODAY_JOURNEY_IS_POSTED= "isVisitedTodayCustomerJourneyPlanIsPosted";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID = "todayCustomerDayID";
@@ -442,10 +444,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_ID+ " TEXT,"
                 + KEY_TODAY_JOURNEY_IS_VISITED+ " TEXT,"
+                +  KEY_TODAY_JOURNEY_IS_POSTED_INTERNET_AVAILALE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_IS_POSTED+ " TEXT,"
                 + KEY_TODAY_JOURNEY_TYPE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_CODE+ " TEXT,"
+                +  KEY_TODAY_JOURNEY_CUSTOMER_LOCATION_STATUS+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_NAME+ " TEXT,"

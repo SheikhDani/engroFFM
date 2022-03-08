@@ -1,6 +1,5 @@
 package com.tallymarks.ffmapp.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.tallymarks.ffmapp.R;
@@ -21,15 +19,11 @@ import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.CustomerSnapShot;
 import com.tallymarks.ffmapp.models.CustomerSnapShotParent;
-import com.tallymarks.ffmapp.models.Farmes;
-import com.tallymarks.ffmapp.models.FloorStockChild;
-import com.tallymarks.ffmapp.models.FloorStockParent;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.Helpers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class CustomerSnapShotActivity extends AppCompatActivity {
     private TextView tvTopHeader;
