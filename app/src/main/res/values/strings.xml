@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Engro FFM</string>
+    <string name="app_name_s2">Engro FFM S2</string>
     <string name="notedata">Note Data</string>
 
     <string name="title_fingerprint">One-touch Sign In</string>
