@@ -45,7 +45,6 @@ import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.SaelsPoint;
 import com.tallymarks.ffmapp.models.createProductDemo.CreateProductDemo;
-import com.tallymarks.ffmapp.models.getallFarmersplanoutput.FarmerCheckIn;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.Helpers;
 import com.tallymarks.ffmapp.utils.HttpHandler;

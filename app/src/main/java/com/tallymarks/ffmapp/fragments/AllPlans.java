@@ -27,7 +27,6 @@ import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.activities.FarmersStartActivity;
 import com.tallymarks.ffmapp.activities.StartActivity;
 import com.tallymarks.ffmapp.adapters.AllPlanAdapter;
-import com.tallymarks.ffmapp.adapters.TodayPlanAdapter;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;

@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
 
-import android.provider.SyncStateContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -27,17 +26,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.activities.FarmersStartActivity;
-import com.tallymarks.ffmapp.activities.MainActivity;
 import com.tallymarks.ffmapp.activities.StartActivity;
-import com.tallymarks.ffmapp.adapters.DealersAdapter;
-import com.tallymarks.ffmapp.adapters.FarmersAdapter;
 import com.tallymarks.ffmapp.adapters.TodayPlanAdapter;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
-import com.tallymarks.ffmapp.models.Farmes;
 import com.tallymarks.ffmapp.models.TodayPlan;
-import com.tallymarks.ffmapp.tasks.GetCompanHeldBrandBasicList;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.DialougeManager;
 import com.tallymarks.ffmapp.utils.GpsTracker;

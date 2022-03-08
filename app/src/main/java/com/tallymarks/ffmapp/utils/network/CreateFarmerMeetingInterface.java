@@ -5,7 +5,6 @@ import com.tallymarks.ffmapp.models.farmerMeeting.post.CreateFarmerMeetingRespon
 import com.tallymarks.ffmapp.utils.Constants;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

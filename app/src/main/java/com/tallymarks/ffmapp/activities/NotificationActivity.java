@@ -5,15 +5,12 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,15 +20,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
-import com.tallymarks.ffmapp.adapters.LocationApprovalAdapter;
 import com.tallymarks.ffmapp.adapters.NotificationAdapter;
 import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
-import com.tallymarks.ffmapp.models.ChangeLocation;
 import com.tallymarks.ffmapp.models.NotificationModel;
-import com.tallymarks.ffmapp.models.changecustomerlocationoutput.ChangeCustomerLocationOutput;
 import com.tallymarks.ffmapp.models.getnotifications.NotificationOutput;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.Helpers;
@@ -41,10 +34,8 @@ import com.tallymarks.ffmapp.utils.ItemClickListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class NotificationActivity extends AppCompatActivity implements ItemClickListener {
     private TextView tvTopHeader, cartbadge;

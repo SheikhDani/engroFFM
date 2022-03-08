@@ -1,7 +1,6 @@
 package com.tallymarks.ffmapp.activities;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,7 +29,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -62,7 +60,6 @@ import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.MyHelper;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
-import com.tallymarks.ffmapp.models.changecustomerlocation.ChnageCustomerLocationinput;
 import com.tallymarks.ffmapp.models.devicetokeninput.DeviceTokenInput;
 import com.tallymarks.ffmapp.models.forgetpasswordinput.ForgetPasswordInput;
 import com.tallymarks.ffmapp.models.loginoutput.LoginOutput;
@@ -70,7 +67,6 @@ import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.DialougeManager;
 import com.tallymarks.ffmapp.utils.FingerprintDialog;
 import com.tallymarks.ffmapp.utils.GpsTracker;
-import com.tallymarks.ffmapp.utils.HTTPSTrustManager;
 import com.tallymarks.ffmapp.utils.Helpers;
 import com.tallymarks.ffmapp.utils.HttpHandler;
 
@@ -78,7 +74,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;

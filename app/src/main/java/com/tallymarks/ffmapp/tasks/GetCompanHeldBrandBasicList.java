@@ -16,7 +16,6 @@ import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.companybrandbasiclistoutput.CompanyHeldBrandBasicListOutput;
-import com.tallymarks.ffmapp.models.productsbrandbycategory.ProductBrandByCategoryOutput;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.Helpers;
 import com.tallymarks.ffmapp.utils.HttpHandler;

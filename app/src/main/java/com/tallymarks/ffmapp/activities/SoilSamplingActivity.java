@@ -50,7 +50,6 @@ import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.MyDatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
-import com.tallymarks.ffmapp.models.Recommendations;
 import com.tallymarks.ffmapp.models.SaelsPoint;
 import com.tallymarks.ffmapp.models.SoilSamplingCrops;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Activity;
@@ -68,7 +67,6 @@ import com.tallymarks.ffmapp.utils.RecyclerTouchListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;

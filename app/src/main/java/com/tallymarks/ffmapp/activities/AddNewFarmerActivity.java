@@ -23,7 +23,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,19 +35,10 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.tallymarks.ffmapp.R;
-import com.tallymarks.ffmapp.adapters.FarmersAdapter;
 import com.tallymarks.ffmapp.adapters.SalesPointAdapter;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
-import com.tallymarks.ffmapp.models.Farmes;
-import com.tallymarks.ffmapp.models.MarketPlayers;
-import com.tallymarks.ffmapp.models.MarketPrice;
 import com.tallymarks.ffmapp.models.SaelsPoint;
-import com.tallymarks.ffmapp.models.addfarmerinput.MarketPlayer;
-import com.tallymarks.ffmapp.utils.Constants;
-import com.tallymarks.ffmapp.utils.DialougeManager;
 import com.tallymarks.ffmapp.utils.GpsTracker;
 import com.tallymarks.ffmapp.utils.Helpers;
 import com.tallymarks.ffmapp.utils.RecyclerTouchListener;

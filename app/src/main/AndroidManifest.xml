@@ -29,12 +29,6 @@
 
 
         <activity
-            android:name="com.tallymarks.ffmapp.activities.LoginActivity"
-            android:taskAffinity=""
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-        <activity
             android:name=".activities.SpalshScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
@@ -46,12 +40,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.MainActivity"
-            android:screenOrientation="portrait"
-            android:taskAffinity=""
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.DownloadFarmersDataActivity"
             android:screenOrientation="portrait"

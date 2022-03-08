@@ -1,7 +1,5 @@
 package com.tallymarks.ffmapp.activities;
 
-import static com.tallymarks.ffmapp.utils.Helpers.getDatefromMilis;
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
@@ -11,7 +9,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,10 +25,7 @@ import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.MarketPrice;
-import com.tallymarks.ffmapp.models.SalesOrderHeader;
-import com.tallymarks.ffmapp.tasks.GetListofAllDepths;
 import com.tallymarks.ffmapp.utils.Constants;
-import com.tallymarks.ffmapp.utils.Helpers;
 
 import java.util.ArrayList;
 import java.util.HashMap;

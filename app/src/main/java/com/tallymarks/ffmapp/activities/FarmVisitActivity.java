@@ -56,7 +56,6 @@ import com.tallymarks.ffmapp.models.DataModel;
 import com.tallymarks.ffmapp.models.OtherProduct;
 import com.tallymarks.ffmapp.models.Recommendations;
 import com.tallymarks.ffmapp.models.SaelsPoint;
-import com.tallymarks.ffmapp.models.farmerMeeting.local.Customer;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Activity;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.FarmerCheckIn;
 import com.tallymarks.ffmapp.models.getallFarmersplanoutput.Recommendation;
@@ -70,9 +69,7 @@ import com.tallymarks.ffmapp.utils.RecyclerTouchListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
