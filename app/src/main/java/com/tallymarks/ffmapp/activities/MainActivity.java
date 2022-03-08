@@ -317,10 +317,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 filter2.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
                 filter2.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "0");
                 mydb.deleteData(mydb.TODAY_FARMER_JOURNEY_PLAN,filter2);
-                //loadrefereshdata();
-
-                loadCustomerData();
-               loadFarmerData();
+          
 
 
             }
