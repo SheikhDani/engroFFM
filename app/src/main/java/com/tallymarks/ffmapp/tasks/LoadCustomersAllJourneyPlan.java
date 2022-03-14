@@ -2,15 +2,19 @@ package com.tallymarks.ffmapp.tasks;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.activities.LoginActivity;
 import com.tallymarks.ffmapp.activities.MainActivity;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.ExtraHelper;
@@ -26,7 +30,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,6 +46,7 @@ public class LoadCustomersAllJourneyPlan extends AsyncTask<String, Void, Void> {
     private ExtraHelper extraHelper;
     private DatabaseHandler db;
     private Context mContext;
+    int customersize;
     public LoadCustomersAllJourneyPlan(Context context)
     {
         this.mContext = context;
@@ -77,6 +84,9 @@ public class LoadCustomersAllJourneyPlan extends AsyncTask<String, Void, Void> {
             {
                 headerParams.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
             }
+           // int time = 60000;
+
+            //Thread.sleep(time);
           //  headerParams.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
             response = httpHandler.httpGet(journeyPlanUrl, headerParams);
             Log.e("lOGIN Url", journeyPlanUrl);
@@ -84,8 +94,11 @@ public class LoadCustomersAllJourneyPlan extends AsyncTask<String, Void, Void> {
             Type journeycodeType = new TypeToken<ArrayList<AllJourneyPlanOutput>>() {
             }.getType();
             List<AllJourneyPlanOutput> journeycode = new Gson().fromJson(response, journeycodeType);
+
             if (response != null) {
-                if (journeycode.size() > 0) {
+                customersize = journeycode.size();
+
+                if (journeycode.size() > 0 && journeycode.size()<600) {
                     for (int i = 0; i < journeycode.size(); i++) {
                         sHelper.setString(Constants.CUSTOMER_ALL_PLAN_NOT_FOUND,"1");
                         HashMap<String, String> map = new HashMap<>();
@@ -173,25 +186,32 @@ public class LoadCustomersAllJourneyPlan extends AsyncTask<String, Void, Void> {
 
                     }
                 }
+
             }
-        } catch (Exception exception) {
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+            Helpers.displayMessage(mContext, true,e.getMessage());
+        }catch (Exception exception) {
             if (response.equals("")) {
                 Helpers.displayMessage(mContext, true, exception.getMessage());
                 //showResponseDialog( mContext.getResources().getString(R.string.alert),exception.getMessage());
                 //pDialog.dismiss();
             } else {
-                JSONObject json = null;
-                try {
-                    json = new JSONObject(response);
-                    errorMessage = json.getString("description");
-                    String status = json.getString("success");
-                    if (status.equals("false")) {
-                        sHelper.setString(Constants.CUSTOMER_ALL_PLAN_NOT_FOUND,"0");
-                         Helpers.displayMessage(mContext, true, errorMessage);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if(customersize<600) {
+                    JSONObject json = null;
+                    try {
+                        json = new JSONObject(response);
+                        errorMessage = json.getString("description");
+                        String status = json.getString("success");
+                        if (status.equals("false")) {
+                            sHelper.setString(Constants.CUSTOMER_ALL_PLAN_NOT_FOUND, "0");
+                            Helpers.displayMessage(mContext, true, errorMessage);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
 
+                    }
                 }
                 //Helpers.displayMessage(LoginActivity.this, true, exception.getMessage());
             }
@@ -203,6 +223,32 @@ public class LoadCustomersAllJourneyPlan extends AsyncTask<String, Void, Void> {
     @Override
     protected void onPostExecute(Void args) {
                 pDialog.dismiss();
+                if(customersize>600)
+                {
+
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+                    alertDialogBuilder.setTitle(R.string.alert)
+                            .setMessage("Connection Timeout")
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    mContext.deleteDatabase("FFMApplicationDataBasev5");
+                                    mContext.deleteDatabase("FFMAppDb_Zohaib_v5");
+                                    sHelper.clearPreferenceStore();
+                                    extraHelper.clearPreferenceStore();
+                                    //Helpers.displayMessage(mContext, true, message);
+                                    Intent logout = new Intent(mContext, LoginActivity.class);
+                                    mContext.startActivity(logout);
+//                                    Intent move = new Intent(mContext, LoginActivity.class);
+//                                    mContext.startActivity(move);
+                                    //new PostSyncOutlet().execute();
+                                }
+                            });
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                }
 
 
     }

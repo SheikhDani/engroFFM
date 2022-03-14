@@ -166,6 +166,8 @@ public class HttpHandler {
         {
             URL url = new URL(requestUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            //conn.setReadTimeout(60000);
+            //conn.setConnectTimeout(60000);
             if (conn instanceof HttpsURLConnection) {
                 ((HttpsURLConnection) conn).setSSLSocketFactory(trustCert().getSocketFactory());
             }
