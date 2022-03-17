@@ -57,6 +57,7 @@
                 android:layout_marginStart="@dimen/p10"
                 android:layout_marginLeft="@dimen/p10"
                 android:layout_marginTop="@dimen/p10"
+                android:visibility="gone"
                 android:layout_marginEnd="@dimen/p10"
                 android:layout_marginRight="@dimen/p10"
                 android:layout_marginBottom="@dimen/p10"

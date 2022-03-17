@@ -67,6 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginStart="@dimen/p10"
+                android:visibility="gone"
                 android:layout_marginLeft="@dimen/p10"
                 android:layout_marginTop="@dimen/p10"
                 android:layout_marginEnd="@dimen/p10"

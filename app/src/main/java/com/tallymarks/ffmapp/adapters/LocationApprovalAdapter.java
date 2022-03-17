@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -194,9 +195,15 @@ public class LocationApprovalAdapter extends RecyclerView.Adapter<LocationApprov
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!et_review.getText().toString().equals("")) {
 
-                alertDialog.dismiss();
-                new AddLocationApprovalComment(status,et_review.getText().toString(),id).execute();
+                    alertDialog.dismiss();
+                    new AddLocationApprovalComment(status, et_review.getText().toString(), id).execute();
+                }
+                else
+                {
+                    Toast.makeText(mContext, "Please add your Comment", Toast.LENGTH_SHORT).show();
+                }
 //                Intent salescall = new Intent(FarmVisitActivity.this,QualityofSalesCallActivity.class);
 //                startActivity(salescall);
 

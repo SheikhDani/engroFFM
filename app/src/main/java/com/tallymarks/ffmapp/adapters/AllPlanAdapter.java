@@ -166,17 +166,34 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
         this.clickListener = itemClickListener;
     }
     public void filter(String charText) {
+       // String filterPattern = charText;
         charText = charText.toLowerCase(Locale.getDefault());
         planList.clear();
         if (charText.length() == 0) {
             planList.addAll(headerList);
         } else {
 
+
             ArrayList<TodayPlan> filteredList = new ArrayList<>();
             for (TodayPlan pl :headerList) {
+                if(from.equals("customers")) {
 
-                if (pl.getTitle().toLowerCase(Locale.getDefault()).contains(charText)) {
-                    planList.add(pl);
+                    if (pl.getTitle().toLowerCase(Locale.getDefault()).contains(charText) || pl.getCustomercode().toLowerCase(Locale.getDefault()).contains(charText) || pl.getSalespoint().toLowerCase(Locale.getDefault()).contains(charText) || pl.getLocationStauts().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        planList.add(pl);
+                    }
+                }
+                else if(from.equals("farmers"))
+                {
+                    if (pl.getTitle().toLowerCase(Locale.getDefault()).contains(charText) || pl.getSalespoint().toLowerCase(Locale.getDefault()).contains(charText) || pl.getSalespoint().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        planList.add(pl);
+                    }
+
+                }
+                else
+                {
+                    if (pl.getTitle().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        planList.add(pl);
+                    }
                 }
 
             }

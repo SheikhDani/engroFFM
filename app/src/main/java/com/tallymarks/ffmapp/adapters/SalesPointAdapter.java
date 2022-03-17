@@ -57,7 +57,7 @@ public class SalesPointAdapter extends RecyclerView.Adapter<SalesPointAdapter.My
             holder.title.setText(movie.getId()+"-"+movie.getPoint());
         }
         else if (activity.equals("changelocation")) {
-            holder.title.setText(movie.getCode()+"-"+movie.getPoint());
+            holder.title.setText(movie.getCode()+"-"+movie.getPoint() +"-"+movie.getSalespoint());
         }else {
             holder.title.setText(movie.getPoint());
         }
@@ -79,9 +79,18 @@ public class SalesPointAdapter extends RecyclerView.Adapter<SalesPointAdapter.My
 
             ArrayList<TodayPlan> filteredList = new ArrayList<>();
             for (SaelsPoint pl : headerList) {
+                if(activity.equals("changelocation")) {
+                    if (pl.getPoint().toLowerCase(Locale.getDefault()).contains(charText) ||pl.getSalespoint().toLowerCase(Locale.getDefault()).contains(charText)||pl.getCode().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        moviesList.add(pl);
+                    }
 
-                if (pl.getPoint().toLowerCase(Locale.getDefault()).contains(charText)) {
-                    moviesList.add(pl);
+                }
+                else
+                {
+                    if (pl.getPoint().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        moviesList.add(pl);
+                    }
+
                 }
 
             }

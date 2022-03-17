@@ -7,6 +7,18 @@ public class ChangeCustomerLocationOutput {
     @Expose
     private Long customerId;
 
+    public Long getCustomerCode() {
+        return customerCode;
+    }
+
+    public void setCustomerCode(Long customerCode) {
+        this.customerCode = customerCode;
+    }
+
+    @SerializedName("customerCode")
+    @Expose
+    private Long customerCode;
+
     public int getId() {
         return id;
     }

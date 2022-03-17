@@ -1,25 +1,37 @@
 package com.tallymarks.ffmapp.activities;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -42,12 +54,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.adapters.SalesPointAdapter;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
+import com.tallymarks.ffmapp.models.SaelsPoint;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.DirectionsJSONParser;
 import com.tallymarks.ffmapp.utils.GpsTracker;
 import com.tallymarks.ffmapp.utils.Helpers;
+import com.tallymarks.ffmapp.utils.RecyclerTouchListener;
 import com.tallymarks.ffmapp.utils.User;
 
 import org.json.JSONArray;
@@ -156,15 +171,17 @@ public class TodayCustomerMap extends AppCompatActivity implements OnMapReadyCal
          //   LatLng locationdealer = new LatLng(Double.parseDouble(dealerlat), Double.parseDouble(dealerlng));
             mMap.addMarker(new MarkerOptions().position(location).title("Current Location")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
             LatLng locationdemo = new LatLng(32.48765794516779,74.52277713987364);
-            LatLng destination= getNearestMarker(locationArrayList , location);
-         //   mMap.addMarker(new MarkerOptions().position(destination).title("Destination Location")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(currentlat), Double.parseDouble(currentlng)), 10));
+            if(locationArrayList.size()>0) {
+                LatLng destination = getNearestMarker(locationArrayList, location);
+                //   mMap.addMarker(new MarkerOptions().position(destination).title("Destination Location")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
 
 
 
-            String url = getDirectionsUrl(location, destination);
-            DownloadTask downloadTask = new DownloadTask();
-            downloadTask.execute(url);
+                String url = getDirectionsUrl(location, destination);
+                DownloadTask downloadTask = new DownloadTask();
+                downloadTask.execute(url);
+            }
 //            }
         } else {
             enableLoc();
@@ -252,9 +269,17 @@ public class TodayCustomerMap extends AppCompatActivity implements OnMapReadyCal
         btnProceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                if(locationArrayList.size()>0) {
+                    btnProceed.setVisibility(View.VISIBLE);
+                    selectDialouge();
+                }
+                else
+                {
+                    btnProceed.setVisibility(View.GONE);
+                }
+               // onBackPressed();
 
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+               // overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -276,6 +301,130 @@ public class TodayCustomerMap extends AppCompatActivity implements OnMapReadyCal
             startActivity(getIntent());
         }
     }
+    public void selectDialouge() {
+        LayoutInflater li = LayoutInflater.from(TodayCustomerMap.this);
+        View promptsView = li.inflate(R.layout.dialouge_sales_point, null);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(TodayCustomerMap.this);
+        alertDialogBuilder.setView(promptsView);
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+
+        final List<SaelsPoint> companyList = new ArrayList<>();
+        final TextView title = promptsView.findViewById(R.id.tv_option);
+        final EditText search = promptsView.findViewById(R.id.et_Search);
+        final ImageView ivClsoe = promptsView.findViewById(R.id.iv_Close);
+        ivClsoe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+
+        title.setText("Select Dealer for Navigation");
+
+
+        final RecyclerView recyclerView = promptsView.findViewById(R.id.recyclerView);
+
+
+        prepareDealerData(companyList);
+
+
+        final SalesPointAdapter mAdapter = new SalesPointAdapter(companyList, "navigation");
+
+        // vertical RecyclerView
+        // keep movie_list_row.xml width to `match_parent`
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                SaelsPoint companyname = companyList.get(position);
+                alertDialog.dismiss();
+                Uri gmmIntentUri = Uri.parse("google.navigation:q="+companyname.getLat()+","+companyname.getLng()+"&mode=l");
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                }
+                //autoProduct.setText(companyname.getCode() + "-" + companyname.getPoint() + "-" + companyname.getSalespoint());
+               // new LocationChangeRequestActivity.GetLastVisitCount(companyname.getId()).execute();
+
+
+
+
+                // Toast.makeText(getApplicationContext(), movie.getPoint() + " is selected!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+        search.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                if (search.hasFocus()) {
+                    mAdapter.filter(cs.toString());
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+                // Toast.makeText(getApplicationContext(),"before text change",Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                //Toast.makeText(getApplicationContext(),"after text change",Toast.LENGTH_LONG).show();
+            }
+        });
+
+        //ImageView ivClose = promptsView.findViewById(R.id.iv_close);
+
+        alertDialogBuilder.setCancelable(true);
+        alertDialog.show();
+    }
+    private void prepareDealerData(List<SaelsPoint> movieList) {
+        movieList.clear();
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME, "");
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE, "");
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE_MAP));
+        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                SaelsPoint companyname = new SaelsPoint();
+                if(!cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE)).equals("NA") && !cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE)).equals("NA")) {
+                   String latitude = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE));
+                    String longitude = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE));
+                    String name = Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME)));
+                    companyname.setLat(latitude);
+                    companyname.setLng(longitude);
+                    companyname.setPoint(name);
+                     movieList.add(companyname);
+
+                    //mClusterManager.addItem(new User(Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE))), Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE))), Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME))), ""));
+                    //  LatLng location = new LatLng(Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_LATITUDE))), Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_LANGITUDE))));
+                    // mMap.addMarker(new MarkerOptions().position(location).title(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_NAME)))));
+
+                }
+            }
+            while (cursor.moveToNext());
+        }
+
+
+        // notify adapter about data set changes
+        // so that it will render the list with new data
+        // mAdapter.notifyDataSetChanged();
+    }
+
 
     private void enableLoc() {
         if (googleApiClient == null) {

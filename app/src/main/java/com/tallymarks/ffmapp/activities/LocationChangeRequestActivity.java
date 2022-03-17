@@ -107,7 +107,7 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
         iv_back.setVisibility(View.VISIBLE);
         iv_menu.setVisibility(View.GONE);
         tvTopHeader.setVisibility(View.VISIBLE);
-        tvTopHeader.setText("Change Customer Location");
+        tvTopHeader.setText("Update Customer Location");
 
         SpannableStringBuilder objective = setStarToLabel("Select Dealer");
         tvDealer.setText(objective);
@@ -227,7 +227,7 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
             public void onClick(View view, int position) {
                 SaelsPoint companyname = companyList.get(position);
                 alertDialog.dismiss();
-                autoProduct.setText(companyname.getCode() + "-" + companyname.getPoint());
+                autoProduct.setText(companyname.getCode() + "-" + companyname.getPoint() + "-" + companyname.getSalespoint());
                 new GetLastVisitCount(companyname.getId()).execute();
 
 
@@ -295,6 +295,7 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
         String productName = "", productID = "";
         HashMap<String, String> map = new HashMap<>();
         map.put(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_NAME, "");
+        map.put(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME, "");
         map.put(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_CODE, "");
         map.put(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
         map.put(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE, "");
@@ -309,6 +310,7 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
             do {
                 SaelsPoint companyname = new SaelsPoint();
                 String customerName = Helpers.clean(cursor.getString(cursor.getColumnIndex(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_NAME)));
+                String salesPoint = Helpers.clean(cursor.getString(cursor.getColumnIndex(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME)));
                 String customerCode = cursor.getString(cursor.getColumnIndex(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_CODE));
                 String customerlat = Helpers.clean(cursor.getString(cursor.getColumnIndex(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE)));
                 String customerlng = cursor.getString(cursor.getColumnIndex(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE));
@@ -316,6 +318,7 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
                 String customerlocation = cursor.getString(cursor.getColumnIndex(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_LOCATION_STATUS));
                 companyname.setPoint(customerName);
                 companyname.setId(customerID);
+                companyname.setSalespoint(salesPoint);
                 companyname.setCode(customerCode);
                 companyname.setLat(customerlat);
                 companyname.setLng(customerlng);

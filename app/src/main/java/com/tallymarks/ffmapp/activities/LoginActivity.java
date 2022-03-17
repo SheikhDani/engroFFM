@@ -455,7 +455,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 //                    // main.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //                    startActivity(main);
 //                    finish();
-                   getDeviceToken(pDialog);
+                     getDeviceToken(pDialog);
 
                 } else {
                     pDialog.dismiss();
@@ -816,7 +816,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         @Override
         protected void onPostExecute(Void args) {
-            //  pDialog.dismiss();
+             pDialog.dismiss();
 
 
         }
