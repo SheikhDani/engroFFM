@@ -26,9 +26,8 @@ public class ChangeLocationAdapter extends RecyclerView.Adapter<ChangeLocationAd
     private ItemClickListener clickListener;
 
 
-
-    public class MyViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener  {
-        public TextView title, member, customecode, lat, lng,reason,createdate;
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public TextView title, member, customecode, lat, lng, reason, createdate, comment, distance;
         ImageView image;
 
         public MyViewHolder(View view) {
@@ -39,8 +38,10 @@ public class ChangeLocationAdapter extends RecyclerView.Adapter<ChangeLocationAd
             customecode = (TextView) view.findViewById(R.id.customer_code);
             lat = (TextView) view.findViewById(R.id.latitude);
             lng = (TextView) view.findViewById(R.id.longitude);
-            reason= (TextView) view.findViewById(R.id.reason);
-            createdate= (TextView) view.findViewById(R.id.creation_date);
+            reason = (TextView) view.findViewById(R.id.reason);
+            createdate = (TextView) view.findViewById(R.id.creation_date);
+            comment = (TextView) view.findViewById(R.id.supervisorcomment);
+            distance = (TextView) view.findViewById(R.id.distance);
 
             itemView.setTag(itemView);
             itemView.setOnClickListener(this);
@@ -76,21 +77,27 @@ public class ChangeLocationAdapter extends RecyclerView.Adapter<ChangeLocationAd
         ChangeLocation movie = planList.get(position);
         holder.title.setText(movie.getName());
 
-            if (movie.getStatus().equals("Completed")) {
-                holder.member.setBackgroundColor(Color.parseColor("#159356"));
-                holder.member.setText(movie.getStatus());
-            }
-            else
-            {
-                holder.member.setBackgroundColor(Color.GRAY);
-                holder.member.setText(movie.getStatus());
-            }
+        if (movie.getStatus().equals("Completed")) {
+           // holder.comment.setVisibility(View.GONE);
+            holder.member.setBackgroundColor(Color.parseColor("#159356"));
+            holder.member.setText(movie.getStatus());
+        } else if (movie.getStatus().equals("Rejected")) {
+            holder.comment.setVisibility(View.VISIBLE);
+            holder.comment.setText("Supervisor Comment: " +movie.getComment());
+        }
+        {
+           // holder.comment.setVisibility(View.GONE);
+            holder.member.setBackgroundColor(Color.GRAY);
+            holder.member.setText(movie.getStatus());
+        }
+
+        holder.distance.setText("Distance between locations: " +movie.getDistancedif());
 
         holder.customecode.setText(movie.getCode());
         holder.lat.setText(movie.getLatitude());
         holder.lng.setText(movie.getLongitude());
         holder.reason.setText(movie.getReason());
-        holder.createdate.setText("Creation Date: "+movie.getDate());
+        holder.createdate.setText("Changed Date: " + movie.getDate());
 
     }
 
@@ -98,9 +105,11 @@ public class ChangeLocationAdapter extends RecyclerView.Adapter<ChangeLocationAd
     public int getItemCount() {
         return planList.size();
     }
+
     public void setClickListener(ItemClickListener itemClickListener) {
         this.clickListener = itemClickListener;
     }
+
     public void filter(String charText) {
         charText = charText.toLowerCase(Locale.getDefault());
         planList.clear();
@@ -109,7 +118,7 @@ public class ChangeLocationAdapter extends RecyclerView.Adapter<ChangeLocationAd
         } else {
 
             ArrayList<ChangeLocation> filteredList = new ArrayList<>();
-            for (ChangeLocation pl :headerList) {
+            for (ChangeLocation pl : headerList) {
 
                 if (pl.getName().toLowerCase(Locale.getDefault()).contains(charText)) {
                     planList.add(pl);

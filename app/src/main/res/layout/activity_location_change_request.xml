@@ -90,7 +90,7 @@
                 <AutoCompleteTextView
                     android:id="@+id/auto_dealer"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="wrap_content"
 
                     android:layout_weight="1"
                     android:textSize="@dimen/ts16"
@@ -101,9 +101,9 @@
                     android:dropDownHeight="155dp"
                     android:focusable="false"
 
-                    android:hint="Select Dealer"
+                    android:text="Select Dealer"
                     android:inputType="none"
-                    android:maxLines="1"
+
                     android:paddingLeft="@dimen/p10"
                     android:paddingTop="@dimen/p5"
                     android:paddingRight="@dimen/p10"
@@ -148,22 +148,25 @@
                     android:layout_marginRight="@dimen/p5"
                     android:gravity="center_vertical"
                     android:padding="@dimen/p10"
-                    android:text="New Location Coordinates"
+                    android:text="Select location coordinates"
                     android:textColor="@color/black"
                     android:textSize="18sp"
 
                     />
 
-                <ImageView
+                <Button
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_marginRight="@dimen/p10"
                     android:layout_weight="0.2"
                     android:id="@+id/iv_location"
+                    android:background="@color/green"
+                  android:padding="7dp"
+                    android:layout_marginTop="@dimen/p10"
 
                     android:gravity="center"
-                    android:src="@mipmap/engrolocation"
-                    app:tint="@color/black" />
+                    android:drawableLeft="@drawable/ic_baseline_map_24"
+                  />
 
             </LinearLayout>
 
@@ -198,6 +201,7 @@
                     />
 
 
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -213,23 +217,53 @@
                 android:id="@+id/linear_remarks"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/p10"
+                android:layout_marginRight="@dimen/p10"
                 android:layout_below="@+id/l1"
 
                 >
+                <AutoCompleteTextView
+                    android:id="@+id/auto_reason"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
 
-                <EditText
-                    android:id="@+id/et_reason"
-                    android:layout_width="fill_parent"
-                    android:layout_height="@dimen/p150"
-                    android:layout_marginLeft="@dimen/p20"
-                    android:layout_marginRight="@dimen/p20"
-                    android:background="@drawable/custom_item_layout"
-                    android:gravity="top"
-                    android:hint=""
-                    android:maxLength="500"
-                    android:padding="10dp">
+                    android:layout_weight="1"
+                    android:textSize="@dimen/ts16"
+                    android:background="@drawable/eidttext_boader"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:dropDownHeight="155dp"
+                    android:focusable="false"
 
-                </EditText>
+                    android:text="Select Reason"
+                    android:inputType="none"
+
+                    android:paddingLeft="@dimen/p10"
+                    android:paddingTop="@dimen/p5"
+                    android:paddingRight="@dimen/p10"
+                    android:paddingBottom="@dimen/p5"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+
+                    />
+
+<!--                <EditText-->
+<!--                    android:id="@+id/et_reason"-->
+<!--                    android:layout_width="fill_parent"-->
+<!--                    android:layout_height="@dimen/p150"-->
+<!--                    android:layout_marginLeft="@dimen/p20"-->
+<!--                    android:layout_marginRight="@dimen/p20"-->
+<!--                    android:background="@drawable/custom_item_layout"-->
+<!--                    android:gravity="top"-->
+<!--                    android:hint=""-->
+<!--                    android:maxLength="500"-->
+<!--                    android:padding="10dp">-->
+
+<!--                </EditText>-->
 
             </LinearLayout>
 

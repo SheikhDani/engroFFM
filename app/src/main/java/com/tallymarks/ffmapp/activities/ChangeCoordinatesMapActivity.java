@@ -43,6 +43,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
+import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.DirectionsJSONParser;
 import com.tallymarks.ffmapp.utils.GpsTracker;
 import com.tallymarks.ffmapp.utils.User;
@@ -377,7 +378,8 @@ public class ChangeCoordinatesMapActivity extends AppCompatActivity implements O
                 JSONObject duration = legs1.getJSONObject("duration");
 
                 distanceText = distance.getString("text");
-                tvDistance.setText("Distance :"+distanceText);
+                tvDistance.setText("Distance between current and last location : "+distanceText);
+                sHelper.setString(Constants.DISTANCETEXT,distanceText);
 
                // durationText = duration.getString("text");
                 ParserTask parserTask = new ParserTask();

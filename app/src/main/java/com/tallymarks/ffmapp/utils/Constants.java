@@ -24,6 +24,7 @@ public class Constants {
     public static final String USER_NAME= "Username";
     public static final String NAME= "Name";
     public static final String ROLE= "Role";
+    public static final String DISTANCETEXT= "DistanceText";
     public static final String REFERSH_TOKEN= "RefershToken";
     public static final String ACTIVITY_STATUS = "activityStatus";
     public static final String ACTIVITY_CUSTOMER_CODE= "activityCustomerCode";

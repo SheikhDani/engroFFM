@@ -44,9 +44,10 @@
             android:layout_toEndOf="@id/imageView"
             android:layout_toRightOf="@id/imageView"
             android:layout_weight="2"
-            android:text="Abid Hussain &amp; Brothers"
+            android:text="Dealer : Abid Hussain &amp; Brothers"
             android:textSize="16sp"
             android:textStyle="bold" />
+
 
         <TextView
             android:id="@+id/textView_subcription"
@@ -63,6 +64,18 @@
             android:textColor="@color/white" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/textView_tso"
+
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_member"
+        android:layout_toEndOf="@id/imageView"
+        android:layout_toRightOf="@id/imageView"
+
+        android:text="TSO : Abid Hussain &amp; Brothers"
+        android:textSize="16sp"
+        android:textStyle="bold" />
     <TextView
         android:id="@+id/latitude"
         android:layout_width="300dp"
@@ -119,7 +132,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_below="@+id/layout_member"
+        android:layout_below="@+id/textView_tso"
         android:layout_toEndOf="@id/imageView"
         android:layout_toRightOf="@id/imageView"
         android:gravity="center_vertical"
@@ -138,7 +151,7 @@
         android:layout_toRightOf="@id/imageView"
         android:gravity="center_vertical"
 
-        android:text="Creation Date : 12-02-2022"
+        android:text="Change Date : 12-02-2022"
         android:textSize="16sp" />
 
     <LinearLayout

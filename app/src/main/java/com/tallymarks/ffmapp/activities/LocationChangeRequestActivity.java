@@ -18,6 +18,8 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -66,14 +68,15 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
     private String currentlat = "";
     private ArrayList<Customer> dealersArrayList;
     TextView txt_lat, txt_lng, location_status, tvReason, tvDealer, tvlastvisitcount;
-    ImageView iv_location;
+   Button iv_location;
     Button btn_submit;
     EditText et_reason;
     private DatabaseHandler databaseHandler;
-    private AutoCompleteTextView autoDealer;
+    private AutoCompleteTextView autoDealer,autoReason;
     private String dealerID, dealerName, dealerlat, dealerlng, dealerlocationstatus;
     GpsTracker gps;
     String lastvisitCount = "";
+    String selection = "";
 
     static {
         System.loadLibrary("native-lib");
@@ -96,10 +99,11 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
         tvReason = findViewById(R.id.txt_rea);
         location_status = findViewById(R.id.lcoationstatus);
         btn_submit = findViewById(R.id.btn_submit);
-        et_reason = findViewById(R.id.et_reason);
+      //  et_reason = findViewById(R.id.et_reason);
         tvTopHeader = findViewById(R.id.tv_dashboard);
         iv_menu = findViewById(R.id.iv_drawer);
         autoDealer = findViewById(R.id.auto_dealer);
+        autoReason = findViewById(R.id.auto_reason);
         databaseHandler = new DatabaseHandler(LocationChangeRequestActivity.this);
         sHelper = new SharedPrefferenceHelper(LocationChangeRequestActivity.this);
         extraHelper = new ExtraHelper(LocationChangeRequestActivity.this);
@@ -128,7 +132,7 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (dealerID != null && !dealerID.equals("") && !currentlat.equals("")
-                        && !currentlng.equals("") && !et_reason.getText().toString().equals("")) {
+                        && !currentlng.equals("") && !selection.equals("") && selection!= null ) {
                     {
                         if (Helpers.isNetworkAvailable(LocationChangeRequestActivity.this)) {
                             new PostCustomerLocation(dealerID).execute();
@@ -149,6 +153,26 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 selectDialouge(autoDealer);
+            }
+        });
+        final String arraylist[] = {"wrong location coordinate", "customer business location changed","No location updated on customer"};
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_list_item_1, arraylist);
+        autoReason.setAdapter(arrayAdapter);
+        autoReason.setCursorVisible(false);
+        autoReason.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                autoReason.showDropDown();
+            selection = arraylist[position];
+                //auto_gender.setText(selection);
+            }
+        });
+        autoReason.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View arg0) {
+                autoReason.showDropDown();
             }
         });
         iv_location.setOnClickListener(new View.OnClickListener() {
@@ -369,6 +393,7 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
             inputParameters.setCustomerId(Long.parseLong(customercode));
             inputParameters.setLocationStatus(dealerlocationstatus);
             inputParameters.setLatitude(Double.parseDouble(currentlat));
+            inputParameters.setDifferenceInDistance(sHelper.getString(Constants.DISTANCETEXT));
             if (!dealerlat.equals("NA") && !dealerlng.equals("NA")) {
                 inputParameters.setOldLatitude(Double.parseDouble(dealerlat));
                 inputParameters.setOldLongitude(Double.parseDouble(dealerlng));
@@ -383,7 +408,7 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
             } else if (dealerlocationstatus.equals("Unverified")) {
                 inputParameters.setStatus("Completed");
             }
-            inputParameters.setReason(et_reason.getText().toString());
+            inputParameters.setReason(autoReason.getText().toString());
             inputParameters.setLastvisitcount(Integer.parseInt(lastvisitCount));
 
             httpHandler = new HttpHandler(LocationChangeRequestActivity.this);

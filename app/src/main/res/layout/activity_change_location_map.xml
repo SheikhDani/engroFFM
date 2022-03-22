@@ -50,14 +50,14 @@
 
             <TextView
                 android:id="@+id/txt_distance"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
 
                 android:padding="@dimen/p20"
-                android:text="Distance : 0 km"
+                android:text="Distance between current and last location : 0 km"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="16sp"
 
                 />
 

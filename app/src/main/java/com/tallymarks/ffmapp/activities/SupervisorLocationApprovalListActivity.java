@@ -188,6 +188,7 @@ public class SupervisorLocationApprovalListActivity extends AppCompatActivity im
                     for (int j = 0; j < journeycode.size(); j++) {
                         ChangeLocation  plan4 = new ChangeLocation ();
                         plan4.setCode(journeycode.get(j).getCustomerCode()== null || journeycode.get(j).getCustomerCode().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getCustomerCode().toString());
+                        plan4.setTso(journeycode.get(j).getTerritoryOfficierName() == null || journeycode.get(j).getTerritoryOfficierName().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getTerritoryOfficierName().toString());
                         plan4.setName(journeycode.get(j).getCustomerName() == null || journeycode.get(j).getCustomerName().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getCustomerName().toString());
                         plan4.setReason(journeycode.get(j).getReason() == null || journeycode.get(j).getReason().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getReason().toString());
                         plan4.setStatus(journeycode.get(j).getStatus()== null || journeycode.get(j).getStatus().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getStatus().toString());

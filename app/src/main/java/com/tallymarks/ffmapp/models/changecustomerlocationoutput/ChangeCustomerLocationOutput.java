@@ -131,6 +131,42 @@ public class ChangeCustomerLocationOutput {
     @Expose
     private String status;
 
+    public String getSupervisorComments() {
+        return supervisorComments;
+    }
+
+    public void setSupervisorComments(String supervisorComments) {
+        this.supervisorComments = supervisorComments;
+    }
+
+    @SerializedName("supervisorComments")
+    @Expose
+    private String supervisorComments;
+
+    public String getTerritoryOfficierName() {
+        return territoryOfficierName;
+    }
+
+    public void setTerritoryOfficierName(String territoryOfficierName) {
+        this.territoryOfficierName = territoryOfficierName;
+    }
+
+    @SerializedName("territoryOfficierName")
+    @Expose
+    private String territoryOfficierName;
+
+    public String getDifferenceInDistance() {
+        return differenceInDistance;
+    }
+
+    public void setDifferenceInDistance(String differenceInDistance) {
+        this.differenceInDistance = differenceInDistance;
+    }
+
+    @SerializedName("differenceInDistance")
+    @Expose
+    private String differenceInDistance;
+
     public String getCreationDate() {
         return creationDate;
     }

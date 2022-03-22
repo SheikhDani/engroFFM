@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.activities.QualityofSalesCallActivity;
 import com.tallymarks.ffmapp.activities.SupervisorLocationApprovalListActivity;
 import com.tallymarks.ffmapp.database.ExtraHelper;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
@@ -51,24 +52,23 @@ public class LocationApprovalAdapter extends RecyclerView.Adapter<LocationApprov
     ExtraHelper extraHelper;
 
 
-
-
-    public class MyViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener  {
-        public TextView title, member, customecode, lat, lng,reason,createdate,approve,reject,lastvisitcount;
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public TextView title, tso ,member, customecode, lat, lng, reason, createdate, approve, reject, lastvisitcount;
         ImageView image;
 
         public MyViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.textView_name);
+            tso = (TextView) view.findViewById(R.id.textView_tso);
             member = (TextView) view.findViewById(R.id.textView_subcription);
             image = (ImageView) view.findViewById(R.id.imageView);
             customecode = (TextView) view.findViewById(R.id.customer_code);
             lat = (TextView) view.findViewById(R.id.latitude);
             lng = (TextView) view.findViewById(R.id.longitude);
-            reason= (TextView) view.findViewById(R.id.reason);
-            createdate= (TextView) view.findViewById(R.id.creation_date);
-            approve= (TextView) view.findViewById(R.id.textView_approve);
-            reject= (TextView) view.findViewById(R.id.textView_reject);
+            reason = (TextView) view.findViewById(R.id.reason);
+            createdate = (TextView) view.findViewById(R.id.creation_date);
+            approve = (TextView) view.findViewById(R.id.textView_approve);
+            reject = (TextView) view.findViewById(R.id.textView_reject);
             lastvisitcount = (TextView) view.findViewById(R.id.lastvisitcount);
 
             itemView.setTag(itemView);
@@ -84,7 +84,7 @@ public class LocationApprovalAdapter extends RecyclerView.Adapter<LocationApprov
     }
 
 
-    public LocationApprovalAdapter(List<ChangeLocation> moviesList,Context c) {
+    public LocationApprovalAdapter(List<ChangeLocation> moviesList, Context c) {
         this.planList = moviesList;
         this.headerList = new ArrayList<ChangeLocation>();
         this.headerList.addAll(planList);
@@ -107,14 +107,12 @@ public class LocationApprovalAdapter extends RecyclerView.Adapter<LocationApprov
     @Override
     public void onBindViewHolder(LocationApprovalAdapter.MyViewHolder holder, int position) {
         ChangeLocation movie = planList.get(position);
-        holder.title.setText(movie.getName());
+        holder.title.setText("Dealer: "+movie.getName());
 
         if (movie.getStatus().equals("Completed")) {
             holder.member.setBackgroundColor(Color.parseColor("#159356"));
             holder.member.setText(movie.getStatus());
-        }
-        else
-        {
+        } else {
             holder.member.setBackgroundColor(Color.GRAY);
             holder.member.setText(movie.getStatus());
         }
@@ -122,19 +120,21 @@ public class LocationApprovalAdapter extends RecyclerView.Adapter<LocationApprov
         holder.customecode.setText(movie.getCode());
         holder.lat.setText(movie.getLatitude());
         holder.lng.setText(movie.getLongitude());
+        holder.tso.setText("TSO: "+movie.getTso());
         holder.reason.setText(movie.getReason());
-        holder.createdate.setText("Creation Date: "+movie.getDate());
-        holder.lastvisitcount.setText("Last Visit Count: "+movie.getLastvisitcount());
+        holder.createdate.setText("Changed Date: " + movie.getDate());
+        holder.lastvisitcount.setText("Last Visit Count: " + movie.getLastvisitcount());
         holder.approve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openDialouge("Approved",movie.getId());
+                //openDialouge("Approved",movie.getId());
+                customerSavedConfirmationPopUp("Approved",movie.getId());
             }
         });
         holder.reject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openDialouge("Rejected",movie.getId());
+                openDialouge("Rejected", movie.getId());
 
             }
         });
@@ -145,9 +145,11 @@ public class LocationApprovalAdapter extends RecyclerView.Adapter<LocationApprov
     public int getItemCount() {
         return planList.size();
     }
+
     public void setClickListener(ItemClickListener itemClickListener) {
         this.clickListener = itemClickListener;
     }
+
     public void filter(String charText) {
         charText = charText.toLowerCase(Locale.getDefault());
         planList.clear();
@@ -156,7 +158,7 @@ public class LocationApprovalAdapter extends RecyclerView.Adapter<LocationApprov
         } else {
 
             ArrayList<ChangeLocation> filteredList = new ArrayList<>();
-            for (ChangeLocation pl :headerList) {
+            for (ChangeLocation pl : headerList) {
 
                 if (pl.getName().toLowerCase(Locale.getDefault()).contains(charText)) {
                     planList.add(pl);
@@ -168,7 +170,8 @@ public class LocationApprovalAdapter extends RecyclerView.Adapter<LocationApprov
 
         notifyDataSetChanged();
     }
-    private void openDialouge(String status,String id) {
+
+    private void openDialouge(String status, String id) {
 
         LayoutInflater li = LayoutInflater.from(mContext);
         View promptsView = li.inflate(R.layout.dialouge_supervisor_comments, null);
@@ -195,13 +198,11 @@ public class LocationApprovalAdapter extends RecyclerView.Adapter<LocationApprov
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!et_review.getText().toString().equals("")) {
+                if (!et_review.getText().toString().equals("")) {
 
                     alertDialog.dismiss();
                     new AddLocationApprovalComment(status, et_review.getText().toString(), id).execute();
-                }
-                else
-                {
+                } else {
                     Toast.makeText(mContext, "Please add your Comment", Toast.LENGTH_SHORT).show();
                 }
 //                Intent salescall = new Intent(FarmVisitActivity.this,QualityofSalesCallActivity.class);
@@ -214,20 +215,41 @@ public class LocationApprovalAdapter extends RecyclerView.Adapter<LocationApprov
         alertDialogBuilder.setCancelable(true);
         alertDialog.show();
     }
+
+    public void customerSavedConfirmationPopUp(String status,String id) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+        alertDialogBuilder
+                .setMessage("Are you Sure to want to Approve")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        new AddLocationApprovalComment(status, "", id).execute();
+                    }
+                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }
+        );
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
     private class AddLocationApprovalComment extends AsyncTask<String, Void, Void> {
 
         String response = null;
         String status = "";
         String message = "";
         String approvalstatus = "";
-        String approvalcomments= "";
-        String approvalid =  "";
+        String approvalcomments = "";
+        String approvalid = "";
         ProgressDialog pDialog;
         private HttpHandler httpHandler;
 
-        AddLocationApprovalComment(String status,String comment,String id)
-        {
-            this.approvalstatus= status;
+        AddLocationApprovalComment(String status, String comment, String id) {
+            this.approvalstatus = status;
             this.approvalcomments = comment;
             this.approvalid = id;
         }
@@ -256,11 +278,9 @@ public class LocationApprovalAdapter extends RecyclerView.Adapter<LocationApprov
             createConversion.setId(Integer.parseInt(approvalid));
             httpHandler = new HttpHandler(mContext);
             HashMap<String, String> headerParams2 = new HashMap<>();
-            if(sHelper.getString(Constants.ACCESS_TOKEN)!=null  && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
+            if (sHelper.getString(Constants.ACCESS_TOKEN) != null && !sHelper.getString(Constants.ACCESS_TOKEN).equals("")) {
                 headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
-            }
-            else
-            {
+            } else {
                 headerParams2.put(Constants.AUTHORIZATION, "Bearer " + extraHelper.getString(Constants.ACCESS_TOKEN));
             }
             // headerParams2.put(Constants.AUTHORIZATION, "Bearer " + sHelper.getString(Constants.ACCESS_TOKEN));
@@ -303,9 +323,9 @@ public class LocationApprovalAdapter extends RecyclerView.Adapter<LocationApprov
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                Intent i = new Intent(mContext,SupervisorLocationApprovalListActivity.class);
+                                Intent i = new Intent(mContext, SupervisorLocationApprovalListActivity.class);
                                 mContext.startActivity(i);
-                                ((Activity)mContext).finish();
+                                ((Activity) mContext).finish();
 
                                 //new SupervisorLocationApprovalListActivity.GetAllCustomerLocation().execute();
 

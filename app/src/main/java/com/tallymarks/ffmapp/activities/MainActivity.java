@@ -272,6 +272,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         txt_refersh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                postCustomerData();
+//                postAddFarmerData();
+//                postFarmerData();
                 //customer tables
                 HashMap<String, String> filter = new HashMap<>();
                 filter.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");

@@ -86,6 +86,35 @@ public class ChangeLocation {
     private String status;
     private String name;
 
+    public String getTso() {
+        return tso;
+    }
+
+    public void setTso(String tso) {
+        this.tso = tso;
+    }
+
+    private String tso;
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    private String comment;
+
+    public String getDistancedif() {
+        return distancedif;
+    }
+
+    public void setDistancedif(String distancedif) {
+        this.distancedif = distancedif;
+    }
+
+    private String distancedif;
     public String getLastvisitcount() {
         return lastvisitcount;
     }

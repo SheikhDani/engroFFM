@@ -201,9 +201,11 @@ public class ChangeCustomerLocationListActivity extends AppCompatActivity implem
                         plan4.setLongitude(String.valueOf(journeycode.get(j).getLongitude()));
                         plan4.setOldlatitude(String.valueOf(journeycode.get(j).getOldLatitude()));
                         plan4.setOldlongitude(String.valueOf(journeycode.get(j).getOldLongitude()));
+                        plan4.setComment(journeycode.get(j).getSupervisorComments() == null || journeycode.get(j).getSupervisorComments().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getSupervisorComments().toString());
+                        plan4.setDistancedif(journeycode.get(j).getDifferenceInDistance() == null || journeycode.get(j).getDifferenceInDistance().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getDifferenceInDistance().toString());
                         String date = journeycode.get(j).getCreationDate()== null || journeycode.get(j).getCreationDate().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getCreationDate().toString();
-                       plan4.setDate(Helpers.utcToAnyDateFormat(date,"yyyy-MM-dd'T'HH:mm:ss","MMM d yyyy"));
-                       planList.add(plan4);
+                        plan4.setDate(Helpers.utcToAnyDateFormat(date,"yyyy-MM-dd'T'HH:mm:ss","MMM d yyyy"));
+                        planList.add(plan4);
                        // plan4.setDate(journeycode.get(j).getCustomerId()== null || journeycode.get(j).getCustomerId().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getCustomerId().toString());
 
 
