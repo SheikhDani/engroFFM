@@ -1037,20 +1037,21 @@ public class ConverionRetentionFormActivity extends AppCompatActivity {
             }
 
         } else {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ConverionRetentionFormActivity.this);
-            alertDialogBuilder
-                    .setMessage(getResources().getString(R.string.field_required_message))
-                    .setCancelable(false)
-                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-
-
-                        }
-                    });
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
+            Helpers.alertWarning(ConverionRetentionFormActivity.this,getResources().getString(R.string.field_required_message),"Warning",null,null);
+//            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ConverionRetentionFormActivity.this);
+//            alertDialogBuilder
+//                    .setMessage(getResources().getString(R.string.field_required_message))
+//                    .setCancelable(false)
+//                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//
+//
+//                        }
+//                    });
+//            AlertDialog alertDialog = alertDialogBuilder.create();
+//            alertDialog.show();
         }
     }
 
@@ -1164,22 +1165,23 @@ public class ConverionRetentionFormActivity extends AppCompatActivity {
         protected void onPostExecute(Void args) {
             pDialog.dismiss();
             if (status.equals("true")) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ConverionRetentionFormActivity.this);
-                alertDialogBuilder.setTitle(R.string.alert)
-                        .setMessage("Conversion Rerention Added Successfully")
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                Intent con = new Intent(ConverionRetentionFormActivity.this,ConversionRetentionActivity.class);
-                                startActivity(con);
-
-                                //new PostSyncOutlet().execute();
-                            }
-                        });
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+                Helpers.alertSuccess(ConverionRetentionFormActivity.this,"Conversion Rerention Added Successfully","Success",null,null,ConversionRetentionActivity.class,null);
+//                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ConverionRetentionFormActivity.this);
+//                alertDialogBuilder.setTitle(R.string.alert)
+//                        .setMessage("Conversion Rerention Added Successfully")
+//                        .setCancelable(false)
+//                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                dialog.dismiss();
+//                                Intent con = new Intent(ConverionRetentionFormActivity.this,ConversionRetentionActivity.class);
+//                                startActivity(con);
+//
+//                                //new PostSyncOutlet().execute();
+//                            }
+//                        });
+//                AlertDialog alertDialog = alertDialogBuilder.create();
+//                alertDialog.show();
             }
 
         }
@@ -1265,22 +1267,23 @@ public class ConverionRetentionFormActivity extends AppCompatActivity {
         protected void onPostExecute(Void args) {
             pDialog.dismiss();
             if (status.equals("true")) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ConverionRetentionFormActivity.this);
-                alertDialogBuilder.setTitle(R.string.alert)
-                        .setMessage("Conversion Retention Record has been updated")
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                Intent con = new Intent(ConverionRetentionFormActivity.this,ConversionRetentionActivity.class);
-                                startActivity(con);
-
-                                //new PostSyncOutlet().execute();
-                            }
-                        });
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+                Helpers.alertSuccess(ConverionRetentionFormActivity.this,"Conversion Retention Record has been updated","Success",null,null,ConversionRetentionActivity.class,null);
+//                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ConverionRetentionFormActivity.this);
+//                alertDialogBuilder.setTitle(R.string.alert)
+//                        .setMessage("Conversion Retention Record has been updated")
+//                        .setCancelable(false)
+//                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                dialog.dismiss();
+//                                Intent con = new Intent(ConverionRetentionFormActivity.this,ConversionRetentionActivity.class);
+//                                startActivity(con);
+//
+//                                //new PostSyncOutlet().execute();
+//                            }
+//                        });
+//                AlertDialog alertDialog = alertDialogBuilder.create();
+//                alertDialog.show();
             }
 
         }

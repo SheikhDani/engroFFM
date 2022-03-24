@@ -126,23 +126,23 @@ public class ChangeCustomerLocationListActivity extends AppCompatActivity implem
 
     @Override
     public void onClick(View view, int position) {
-        final ChangeLocation city = planList.get(position);
-        if(city.getLatitude()!=null && city.getLongitude()!=null
-                && !city.getLatitude().equals("0.0") && !city.getLongitude().equals("0.0") ) {
-            // Toast.makeText(getContext(), "" + planList.get(position).getTitle(), Toast.LENGTH_SHORT).show();
-
-            Intent i = new Intent(ChangeCustomerLocationListActivity.this, ChangeCoordinatesMapActivity.class);
-            i.putExtra("dealerlat",city.getOldlatitude());
-            i.putExtra("dealerlng",city.getOldlongitude());
-            i.putExtra("dealerlatnew", city.getLatitude());
-            i.putExtra("dealerlngnew", city.getLongitude());
-            i.putExtra("from", "customerlocation");
-            startActivity(i);
-        }
-        else
-        {
-            Toast.makeText(ChangeCustomerLocationListActivity.this, "No Location Found", Toast.LENGTH_SHORT).show();
-        }
+//        final ChangeLocation city = planList.get(position);
+//        if(city.getLatitude()!=null && city.getLongitude()!=null
+//                && !city.getLatitude().equals("0.0") && !city.getLongitude().equals("0.0") ) {
+//            // Toast.makeText(getContext(), "" + planList.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+//
+//            Intent i = new Intent(ChangeCustomerLocationListActivity.this, ChangeCoordinatesMapActivity.class);
+//            i.putExtra("dealerlat",city.getOldlatitude());
+//            i.putExtra("dealerlng",city.getOldlongitude());
+//            i.putExtra("dealerlatnew", city.getLatitude());
+//            i.putExtra("dealerlngnew", city.getLongitude());
+//            i.putExtra("from", "customerlocation");
+//            startActivity(i);
+//        }
+//        else
+//        {
+//            Toast.makeText(ChangeCustomerLocationListActivity.this, "No Location Found", Toast.LENGTH_SHORT).show();
+//        }
 
     }
     public class GetAllCustomerLocation extends AsyncTask<String, Void, Void> {
@@ -241,7 +241,7 @@ public class ChangeCustomerLocationListActivity extends AppCompatActivity implem
         protected void onPostExecute(Void args) {
 
             pDialog.dismiss();
-            adapter = new ChangeLocationAdapter(planList);
+            adapter = new ChangeLocationAdapter(planList,ChangeCustomerLocationListActivity.this);
             recyclerView.setAdapter(adapter);
             adapter.setClickListener(ChangeCustomerLocationListActivity.this);
 

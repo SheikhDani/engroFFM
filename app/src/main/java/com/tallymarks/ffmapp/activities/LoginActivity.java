@@ -530,6 +530,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         alertDialogBuilder
                 .setMessage(getResources().getString(R.string.exit_message))
                 .setCancelable(false)
+                .setTitle("Warning")
+                .setIcon(R.drawable.ic_baseline_warning_24)
                 .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

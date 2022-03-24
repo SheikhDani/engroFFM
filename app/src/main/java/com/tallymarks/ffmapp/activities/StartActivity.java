@@ -26,6 +26,7 @@ import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.DialougeManager;
 import com.tallymarks.ffmapp.utils.GpsTracker;
+import com.tallymarks.ffmapp.utils.Helpers;
 
 import java.util.HashMap;
 
@@ -137,19 +138,20 @@ public class StartActivity extends AppCompatActivity {
                             DialougeManager.gpsNotEnabledPopup(StartActivity.this);
                         }
                 } else {
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(StartActivity.this);
-                    alertDialogBuilder.setTitle(R.string.message)
-                            .setMessage("You must Select Objective and Status")
-                            .setCancelable(false)
-                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-
-                                }
-                            });
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-                    alertDialog.show();
+                    Helpers.alertWarning(StartActivity.this,"You must Select Objective and Status","Warning",null,null);
+//                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(StartActivity.this);
+//                    alertDialogBuilder.setTitle(R.string.message)
+//                            .setMessage("You must Select Objective and Status")
+//                            .setCancelable(false)
+//                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.dismiss();
+//
+//                                }
+//                            });
+//                    AlertDialog alertDialog = alertDialogBuilder.create();
+//                    alertDialog.show();
 
                 }
             }

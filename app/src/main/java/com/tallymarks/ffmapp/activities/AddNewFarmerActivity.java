@@ -715,20 +715,21 @@ public class AddNewFarmerActivity extends AppCompatActivity {
         ) {
             customerSavedConfirmationPopUp();
         } else {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddNewFarmerActivity.this);
-            alertDialogBuilder
-                    .setMessage(getResources().getString(R.string.field_required_message))
-                    .setCancelable(false)
-                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-
-
-                        }
-                    });
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
+            Helpers.alertWarning(AddNewFarmerActivity.this,getResources().getString(R.string.field_required_message),"Warning",null,null);
+//            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddNewFarmerActivity.this);
+//            alertDialogBuilder
+//                    .setMessage(getResources().getString(R.string.field_required_message))
+//                    .setCancelable(false)
+//                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//
+//
+//                        }
+//                    });
+//            AlertDialog alertDialog = alertDialogBuilder.create();
+//            alertDialog.show();
         }
     }
 
@@ -737,6 +738,8 @@ public class AddNewFarmerActivity extends AppCompatActivity {
         alertDialogBuilder
                 .setMessage(AddNewFarmerActivity.this.getString(R.string.save_farmer))
                 .setCancelable(false)
+                .setTitle("Warning")
+                .setIcon(R.drawable.ic_baseline_warning_24)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.activities.ChangeCoordinatesMapActivity;
 import com.tallymarks.ffmapp.activities.QualityofSalesCallActivity;
 import com.tallymarks.ffmapp.activities.SupervisorLocationApprovalListActivity;
 import com.tallymarks.ffmapp.database.ExtraHelper;
@@ -30,6 +31,7 @@ import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 import com.tallymarks.ffmapp.models.ChangeLocation;
 import com.tallymarks.ffmapp.models.addapprovalrequest.AddLocationApproval;
 import com.tallymarks.ffmapp.utils.Constants;
+import com.tallymarks.ffmapp.utils.Helpers;
 import com.tallymarks.ffmapp.utils.HttpHandler;
 import com.tallymarks.ffmapp.utils.ItemClickListener;
 
@@ -53,20 +55,23 @@ public class LocationApprovalAdapter extends RecyclerView.Adapter<LocationApprov
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView title, tso ,member, customecode, lat, lng, reason, createdate, approve, reject, lastvisitcount;
+        public TextView title, tso ,member, customecode, lat, lng, reason, createdate, distance,approve, reject, lastvisitcount;
         ImageView image;
+        Button location;
 
         public MyViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.textView_name);
             tso = (TextView) view.findViewById(R.id.textView_tso);
             member = (TextView) view.findViewById(R.id.textView_subcription);
+            location = (Button) view.findViewById(R.id.iv_location);
             image = (ImageView) view.findViewById(R.id.imageView);
             customecode = (TextView) view.findViewById(R.id.customer_code);
             lat = (TextView) view.findViewById(R.id.latitude);
             lng = (TextView) view.findViewById(R.id.longitude);
             reason = (TextView) view.findViewById(R.id.reason);
             createdate = (TextView) view.findViewById(R.id.creation_date);
+            distance = (TextView) view.findViewById(R.id.distance);
             approve = (TextView) view.findViewById(R.id.textView_approve);
             reject = (TextView) view.findViewById(R.id.textView_reject);
             lastvisitcount = (TextView) view.findViewById(R.id.lastvisitcount);
@@ -123,6 +128,7 @@ public class LocationApprovalAdapter extends RecyclerView.Adapter<LocationApprov
         holder.tso.setText("TSO: "+movie.getTso());
         holder.reason.setText(movie.getReason());
         holder.createdate.setText("Changed Date: " + movie.getDate());
+        holder.distance.setText("Distance between locations: " +movie.getDistancedif());
         holder.lastvisitcount.setText("Last Visit Count: " + movie.getLastvisitcount());
         holder.approve.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,6 +141,28 @@ public class LocationApprovalAdapter extends RecyclerView.Adapter<LocationApprov
             @Override
             public void onClick(View view) {
                 openDialouge("Rejected", movie.getId());
+
+            }
+        });
+        holder.location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(movie.getLatitude()!=null && movie.getLongitude()!=null
+                        && !movie.getLatitude().equals("0.0") && !movie.getLongitude().equals("0.0") ) {
+                    // Toast.makeText(getContext(), "" + planList.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+
+                    Intent i = new Intent(mContext, ChangeCoordinatesMapActivity.class);
+                    i.putExtra("dealerlat",movie.getOldlatitude());
+                    i.putExtra("dealerlng",movie.getOldlongitude());
+                    i.putExtra("dealerlatnew", movie.getLatitude());
+                    i.putExtra("dealerlngnew", movie.getLongitude());
+                    i.putExtra("from", "approvallocation");
+                    mContext.startActivity(i);
+                }
+                else
+                {
+                    Toast.makeText(mContext, "No Location Found", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -217,10 +245,14 @@ public class LocationApprovalAdapter extends RecyclerView.Adapter<LocationApprov
     }
 
     public void customerSavedConfirmationPopUp(String status,String id) {
+
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
         alertDialogBuilder
                 .setMessage("Are you Sure to want to Approve")
                 .setCancelable(false)
+                .setTitle("Warning")
+                .setIcon(R.drawable.ic_baseline_warning_24)
+                .setIcon(R.drawable.ic_baseline_warning_24)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -315,25 +347,26 @@ public class LocationApprovalAdapter extends RecyclerView.Adapter<LocationApprov
         protected void onPostExecute(Void args) {
             pDialog.dismiss();
             if (status.equals("true")) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
-                alertDialogBuilder.setTitle(R.string.alert)
-                        .setMessage(message)
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                Intent i = new Intent(mContext, SupervisorLocationApprovalListActivity.class);
-                                mContext.startActivity(i);
-                                ((Activity) mContext).finish();
-
-                                //new SupervisorLocationApprovalListActivity.GetAllCustomerLocation().execute();
-
-                                //new PostSyncOutlet().execute();
-                            }
-                        });
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+                Helpers.alertSuccess(mContext,message,"Success",null,null,SupervisorLocationApprovalListActivity.class,"locationapproval");
+//                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+//                alertDialogBuilder.setTitle(R.string.alert)
+//                        .setMessage(message)
+//                        .setCancelable(false)
+//                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                dialog.dismiss();
+//                                Intent i = new Intent(mContext, SupervisorLocationApprovalListActivity.class);
+//                                mContext.startActivity(i);
+//                                ((Activity) mContext).finish();
+//
+//                                //new SupervisorLocationApprovalListActivity.GetAllCustomerLocation().execute();
+//
+//                                //new PostSyncOutlet().execute();
+//                            }
+//                        });
+//                AlertDialog alertDialog = alertDialogBuilder.create();
+//                alertDialog.show();
             }
 
         }

@@ -155,20 +155,22 @@ public class FarmersStartActivity extends AppCompatActivity {
                         DialougeManager.gpsNotEnabledPopup(FarmersStartActivity.this);
                     }
                 }else{
-                    final AlertDialog actions;
-                    AlertDialog.Builder categoryAlert = new AlertDialog.Builder(FarmersStartActivity.this);
-                    categoryAlert.setTitle("Select objective and status");
-                    categoryAlert.setMessage("You must select objective and status");
-                    categoryAlert.setCancelable(false);
-                    categoryAlert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-
-                    actions = categoryAlert.create();
-                    actions.show();
+                    Helpers.alertWarning(FarmersStartActivity.this,"Select objective and status","Warning",null,null);
+//                    final AlertDialog actions;
+//                    AlertDialog.Builder categoryAlert = new AlertDialog.Builder(FarmersStartActivity.this);
+//                    categoryAlert.setTitle("Select objective and status");
+//                    categoryAlert.setMessage("You must select objective and status");
+//                    categoryAlert.setCancelable(false);
+//                    categoryAlert.setIcon(R.drawable.ic_baseline_warning_24);
+//                    categoryAlert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//                        }
+//                    });
+//
+//                    actions = categoryAlert.create();
+//                    actions.show();
                 }
             }
         });

@@ -373,19 +373,20 @@ public class CustomerLocationActivity extends AppCompatActivity implements OnMap
     protected void onPostExecute(Void args) {
         pDialog.dismiss();
         if (status.equals("true")) {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(CustomerLocationActivity.this);
-            alertDialogBuilder.setTitle(R.string.alert)
-                    .setMessage(message)
-                    .setCancelable(false)
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            //new PostSyncOutlet().execute();
-                        }
-                    });
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
+            Helpers.alertSuccess(CustomerLocationActivity.this,message,"Success",null,null,null,null);
+//            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(CustomerLocationActivity.this);
+//            alertDialogBuilder.setTitle(R.string.alert)
+//                    .setMessage(message)
+//                    .setCancelable(false)
+//                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//                            //new PostSyncOutlet().execute();
+//                        }
+//                    });
+//            AlertDialog alertDialog = alertDialogBuilder.create();
+//            alertDialog.show();
         }
 
     }

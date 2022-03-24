@@ -155,7 +155,7 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
                 selectDialouge(autoDealer);
             }
         });
-        final String arraylist[] = {"wrong location coordinate", "customer business location changed","No location updated on customer"};
+        final String arraylist[] = {"Wrong Location Coordinate", "Customer Business Location Changed","No Location Updated on Customer"};
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_list_item_1, arraylist);
         autoReason.setAdapter(arrayAdapter);
@@ -262,20 +262,21 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
                 dealerlocationstatus = companyname.getLocationstatus();
                 location_status.setText(dealerlocationstatus);
                 if (dealerlocationstatus.equals("Verified")) {
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(LocationChangeRequestActivity.this);
-                    alertDialogBuilder.setTitle(R.string.alert)
-                            .setMessage("You would require your supervisor's approval to change the dealers verified location.")
-                            .setCancelable(false)
-                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-
-                                    //new PostSyncOutlet().execute();
-                                }
-                            });
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-                    alertDialog.show();
+                    Helpers.alertWarning(LocationChangeRequestActivity.this,"You would require your supervisor's approval to change the dealers verified location.","Warning",null,null);
+//                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(LocationChangeRequestActivity.this);
+//                    alertDialogBuilder.setTitle(R.string.alert)
+//                            .setMessage("You would require your supervisor's approval to change the dealers verified location.")
+//                            .setCancelable(false)
+//                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.dismiss();
+//
+//                                    //new PostSyncOutlet().execute();
+//                                }
+//                            });
+//                    AlertDialog alertDialog = alertDialogBuilder.create();
+//                    alertDialog.show();
 
                 }
 
@@ -469,23 +470,24 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
         protected void onPostExecute(Void args) {
             pDialog.dismiss();
             if (status.equals("true")) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(LocationChangeRequestActivity.this);
-                alertDialogBuilder.setTitle(R.string.alert)
-                        .setMessage(message)
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                Intent i = new Intent(LocationChangeRequestActivity.this, ChangeCustomerLocationListActivity.class);
-
-                                startActivity(i);
-                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                                //new PostSyncOutlet().execute();
-                            }
-                        });
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+                Helpers.alertSuccess(LocationChangeRequestActivity.this,message,"Success",null,null,ChangeCustomerLocationListActivity.class,null);
+//                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(LocationChangeRequestActivity.this);
+//                alertDialogBuilder.setTitle(R.string.alert)
+//                        .setMessage(message)
+//                        .setCancelable(false)
+//                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                dialog.dismiss();
+//                                Intent i = new Intent(LocationChangeRequestActivity.this, ChangeCustomerLocationListActivity.class);
+//
+//                                startActivity(i);
+//                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//                                //new PostSyncOutlet().execute();
+//                            }
+//                        });
+//                AlertDialog alertDialog = alertDialogBuilder.create();
+//                alertDialog.show();
             }
 
         }

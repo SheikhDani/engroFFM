@@ -293,6 +293,8 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
     public void customerSavedConfirmationPopUp() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(QualityofSalesCallActivity.this);
         alertDialogBuilder
+                .setTitle("Warning")
+                .setIcon(R.drawable.ic_baseline_warning_24)
                 .setMessage(QualityofSalesCallActivity.this.getString(R.string.outlet_confirmation))
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -564,20 +566,21 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
             alertDialog.dismiss();
 
         } else {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(QualityofSalesCallActivity.this);
-            alertDialogBuilder
-                    .setMessage(getResources().getString(R.string.field_required_message))
-                    .setCancelable(false)
-                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-
-
-                        }
-                    });
-            AlertDialog alertDialog2 = alertDialogBuilder.create();
-            alertDialog2.show();
+            Helpers.alertWarning(QualityofSalesCallActivity.this,getResources().getString(R.string.field_required_message),"Warning",null,null);
+//            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(QualityofSalesCallActivity.this);
+//            alertDialogBuilder
+//                    .setMessage(getResources().getString(R.string.field_required_message))
+//                    .setCancelable(false)
+//                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//
+//
+//                        }
+//                    });
+//            AlertDialog alertDialog2 = alertDialogBuilder.create();
+//            alertDialog2.show();
         }
     }
 
@@ -1071,9 +1074,10 @@ public class QualityofSalesCallActivity extends AppCompatActivity {
             pDialog.dismiss();
             if (status.equals("true")) {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(QualityofSalesCallActivity.this);
-                alertDialogBuilder.setTitle(R.string.alert)
+                alertDialogBuilder.setTitle("Success")
                         .setMessage("Data Posted Successfully")
                         .setCancelable(false)
+                        .setIcon(R.drawable.ic_baseline_done_all_24)
                         .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

@@ -301,26 +301,27 @@ public class AllPlans extends Fragment implements ItemClickListener {
                     currentlat = String.valueOf(gps.getLatitude());
                     currentlng = String.valueOf(gps.getLongitude());
                     if (plan.getLatitude().equals("NA") || plan.getLatitude() == "NA" && plan.getLongitude().equals("NA") || plan.getLongitude() == "NA") {
-                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-                        alertDialogBuilder
-                                .setMessage("Location info not available")
-                                .setCancelable(false)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.cancel();
-
-                                                //Toast.makeText(ShopStatusActivity.this, "You are "+totalb+" Km away from the shop ", Toast.LENGTH_SHORT).show();
-                                            }
-//                                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(DialogInterface dialog, int which) {
-//                                        dialog.cancel();
-//                                    }
-                                        }
-                                );
-                        AlertDialog alertDialog = alertDialogBuilder.create();
-                        alertDialog.show();
+                        Helpers.alertWarning(getActivity(),"Location info not available","Warning",null,null);
+//                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+//                        alertDialogBuilder
+//                                .setMessage("Location info not available")
+//                                .setCancelable(false)
+//                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(DialogInterface dialog, int which) {
+//                                                dialog.cancel();
+//
+//                                                //Toast.makeText(ShopStatusActivity.this, "You are "+totalb+" Km away from the shop ", Toast.LENGTH_SHORT).show();
+//                                            }
+////                                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+////                                    @Override
+////                                    public void onClick(DialogInterface dialog, int which) {
+////                                        dialog.cancel();
+////                                    }
+//                                        }
+//                                );
+//                        AlertDialog alertDialog = alertDialogBuilder.create();
+//                        alertDialog.show();
 
                     } else {
                         float distance = getMeterFromLatLong(Float.parseFloat(currentlat), Float.parseFloat(currentlng), Float.parseFloat(plan.getLatitude()), Float.parseFloat(plan.getLongitude()));
@@ -347,6 +348,8 @@ public class AllPlans extends Fragment implements ItemClickListener {
                             alertDialogBuilder
                                     .setMessage("You are " + totalb + " Km" + "(" + totalmeters + " Meters" + ")" + " away from the shop. ")
                                     .setCancelable(false)
+                                    .setIcon(R.drawable.ic_baseline_warning_24)
+                                    .setTitle("Warning")
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
@@ -402,6 +405,8 @@ public class AllPlans extends Fragment implements ItemClickListener {
                         alertDialogBuilder
                                 .setMessage("Location info not available, Do you want to proceed?")
                                 .setCancelable(false)
+                                .setTitle("Warning")
+                                .setIcon(R.drawable.ic_baseline_warning_24)
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {

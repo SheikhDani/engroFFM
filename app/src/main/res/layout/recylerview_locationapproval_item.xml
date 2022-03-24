@@ -63,24 +63,48 @@
             android:text="Visited"
             android:textColor="@color/white" />
     </LinearLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:weightSum="3"
+    android:id="@+id/lienarloc"
+    android:layout_below="@+id/layout_member"
+    android:layout_toEndOf="@id/imageView"
+    android:layout_toRightOf="@id/imageView"
+    android:orientation="horizontal"
 
+    android:layout_height="wrap_content">
     <TextView
         android:id="@+id/textView_tso"
 
-        android:layout_width="300dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_member"
-        android:layout_toEndOf="@id/imageView"
-        android:layout_toRightOf="@id/imageView"
+        android:layout_weight="2.3"
+
 
         android:text="TSO : Abid Hussain &amp; Brothers"
         android:textSize="16sp"
         android:textStyle="bold" />
+    <Button
+        android:id="@+id/iv_location"
+        android:layout_width="0dp"
+
+        android:layout_height="20dp"
+        android:layout_marginTop="@dimen/p5"
+
+
+        android:layout_marginRight="@dimen/p10"
+        android:layout_weight="0.4"
+        android:background="@color/green"
+        android:drawableLeft="@drawable/ic_baseline_map_24"
+
+        android:gravity="center_vertical"
+        android:padding="7dp" />
+</LinearLayout>
     <TextView
         android:id="@+id/latitude"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/creation_date"
+        android:layout_below="@+id/distance"
         android:layout_toEndOf="@id/imageView"
 
         android:layout_toRightOf="@id/imageView"
@@ -132,7 +156,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_below="@+id/textView_tso"
+        android:layout_below="@+id/lienarloc"
         android:layout_toEndOf="@id/imageView"
         android:layout_toRightOf="@id/imageView"
         android:gravity="center_vertical"
@@ -152,6 +176,19 @@
         android:gravity="center_vertical"
 
         android:text="Change Date : 12-02-2022"
+        android:textSize="16sp" />
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+
+        android:layout_below="@+id/creation_date"
+        android:layout_toEndOf="@id/imageView"
+        android:layout_toRightOf="@id/imageView"
+        android:gravity="center_vertical"
+
+        android:text="Difference in Distance : 0km"
         android:textSize="16sp" />
 
     <LinearLayout

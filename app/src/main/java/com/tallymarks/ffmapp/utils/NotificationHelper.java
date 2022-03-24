@@ -52,7 +52,7 @@ public class NotificationHelper extends ContextWrapper {
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
 //                .setContentTitle(title)
 //                .setContentText(body)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.engrosmall)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle(title).bigText(body))
                 .setContentIntent(pendingIntent)

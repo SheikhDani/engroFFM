@@ -67,27 +67,27 @@
         android:id="@+id/latitude"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:layout_below="@+id/distance"
-
         android:layout_toEndOf="@id/imageView"
+
         android:layout_toRightOf="@id/imageView"
         android:gravity="center_vertical"
         android:text="Latitude : 32.121312312313"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/longitude"
         android:layout_width="300dp"
-        android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_below="@+id/latitude"
-
         android:layout_toEndOf="@id/imageView"
+
         android:layout_toRightOf="@id/imageView"
         android:gravity="center_vertical"
         android:text="Longitude: 32.121312312313"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/reason"
@@ -106,27 +106,48 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/reason"
-android:visibility="gone"
-
         android:layout_toEndOf="@id/imageView"
         android:layout_toRightOf="@id/imageView"
         android:gravity="center_vertical"
         android:text=""
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:visibility="gone" />
 
-
-    <TextView
-        android:id="@+id/customer_code"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/lienarloc"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_below="@+id/layout_member"
         android:layout_toEndOf="@id/imageView"
         android:layout_toRightOf="@id/imageView"
-        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:weightSum="3">
 
-        android:text="Customer Code: 8103214"
-        android:textSize="16sp" />
+        <TextView
+            android:id="@+id/customer_code"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2.3"
+
+            android:text="Customer Code: 8103214"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/iv_location"
+            android:layout_width="0dp"
+
+            android:layout_height="20dp"
+            android:layout_marginTop="@dimen/p5"
+
+
+            android:layout_marginRight="@dimen/p10"
+            android:layout_weight="0.4"
+            android:background="@color/green"
+            android:drawableLeft="@drawable/ic_baseline_map_24"
+
+            android:gravity="center_vertical"
+            android:padding="7dp" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/creation_date"
@@ -134,13 +155,14 @@ android:visibility="gone"
         android:layout_height="wrap_content"
 
 
-        android:layout_below="@+id/customer_code"
+        android:layout_below="@+id/lienarloc"
         android:layout_toEndOf="@id/imageView"
         android:layout_toRightOf="@id/imageView"
         android:gravity="center_vertical"
 
         android:text="Creation Date : 12-02-2022"
         android:textSize="16sp" />
+
     <TextView
         android:id="@+id/distance"
         android:layout_width="wrap_content"
