@@ -205,24 +205,26 @@ public class TodayCustomerMap extends AppCompatActivity implements OnMapReadyCal
             // DialougeManager.gpsNotEnabledPopup(ProjectDetailActivity.this);
         }
         enableUserLocation();
-        if (Build.VERSION.SDK_INT >= 29) {
+        if (locationArrayList.size() > 0) {
+            if (Build.VERSION.SDK_INT >= 29) {
                 //We need background permission
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     addGeofence(GEOFENCE_RADIUS);
                 } else {
                     if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
                         //We show a dialog and ask for permission
-                        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_BACKGROUND_LOCATION}, BACKGROUND_LOCATION_ACCESS_REQUEST_CODE);
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, BACKGROUND_LOCATION_ACCESS_REQUEST_CODE);
                     } else {
-                        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_BACKGROUND_LOCATION}, BACKGROUND_LOCATION_ACCESS_REQUEST_CODE);
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, BACKGROUND_LOCATION_ACCESS_REQUEST_CODE);
                     }
                 }
 
             } else {
-               // LatLng location = new LatLng(locationArrayList.get(i).latitude , locationArrayList.get(i).longitude);
+                // LatLng location = new LatLng(locationArrayList.get(i).latitude , locationArrayList.get(i).longitude);
                 addGeofence(GEOFENCE_RADIUS);
 
             }
+        }
 
 
 
