@@ -251,9 +251,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 if (Helpers.isNetworkAvailable(MainActivity.this)) {
-                    postCustomerData("sync");
-                    postAddFarmerData("sync");
-                    postFarmerData("sync");
+                    if(isUnpostedDataExist()==false && isUnpostedAddFarmerDataExist()==false
+                    && isMyUnpostedDataExist()==false)
+                    {
+                        Helpers.alertWarning(MainActivity.this,"There is no Data Exist for Posting","Warning",null,null);
+                    }
+                    else {
+                        postCustomerData("sync");
+                        postAddFarmerData("sync");
+                        postFarmerData("sync");
+                    }
 
                 } else {
                     Helpers.noConnectivityPopUp(MainActivity.this);
@@ -1073,15 +1080,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else
         {
+            if(from.equals("refresh")) {
 
-            HashMap<String, String> filterdarmerdownalod = new HashMap<>();
-            mydb.deleteData(mydb.DOWNLOADED_FARMER_DATA,filterdarmerdownalod);
+                HashMap<String, String> filterdarmerdownalod = new HashMap<>();
+                mydb.deleteData(mydb.DOWNLOADED_FARMER_DATA, filterdarmerdownalod);
 
-            //farmer tables
-            HashMap<String, String> filter2 = new HashMap<>();
-            filter2.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
-            filter2.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "0");
-            mydb.deleteData(mydb.TODAY_FARMER_JOURNEY_PLAN,filter2);
+                //farmer tables
+                HashMap<String, String> filter2 = new HashMap<>();
+                filter2.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
+                filter2.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+                mydb.deleteData(mydb.TODAY_FARMER_JOURNEY_PLAN, filter2);
+            }
 
         }
     }
@@ -1095,18 +1104,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else
         {
-            HashMap<String, String> filter = new HashMap<>();
-            filter.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
-            filter.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "0");
-            db.deleteData(db.TODAY_JOURNEY_PLAN,filter);
-            HashMap<String, String> filterorders = new HashMap<>();
-            db.deleteData(db.TODAY_JOURNEY_PLAN_ORDERS,filterorders);
-            HashMap<String, String> filterinvoice = new HashMap<>();
-            db.deleteData(db.TODAY_JOURNEY_PLAN_ORDERS_INVOICES,filterinvoice);
-            HashMap<String, String> filtersnapshot= new HashMap<>();
-            db.deleteData(db.TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT,filtersnapshot);
-            HashMap<String, String> filterstock = new HashMap<>();
-            db.deleteData(db.TODAY_JOURNEY_PLAN_PREVIOUS_STOCK,filterstock);
+            if(from.equals("refresh")) {
+                HashMap<String, String> filter = new HashMap<>();
+                filter.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
+                filter.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+                db.deleteData(db.TODAY_JOURNEY_PLAN, filter);
+                HashMap<String, String> filterorders = new HashMap<>();
+                db.deleteData(db.TODAY_JOURNEY_PLAN_ORDERS, filterorders);
+                HashMap<String, String> filterinvoice = new HashMap<>();
+                db.deleteData(db.TODAY_JOURNEY_PLAN_ORDERS_INVOICES, filterinvoice);
+                HashMap<String, String> filtersnapshot = new HashMap<>();
+                db.deleteData(db.TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT, filtersnapshot);
+                HashMap<String, String> filterstock = new HashMap<>();
+                db.deleteData(db.TODAY_JOURNEY_PLAN_PREVIOUS_STOCK, filterstock);
+            }
 
         }
 

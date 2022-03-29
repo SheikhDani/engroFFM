@@ -289,8 +289,10 @@ public class Helpers extends Activity {
                         }
                         else
                         {
-                            Intent i = new Intent(context, activity);
-                            context.startActivity(i);
+                            if(activity!=null) {
+                                Intent i = new Intent(context, activity);
+                                context.startActivity(i);
+                            }
                            // ((Activity) context).overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
                         }
