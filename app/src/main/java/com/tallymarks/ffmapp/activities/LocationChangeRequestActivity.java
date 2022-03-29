@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,6 +38,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.SalesPointAdapter;
@@ -77,6 +81,7 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
     GpsTracker gps;
     String lastvisitCount = "";
     String selection = "";
+    FusedLocationProviderClient fusedLocationProviderClient;
 
     static {
         System.loadLibrary("native-lib");
@@ -91,6 +96,7 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
 
     private void initView() {
         iv_location = findViewById(R.id.iv_location);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         txt_lat = findViewById(R.id.txt_latitude);
         txt_lng = findViewById(R.id.txt_longitude);
         location_status = findViewById(R.id.lcoationstatus);
@@ -192,11 +198,18 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
                         if (ActivityCompat.checkSelfPermission(LocationChangeRequestActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(LocationChangeRequestActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                             return;
                         }
-                        currentlat = String.valueOf(gps.getLatitude());
-                        currentlng = String.valueOf(gps.getLongitude());
+                        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(@NonNull Location location) {
+                                currentlat = String.valueOf(location.getLatitude());
+                                currentlng = String.valueOf(location.getLongitude());
+                                txt_lat.setText("Latitude: " + currentlat);
+                                txt_lng.setText("Longitude: " + currentlng);
+                            }});
+
+
                     }
-                    txt_lat.setText("Latitude: " + currentlat);
-                    txt_lng.setText("Longitude: " + currentlng);
+
 
 
                 } else {

@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,8 +26,12 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
@@ -39,6 +44,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.maps.android.clustering.ClusterManager;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
@@ -62,9 +68,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ChangeCoordinatesMapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
+public class ChangeCoordinatesMapActivity extends AppCompatActivity implements  GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
-    private TextView tvTopHeader,tvDistance;
+    private TextView tvTopHeader, tvDistance;
     ImageView iv_menu, iv_back;
     final static int REQUEST_LOCATION = 199;
     private ClusterManager<User> mClusterManager;
@@ -81,8 +87,12 @@ public class ChangeCoordinatesMapActivity extends AppCompatActivity implements O
     private GoogleMap mMap;
     Button btnProceed;
     private ArrayList<LatLng> locationArrayList;
-    String dealerlat,dealerlng,from,dealetlatnew,delaerlngnew,dealername;
-    String distanceText ;
+    String dealerlat, dealerlng, from, dealetlatnew, delaerlngnew, dealername;
+    String distanceText;
+
+    double latitude, longitude;
+    Location location;
+
 
     static {
         System.loadLibrary("native-lib");
@@ -103,65 +113,7 @@ public class ChangeCoordinatesMapActivity extends AppCompatActivity implements O
 
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        gpsTracker = new GpsTracker(ChangeCoordinatesMapActivity.this);
 
-        mMap = googleMap;
-        if (gpsTracker.canGetLocation()) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-
-            }
-            mMap.getUiSettings().setScrollGesturesEnabled(true);
-            //  mMap.setMyLocationEnabled(true);
-            //            currentlat = String.valueOf(gpsTracker.getLatitude());
-            if(from.equals("approvallocation")) {
-                currentlng = delaerlngnew;
-                currentlat =  dealetlatnew;
-            }
-            else if(from.equals("customerlocation")) {
-                currentlng = delaerlngnew;
-                currentlat =  dealetlatnew;
-            }
-            else
-            {
-                currentlng = String.valueOf(gpsTracker.getLongitude());
-                currentlat = String.valueOf(gpsTracker.getLatitude());
-            }
-
-            // mMap.addMarker(new MarkerOptions().position(new LatLng(gpsTracker.getLatitude(),gpsTracker.getLongitude())).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Current Location"));
-            //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), 17.0f));
-//            for (int i = 0; i < locationArrayList.size(); i++) {
-                LatLng location = new LatLng(Double.parseDouble(currentlat), Double.parseDouble(currentlng));
-            mMap.addMarker(new MarkerOptions().position(location).title("Current Location")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(currentlat), Double.parseDouble(currentlng)), 10));
-            if(!dealerlat.equals("NA") && !dealerlng.equals("NA")) {
-                LatLng locationdealer = new LatLng(Double.parseDouble(dealerlat), Double.parseDouble(dealerlng));
-                mMap.addMarker(new MarkerOptions().position(locationdealer).title("Previous Location")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                float distance = getMeterFromLatLong(Float.parseFloat(String.valueOf(currentlat)), Float.parseFloat(String.valueOf(currentlng)), Float.parseFloat(dealerlat), Float.parseFloat(dealerlng));
-                float totaldistance = distance / 1000;
-                int totalb = (int) Math.round(totaldistance);
-                //tvDistance.setText("Distance " + totalb +" KM ");
-                // googleMap.addPolyline(new PolylineOptions()
-                //  .clickable(true)
-                //.add(location,locationdealer));
-                // Getting URL to the Google Directions API
-                //  LatLng locationdemo = new LatLng(32.48711012882795, 74.52280822655976);
-                String url = getDirectionsUrl(location, locationdealer);
-
-                DownloadTask downloadTask = new DownloadTask();
-
-                // Start downloading json data from Google Directions API
-                downloadTask.execute(url);
-            }
-//            }
-        } else {
-            enableLoc();
-            // DialougeManager.gpsNotEnabledPopup(ProjectDetailActivity.this);
-        }
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,6 +126,7 @@ public class ChangeCoordinatesMapActivity extends AppCompatActivity implements O
     private void initView() {
         sHelper = new SharedPrefferenceHelper(ChangeCoordinatesMapActivity.this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
         db = new DatabaseHandler(ChangeCoordinatesMapActivity.this);
         btnProceed = findViewById(R.id.btnProceed);
         tvTopHeader = findViewById(R.id.tv_dashboard);
@@ -185,9 +138,23 @@ public class ChangeCoordinatesMapActivity extends AppCompatActivity implements O
         tvTopHeader.setVisibility(View.VISIBLE);
         tvTopHeader.setText("MAP Activity");
         Intent intent = getIntent();
-        from= intent.getExtras().getString("from");
+        from = intent.getExtras().getString("from");
         dealerlat = intent.getExtras().getString("dealerlat");
         dealerlng = intent.getExtras().getString("dealerlng");
+//
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            // TODO: Consider calling
+//            //    ActivityCompat#requestPermissions
+//            // here to request the missing permissions, and then overriding
+//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//            //                                          int[] grantResults)
+//            // to handle the case where the user grants the permission. See the documentation
+//            // for ActivityCompat#requestPermissions for more details.
+//            return;
+//        }
+
+
+
 
         if(from.equals("approvallocation"))
         {
@@ -223,7 +190,75 @@ public class ChangeCoordinatesMapActivity extends AppCompatActivity implements O
             }
         });
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                gpsTracker = new GpsTracker(ChangeCoordinatesMapActivity.this);
+
+                mMap = googleMap;
+                if (gpsTracker.canGetLocation()) {
+                    if (ActivityCompat.checkSelfPermission(ChangeCoordinatesMapActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ChangeCoordinatesMapActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+
+                    }
+                    mMap.getUiSettings().setScrollGesturesEnabled(true);
+                    mMap.setMyLocationEnabled(true);
+                    fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(@NonNull Location location) {
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
+
+                            //            currentlat = String.valueOf(gpsTracker.getLatitude());
+                            if (from.equals("approvallocation")) {
+                                currentlng = delaerlngnew;
+                                currentlat = dealetlatnew;
+                            } else if (from.equals("customerlocation")) {
+                                currentlng = delaerlngnew;
+                                currentlat = dealetlatnew;
+                            } else {
+                                currentlng = String.valueOf(longitude);
+                                currentlat = String.valueOf(latitude);
+                            }
+
+                            // mMap.addMarker(new MarkerOptions().position(new LatLng(gpsTracker.getLatitude(),gpsTracker.getLongitude())).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Current Location"));
+                            //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), 17.0f));
+//            for (int i = 0; i < locationArrayList.size(); i++) {
+                            LatLng locationcurrent = new LatLng(Double.parseDouble(currentlat), Double.parseDouble(currentlng));
+                            mMap.addMarker(new MarkerOptions().position(locationcurrent).title("Current Location")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(currentlat), Double.parseDouble(currentlng)), 10));
+                            if (!dealerlat.equals("NA") && !dealerlng.equals("NA")) {
+                                LatLng locationdealer = new LatLng(Double.parseDouble(dealerlat), Double.parseDouble(dealerlng));
+                                mMap.addMarker(new MarkerOptions().position(locationdealer).title("Previous Location")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                                float distance = getMeterFromLatLong(Float.parseFloat(String.valueOf(currentlat)), Float.parseFloat(String.valueOf(currentlng)), Float.parseFloat(dealerlat), Float.parseFloat(dealerlng));
+                                float totaldistance = distance / 1000;
+                                int totalb = (int) Math.round(totaldistance);
+                                //tvDistance.setText("Distance " + totalb +" KM ");
+                                // googleMap.addPolyline(new PolylineOptions()
+                                //  .clickable(true)
+                                //.add(location,locationdealer));
+                                // Getting URL to the Google Directions API
+                                //  LatLng locationdemo = new LatLng(32.48711012882795, 74.52280822655976);
+                                String url = getDirectionsUrl(locationcurrent, locationdealer);
+
+                                DownloadTask downloadTask = new DownloadTask();
+
+                                // Start downloading json data from Google Directions API
+                                downloadTask.execute(url);
+                            }
+                        }
+                    });
+
+//            }
+                } else {
+                    enableLoc();
+                    // DialougeManager.gpsNotEnabledPopup(ProjectDetailActivity.this);
+                }
+
+
+            }
+        });
     }
 
     @Override

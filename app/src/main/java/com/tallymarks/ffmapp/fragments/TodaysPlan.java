@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -24,6 +25,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.activities.FarmersStartActivity;
 import com.tallymarks.ffmapp.activities.StartActivity;
@@ -56,6 +60,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
     static EditText et_search_plan;
     MyDatabaseHandler mydb;
     TextView txt_no_data;
+    FusedLocationProviderClient fusedLocationProviderClient;
 
 
     public static TodaysPlan newInstance(String activity, EditText et_search) {
@@ -86,6 +91,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
         db = new DatabaseHandler(getActivity());
         mydb = new MyDatabaseHandler(getActivity());
         txt_no_data = view.findViewById(R.id.empty_view);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         sHelper = new SharedPrefferenceHelper(getActivity());
         planList.clear();
@@ -94,84 +100,90 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            currentlat = String.valueOf(gps.getLatitude());
-            currentlng = String.valueOf(gps.getLongitude());
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(@NonNull Location location1) {
+                    currentlat = String.valueOf(location1.getLatitude());
+                    currentlng = String.valueOf(location1.getLongitude());
+                    if (activity.equals("customers")) {
+                        sHelper.setString(Constants.PLAN_TYPE, "today");
+                        getTodayCustomerJourneyPlan();
+                        if (planList.isEmpty()) {
+                            recyclerView.setVisibility(View.GONE);
+                            txt_no_data.setVisibility(View.VISIBLE);
+
+                        } else {
+                            recyclerView.setVisibility(View.VISIBLE);
+                            txt_no_data.setVisibility(View.GONE);
+                        }
+                    } else {
+                        prepareMovieData(activity);
+                        if (planList.isEmpty()) {
+                            recyclerView.setVisibility(View.GONE);
+                            txt_no_data.setVisibility(View.VISIBLE);
+
+                        } else {
+                            recyclerView.setVisibility(View.VISIBLE);
+                            txt_no_data.setVisibility(View.GONE);
+                        }
+                    }
+
+
+                    TodayPlanAdapter adapter = new TodayPlanAdapter(planList, activity);
+
+                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+                    recyclerView.setLayoutManager(layoutManager);
+                    recyclerView.setAdapter(adapter);
+                    adapter.setClickListener(TodaysPlan.this);
+                    if (activity.equals("customers")) {
+                        et_search_plan.addTextChangedListener(new TextWatcher() {
+
+                            @Override
+                            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                                if (et_search_plan.hasFocus()) {
+                                    adapter.filter(cs.toString());
+                                }
+                            }
+
+                            @Override
+                            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+                                // Toast.makeText(getApplicationContext(),"before text change",Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable arg0) {
+                                //Toast.makeText(getApplicationContext(),"after text change",Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+                    } else {
+                        et_search_plan.addTextChangedListener(new TextWatcher() {
+
+                            @Override
+                            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                                if (et_search_plan.hasFocus()) {
+                                    adapter.filter(cs.toString());
+                                }
+                            }
+
+                            @Override
+                            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+                                // Toast.makeText(getApplicationContext(),"before text change",Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable arg0) {
+                                //Toast.makeText(getApplicationContext(),"after text change",Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+                    }
+                }});
+
         } else {
             DialougeManager.gpsNotEnabledPopup(getActivity());
         }
-        if (activity.equals("customers")) {
-            sHelper.setString(Constants.PLAN_TYPE, "today");
-            getTodayCustomerJourneyPlan();
-            if (planList.isEmpty()) {
-                recyclerView.setVisibility(View.GONE);
-                txt_no_data.setVisibility(View.VISIBLE);
 
-            } else {
-                recyclerView.setVisibility(View.VISIBLE);
-                txt_no_data.setVisibility(View.GONE);
-            }
-        } else {
-            prepareMovieData(activity);
-            if (planList.isEmpty()) {
-                recyclerView.setVisibility(View.GONE);
-                txt_no_data.setVisibility(View.VISIBLE);
-
-            } else {
-                recyclerView.setVisibility(View.VISIBLE);
-                txt_no_data.setVisibility(View.GONE);
-            }
-        }
-
-
-        TodayPlanAdapter adapter = new TodayPlanAdapter(planList, activity);
-
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-        adapter.setClickListener(this);
-        if (activity.equals("customers")) {
-            et_search_plan.addTextChangedListener(new TextWatcher() {
-
-                @Override
-                public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                    if (et_search_plan.hasFocus()) {
-                        adapter.filter(cs.toString());
-                    }
-                }
-
-                @Override
-                public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-                    // Toast.makeText(getApplicationContext(),"before text change",Toast.LENGTH_LONG).show();
-                }
-
-                @Override
-                public void afterTextChanged(Editable arg0) {
-                    //Toast.makeText(getApplicationContext(),"after text change",Toast.LENGTH_LONG).show();
-                }
-            });
-
-        } else {
-            et_search_plan.addTextChangedListener(new TextWatcher() {
-
-                @Override
-                public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                    if (et_search_plan.hasFocus()) {
-                        adapter.filter(cs.toString());
-                    }
-                }
-
-                @Override
-                public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-                    // Toast.makeText(getApplicationContext(),"before text change",Toast.LENGTH_LONG).show();
-                }
-
-                @Override
-                public void afterTextChanged(Editable arg0) {
-                    //Toast.makeText(getApplicationContext(),"after text change",Toast.LENGTH_LONG).show();
-                }
-            });
-
-        }
     }
 
     private void getTodayCustomerJourneyPlan() {
@@ -215,10 +227,8 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                 plan.setTime("9:00 AM");
                 plan.setCustomerJourneyPlanID(custoemrjourneyplanID);
                 plan.setCustomerDayID(customerDayid);
-
-                    plan.setLatitude(customerLat);
-                    plan.setLongitude(customerLng);
-
+                plan.setLatitude(customerLat);
+                plan.setLongitude(customerLng);
                 plan.setCustomerID(customerID);
                 if(!customerLat.equals("NA") && !customerLng.equals("NA")) {
                     float distance = getMeterFromLatLong(Float.parseFloat(currentlat), Float.parseFloat(currentlng), Float.parseFloat(customerLat), Float.parseFloat(customerLng));
@@ -313,8 +323,14 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                     if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         return;
                     }
-                    currentlat = String.valueOf(gps.getLatitude());
-                    currentlng = String.valueOf(gps.getLongitude());
+                    fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(@NonNull Location location1) {
+                            currentlat = String.valueOf(location1.getLatitude());
+                            currentlng = String.valueOf(location1.getLongitude());
+                        }});
+//                    currentlat = String.valueOf(gps.getLatitude());
+//                    currentlng = String.valueOf(gps.getLongitude());
                     if (plan.getLatitude().equals("NA") || plan.getLatitude() == "NA" && plan.getLongitude().equals("NA") || plan.getLongitude() == "NA") {
                         Helpers.alertWarning(getActivity(),"Location info not available","Warning",null,null);
 //                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
@@ -407,11 +423,17 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                 //sHelper.clearPreferenceStore();
                 gps = new GpsTracker(getActivity());
                 if (gps.canGetLocation()) {
-//                    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                        return;
-//                    }
-                    currentlat = String.valueOf(gps.getLatitude());
-                    currentlng = String.valueOf(gps.getLongitude());
+                    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(@NonNull Location location1) {
+                            currentlat = String.valueOf(location1.getLatitude());
+                            currentlng = String.valueOf(location1.getLongitude());
+                        }});
+//                    currentlat = String.valueOf(gps.getLatitude());
+//                    currentlng = String.valueOf(gps.getLongitude());
                     if (plan.getLatitude().equals("NA") || plan.getLatitude() == "NA" && plan.getLongitude().equals("NA") || plan.getLongitude() == "NA") {
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
                         alertDialogBuilder
