@@ -190,10 +190,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         tabLayout = (TabLayout) findViewById(R.id.tabs_sales_plan);
         viewPager = (ViewPager) findViewById(R.id.viewPager_sales_plan);
-        if(sHelper.getString(Constants.LAST_POSTED)!=null && !sHelper.getString(Constants.LAST_POSTED).equals(""))
-        {
-            lastPosted.setText("Last Posted on "+sHelper.getString(Constants.LAST_POSTED));
-        }
+
 
 
 
@@ -230,6 +227,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         gpsTracker = new GpsTracker(MainActivity.this);
         db = new DatabaseHandler(MainActivity.this);
         mydb = new MyDatabaseHandler(MainActivity.this);
+
+        if(sHelper.getString(Constants.LAST_POSTED)!=null && !sHelper.getString(Constants.LAST_POSTED).equals(""))
+        {
+            lastPosted.setText("Last Posted on "+sHelper.getString(Constants.LAST_POSTED));
+        }
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         txt_farmer_Demo.setOnClickListener(new View.OnClickListener() {
