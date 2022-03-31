@@ -102,6 +102,7 @@ import com.tallymarks.ffmapp.utils.HttpHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -190,10 +191,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         tabLayout = (TabLayout) findViewById(R.id.tabs_sales_plan);
         viewPager = (ViewPager) findViewById(R.id.viewPager_sales_plan);
-        if(sHelper.getString(Constants.LAST_POSTED)!=null && !sHelper.getString(Constants.LAST_POSTED).equals(""))
-        {
-            lastPosted.setText("Last Posted on "+sHelper.getString(Constants.LAST_POSTED));
-        }
+
 
         iv_Notification.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -202,6 +200,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(notification );
             }
         });
+
+
 
 
 
@@ -299,6 +299,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(soil);
             }
         });
+
+        if(sHelper.getString(Constants.CURRENT_DATE)!=null && !sHelper.getString(Constants.CURRENT_DATE).equals("") )
+        {
+            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date date1 = sdf2.parse(sHelper.getString(Constants.CURRENT_DATE));
+                String currentDateandTime = sdf2.format(new Date());
+                Date date2 = sdf2.parse(currentDateandTime);
+                if (date1.compareTo(date2) > 0) {
+
+                   // Log.i("app", "Date1 is after Date2");
+                } else if (date1.compareTo(date2) < 0) {
+                    postCustomerData("refresh");
+                    postAddFarmerData("refresh");
+                    postFarmerData("refresh");
+                    loadrefereshdata();
+                } else if (date1.compareTo(date2) == 0) {
+                    postCustomerData("time");
+                    postAddFarmerData("time");
+                    postFarmerData("time");
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+        if(sHelper.getString(Constants.LAST_POSTED)!=null && !sHelper.getString(Constants.LAST_POSTED).equals(""))
+        {
+            lastPosted.setText("Last Posted on "+sHelper.getString(Constants.LAST_POSTED));
+        }
 
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -543,8 +574,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     {
         if (Helpers.isNetworkAvailable(MainActivity.this)) {
             //customer tables
-
-
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String currentDateandTime = sdf.format(new Date());
+            sHelper.setString(Constants.CURRENT_DATE,currentDateandTime);
             new LoadCustomersTodayJourneyPlan(MainActivity.this).execute();
             new LoadCustomersAllJourneyPlan(MainActivity.this).execute();
             new LoadFarmersAllJourneyPlan(MainActivity.this).execute();
@@ -1055,6 +1087,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             while (cursor.moveToNext());
         } else {
             if (Helpers.isNetworkAvailable(MainActivity.this)) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                String currentDateandTime = sdf.format(new Date());
+                sHelper.setString(Constants.CURRENT_DATE,currentDateandTime);
                 task8 = new LoadCustomersTodayJourneyPlan(MainActivity.this);
                 task8.execute();
             } else {
@@ -1600,7 +1635,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         protected void onPostExecute(Void args) {
             pDialog.dismiss();
-            if(from.equals("sync")) {
+            if(from.equals("sync") || from.equals("time")) {
                 if (status.equals("true")) {
                     Helpers.alertSuccess(MainActivity.this,"Data Posted Successfully","Success",sHelper,lastPosted,null,null);
 //                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
@@ -1781,7 +1816,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         protected void onPostExecute(Void args) {
             pDialog.dismiss();
-            if (from.equals("sync")) {
+            if (from.equals("sync") ||from.equals("time") ) {
                 if (status.equals("true")) {
                     Helpers.alertSuccess(MainActivity.this,"Data Posted Successfully","Success",sHelper,lastPosted,null,null);
 //                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
@@ -1994,7 +2029,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         protected void onPostExecute(Void args) {
             pDialog.dismiss();
-            if (from.equals("sync")) {
+            if (from.equals("sync") || from.equals("time")) {
                 if (status.equals("true")) {
                     Helpers.alertSuccess(MainActivity.this,"Data Posted Successfully","Success",sHelper,lastPosted,null,null);
 //                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
