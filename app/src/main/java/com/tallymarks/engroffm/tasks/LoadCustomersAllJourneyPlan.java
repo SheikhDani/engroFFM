@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
@@ -91,11 +92,41 @@ public class LoadCustomersAllJourneyPlan extends AsyncTask<String, Void, Void> {
             List<AllJourneyPlanOutput> journeycode = new Gson().fromJson(response, journeycodeType);
 
             if (response != null) {
-                customersize = journeycode.size();
+                //customersize = journeycode.size();
 
-                if (journeycode.size() > 0 && journeycode.size()<600) {
+               if (journeycode.size() > 0 ) {
+//                   Handler handler = new Handler();
+//                   Runnable r=new Runnable() {
+//                       @Override
+//                       public void run() {
+//                           AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+//                           alertDialogBuilder.setTitle(R.string.alert)
+//                                   .setMessage("Connection Timeout")
+//                                   .setCancelable(false)
+//                                   .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                                       @Override
+//                                       public void onClick(DialogInterface dialog, int which) {
+//                                           dialog.dismiss();
+//                                           mContext.deleteDatabase("FFMApplicationDataBasev5");
+//                                           mContext.deleteDatabase("FFMAppDb_Zohaib_v5");
+//                                           sHelper.clearPreferenceStore();
+//                                           extraHelper.clearPreferenceStore();
+//                                           //Helpers.displayMessage(mContext, true, message);
+//                                           Intent logout = new Intent(mContext, LoginActivity.class);
+//                                           mContext.startActivity(logout);
+////                                    Intent move = new Intent(mContext, LoginActivity.class);
+////                                    mContext.startActivity(move);
+//                                           //new PostSyncOutlet().execute();
+//                                       }
+//                                   });
+//                           AlertDialog alertDialog = alertDialogBuilder.create();
+//                           alertDialog.show();
+//                           // finish();
+//                       }
+//                   };
+//                   handler.postDelayed(r, 60000);
                     for (int i = 0; i < journeycode.size(); i++) {
-                        sHelper.setString(Constants.CUSTOMER_ALL_PLAN_NOT_FOUND,"1");
+                        sHelper.setString(Constants.CUSTOMER_ALL_PLAN_NOT_FOUND, "1");
                         HashMap<String, String> map = new HashMap<>();
                         map.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
                         map.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "0");
@@ -109,7 +140,7 @@ public class LoadCustomersAllJourneyPlan extends AsyncTask<String, Void, Void> {
                         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID, journeycode.get(i).getJourneyPlanId() == null || journeycode.get(i).getJourneyPlanId().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getJourneyPlanId().toString());
                         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME, journeycode.get(i).getSalePointName() == null || journeycode.get(i).getSalePointName().equals("") ? mContext.getString(R.string.not_applicable) : journeycode.get(i).getSalePointName());
                         db.addData(db.TODAY_JOURNEY_PLAN, map);
-                        if(journeycode.get(i).getOrders()!=null) {
+                        if (journeycode.get(i).getOrders() != null) {
                             if (journeycode.get(i).getOrders().size() > 0) {
                                 for (int j = 0; j < journeycode.get(i).getOrders().size(); j++) {
                                     HashMap<String, String> dbParams = new HashMap<>();
@@ -137,7 +168,7 @@ public class LoadCustomersAllJourneyPlan extends AsyncTask<String, Void, Void> {
                                 }
                             }
                         }
-                        if(journeycode.get(i).getPreviousStockSnapshot()!=null) {
+                        if (journeycode.get(i).getPreviousStockSnapshot() != null) {
                             if (journeycode.get(i).getPreviousStockSnapshot().size() > 0) {
                                 for (int l = 0; l < journeycode.get(i).getPreviousStockSnapshot().size(); l++) {
 
@@ -160,6 +191,7 @@ public class LoadCustomersAllJourneyPlan extends AsyncTask<String, Void, Void> {
                                 }
                             }
                         }
+                    }
 //                        try {
 //                            JSONObject jsonObject = null;
 //                            jsonObject = new JSONObject(response);
@@ -180,7 +212,7 @@ public class LoadCustomersAllJourneyPlan extends AsyncTask<String, Void, Void> {
 //                        }
 
                     }
-                }
+//                }
 
             }
         }
@@ -193,7 +225,7 @@ public class LoadCustomersAllJourneyPlan extends AsyncTask<String, Void, Void> {
                 //showResponseDialog( mContext.getResources().getString(R.string.alert),exception.getMessage());
                 //pDialog.dismiss();
             } else {
-                if(customersize<600) {
+//                if(customersize<600) {
                     JSONObject json = null;
                     try {
                         json = new JSONObject(response);
@@ -207,7 +239,7 @@ public class LoadCustomersAllJourneyPlan extends AsyncTask<String, Void, Void> {
                         e.printStackTrace();
 
                     }
-                }
+//                }
                 //Helpers.displayMessage(LoginActivity.this, true, exception.getMessage());
             }
         }
@@ -218,32 +250,11 @@ public class LoadCustomersAllJourneyPlan extends AsyncTask<String, Void, Void> {
     @Override
     protected void onPostExecute(Void args) {
                 pDialog.dismiss();
-                if(customersize>600)
-                {
+//                if(customersize>600)
+//                {
 
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
-                    alertDialogBuilder.setTitle(R.string.alert)
-                            .setMessage("Connection Timeout")
-                            .setCancelable(false)
-                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    mContext.deleteDatabase("FFMApplicationDataBasev5");
-                                    mContext.deleteDatabase("FFMAppDb_Zohaib_v5");
-                                    sHelper.clearPreferenceStore();
-                                    extraHelper.clearPreferenceStore();
-                                    //Helpers.displayMessage(mContext, true, message);
-                                    Intent logout = new Intent(mContext, LoginActivity.class);
-                                    mContext.startActivity(logout);
-//                                    Intent move = new Intent(mContext, LoginActivity.class);
-//                                    mContext.startActivity(move);
-                                    //new PostSyncOutlet().execute();
-                                }
-                            });
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-                    alertDialog.show();
-                }
+
+//                }
 
 
     }
