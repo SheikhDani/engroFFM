@@ -565,25 +565,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void loadAllData() {
-       // checkStorageCompanyHeldBrand();
-       // checkStorageCrops();
-       // checkStorageFertTypes();
-       // checkProductBrandGrouopByCategory();
-       // checkStorageDepth();
-       // checkMarketPlayers();
-       // checkAssignedSalesPoint();
+        checkStorageCompanyHeldBrand();
+       checkStorageCrops();
+        checkStorageFertTypes();
+        checkProductBrandGrouopByCategory();
+       checkStorageDepth();
+       checkMarketPlayers();
+       checkAssignedSalesPoint();
         if(!rolename.equals("FieldAssistant")) {
             if(sHelper.getString(Constants.CUSTOMER_TODAY_PLAN_NOT_FOUND).equals("2")) {
-               // checkLoadTodayCustomerJourneyPlan();
+                checkLoadTodayCustomerJourneyPlan();
             }
             if(sHelper.getString(Constants.CUSTOMER_ALL_PLAN_NOT_FOUND).equals("2")) {
                 checkLoadAllCustomerJourneyPlan();
             }
 
         }
-      //  checkFarmerAllJourneyPlan();
+        checkFarmerAllJourneyPlan();
         if(sHelper.getString(Constants.FARMER_TODAY_PLAN_NOT_FOUND).equals("2")) {
-           // checkFarmerTodayJourneyPlan();
+            checkFarmerTodayJourneyPlan();
         }
 
     }
