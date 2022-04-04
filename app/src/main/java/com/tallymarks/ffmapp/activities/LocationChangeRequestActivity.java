@@ -423,7 +423,9 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
                 inputParameters.setStatus("Completed");
             }
             inputParameters.setReason(autoReason.getText().toString());
-            inputParameters.setLastvisitcount(Integer.parseInt(lastvisitCount));
+            if(!lastvisitCount.equals("")) {
+                inputParameters.setLastvisitcount(Integer.parseInt(lastvisitCount));
+            }
 
             httpHandler = new HttpHandler(LocationChangeRequestActivity.this);
             HashMap<String, String> headerParams2 = new HashMap<>();
