@@ -152,7 +152,7 @@ public class ChangeLocationAdapter extends RecyclerView.Adapter<ChangeLocationAd
             ArrayList<ChangeLocation> filteredList = new ArrayList<>();
             for (ChangeLocation pl : headerList) {
 
-                if (pl.getName().toLowerCase(Locale.getDefault()).contains(charText)) {
+                if (pl.getName().toLowerCase(Locale.getDefault()).contains(charText) ||pl.getCode().toLowerCase(Locale.getDefault()).contains(charText)) {
                     planList.add(pl);
                 }
 

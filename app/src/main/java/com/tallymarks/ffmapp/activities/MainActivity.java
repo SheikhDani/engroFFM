@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if(isUnpostedDataExist()==false && isUnpostedAddFarmerDataExist()==false
                     && isMyUnpostedDataExist()==false)
                     {
-                        Helpers.alertWarning(MainActivity.this,"There is no Data Exist for Posting","Warning",null,null);
+                        Helpers.alertWarning(MainActivity.this,"No pending updates found, data has been posted automatically","Warning",null,null);
                     }
                     else {
                         postCustomerData("sync");
