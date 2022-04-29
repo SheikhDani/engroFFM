@@ -55,7 +55,7 @@
 
 
                 android:padding="@dimen/p10"
-                android:text="Distance : 0.5 km"
+                android:text="Distance : 0.0 km"
                 android:textColor="@color/black"
                 android:textSize="18sp"
 
@@ -69,7 +69,7 @@
 
                 android:padding="@dimen/p10"
 
-                android:text="Time : 22 mins"
+                android:text="Time : 0 mins"
                 android:textColor="@color/black"
                 android:textSize="18sp"
 

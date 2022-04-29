@@ -623,26 +623,29 @@ public class EditFarmerActivity extends AppCompatActivity {
         ) {
             customerSavedConfirmationPopUp();
         } else {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(EditFarmerActivity.this);
-            alertDialogBuilder
-                    .setMessage(getResources().getString(R.string.field_required_message))
-                    .setCancelable(false)
-                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-
-
-                        }
-                    });
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
+            Helpers.alertWarning(EditFarmerActivity.this,getResources().getString(R.string.field_required_message),"Warning",null,null);
+//            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(EditFarmerActivity.this);
+//            alertDialogBuilder
+//                    .setMessage(getResources().getString(R.string.field_required_message))
+//                    .setCancelable(false)
+//                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//
+//
+//                        }
+//                    });
+//            AlertDialog alertDialog = alertDialogBuilder.create();
+//            alertDialog.show();
         }
     }
 
     public void customerSavedConfirmationPopUp() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(EditFarmerActivity.this);
         alertDialogBuilder
+                .setTitle("Warning")
+                .setIcon(R.drawable.ic_baseline_warning_24)
                 .setMessage(EditFarmerActivity.this.getString(R.string.edit_farmer))
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -818,9 +821,10 @@ public class EditFarmerActivity extends AppCompatActivity {
             pDialog.dismiss();
             if (status.equals("true")) {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(EditFarmerActivity.this);
-                alertDialogBuilder.setTitle(R.string.alert)
+                alertDialogBuilder.setTitle("Success")
                         .setMessage(description)
                         .setCancelable(false)
+                        .setIcon(R.drawable.ic_baseline_done_all_24)
                         .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -832,19 +836,20 @@ public class EditFarmerActivity extends AppCompatActivity {
                 AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
             } else {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(EditFarmerActivity.this);
-                alertDialogBuilder.setTitle(R.string.alert)
-                        .setMessage(description)
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                //new PostSyncOutlet().execute();
-                            }
-                        });
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+                Helpers.alertWrong(EditFarmerActivity.this,description,"Something Went Wrong",null,null);
+//                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(EditFarmerActivity.this);
+//                alertDialogBuilder.setTitle(R.string.alert)
+//                        .setMessage(description)
+//                        .setCancelable(false)
+//                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                dialog.dismiss();
+//                                //new PostSyncOutlet().execute();
+//                            }
+//                        });
+//                AlertDialog alertDialog = alertDialogBuilder.create();
+//                alertDialog.show();
             }
 
         }

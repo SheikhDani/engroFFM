@@ -2,6 +2,8 @@ package com.tallymarks.ffmapp.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -31,6 +33,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.activities.ChangeCustomerLocationListActivity;
+import com.tallymarks.ffmapp.activities.LocationChangeRequestActivity;
+import com.tallymarks.ffmapp.activities.MainActivity;
+import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
 
 import org.json.JSONObject;
 
@@ -48,7 +54,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 
-public class Helpers {
+public class Helpers extends Activity {
 
     public static String urlParamBuilders(HashMap<String, String> params) throws UnsupportedEncodingException {
         StringBuilder result = new StringBuilder();
@@ -64,6 +70,7 @@ public class Helpers {
         }
         return result.toString();
     }
+
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
@@ -115,6 +122,7 @@ public class Helpers {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
     public static void noConnectivityPopUp(final Context context) {
 
         ((Activity) context).runOnUiThread(new Runnable() {
@@ -150,6 +158,7 @@ public class Helpers {
             }
         });
     }
+
     public static String getDatetoUTC(String date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         return dateFormat.format(date);
@@ -167,7 +176,6 @@ public class Helpers {
     }
 
 
-
     public static String urlEncode(String data) {
         return Uri.encode(data);
     }
@@ -177,8 +185,8 @@ public class Helpers {
         TimeZone timeZone = TimeZone.getDefault();
         return timeZone.getID();
     }
-    public static String getDatefromMilis(String date)
-    {
+
+    public static String getDatefromMilis(String date) {
         long num = Long.parseLong(date);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM d, yyyy");
         Calendar calendar = Calendar.getInstance();
@@ -186,8 +194,8 @@ public class Helpers {
         return simpleDateFormat.format(calendar.getTime());
 
     }
-    public static String getDatefromMilis2(String date)
-    {
+
+    public static String getDatefromMilis2(String date) {
         long num = Long.parseLong(date);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar calendar = Calendar.getInstance();
@@ -250,6 +258,101 @@ public class Helpers {
         }
     }
 
+    public static void alertSuccess(final Context context, final String message, final String title, SharedPrefferenceHelper sHelper, TextView txt, final Class<? extends Activity>  activity,String from) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setTitle(title)
+                .setMessage(message)
+                .setCancelable(false)
+                .setIcon(R.drawable.ic_baseline_done_all_24)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy hh:mm aaa");
+                        String currentDateandTime = sdf.format(new Date());
+
+                        if (sHelper != null) {
+                            sHelper.setString(Constants.LAST_POSTED, currentDateandTime);
+                        }
+
+                        if (txt != null) {
+                            txt.setText("Last Posted on " + sHelper.getString(Constants.LAST_POSTED));
+                        }
+                        if(activity!=null && from!=null)
+                        {
+                            Intent i = new Intent(context, activity);
+                            context.startActivity(i);
+                            ((Activity) context).finish();
+                          // overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+                        }
+                        else
+                        {
+                            if(activity!=null) {
+                                Intent i = new Intent(context, activity);
+                                context.startActivity(i);
+                            }
+                           // ((Activity) context).overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+                        }
+                        //new PostSyncOutlet().execute();
+                    }
+                });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    public static void alertWarning(final Context context, final String message, final String title, SharedPrefferenceHelper sHelper, TextView txt) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setTitle(title)
+                .setMessage(message)
+                .setCancelable(false)
+                .setIcon(R.drawable.ic_baseline_warning_24)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy hh:mm aaa");
+                        String currentDateandTime = sdf.format(new Date());
+                        if (sHelper != null) {
+                            sHelper.setString(Constants.LAST_POSTED, currentDateandTime);
+                        }
+                        if (txt != null) {
+                            txt.setText("Last Posted on " + sHelper.getString(Constants.LAST_POSTED));
+                        }
+                        //new PostSyncOutlet().execute();
+                    }
+                });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    public static void alertWrong(final Context context, final String message, final String title, SharedPrefferenceHelper sHelper, TextView txt) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setTitle(title)
+                .setMessage(message)
+                .setCancelable(false)
+                .setIcon(R.drawable.ic_baseline_close_24)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy hh:mm aaa");
+                        String currentDateandTime = sdf.format(new Date());
+                        if (sHelper != null) {
+                            sHelper.setString(Constants.LAST_POSTED, currentDateandTime);
+                        }
+                        if (txt != null) {
+                            txt.setText("Last Posted on " + sHelper.getString(Constants.LAST_POSTED));
+                        }
+                        //new PostSyncOutlet().execute();
+                    }
+                });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
 
     public static void displayMessage(final Context context, boolean isBackgroundMessage, final String message) {
         if (isBackgroundMessage) {
@@ -263,8 +366,6 @@ public class Helpers {
             Toast.makeText(context, message, Toast.LENGTH_LONG).show();
         }
     }
-
-
 
 
     public static byte[] bimapToByte(Bitmap bitmap) {
@@ -281,8 +382,7 @@ public class Helpers {
         return BitmapFactory.decodeStream(inputStream);
     }
 
-    public static String bitmapToBase64(Bitmap bitmap)
-    {
+    public static String bitmapToBase64(Bitmap bitmap) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
         return Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP);
@@ -291,8 +391,8 @@ public class Helpers {
     public static Bitmap getBitmapFromView(View view) {
         Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(returnedBitmap);
-        Drawable bgDrawable =view.getBackground();
-        if (bgDrawable!=null)
+        Drawable bgDrawable = view.getBackground();
+        if (bgDrawable != null)
             bgDrawable.draw(canvas);
         else
             canvas.drawColor(Color.WHITE);
@@ -300,96 +400,72 @@ public class Helpers {
         return returnedBitmap;
     }
 
-    public static boolean isEmpty(Context context, EditText editText)
-    {
-        String input=editText.getText().toString();
-        input=input.trim();
-        if(input.equals(""))
-        {
+    public static boolean isEmpty(Context context, EditText editText) {
+        String input = editText.getText().toString();
+        input = input.trim();
+        if (input.equals("")) {
             editText.setText("");
             //editText.setError(context.getResources().getString(R.string.required));
             return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    public static boolean isEmptyTextview(Context context, TextView editText)
-    {
-        String input=editText.getText().toString();
-        input=input.trim();
-        if(input.equals(""))
-        {
-            editText.setText("");
-          //  editText.setError(context.getResources().getString(R.string.required));
-            return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
 
-    public static boolean isEmptyAutoTextview(Context context, AutoCompleteTextView editText)
-    {
-        String input=editText.getText().toString();
-        input=input.trim();
-        if(input.equals(""))
-        {
+    public static boolean isEmptyTextview(Context context, TextView editText) {
+        String input = editText.getText().toString();
+        input = input.trim();
+        if (input.equals("")) {
             editText.setText("");
-           // editText.setError(context.getResources().getString(R.string.required));
+            //  editText.setError(context.getResources().getString(R.string.required));
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
-    public static String getCurrectDate(String format)
-    {
+
+    public static boolean isEmptyAutoTextview(Context context, AutoCompleteTextView editText) {
+        String input = editText.getText().toString();
+        input = input.trim();
+        if (input.equals("")) {
+            editText.setText("");
+            // editText.setError(context.getResources().getString(R.string.required));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static String getCurrectDate(String format) {
         return new SimpleDateFormat(format).format(Calendar.getInstance().getTime());
     }
 
 
-
-
-    public static String dateMask(String inputData, String inputFormat, String outputFormat)
-    {
+    public static String dateMask(String inputData, String inputFormat, String outputFormat) {
         SimpleDateFormat input = new SimpleDateFormat(inputFormat);
         SimpleDateFormat output = new SimpleDateFormat(outputFormat);
         Date date = null;
-        try
-        {
+        try {
             date = input.parse(inputData);
             System.out.println(output.format(date));
-        }
-        catch (ParseException e)
-        {
+        } catch (ParseException e) {
             e.printStackTrace();
         }
         return output.format(date);
     }
 
 
-
-
-
-    public static Double numberMask(Double number)
-    {
-        return Math.round(number*100.0)/100.0;
+    public static Double numberMask(Double number) {
+        return Math.round(number * 100.0) / 100.0;
     }
 
 
-
-
-
-    public static void highlightMandatoryFields(final Context context, final EditText editText)
-    {
+    public static void highlightMandatoryFields(final Context context, final EditText editText) {
         editText.addTextChangedListener(new TextWatcher() {
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
 
             @Override
             public void beforeTextChanged(CharSequence s, int start,
@@ -399,13 +475,13 @@ public class Helpers {
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
-                if(editText.getText().toString().equals(""))
-                {
+                if (editText.getText().toString().equals("")) {
                     editText.setError(context.getResources().getString(R.string.required));
                 }
             }
         });
     }
+
     public static void hideKeyboard(Activity activity) {
         try {
             InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -416,18 +492,14 @@ public class Helpers {
     }
 
 
-    public static void highlightMandatoryFieldsOnLoad(final Context context, final EditText editText)
-    {
-        if(editText.getText().toString().equals(""))
-        {
+    public static void highlightMandatoryFieldsOnLoad(final Context context, final EditText editText) {
+        if (editText.getText().toString().equals("")) {
             editText.setError(context.getResources().getString(R.string.required));
         }
     }
 
 
-
-    public static void unHighlightMandatoryField(EditText editText)
-    {
+    public static void unHighlightMandatoryField(EditText editText) {
         editText.setError(null);
     }
 
@@ -457,3 +529,4 @@ public class Helpers {
 
 
 }
+

@@ -1248,20 +1248,21 @@ public class FarmVisitActivity extends AppCompatActivity {
 //            soil.putExtras(data);
 //            startActivity(soil);
         } else {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitActivity.this);
-            alertDialogBuilder
-                    .setMessage(getResources().getString(R.string.field_required_message))
-                    .setCancelable(false)
-                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-
-
-                        }
-                    });
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
+            Helpers.alertWarning(FarmVisitActivity.this,getResources().getString(R.string.field_required_message),"Warning",null,null);
+//            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitActivity.this);
+//            alertDialogBuilder
+//                    .setMessage(getResources().getString(R.string.field_required_message))
+//                    .setCancelable(false)
+//                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//
+//
+//                        }
+//                    });
+//            AlertDialog alertDialog = alertDialogBuilder.create();
+//            alertDialog.show();
         }
     }
 
@@ -1703,20 +1704,21 @@ public class FarmVisitActivity extends AppCompatActivity {
 //                startActivity(salescall);
 
         } else {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitActivity.this);
-            alertDialogBuilder
-                    .setMessage(getResources().getString(R.string.field_required_message))
-                    .setCancelable(false)
-                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-
-
-                        }
-                    });
-            AlertDialog alertDialog2 = alertDialogBuilder.create();
-            alertDialog2.show();
+            Helpers.alertWarning(FarmVisitActivity.this,getResources().getString(R.string.field_required_message),"Warning",null,null);
+//            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitActivity.this);
+//            alertDialogBuilder
+//                    .setMessage(getResources().getString(R.string.field_required_message))
+//                    .setCancelable(false)
+//                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//
+//
+//                        }
+//                    });
+//            AlertDialog alertDialog2 = alertDialogBuilder.create();
+//            alertDialog2.show();
         }
     }
     public void drawOtherProductsTable()
@@ -2200,21 +2202,22 @@ public class FarmVisitActivity extends AppCompatActivity {
         protected void onPostExecute(Void args) {
             pDialog.dismiss();
             if (status.equals("true")) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitActivity.this);
-                alertDialogBuilder.setTitle(R.string.alert)
-                        .setMessage("Data Posted Successfully")
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                Intent farmvisit = new Intent(FarmVisitActivity.this, VisitFarmerActivity.class);
-                                startActivity(farmvisit);
-                                //new PostSyncOutlet().execute();
-                            }
-                        });
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+                Helpers.alertSuccess(FarmVisitActivity.this,"Data Posted Successfully","Success",null,null,VisitFarmerActivity.class,null);
+//                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FarmVisitActivity.this);
+//                alertDialogBuilder.setTitle(R.string.alert)
+//                        .setMessage("Data Posted Successfully")
+//                        .setCancelable(false)
+//                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                dialog.dismiss();
+//                                Intent farmvisit = new Intent(FarmVisitActivity.this, VisitFarmerActivity.class);
+//                                startActivity(farmvisit);
+//                                //new PostSyncOutlet().execute();
+//                            }
+//                        });
+//                AlertDialog alertDialog = alertDialogBuilder.create();
+//                alertDialog.show();
             }
 
         }

@@ -30,13 +30,14 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
 
     public class MyViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener  {
         public TextView title, member, customecode, salespoint, time,distance,locationstatus;
-        ImageView image;
+        ImageView image,status_image;
 
         public MyViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.textView_name);
             member = (TextView) view.findViewById(R.id.textView_subcription);
             image = (ImageView) view.findViewById(R.id.imageView);
+
             customecode = (TextView) view.findViewById(R.id.customer_code);
             salespoint = (TextView) view.findViewById(R.id.sale_point);
             time = (TextView) view.findViewById(R.id.time);
@@ -45,30 +46,35 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
 
             if(from.equals("farmers")) {
                 member.setVisibility(View.VISIBLE);
-                locationstatus.setVisibility(View.GONE);
+
+
                 distance.setVisibility(View.GONE);
                 time.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
 
             }
             else if(from.equals("editfarmer")) {
+
                 member.setVisibility(View.VISIBLE);
                 distance.setVisibility(View.GONE);
-                locationstatus.setVisibility(View.GONE);
+
                 time.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
 
             }
             else if(from.equals("subordinate"))
             {
+
+
                 member.setVisibility(View.GONE);
                 distance.setVisibility(View.GONE);
-                locationstatus.setVisibility(View.GONE);
+
                 time.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
             }
             else
             {
+
                 member.setVisibility(View.VISIBLE);
                 distance.setVisibility(View.VISIBLE);
-                locationstatus.setVisibility(View.VISIBLE);
+
             }
 
             itemView.setTag(itemView);
@@ -148,10 +154,20 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
         }
         else
         {
+
             holder.customecode.setText(movie.getCustomercode());
+           if(movie.getLocationStauts().equals("Verified"))
+           {
+              holder.title.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_check_circle_24, 0, 0, 0);
+           }
+           else
+           {
+               holder.title.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+           }
+
             holder.time.setText(movie.getTime());
             holder.distance.setText(movie.getDistance());
-            holder.locationstatus.setText("Location: "+movie.getLocationStauts());
+         //   holder.locationstatus.setText("Location: "+movie.getLocationStauts());
         }
     }
 
@@ -166,17 +182,34 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
         this.clickListener = itemClickListener;
     }
     public void filter(String charText) {
+       // String filterPattern = charText;
         charText = charText.toLowerCase(Locale.getDefault());
         planList.clear();
         if (charText.length() == 0) {
             planList.addAll(headerList);
         } else {
 
+
             ArrayList<TodayPlan> filteredList = new ArrayList<>();
             for (TodayPlan pl :headerList) {
+                if(from.equals("customers")) {
 
-                if (pl.getTitle().toLowerCase(Locale.getDefault()).contains(charText)) {
-                    planList.add(pl);
+                    if (pl.getTitle().toLowerCase(Locale.getDefault()).contains(charText) || pl.getCustomercode().toLowerCase(Locale.getDefault()).contains(charText) || pl.getSalespoint().toLowerCase(Locale.getDefault()).contains(charText) ) {
+                        planList.add(pl);
+                    }
+                }
+                else if(from.equals("farmers"))
+                {
+                    if (pl.getTitle().toLowerCase(Locale.getDefault()).contains(charText) || pl.getSalespoint().toLowerCase(Locale.getDefault()).contains(charText) || pl.getSalespoint().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        planList.add(pl);
+                    }
+
+                }
+                else
+                {
+                    if (pl.getTitle().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        planList.add(pl);
+                    }
                 }
 
             }

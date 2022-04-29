@@ -107,7 +107,7 @@ public class ChangeCustomerLocationListActivity extends AppCompatActivity implem
             }
         });
 
-        tvTopHeader.setText("Change Customer Location");
+        tvTopHeader.setText("Update Customer Location");
         // prepareMovieData();
         if(Helpers.isNetworkAvailable(ChangeCustomerLocationListActivity.this)) {
             new GetAllCustomerLocation().execute();
@@ -126,23 +126,23 @@ public class ChangeCustomerLocationListActivity extends AppCompatActivity implem
 
     @Override
     public void onClick(View view, int position) {
-        final ChangeLocation city = planList.get(position);
-        if(city.getLatitude()!=null && city.getLongitude()!=null
-                && !city.getLatitude().equals("0.0") && !city.getLongitude().equals("0.0") ) {
-            // Toast.makeText(getContext(), "" + planList.get(position).getTitle(), Toast.LENGTH_SHORT).show();
-
-            Intent i = new Intent(ChangeCustomerLocationListActivity.this, ChangeCoordinatesMapActivity.class);
-            i.putExtra("dealerlat",city.getOldlatitude());
-            i.putExtra("dealerlng",city.getOldlongitude());
-            i.putExtra("dealerlatnew", city.getLatitude());
-            i.putExtra("dealerlngnew", city.getLongitude());
-            i.putExtra("from", "customerlocation");
-            startActivity(i);
-        }
-        else
-        {
-            Toast.makeText(ChangeCustomerLocationListActivity.this, "No Location Found", Toast.LENGTH_SHORT).show();
-        }
+//        final ChangeLocation city = planList.get(position);
+//        if(city.getLatitude()!=null && city.getLongitude()!=null
+//                && !city.getLatitude().equals("0.0") && !city.getLongitude().equals("0.0") ) {
+//            // Toast.makeText(getContext(), "" + planList.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+//
+//            Intent i = new Intent(ChangeCustomerLocationListActivity.this, ChangeCoordinatesMapActivity.class);
+//            i.putExtra("dealerlat",city.getOldlatitude());
+//            i.putExtra("dealerlng",city.getOldlongitude());
+//            i.putExtra("dealerlatnew", city.getLatitude());
+//            i.putExtra("dealerlngnew", city.getLongitude());
+//            i.putExtra("from", "customerlocation");
+//            startActivity(i);
+//        }
+//        else
+//        {
+//            Toast.makeText(ChangeCustomerLocationListActivity.this, "No Location Found", Toast.LENGTH_SHORT).show();
+//        }
 
     }
     public class GetAllCustomerLocation extends AsyncTask<String, Void, Void> {
@@ -193,7 +193,7 @@ public class ChangeCustomerLocationListActivity extends AppCompatActivity implem
 
                     for (int j = 0; j < journeycode.size(); j++) {
                         ChangeLocation  plan4 = new ChangeLocation ();
-                        plan4.setCode(journeycode.get(j).getCustomerId()== null || journeycode.get(j).getCustomerId().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getCustomerId().toString());
+                        plan4.setCode(journeycode.get(j).getCustomerCode()== null || journeycode.get(j).getCustomerCode().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getCustomerCode().toString());
                         plan4.setName(journeycode.get(j).getCustomerName() == null || journeycode.get(j).getCustomerName().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getCustomerName().toString());
                         plan4.setReason(journeycode.get(j).getReason() == null || journeycode.get(j).getReason().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getReason().toString());
                         plan4.setStatus(journeycode.get(j).getStatus()== null || journeycode.get(j).getStatus().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getStatus().toString());
@@ -201,9 +201,11 @@ public class ChangeCustomerLocationListActivity extends AppCompatActivity implem
                         plan4.setLongitude(String.valueOf(journeycode.get(j).getLongitude()));
                         plan4.setOldlatitude(String.valueOf(journeycode.get(j).getOldLatitude()));
                         plan4.setOldlongitude(String.valueOf(journeycode.get(j).getOldLongitude()));
+                        plan4.setComment(journeycode.get(j).getSupervisorComments() == null || journeycode.get(j).getSupervisorComments().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getSupervisorComments().toString());
+                        plan4.setDistancedif(journeycode.get(j).getDifferenceInDistance() == null || journeycode.get(j).getDifferenceInDistance().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getDifferenceInDistance().toString());
                         String date = journeycode.get(j).getCreationDate()== null || journeycode.get(j).getCreationDate().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getCreationDate().toString();
-                       plan4.setDate(Helpers.utcToAnyDateFormat(date,"yyyy-MM-dd'T'HH:mm:ss","MMM d yyyy"));
-                       planList.add(plan4);
+                        plan4.setDate(Helpers.utcToAnyDateFormat(date,"yyyy-MM-dd'T'HH:mm:ss","MMM d yyyy"));
+                        planList.add(plan4);
                        // plan4.setDate(journeycode.get(j).getCustomerId()== null || journeycode.get(j).getCustomerId().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getCustomerId().toString());
 
 
@@ -239,7 +241,7 @@ public class ChangeCustomerLocationListActivity extends AppCompatActivity implem
         protected void onPostExecute(Void args) {
 
             pDialog.dismiss();
-            adapter = new ChangeLocationAdapter(planList);
+            adapter = new ChangeLocationAdapter(planList,ChangeCustomerLocationListActivity.this);
             recyclerView.setAdapter(adapter);
             adapter.setClickListener(ChangeCustomerLocationListActivity.this);
 

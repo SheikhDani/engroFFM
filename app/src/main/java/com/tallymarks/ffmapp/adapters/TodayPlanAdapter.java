@@ -47,7 +47,7 @@ public class TodayPlanAdapter extends RecyclerView.Adapter<TodayPlanAdapter.MyVi
             if(from.equals("farmers")) {
                 member.setVisibility(View.VISIBLE);
                 distance.setVisibility(View.GONE);
-                locationstatus.setVisibility(View.GONE);
+               // locationstatus.setVisibility(View.GONE);
                 time.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
 
             }
@@ -55,7 +55,7 @@ public class TodayPlanAdapter extends RecyclerView.Adapter<TodayPlanAdapter.MyVi
             {
                 member.setVisibility(View.GONE);
                 distance.setVisibility(View.GONE);
-                locationstatus.setVisibility(View.GONE);
+               // locationstatus.setVisibility(View.GONE);
                 time.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
             }
 
@@ -63,7 +63,7 @@ public class TodayPlanAdapter extends RecyclerView.Adapter<TodayPlanAdapter.MyVi
             {
                 member.setVisibility(View.VISIBLE);
                 distance.setVisibility(View.VISIBLE);
-                locationstatus.setVisibility(View.VISIBLE);
+               // locationstatus.setVisibility(View.VISIBLE);
             }
 
 
@@ -135,9 +135,17 @@ public class TodayPlanAdapter extends RecyclerView.Adapter<TodayPlanAdapter.MyVi
         else
         {
             holder.customecode.setText(movie.getCustomercode());
-            holder.locationstatus.setText("Location: "+movie.getLocationStauts());
+           // holder.locationstatus.setText("Location: "+movie.getLocationStauts());
             holder.time.setText(movie.getTime());
             holder.distance.setText(movie.getDistance());
+            if(movie.getLocationStauts().equals("Verified"))
+            {
+                holder.title.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_check_circle_24, 0,0, 0);
+            }
+            else
+            {
+                holder.title.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            }
         }
 
 
@@ -160,8 +168,24 @@ public class TodayPlanAdapter extends RecyclerView.Adapter<TodayPlanAdapter.MyVi
             ArrayList<TodayPlan> filteredList = new ArrayList<>();
             for (TodayPlan pl :headerList) {
 
-                if (pl.getTitle().toLowerCase(Locale.getDefault()).contains(charText)) {
-                   planList.add(pl);
+                if(from.equals("customers")) {
+
+                    if (pl.getTitle().toLowerCase(Locale.getDefault()).contains(charText) || pl.getCustomercode().toLowerCase(Locale.getDefault()).contains(charText) || pl.getSalespoint().toLowerCase(Locale.getDefault()).contains(charText) ) {
+                        planList.add(pl);
+                    }
+                }
+                else if(from.equals("farmers"))
+                {
+                    if (pl.getTitle().toLowerCase(Locale.getDefault()).contains(charText) || pl.getSalespoint().toLowerCase(Locale.getDefault()).contains(charText) || pl.getSalespoint().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        planList.add(pl);
+                    }
+
+                }
+                else
+                {
+                    if (pl.getTitle().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        planList.add(pl);
+                    }
                 }
 
             }

@@ -102,6 +102,7 @@ import com.tallymarks.ffmapp.utils.HttpHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -190,10 +191,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         tabLayout = (TabLayout) findViewById(R.id.tabs_sales_plan);
         viewPager = (ViewPager) findViewById(R.id.viewPager_sales_plan);
-        if(sHelper.getString(Constants.LAST_POSTED)!=null && !sHelper.getString(Constants.LAST_POSTED).equals(""))
-        {
-            lastPosted.setText("Last Posted on "+sHelper.getString(Constants.LAST_POSTED));
-        }
+
 
         iv_Notification.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -202,6 +200,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(notification );
             }
         });
+
+
 
 
 
@@ -251,9 +251,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 if (Helpers.isNetworkAvailable(MainActivity.this)) {
-                    postCustomerData();
-                    postAddFarmerData();
-                    postFarmerData();
+                    if(isUnpostedDataExist()==false && isUnpostedAddFarmerDataExist()==false
+                    && isMyUnpostedDataExist()==false)
+                    {
+                        Helpers.alertWarning(MainActivity.this,"No pending updates found, data has been posted automatically","Warning",null,null);
+                    }
+                    else {
+                        postCustomerData("sync");
+                        postAddFarmerData("sync");
+                        postFarmerData("sync");
+                    }
 
                 } else {
                     Helpers.noConnectivityPopUp(MainActivity.this);
@@ -272,27 +279,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         txt_refersh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //customer tables
-                HashMap<String, String> filter = new HashMap<>();
-                filter.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
-                filter.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "0");
-                db.deleteData(db.TODAY_JOURNEY_PLAN,filter);
-                HashMap<String, String> filterorders = new HashMap<>();
-                db.deleteData(db.TODAY_JOURNEY_PLAN_ORDERS,filterorders);
-                HashMap<String, String> filterinvoice = new HashMap<>();
-                db.deleteData(db.TODAY_JOURNEY_PLAN_ORDERS_INVOICES,filterinvoice);
-                HashMap<String, String> filtersnapshot= new HashMap<>();
-                db.deleteData(db.TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT,filtersnapshot);
-                HashMap<String, String> filterstock = new HashMap<>();
-                db.deleteData(db.TODAY_JOURNEY_PLAN_PREVIOUS_STOCK,filterstock);
-                HashMap<String, String> filterdarmerdownalod = new HashMap<>();
-                mydb.deleteData(mydb.DOWNLOADED_FARMER_DATA,filterdarmerdownalod);
 
-                //farmer tables
-                HashMap<String, String> filter2 = new HashMap<>();
-                filter2.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
-                filter2.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "0");
-                mydb.deleteData(mydb.TODAY_FARMER_JOURNEY_PLAN,filter2);
+
+                postCustomerData("refresh");
+                postAddFarmerData("refresh");
+                postFarmerData("refresh");
                 loadrefereshdata();
 
                // loadCustomerData();
@@ -308,6 +299,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(soil);
             }
         });
+
+        if(sHelper.getString(Constants.CURRENT_DATE)!=null && !sHelper.getString(Constants.CURRENT_DATE).equals("") )
+        {
+            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date date1 = sdf2.parse(sHelper.getString(Constants.CURRENT_DATE));
+                String currentDateandTime = sdf2.format(new Date());
+                Date date2 = sdf2.parse(currentDateandTime);
+                if (date1.compareTo(date2) > 0) {
+
+                   // Log.i("app", "Date1 is after Date2");
+                } else if (date1.compareTo(date2) < 0) {
+                    postCustomerData("refresh");
+                    postAddFarmerData("refresh");
+                    postFarmerData("refresh");
+                    loadrefereshdata();
+                } else if (date1.compareTo(date2) == 0) {
+                    postCustomerData("time");
+                    postAddFarmerData("time");
+                    postFarmerData("time");
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+        if(sHelper.getString(Constants.LAST_POSTED)!=null && !sHelper.getString(Constants.LAST_POSTED).equals(""))
+        {
+            lastPosted.setText("Last Posted on "+sHelper.getString(Constants.LAST_POSTED));
+        }
 
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -551,6 +573,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void loadrefereshdata()
     {
         if (Helpers.isNetworkAvailable(MainActivity.this)) {
+            //customer tables
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String currentDateandTime = sdf.format(new Date());
+            sHelper.setString(Constants.CURRENT_DATE,currentDateandTime);
             new LoadCustomersTodayJourneyPlan(MainActivity.this).execute();
             new LoadCustomersAllJourneyPlan(MainActivity.this).execute();
             new LoadFarmersAllJourneyPlan(MainActivity.this).execute();
@@ -1061,6 +1087,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             while (cursor.moveToNext());
         } else {
             if (Helpers.isNetworkAvailable(MainActivity.this)) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                String currentDateandTime = sdf.format(new Date());
+                sHelper.setString(Constants.CURRENT_DATE,currentDateandTime);
                 task8 = new LoadCustomersTodayJourneyPlan(MainActivity.this);
                 task8.execute();
             } else {
@@ -1074,24 +1103,57 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-    public void postAddFarmerData() {
+    public void postAddFarmerData(String from) {
         if (isUnpostedAddFarmerDataExist()) {
-            new PostAddFarmer().execute();
+            new PostAddFarmer(from).execute();
         }
     }
-    public void postFarmerData() {
+    public void postFarmerData(String from) {
         if (isMyUnpostedDataExist()) {
             if (isMyDataSaved() || isMyDataSavedNotAvailable())
-                new PostSyncFarmer(statuCustomer).execute();
+                new PostSyncFarmer(statuCustomer,from).execute();
+        }
+        else
+        {
+            if(from.equals("refresh")) {
+
+                HashMap<String, String> filterdarmerdownalod = new HashMap<>();
+                mydb.deleteData(mydb.DOWNLOADED_FARMER_DATA, filterdarmerdownalod);
+
+                //farmer tables
+                HashMap<String, String> filter2 = new HashMap<>();
+                filter2.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
+                filter2.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+                mydb.deleteData(mydb.TODAY_FARMER_JOURNEY_PLAN, filter2);
+            }
+
         }
     }
 
 
-    public void postCustomerData() {
+    public void postCustomerData(String from) {
         if (isUnpostedDataExist()) {
             if (isDataSaved() || isDataSavedNotAvailable()) {
-                new PostSyncCustomer(statuCustomer).execute();
+                new PostSyncCustomer(statuCustomer,from).execute();
             }
+        }
+        else
+        {
+            if(from.equals("refresh")) {
+                HashMap<String, String> filter = new HashMap<>();
+                filter.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
+                filter.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+                db.deleteData(db.TODAY_JOURNEY_PLAN, filter);
+                HashMap<String, String> filterorders = new HashMap<>();
+                db.deleteData(db.TODAY_JOURNEY_PLAN_ORDERS, filterorders);
+                HashMap<String, String> filterinvoice = new HashMap<>();
+                db.deleteData(db.TODAY_JOURNEY_PLAN_ORDERS_INVOICES, filterinvoice);
+                HashMap<String, String> filtersnapshot = new HashMap<>();
+                db.deleteData(db.TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT, filtersnapshot);
+                HashMap<String, String> filterstock = new HashMap<>();
+                db.deleteData(db.TODAY_JOURNEY_PLAN_PREVIOUS_STOCK, filterstock);
+            }
+
         }
 
 //            else
@@ -1434,9 +1496,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         private HttpHandler httpHandler;
         String customerId = "";
         String visitStatus;
+        String from = "";
 
-        PostSyncCustomer(String status) {
+        PostSyncCustomer(String status,String from) {
             this.visitStatus = status;
+            this.from = from;
         }
 
         @Override
@@ -1571,24 +1635,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         protected void onPostExecute(Void args) {
             pDialog.dismiss();
-            if (status.equals("true")) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                alertDialogBuilder.setTitle(R.string.alert)
-                        .setMessage("Data Posted Successfully")
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy hh:mm aaa");
-                                String currentDateandTime = sdf.format(new Date());
-                                sHelper.setString(Constants.LAST_POSTED,currentDateandTime);
-                                lastPosted.setText("Last Posted on "+sHelper.getString(Constants.LAST_POSTED));
-                                //new PostSyncOutlet().execute();
-                            }
-                        });
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+            if(from.equals("sync") || from.equals("time")) {
+                if (status.equals("true")) {
+                    Helpers.alertSuccess(MainActivity.this,"Data Posted Successfully","Success",sHelper,lastPosted,null,null);
+//                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+//                    alertDialogBuilder.setTitle(R.string.alert)
+//                            .setMessage("Data Posted Successfully")
+//                            .setCancelable(false)
+//                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.dismiss();
+//                                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy hh:mm aaa");
+//                                    String currentDateandTime = sdf.format(new Date());
+//                                    sHelper.setString(Constants.LAST_POSTED, currentDateandTime);
+//                                    lastPosted.setText("Last Posted on " + sHelper.getString(Constants.LAST_POSTED));
+//                                    //new PostSyncOutlet().execute();
+//                                }
+//                            });
+//                    AlertDialog alertDialog = alertDialogBuilder.create();
+//                    alertDialog.show();
+                }
+            }
+            else
+            {
+                HashMap<String, String> filter = new HashMap<>();
+                filter.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
+                filter.put(db.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+                db.deleteData(db.TODAY_JOURNEY_PLAN,filter);
+                HashMap<String, String> filterorders = new HashMap<>();
+                db.deleteData(db.TODAY_JOURNEY_PLAN_ORDERS,filterorders);
+                HashMap<String, String> filterinvoice = new HashMap<>();
+                db.deleteData(db.TODAY_JOURNEY_PLAN_ORDERS_INVOICES,filterinvoice);
+                HashMap<String, String> filtersnapshot= new HashMap<>();
+                db.deleteData(db.TODAY_JOURNEY_PLAN_PREVIOUS_SNAPSHOT,filtersnapshot);
+                HashMap<String, String> filterstock = new HashMap<>();
+                db.deleteData(db.TODAY_JOURNEY_PLAN_PREVIOUS_STOCK,filterstock);
             }
 
         }
@@ -1604,6 +1686,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         private HttpHandler httpHandler;
         String farmerMobileNumber = "";
         String description = "";
+        String from= "";
+        PostAddFarmer(String from)
+        {
+            this.from = from;
+
+        }
 
 
         @Override
@@ -1728,40 +1816,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         protected void onPostExecute(Void args) {
             pDialog.dismiss();
-            if (status.equals("true")) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                alertDialogBuilder.setTitle(R.string.alert)
-                        .setMessage(description)
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy hh:mm aaa");
-                                String currentDateandTime = sdf.format(new Date());
-                                sHelper.setString(Constants.LAST_POSTED,currentDateandTime);
-                                lastPosted.setText("Last Posted on "+sHelper.getString(Constants.LAST_POSTED));
-                                //new PostSyncOutlet().execute();
-                            }
-                        });
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-            } else {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                alertDialogBuilder.setTitle(R.string.alert)
-                        .setMessage(description)
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                //new PostSyncOutlet().execute();
-                            }
-                        });
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-            }
+            if (from.equals("sync") ||from.equals("time") ) {
+                if (status.equals("true")) {
+                    Helpers.alertSuccess(MainActivity.this,"Data Posted Successfully","Success",sHelper,lastPosted,null,null);
+//                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+//                    alertDialogBuilder.setTitle(R.string.alert)
+//                            .setMessage(description)
+//                            .setCancelable(false)
+//                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.dismiss();
+//                                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy hh:mm aaa");
+//                                    String currentDateandTime = sdf.format(new Date());
+//                                    sHelper.setString(Constants.LAST_POSTED, currentDateandTime);
+//                                    lastPosted.setText("Last Posted on " + sHelper.getString(Constants.LAST_POSTED));
+//                                    //new PostSyncOutlet().execute();
+//                                }
+//                            });
+//                    AlertDialog alertDialog = alertDialogBuilder.create();
+//                    alertDialog.show();
+                } else {
+                    Helpers.alertWrong(MainActivity.this,description,"Something Went wrong",null,null);
+//                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+//                    alertDialogBuilder.setTitle(R.string.alert)
+//                            .setMessage(description)
+//                            .setCancelable(false)
+//                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.dismiss();
+//                                    //new PostSyncOutlet().execute();
+//                                }
+//                            });
+//                    AlertDialog alertDialog = alertDialogBuilder.create();
+//                    alertDialog.show();
+                }
 
+            }
         }
     }
 
@@ -1776,9 +1868,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         private HttpHandler httpHandler;
         String farmerId = "";
         String visitStatus;
+        String from = "";
 
-        PostSyncFarmer(String status) {
+        PostSyncFarmer(String status,String from) {
             this.visitStatus = status;
+            this.from = from;
         }
 
         @Override
@@ -1935,26 +2029,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         protected void onPostExecute(Void args) {
             pDialog.dismiss();
-            if (status.equals("true")) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                alertDialogBuilder.setTitle(R.string.alert)
-                        .setMessage("Data Posted Successfully")
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy hh:mm aaa");
-                                String currentDateandTime = sdf.format(new Date());
-                                sHelper.setString(Constants.LAST_POSTED,currentDateandTime);
-                                lastPosted.setText("Last Posted on "+sHelper.getString(Constants.LAST_POSTED));
-                                //new PostSyncOutlet().execute();
-                            }
-                        });
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-            }
+            if (from.equals("sync") || from.equals("time")) {
+                if (status.equals("true")) {
+                    Helpers.alertSuccess(MainActivity.this,"Data Posted Successfully","Success",sHelper,lastPosted,null,null);
+//                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+//                    alertDialogBuilder.setTitle(R.string.alert)
+//                            .setMessage("Data Posted Successfully")
+//                            .setCancelable(false)
+//                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.dismiss();
+//                                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy hh:mm aaa");
+//                                    String currentDateandTime = sdf.format(new Date());
+//                                    sHelper.setString(Constants.LAST_POSTED, currentDateandTime);
+//                                    lastPosted.setText("Last Posted on " + sHelper.getString(Constants.LAST_POSTED));
+//                                    //new PostSyncOutlet().execute();
+//                                }
+//                            });
+//                    AlertDialog alertDialog = alertDialogBuilder.create();
+//                    alertDialog.show();
+                }
 
+            }
+            else
+            {
+                HashMap<String, String> filterdarmerdownalod = new HashMap<>();
+                mydb.deleteData(mydb.DOWNLOADED_FARMER_DATA,filterdarmerdownalod);
+
+                //farmer tables
+                HashMap<String, String> filter2 = new HashMap<>();
+                filter2.put(mydb.KEY_TODAY_JOURNEY_IS_VISITED, "Not Visited");
+                filter2.put(mydb.KEY_TODAY_JOURNEY_IS_POSTED, "0");
+                mydb.deleteData(mydb.TODAY_FARMER_JOURNEY_PLAN,filter2);
+            }
         }
     }
 

@@ -35,27 +35,34 @@
         android:layout_toEndOf="@id/imageView"
         android:layout_toRightOf="@id/imageView"
         android:orientation="horizontal"
-        android:weightSum="3">
+        android:weightSum="4">
 
         <TextView
             android:id="@+id/textView_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/p2"
             android:layout_toEndOf="@id/imageView"
             android:layout_toRightOf="@id/imageView"
-            android:layout_weight="2"
+            android:layout_weight="2.5"
+
+
             android:text="Abid Hussain &amp; Brothers"
             android:textSize="16sp"
+            android:drawableLeft="@drawable/ic_baseline_check_circle_24"
             android:textStyle="bold" />
+
 
         <TextView
             android:id="@+id/textView_subcription"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="22dp"
 
 
-            android:layout_toRightOf="@id/textView_name"
-            android:layout_weight="0.8"
+
+
+            android:layout_weight="1.3"
+
             android:background="@drawable/textview_boarder"
 
             android:gravity="center"
@@ -115,12 +122,13 @@
 
         android:text="Customer Code: 8103214"
         android:textSize="16sp" />
+
     <TextView
         android:id="@+id/customer_lcoation_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-
+android:visibility="gone"
         android:layout_below="@+id/customer_code"
         android:layout_toEndOf="@id/imageView"
         android:layout_toRightOf="@id/imageView"

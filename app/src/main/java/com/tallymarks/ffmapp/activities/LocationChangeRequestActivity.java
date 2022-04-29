@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,6 +38,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 import com.tallymarks.ffmapp.R;
 import com.tallymarks.ffmapp.adapters.SalesPointAdapter;
@@ -66,14 +72,16 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
     private String currentlat = "";
     private ArrayList<Customer> dealersArrayList;
     TextView txt_lat, txt_lng, location_status, tvReason, tvDealer, tvlastvisitcount;
-    ImageView iv_location;
+   Button iv_location;
     Button btn_submit;
     EditText et_reason;
     private DatabaseHandler databaseHandler;
-    private AutoCompleteTextView autoDealer;
+    private AutoCompleteTextView autoDealer,autoReason;
     private String dealerID, dealerName, dealerlat, dealerlng, dealerlocationstatus;
     GpsTracker gps;
     String lastvisitCount = "";
+    String selection = "";
+    FusedLocationProviderClient fusedLocationProviderClient;
 
     static {
         System.loadLibrary("native-lib");
@@ -88,6 +96,7 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
 
     private void initView() {
         iv_location = findViewById(R.id.iv_location);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         txt_lat = findViewById(R.id.txt_latitude);
         txt_lng = findViewById(R.id.txt_longitude);
         location_status = findViewById(R.id.lcoationstatus);
@@ -96,10 +105,11 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
         tvReason = findViewById(R.id.txt_rea);
         location_status = findViewById(R.id.lcoationstatus);
         btn_submit = findViewById(R.id.btn_submit);
-        et_reason = findViewById(R.id.et_reason);
+      //  et_reason = findViewById(R.id.et_reason);
         tvTopHeader = findViewById(R.id.tv_dashboard);
         iv_menu = findViewById(R.id.iv_drawer);
         autoDealer = findViewById(R.id.auto_dealer);
+        autoReason = findViewById(R.id.auto_reason);
         databaseHandler = new DatabaseHandler(LocationChangeRequestActivity.this);
         sHelper = new SharedPrefferenceHelper(LocationChangeRequestActivity.this);
         extraHelper = new ExtraHelper(LocationChangeRequestActivity.this);
@@ -107,7 +117,7 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
         iv_back.setVisibility(View.VISIBLE);
         iv_menu.setVisibility(View.GONE);
         tvTopHeader.setVisibility(View.VISIBLE);
-        tvTopHeader.setText("Change Customer Location");
+        tvTopHeader.setText("Update Customer Location");
 
         SpannableStringBuilder objective = setStarToLabel("Select Dealer");
         tvDealer.setText(objective);
@@ -128,7 +138,7 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (dealerID != null && !dealerID.equals("") && !currentlat.equals("")
-                        && !currentlng.equals("") && !et_reason.getText().toString().equals("")) {
+                        && !currentlng.equals("") && !selection.equals("") && selection!= null ) {
                     {
                         if (Helpers.isNetworkAvailable(LocationChangeRequestActivity.this)) {
                             new PostCustomerLocation(dealerID).execute();
@@ -151,6 +161,26 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
                 selectDialouge(autoDealer);
             }
         });
+        final String arraylist[] = {"Wrong Location Coordinate", "Customer Business Location Changed","No Location Updated on Customer"};
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_list_item_1, arraylist);
+        autoReason.setAdapter(arrayAdapter);
+        autoReason.setCursorVisible(false);
+        autoReason.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                autoReason.showDropDown();
+            selection = arraylist[position];
+                //auto_gender.setText(selection);
+            }
+        });
+        autoReason.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View arg0) {
+                autoReason.showDropDown();
+            }
+        });
         iv_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -168,11 +198,18 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
                         if (ActivityCompat.checkSelfPermission(LocationChangeRequestActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(LocationChangeRequestActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                             return;
                         }
-                        currentlat = String.valueOf(gps.getLatitude());
-                        currentlng = String.valueOf(gps.getLongitude());
+                        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(@NonNull Location location) {
+                                currentlat = String.valueOf(location.getLatitude());
+                                currentlng = String.valueOf(location.getLongitude());
+                                txt_lat.setText("Latitude: " + currentlat);
+                                txt_lng.setText("Longitude: " + currentlng);
+                            }});
+
+
                     }
-                    txt_lat.setText("Latitude: " + currentlat);
-                    txt_lng.setText("Longitude: " + currentlng);
+
 
 
                 } else {
@@ -227,7 +264,7 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
             public void onClick(View view, int position) {
                 SaelsPoint companyname = companyList.get(position);
                 alertDialog.dismiss();
-                autoProduct.setText(companyname.getCode() + "-" + companyname.getPoint());
+                autoProduct.setText(companyname.getCode() + "-" + companyname.getPoint() + "-" + companyname.getSalespoint());
                 new GetLastVisitCount(companyname.getId()).execute();
 
 
@@ -238,20 +275,21 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
                 dealerlocationstatus = companyname.getLocationstatus();
                 location_status.setText(dealerlocationstatus);
                 if (dealerlocationstatus.equals("Verified")) {
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(LocationChangeRequestActivity.this);
-                    alertDialogBuilder.setTitle(R.string.alert)
-                            .setMessage("You would require your supervisor's approval to change the dealers verified location.")
-                            .setCancelable(false)
-                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-
-                                    //new PostSyncOutlet().execute();
-                                }
-                            });
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-                    alertDialog.show();
+                    Helpers.alertWarning(LocationChangeRequestActivity.this,"You would require your supervisor's approval to change the dealers verified location.","Warning",null,null);
+//                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(LocationChangeRequestActivity.this);
+//                    alertDialogBuilder.setTitle(R.string.alert)
+//                            .setMessage("You would require your supervisor's approval to change the dealers verified location.")
+//                            .setCancelable(false)
+//                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.dismiss();
+//
+//                                    //new PostSyncOutlet().execute();
+//                                }
+//                            });
+//                    AlertDialog alertDialog = alertDialogBuilder.create();
+//                    alertDialog.show();
 
                 }
 
@@ -295,6 +333,7 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
         String productName = "", productID = "";
         HashMap<String, String> map = new HashMap<>();
         map.put(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_NAME, "");
+        map.put(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME, "");
         map.put(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_CODE, "");
         map.put(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
         map.put(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE, "");
@@ -309,6 +348,7 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
             do {
                 SaelsPoint companyname = new SaelsPoint();
                 String customerName = Helpers.clean(cursor.getString(cursor.getColumnIndex(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_NAME)));
+                String salesPoint = Helpers.clean(cursor.getString(cursor.getColumnIndex(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME)));
                 String customerCode = cursor.getString(cursor.getColumnIndex(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_CODE));
                 String customerlat = Helpers.clean(cursor.getString(cursor.getColumnIndex(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE)));
                 String customerlng = cursor.getString(cursor.getColumnIndex(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE));
@@ -316,6 +356,7 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
                 String customerlocation = cursor.getString(cursor.getColumnIndex(databaseHandler.KEY_TODAY_JOURNEY_CUSTOMER_LOCATION_STATUS));
                 companyname.setPoint(customerName);
                 companyname.setId(customerID);
+                companyname.setSalespoint(salesPoint);
                 companyname.setCode(customerCode);
                 companyname.setLat(customerlat);
                 companyname.setLng(customerlng);
@@ -366,6 +407,7 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
             inputParameters.setCustomerId(Long.parseLong(customercode));
             inputParameters.setLocationStatus(dealerlocationstatus);
             inputParameters.setLatitude(Double.parseDouble(currentlat));
+            inputParameters.setDifferenceInDistance(sHelper.getString(Constants.DISTANCETEXT));
             if (!dealerlat.equals("NA") && !dealerlng.equals("NA")) {
                 inputParameters.setOldLatitude(Double.parseDouble(dealerlat));
                 inputParameters.setOldLongitude(Double.parseDouble(dealerlng));
@@ -380,8 +422,10 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
             } else if (dealerlocationstatus.equals("Unverified")) {
                 inputParameters.setStatus("Completed");
             }
-            inputParameters.setReason(et_reason.getText().toString());
-            inputParameters.setLastvisitcount(Integer.parseInt(lastvisitCount));
+            inputParameters.setReason(autoReason.getText().toString());
+            if(!lastvisitCount.equals("")) {
+                inputParameters.setLastvisitcount(Integer.parseInt(lastvisitCount));
+            }
 
             httpHandler = new HttpHandler(LocationChangeRequestActivity.this);
             HashMap<String, String> headerParams2 = new HashMap<>();
@@ -441,23 +485,24 @@ public class LocationChangeRequestActivity extends AppCompatActivity {
         protected void onPostExecute(Void args) {
             pDialog.dismiss();
             if (status.equals("true")) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(LocationChangeRequestActivity.this);
-                alertDialogBuilder.setTitle(R.string.alert)
-                        .setMessage(message)
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                Intent i = new Intent(LocationChangeRequestActivity.this, ChangeCustomerLocationListActivity.class);
-
-                                startActivity(i);
-                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                                //new PostSyncOutlet().execute();
-                            }
-                        });
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+                Helpers.alertSuccess(LocationChangeRequestActivity.this,message,"Success",null,null,ChangeCustomerLocationListActivity.class,null);
+//                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(LocationChangeRequestActivity.this);
+//                alertDialogBuilder.setTitle(R.string.alert)
+//                        .setMessage(message)
+//                        .setCancelable(false)
+//                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                dialog.dismiss();
+//                                Intent i = new Intent(LocationChangeRequestActivity.this, ChangeCustomerLocationListActivity.class);
+//
+//                                startActivity(i);
+//                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//                                //new PostSyncOutlet().execute();
+//                            }
+//                        });
+//                AlertDialog alertDialog = alertDialogBuilder.create();
+//                alertDialog.show();
             }
 
         }

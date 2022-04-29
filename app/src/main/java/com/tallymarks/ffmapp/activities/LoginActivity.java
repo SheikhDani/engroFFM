@@ -455,7 +455,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 //                    // main.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //                    startActivity(main);
 //                    finish();
-                   getDeviceToken(pDialog);
+                     getDeviceToken(pDialog);
 
                 } else {
                     pDialog.dismiss();
@@ -530,6 +530,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         alertDialogBuilder
                 .setMessage(getResources().getString(R.string.exit_message))
                 .setCancelable(false)
+                .setTitle("Warning")
+                .setIcon(R.drawable.ic_baseline_warning_24)
                 .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -816,7 +818,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         @Override
         protected void onPostExecute(Void args) {
-            //  pDialog.dismiss();
+             pDialog.dismiss();
 
 
         }

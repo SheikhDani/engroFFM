@@ -1,25 +1,41 @@
 package com.tallymarks.ffmapp.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -27,6 +43,7 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -40,14 +57,20 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.maps.android.clustering.ClusterManager;
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.adapters.SalesPointAdapter;
 import com.tallymarks.ffmapp.database.DatabaseHandler;
 import com.tallymarks.ffmapp.database.SharedPrefferenceHelper;
+import com.tallymarks.ffmapp.models.SaelsPoint;
 import com.tallymarks.ffmapp.utils.Constants;
 import com.tallymarks.ffmapp.utils.DirectionsJSONParser;
+import com.tallymarks.ffmapp.utils.GeofenceHelper;
 import com.tallymarks.ffmapp.utils.GpsTracker;
 import com.tallymarks.ffmapp.utils.Helpers;
+import com.tallymarks.ffmapp.utils.RecyclerTouchListener;
 import com.tallymarks.ffmapp.utils.User;
 
 import org.json.JSONArray;
@@ -64,9 +87,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TodayCustomerMap extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
+import com.google.android.gms.location.Geofence;
+
+import com.google.android.gms.location.GeofencingRequest;
+
+public class TodayCustomerMap extends AppCompatActivity implements  GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
-    private TextView tvTopHeader, tvDistance,tvDuration;
+    private TextView tvTopHeader, tvDistance, tvDuration;
     ImageView iv_menu, iv_back;
     final static int REQUEST_LOCATION = 199;
     private ClusterManager<User> mClusterManager;
@@ -85,12 +112,19 @@ public class TodayCustomerMap extends AppCompatActivity implements OnMapReadyCal
     private ArrayList<LatLng> locationArrayList;
 
     String dealerlat, dealerlng;
-    String distanceText,durationtext;
-    int distancesum ,timesum;
-    int totaldistancesum ,totaltimesum;
+    String distanceText, durationtext;
+    int distancesum, timesum;
+    int totaldistancesum, totaltimesum;
     int shoplength = 0;
+    private GeofencingClient geofencingClient;
+    private GeofenceHelper geofenceHelper;
 
-
+    private float GEOFENCE_RADIUS = 500;
+    private String GEOFENCE_ID = "SOME_GEOFENCE_ID";
+    private int BACKGROUND_LOCATION_ACCESS_REQUEST_CODE = 10002;
+    private int FINE_LOCATION_ACCESS_REQUEST_CODE = 10001;
+    private List<Geofence> mGeofenceList;
+double latitude , longitude;
 
     static {
         System.loadLibrary("native-lib");
@@ -109,69 +143,6 @@ public class TodayCustomerMap extends AppCompatActivity implements OnMapReadyCal
 
 
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        gpsTracker = new GpsTracker(TodayCustomerMap.this);
-
-        mMap = googleMap;
-        if (gpsTracker.canGetLocation()) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-
-            }
-            mMap.getUiSettings().setScrollGesturesEnabled(true);
-            mMap.setMyLocationEnabled(true);
-            //            currentlat = String.valueOf(gpsTracker.getLatitude());
-            currentlng = String.valueOf(gpsTracker.getLongitude());
-            currentlat = String.valueOf(gpsTracker.getLatitude());
-
-            HashMap<String, String> map = new HashMap<>();
-            map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME, "");
-            map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE, "");
-            map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE, "");
-            HashMap<String, String> filters = new HashMap<>();
-            filters.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE_MAP));
-            Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
-            if (cursor.getCount() > 0) {
-                cursor.moveToFirst();
-                do {
-                    if(!cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE)).equals("NA") && !cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE)).equals("NA")) {
-                        LatLng location = new LatLng(Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE))), Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE))));
-                        locationArrayList.add(location);
-                        shoplength++;
-                        mMap.addMarker(new MarkerOptions().position(location).title(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME))))).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-                            //mClusterManager.addItem(new User(Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE))), Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE))), Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME))), ""));
-                            //  LatLng location = new LatLng(Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_LATITUDE))), Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_LANGITUDE))));
-                            // mMap.addMarker(new MarkerOptions().position(location).title(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_NAME)))));
-
-                    }
-                }
-                while (cursor.moveToNext());
-            }
-
-            // mMap.addMarker(new MarkerOptions().position(new LatLng(gpsTracker.getLatitude(),gpsTracker.getLongitude())).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Current Location"));
-            //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), 17.0f));
-//            for (int i = 0; i < locationArrayList.size(); i++) {
-            LatLng location = new LatLng(Double.parseDouble(currentlat), Double.parseDouble(currentlng));
-         //   LatLng locationdealer = new LatLng(Double.parseDouble(dealerlat), Double.parseDouble(dealerlng));
-            mMap.addMarker(new MarkerOptions().position(location).title("Current Location")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-            LatLng locationdemo = new LatLng(32.48765794516779,74.52277713987364);
-            LatLng destination= getNearestMarker(locationArrayList , location);
-         //   mMap.addMarker(new MarkerOptions().position(destination).title("Destination Location")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(currentlat), Double.parseDouble(currentlng)), 10));
-
-
-
-            String url = getDirectionsUrl(location, destination);
-            DownloadTask downloadTask = new DownloadTask();
-            downloadTask.execute(url);
-//            }
-        } else {
-            enableLoc();
-            // DialougeManager.gpsNotEnabledPopup(ProjectDetailActivity.this);
-        }
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,6 +151,7 @@ public class TodayCustomerMap extends AppCompatActivity implements OnMapReadyCal
         initView();
 
     }
+
     private LatLng getNearestMarker(List<LatLng> markers,
                                     LatLng origin) {
 
@@ -191,9 +163,9 @@ public class TodayCustomerMap extends AppCompatActivity implements OnMapReadyCal
 
             for (LatLng marker : markers) {
 
-                double dist =  distBetween(origin.latitude,origin.longitude, marker.latitude,marker.longitude);
+                double dist = distBetween(origin.latitude, origin.longitude, marker.latitude, marker.longitude);
 
-                if (dist  > lowestDistance) {
+                if (dist > lowestDistance) {
                     nearestMarker = marker;
                     lowestDistance = dist;
                 }
@@ -252,14 +224,118 @@ public class TodayCustomerMap extends AppCompatActivity implements OnMapReadyCal
         btnProceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                if (locationArrayList.size() > 0) {
+                    btnProceed.setVisibility(View.VISIBLE);
+                    selectDialouge();
+                } else {
+                    btnProceed.setVisibility(View.GONE);
+                }
+                // onBackPressed();
 
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                // overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
+
+        geofencingClient = LocationServices.getGeofencingClient(this);
+        geofenceHelper = new GeofenceHelper(this);
+        mGeofenceList = new ArrayList<>();
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                gpsTracker = new GpsTracker(TodayCustomerMap.this);
+
+                mMap = googleMap;
+                if (gpsTracker.canGetLocation()) {
+                    if (ActivityCompat.checkSelfPermission(TodayCustomerMap.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(TodayCustomerMap.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+
+                    }
+                    mMap.getUiSettings().setScrollGesturesEnabled(true);
+                    mMap.setMyLocationEnabled(true);
+                    fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(@NonNull Location location1) {
+                            latitude = location1.getLatitude();
+                            longitude = location1.getLongitude();
+                            currentlng = String.valueOf(longitude);
+                            currentlat = String.valueOf(latitude);
+                            HashMap<String, String> map = new HashMap<>();
+                            map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME, "");
+                            map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE, "");
+                            map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE, "");
+                            HashMap<String, String> filters = new HashMap<>();
+                            filters.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE_MAP));
+                            Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
+                            if (cursor.getCount() > 0) {
+                                cursor.moveToFirst();
+                                do {
+                                    if (!cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE)).equals("NA") && !cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE)).equals("NA")) {
+                                        LatLng location = new LatLng(Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE))), Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE))));
+                                        locationArrayList.add(location);
+                                        shoplength++;
+                                        mMap.addMarker(new MarkerOptions().position(location).title(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME))))).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                                        //mClusterManager.addItem(new User(Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE))), Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE))), Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME))), ""));
+                                        //  LatLng location = new LatLng(Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_LATITUDE))), Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_LANGITUDE))));
+                                        // mMap.addMarker(new MarkerOptions().position(location).title(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_NAME)))));
+
+                                    }
+                                }
+                                while (cursor.moveToNext());
+                            }
+
+                            // mMap.addMarker(new MarkerOptions().position(new LatLng(gpsTracker.getLatitude(),gpsTracker.getLongitude())).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Current Location"));
+                            //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), 17.0f));
+//            for (int i = 0; i < locationArrayList.size(); i++) {
+                            LatLng location = new LatLng(Double.parseDouble(currentlat), Double.parseDouble(currentlng));
+                            //   LatLng locationdealer = new LatLng(Double.parseDouble(dealerlat), Double.parseDouble(dealerlng));
+                            mMap.addMarker(new MarkerOptions().position(location).title("Current Location")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                            LatLng locationdemo = new LatLng(32.48765794516779, 74.52277713987364);
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(currentlat), Double.parseDouble(currentlng)), 10));
+                            if (locationArrayList.size() > 0) {
+                                LatLng destination = getNearestMarker(locationArrayList, location);
+                                //   mMap.addMarker(new MarkerOptions().position(destination).title("Destination Location")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+
+
+                                String url = getDirectionsUrl(location, destination);
+                                DownloadTask downloadTask = new DownloadTask();
+                                downloadTask.execute(url);
+                            }
+                        }});
+                    //            currentlat = String.valueOf(gpsTracker.getLatitude());
+
+
+
+//            }
+                } else {
+                    enableLoc();
+                    // DialougeManager.gpsNotEnabledPopup(ProjectDetailActivity.this);
+                }
+                enableUserLocation();
+                if (locationArrayList.size() > 0) {
+                    if (Build.VERSION.SDK_INT >= 29) {
+                        //We need background permission
+                        if (ContextCompat.checkSelfPermission(TodayCustomerMap.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                            addGeofence(GEOFENCE_RADIUS);
+                        } else {
+                            if (ActivityCompat.shouldShowRequestPermissionRationale(TodayCustomerMap.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
+                                //We show a dialog and ask for permission
+                                ActivityCompat.requestPermissions(TodayCustomerMap.this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, BACKGROUND_LOCATION_ACCESS_REQUEST_CODE);
+                            } else {
+                                ActivityCompat.requestPermissions(TodayCustomerMap.this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, BACKGROUND_LOCATION_ACCESS_REQUEST_CODE);
+                            }
+                        }
+
+                    } else {
+                        // LatLng location = new LatLng(locationArrayList.get(i).latitude , locationArrayList.get(i).longitude);
+                        addGeofence(GEOFENCE_RADIUS);
+
+                    }
+                }
+            }
+        });
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -274,6 +350,142 @@ public class TodayCustomerMap extends AppCompatActivity implements OnMapReadyCal
 //            }
             finish();
             startActivity(getIntent());
+        }
+    }
+
+    public void selectDialouge() {
+        LayoutInflater li = LayoutInflater.from(TodayCustomerMap.this);
+        View promptsView = li.inflate(R.layout.dialouge_sales_point, null);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(TodayCustomerMap.this);
+        alertDialogBuilder.setView(promptsView);
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+
+        final List<SaelsPoint> companyList = new ArrayList<>();
+        final TextView title = promptsView.findViewById(R.id.tv_option);
+        final EditText search = promptsView.findViewById(R.id.et_Search);
+        final ImageView ivClsoe = promptsView.findViewById(R.id.iv_Close);
+        ivClsoe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+
+        title.setText("Select Dealer for Navigation");
+
+
+        final RecyclerView recyclerView = promptsView.findViewById(R.id.recyclerView);
+
+
+        prepareDealerData(companyList);
+
+
+        final SalesPointAdapter mAdapter = new SalesPointAdapter(companyList, "navigation");
+
+        // vertical RecyclerView
+        // keep movie_list_row.xml width to `match_parent`
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                SaelsPoint companyname = companyList.get(position);
+                alertDialog.dismiss();
+                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + companyname.getLat() + "," + companyname.getLng() + "&mode=l");
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                }
+                //autoProduct.setText(companyname.getCode() + "-" + companyname.getPoint() + "-" + companyname.getSalespoint());
+                // new LocationChangeRequestActivity.GetLastVisitCount(companyname.getId()).execute();
+
+
+                // Toast.makeText(getApplicationContext(), movie.getPoint() + " is selected!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+        search.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                if (search.hasFocus()) {
+                    mAdapter.filter(cs.toString());
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+                // Toast.makeText(getApplicationContext(),"before text change",Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                //Toast.makeText(getApplicationContext(),"after text change",Toast.LENGTH_LONG).show();
+            }
+        });
+
+        //ImageView ivClose = promptsView.findViewById(R.id.iv_close);
+
+        alertDialogBuilder.setCancelable(true);
+        alertDialog.show();
+    }
+
+    private void prepareDealerData(List<SaelsPoint> movieList) {
+        movieList.clear();
+        HashMap<String, String> map = new HashMap<>();
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME, "");
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE, "");
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE, "");
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put(db.KEY_TODAY_JOURNEY_TYPE, sHelper.getString(Constants.PLAN_TYPE_MAP));
+        Cursor cursor = db.getData(db.TODAY_JOURNEY_PLAN, map, filters);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                SaelsPoint companyname = new SaelsPoint();
+                if (!cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE)).equals("NA") && !cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE)).equals("NA")) {
+                    String latitude = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE));
+                    String longitude = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE));
+                    String name = Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME)));
+                    companyname.setLat(latitude);
+                    companyname.setLng(longitude);
+                    companyname.setPoint(name);
+                    movieList.add(companyname);
+
+                    //mClusterManager.addItem(new User(Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE))), Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE))), Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME))), ""));
+                    //  LatLng location = new LatLng(Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_LATITUDE))), Double.parseDouble(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_LANGITUDE))));
+                    // mMap.addMarker(new MarkerOptions().position(location).title(Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_OUTLET_NAME)))));
+
+                }
+            }
+            while (cursor.moveToNext());
+        }
+
+
+        // notify adapter about data set changes
+        // so that it will render the list with new data
+        // mAdapter.notifyDataSetChanged();
+    }
+    private void enableUserLocation() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
+        } else {
+            //Ask for permission
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                //We need to show user a dialog for displaying why the permission is needed and then ask for the permission...
+                ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, FINE_LOCATION_ACCESS_REQUEST_CODE);
+            } else {
+                ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, FINE_LOCATION_ACCESS_REQUEST_CODE);
+            }
         }
     }
 
@@ -355,8 +567,8 @@ public class TodayCustomerMap extends AppCompatActivity implements OnMapReadyCal
         String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
         String str_key = "key=" + "AIzaSyCqbQ7pazQ2cH-gX_0R0zo39m_ikBNOvsk";
         String waypoints = "waypoints=";
-        for(int i=0;i<locationArrayList.size();i++){
-            LatLng point  = (LatLng) locationArrayList.get(i);
+        for (int i = 0; i < locationArrayList.size(); i++) {
+            LatLng point = (LatLng) locationArrayList.get(i);
 
             waypoints += point.latitude + "," + point.longitude + "|";
         }
@@ -365,7 +577,7 @@ public class TodayCustomerMap extends AppCompatActivity implements OnMapReadyCal
         String sensor = "sensor=false";
         String mode = "mode=driving";
         // Building the parameters to the web service
-        String parameters = str_key + "&" + str_origin + "&" + str_dest + "&" + sensor + "&" + mode +"&"+waypoints;
+        String parameters = str_key + "&" + str_origin + "&" + str_dest + "&" + sensor + "&" + mode + "&" + waypoints;
 
         // Output format
         String output = "json";
@@ -409,8 +621,7 @@ public class TodayCustomerMap extends AppCompatActivity implements OnMapReadyCal
                 JSONObject routes1 = routes.getJSONObject(0);
 
                 JSONArray legs = routes1.getJSONArray("legs");
-                for(int i=0; i< legs.length();i++)
-                {
+                for (int i = 0; i < legs.length(); i++) {
                     JSONObject legs1 = legs.getJSONObject(i);
                     JSONObject distance = legs1.getJSONObject("distance");
                     JSONObject duration = legs1.getJSONObject("duration");
@@ -421,23 +632,23 @@ public class TodayCustomerMap extends AppCompatActivity implements OnMapReadyCal
                     timesum = Integer.parseInt(durationtext);
                     totaltimesum += timesum;
                 }
-                float totaldistance = totaldistancesum/ 1000;
-               // int totalb = (int) Math.round(totaldistance);
+                float totaldistance = totaldistancesum / 1000;
+                // int totalb = (int) Math.round(totaldistance);
                 tvDistance.setText("Total Distance : " + totaldistance + " KM");
-                int shop  = shoplength * 1800;
-                totaltimesum = totaltimesum+shop;
+                int shop = shoplength * 1800;
+                totaltimesum = totaltimesum + shop;
 
                 int sec = totaltimesum % 60;
-                int min = (totaltimesum / 60)%60;
-                int hours = (totaltimesum/60)/60;
+                int min = (totaltimesum / 60) % 60;
+                int hours = (totaltimesum / 60) / 60;
 
-                String strSec=(sec<10)?"0"+Integer.toString(sec):Integer.toString(sec);
-                String strmin=(min<10)?"0"+Integer.toString(min):Integer.toString(min);
-                String strHours=(hours<10)?"0"+Integer.toString(hours):Integer.toString(hours);
+                String strSec = (sec < 10) ? "0" + Integer.toString(sec) : Integer.toString(sec);
+                String strmin = (min < 10) ? "0" + Integer.toString(min) : Integer.toString(min);
+                String strHours = (hours < 10) ? "0" + Integer.toString(hours) : Integer.toString(hours);
 
-               // System.out.println(strHours + ":" + strmin + ":" + strSec);
+                // System.out.println(strHours + ":" + strmin + ":" + strSec);
 
-                tvDuration.setText("Total Duration : " + strHours +" h" + ":" + strmin + " m" +":" + strSec+" s");
+                tvDuration.setText("Total Duration : " + strHours + " h" + ":" + strmin + " m" + ":" + strSec + " s");
                 ParserTask parserTask = new ParserTask();
 
 
@@ -542,5 +753,55 @@ public class TodayCustomerMap extends AppCompatActivity implements OnMapReadyCal
             urlConnection.disconnect();
         }
         return data;
+    }
+
+    @SuppressLint("MissingPermission")
+    private void addGeofence(float radius) {
+        for(int i =0 ; i<locationArrayList.size();i++) {
+            LatLng location = new LatLng(locationArrayList.get(i).latitude , locationArrayList.get(i).longitude);
+            Geofence geofence = geofenceHelper.getGeofence(GEOFENCE_ID, location, radius, Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_DWELL | Geofence.GEOFENCE_TRANSITION_EXIT);
+            mGeofenceList.add(geofence);
+        }
+        GeofencingRequest geofencingRequest = geofenceHelper.getGeofencingRequest(mGeofenceList);
+        PendingIntent pendingIntent = geofenceHelper.getPendingIntent();
+
+
+        geofencingClient.addGeofences(geofencingRequest, pendingIntent)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                       // Log.d(TAG, "onSuccess: Geofence Added...");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        String errorMessage = geofenceHelper.getErrorString(e);
+                      //  Log.d(TAG, "onFailure: " + errorMessage);
+                    }
+                });
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == FINE_LOCATION_ACCESS_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //We have the permission
+                //  mMap.setMyLocationEnabled(true);
+            } else {
+                //We do not have the permission..
+
+            }
+        }
+
+        if (requestCode == BACKGROUND_LOCATION_ACCESS_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //We have the permission
+                Toast.makeText(this, "You can add geofences...", Toast.LENGTH_SHORT).show();
+            } else {
+                //We do not have the permission..
+                Toast.makeText(this, "Background location access is neccessary for geofences to trigger...", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

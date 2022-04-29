@@ -118,23 +118,23 @@ public class SupervisorLocationApprovalListActivity extends AppCompatActivity im
 
     @Override
     public void onClick(View view, int position) {
-        final ChangeLocation city = planList.get(position);
-        if(city.getLatitude()!=null && city.getLongitude()!=null
-                && !city.getLatitude().equals("0.0") && !city.getLongitude().equals("0.0") ) {
-            // Toast.makeText(getContext(), "" + planList.get(position).getTitle(), Toast.LENGTH_SHORT).show();
-
-            Intent i = new Intent(SupervisorLocationApprovalListActivity.this, ChangeCoordinatesMapActivity.class);
-            i.putExtra("dealerlat",city.getOldlatitude());
-            i.putExtra("dealerlng",city.getOldlongitude());
-            i.putExtra("dealerlatnew", city.getLatitude());
-            i.putExtra("dealerlngnew", city.getLongitude());
-            i.putExtra("from", "approvallocation");
-            startActivity(i);
-        }
-        else
-        {
-            Toast.makeText(SupervisorLocationApprovalListActivity.this, "No Location Found", Toast.LENGTH_SHORT).show();
-        }
+//        final ChangeLocation city = planList.get(position);
+//        if(city.getLatitude()!=null && city.getLongitude()!=null
+//                && !city.getLatitude().equals("0.0") && !city.getLongitude().equals("0.0") ) {
+//            // Toast.makeText(getContext(), "" + planList.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+//
+//            Intent i = new Intent(SupervisorLocationApprovalListActivity.this, ChangeCoordinatesMapActivity.class);
+//            i.putExtra("dealerlat",city.getOldlatitude());
+//            i.putExtra("dealerlng",city.getOldlongitude());
+//            i.putExtra("dealerlatnew", city.getLatitude());
+//            i.putExtra("dealerlngnew", city.getLongitude());
+//            i.putExtra("from", "approvallocation");
+//            startActivity(i);
+//        }
+//        else
+//        {
+//            Toast.makeText(SupervisorLocationApprovalListActivity.this, "No Location Found", Toast.LENGTH_SHORT).show();
+//        }
 
 
     }
@@ -187,9 +187,11 @@ public class SupervisorLocationApprovalListActivity extends AppCompatActivity im
 
                     for (int j = 0; j < journeycode.size(); j++) {
                         ChangeLocation  plan4 = new ChangeLocation ();
-                        plan4.setCode(journeycode.get(j).getCustomerId()== null || journeycode.get(j).getCustomerId().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getCustomerId().toString());
+                        plan4.setCode(journeycode.get(j).getCustomerCode()== null || journeycode.get(j).getCustomerCode().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getCustomerCode().toString());
+                        plan4.setTso(journeycode.get(j).getTerritoryOfficierName() == null || journeycode.get(j).getTerritoryOfficierName().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getTerritoryOfficierName().toString());
                         plan4.setName(journeycode.get(j).getCustomerName() == null || journeycode.get(j).getCustomerName().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getCustomerName().toString());
                         plan4.setReason(journeycode.get(j).getReason() == null || journeycode.get(j).getReason().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getReason().toString());
+                        plan4.setDistancedif(journeycode.get(j).getDifferenceInDistance() == null || journeycode.get(j).getDifferenceInDistance().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getDifferenceInDistance().toString());
                         plan4.setStatus(journeycode.get(j).getStatus()== null || journeycode.get(j).getStatus().equals("") ? getString(R.string.not_applicable) : journeycode.get(j).getStatus().toString());
                         plan4.setLatitude(String.valueOf(journeycode.get(j).getLatitude()));
                         plan4.setLongitude(String.valueOf(journeycode.get(j).getLongitude()));

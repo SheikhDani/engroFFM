@@ -557,20 +557,21 @@ public class SoilSamplingActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SoilSamplingActivity.this);
-                    alertDialogBuilder
-                            .setMessage(getResources().getString(R.string.field_required_message))
-                            .setCancelable(false)
-                            .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-
-
-                                }
-                            });
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-                    alertDialog.show();
+                    Helpers.alertWarning(SoilSamplingActivity.this,getResources().getString(R.string.field_required_message),"Warning",null,null);
+//                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SoilSamplingActivity.this);
+//                    alertDialogBuilder
+//                            .setMessage(getResources().getString(R.string.field_required_message))
+//                            .setCancelable(false)
+//                            .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.dismiss();
+//
+//
+//                                }
+//                            });
+//                    AlertDialog alertDialog = alertDialogBuilder.create();
+//                    alertDialog.show();
                 }
 
             }
@@ -580,6 +581,8 @@ public class SoilSamplingActivity extends AppCompatActivity {
     {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SoilSamplingActivity.this);
         alertDialogBuilder
+                .setTitle("Warning")
+                .setIcon(R.drawable.ic_baseline_warning_24)
                 .setMessage(SoilSamplingActivity.this.getString(R.string.outlet_confirmation))
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -833,20 +836,21 @@ public class SoilSamplingActivity extends AppCompatActivity {
             acres.setText("");
             blocks.setText("");
         } else {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SoilSamplingActivity.this);
-            alertDialogBuilder
-                    .setMessage(getResources().getString(R.string.field_required_message))
-                    .setCancelable(false)
-                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-
-
-                        }
-                    });
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
+            Helpers.alertWarning(SoilSamplingActivity.this,getResources().getString(R.string.field_required_message),"Warning",null,null);
+//            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SoilSamplingActivity.this);
+//            alertDialogBuilder
+//                    .setMessage(getResources().getString(R.string.field_required_message))
+//                    .setCancelable(false)
+//                    .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//
+//
+//                        }
+//                    });
+//            AlertDialog alertDialog = alertDialogBuilder.create();
+//            alertDialog.show();
         }
     }
     private void updateOutletStatus(String visited,String interentstatus) {
@@ -1413,6 +1417,8 @@ public class SoilSamplingActivity extends AppCompatActivity {
             if (status.equals("true")) {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SoilSamplingActivity.this);
                 alertDialogBuilder.setTitle(R.string.alert)
+                        .setTitle("Success")
+                        .setIcon(R.drawable.ic_baseline_done_all_24)
                         .setMessage("Data Posted Successfully")
                         .setCancelable(false)
                         .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {

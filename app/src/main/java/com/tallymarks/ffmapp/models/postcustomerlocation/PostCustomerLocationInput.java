@@ -78,6 +78,18 @@ public class PostCustomerLocationInput {
     @Expose
     private int lastvisitcount;
 
+    public String getDifferenceInDistance() {
+        return differenceInDistance;
+    }
+
+    public void setDifferenceInDistance(String differenceInDistance) {
+        this.differenceInDistance = differenceInDistance;
+    }
+
+    @SerializedName("differenceInDistance")
+    @Expose
+    private String differenceInDistance;
+
     public String getCustomerCustomerName() {
         return customerCustomerName;
     }
