@@ -19,7 +19,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private SQLiteDatabase db;
     /*Database Varaiables*/
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     private static final String TAG = "DBAdapter";
     private static final String DATABASE_NAME = "FFMApplicationDataBasev5";
     private Context mContext;
@@ -233,6 +233,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //Today Journey Plan Table Fields
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_ID = "todayCustomerID";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_CODE = "todayCustomerCode";
+    public static final String KEY_TODAY_JOURNEY_CUSTOMER_CATEGORY = "todayCustomerCategory";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_LOCATION_STATUS= "todayCustomerLocationStatus";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_NAME = "todayCustomerName";
     public static final String KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE = "todayCustomerLatitude";
@@ -451,6 +452,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_TODAY_JOURNEY_CUSTOMER_CODE+ " TEXT,"
                 +  KEY_TODAY_JOURNEY_CUSTOMER_LOCATION_STATUS+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE+ " TEXT,"
+                + KEY_TODAY_JOURNEY_CUSTOMER_CATEGORY+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_NAME+ " TEXT,"
                 + KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME + " TEXT" + ")";

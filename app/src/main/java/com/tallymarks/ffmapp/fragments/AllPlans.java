@@ -189,12 +189,13 @@ public class AllPlans extends Fragment implements ItemClickListener {
     }
     private void getAllCustomerJourneyPlan()
     {
-        String  customerCode="" , customerName="" , customerLat="", customerLng="" ,customersalesPoint="" , customerVisit="", customerID= "",customerDayid="",custoemrjourneyplanID="",locationStatus="";
+        String  customerCode="" , customerName="", customerCategory="" , customerLat="", customerLng="" ,customersalesPoint="" , customerVisit="", customerID= "",customerDayid="",custoemrjourneyplanID="",locationStatus="";
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CODE, "");
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME, "");
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME, "");
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CATEGORY, "");
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LATITUDE, "");
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID, "");
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID, "");
@@ -213,6 +214,7 @@ public class AllPlans extends Fragment implements ItemClickListener {
                 customerDayid = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID));
                 custoemrjourneyplanID = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID));
                 customerID = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_ID));
+                customerCategory = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_CATEGORY)));
                 customerName = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME)));
                 customersalesPoint = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME)));
                 customerVisit = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_IS_VISITED)));
@@ -225,6 +227,7 @@ public class AllPlans extends Fragment implements ItemClickListener {
                 plan.setSalespoint(customersalesPoint);
                 plan.setLocationStauts(locationStatus);
                 plan.setTime("9:00 AM");
+                plan.setCustomercategory(customerCategory);
                 plan.setCustomerJourneyPlanID(custoemrjourneyplanID);
                 plan.setCustomerDayID(customerDayid);
                 plan.setLatitude(customerLat);

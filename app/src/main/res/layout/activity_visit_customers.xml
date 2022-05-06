@@ -29,7 +29,7 @@
             android:layout_marginTop="@dimen/p10"
             android:layout_marginRight="@dimen/p10"
             android:layout_marginBottom="@dimen/p10"
-            android:layout_toLeftOf="@+id/img_location"
+            android:layaout_toLeftOf="@+id/img_location"
 
 
             android:background="@drawable/eidttext_boader"

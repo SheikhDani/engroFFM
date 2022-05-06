@@ -67,6 +67,16 @@ public class TodayPlan {
     private String memebrship;
     private String time;
     private String customercode;
+
+    public String getCustomercategory() {
+        return customercategory;
+    }
+
+    public void setCustomercategory(String customercategory) {
+        this.customercategory = customercategory;
+    }
+
+    private String customercategory;
     private String salespoint;
     private String mobilenumber;
     private String location;

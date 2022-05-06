@@ -51,6 +51,8 @@ public class AllJourneyPlanOutput {
     @SerializedName("locationCode")
     @Expose
     private String locationCode;
+
+
     @SerializedName("orders")
     @Expose
     private List<Order> orders = null;

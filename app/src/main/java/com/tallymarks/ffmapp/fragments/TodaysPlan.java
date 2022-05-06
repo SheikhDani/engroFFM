@@ -29,6 +29,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.activities.DealersInsightActivity;
 import com.tallymarks.ffmapp.activities.FarmersStartActivity;
 import com.tallymarks.ffmapp.activities.StartActivity;
 import com.tallymarks.ffmapp.adapters.TodayPlanAdapter;
@@ -187,7 +188,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
     }
 
     private void getTodayCustomerJourneyPlan() {
-        String customerCode = "", customerName = "", customerLat = "",locationstatus="", customerLng = "", customersalesPoint = "", customerVisit = "", customerID = "", customerDayid = "", custoemrjourneyplanID = "";
+        String customerCode = "", customerName = "",customerCategory = "", customerLat = "",locationstatus="", customerLng = "", customersalesPoint = "", customerVisit = "", customerID = "", customerDayid = "", custoemrjourneyplanID = "";
         HashMap<String, String> map = new HashMap<>();
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CODE, "");
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_ID, "");
@@ -198,6 +199,8 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID, "");
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE, "");
         map.put(db.KEY_TODAY_JOURNEY_IS_VISITED, "");
+        map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_CATEGORY, "");
+
         map.put(db.KEY_TODAY_JOURNEY_CUSTOMER_LOCATION_STATUS, "");
         //map.put(db.KEY_IS_VALID_USER, "");
         HashMap<String, String> filters = new HashMap<>();
@@ -214,6 +217,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                 customerDayid = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_DAY_ID));
                 custoemrjourneyplanID = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_JOURNEYPLAN_ID));
                 customerID = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_ID));
+                customerCategory = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_CATEGORY)));
                 customerName = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_NAME)));
                 customersalesPoint = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_SALES_POINT_NAME)));
                 customerVisit = "" + Helpers.clean(cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_IS_VISITED)));
@@ -221,6 +225,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                 customerLng = cursor.getString(cursor.getColumnIndex(db.KEY_TODAY_JOURNEY_CUSTOMER_LONGITUDE));
                 plan.setCustomercode(customerCode);
                 plan.setMemebrship(customerVisit);
+                plan.setCustomercategory(customerCategory);
                 plan.setTitle(customerName);
                 plan.setSalespoint(customersalesPoint);
                 plan.setLocationStauts(locationstatus);
@@ -374,7 +379,7 @@ public class TodaysPlan extends Fragment implements ItemClickListener {
                             sHelper.setString(Constants.CUSTOMER_DAY_ID, plan.getCustomerDayID());
                             sHelper.setString(Constants.CUSTOMER_JOURNEYPLAN_ID, plan.getCustomerJourneyPlanID());
                             sHelper.setString(Constants.CUSTOMER_SALES_POINT_NAME, plan.getSalespoint());
-                            Intent i = new Intent(getActivity(), StartActivity.class);
+                            Intent i = new Intent(getActivity(), DealersInsightActivity.class);
                             startActivity(i);
                         } else {
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
