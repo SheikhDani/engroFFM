@@ -29,17 +29,17 @@
             android:layout_marginTop="@dimen/p10"
             android:layout_marginRight="@dimen/p10"
             android:layout_marginBottom="@dimen/p10"
-            android:layaout_toLeftOf="@+id/img_location"
-
-
             android:background="@drawable/eidttext_boader"
+
+
             android:drawableRight="@drawable/iconresizer"
             android:hint="Search"
+
             android:paddingLeft="@dimen/p10"
             android:paddingTop="@dimen/p10"
             android:paddingRight="@dimen/p10"
             android:paddingBottom="@dimen/p10"
-
+            android:layout_toLeftOf="@+id/img_location"
 
             android:textColor="@color/black"></EditText>
 
@@ -52,7 +52,7 @@
             android:layout_marginLeft="@dimen/p20"
             android:layout_marginTop="@dimen/p20"
 
-            android:layout_marginRight="@dimen/p10"
+            android:layout_marginRight="9dp"
             android:layout_marginBottom="@dimen/p20"
 
             android:src="@mipmap/engrolocation"></ImageView>

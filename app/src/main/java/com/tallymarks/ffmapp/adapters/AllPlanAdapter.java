@@ -29,7 +29,7 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener  {
-        public TextView title, member, customecode, salespoint, time,distance,locationstatus;
+        public TextView title, member, customecode, salespoint, time,distance,locationstatus,cateogry;
         ImageView image,status_image;
 
         public MyViewHolder(View view) {
@@ -37,6 +37,7 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
             title = (TextView) view.findViewById(R.id.textView_name);
             member = (TextView) view.findViewById(R.id.textView_subcription);
             image = (ImageView) view.findViewById(R.id.imageView);
+            cateogry = (TextView) view.findViewById(R.id.textView_category);
 
             customecode = (TextView) view.findViewById(R.id.customer_code);
             salespoint = (TextView) view.findViewById(R.id.sale_point);
@@ -47,13 +48,13 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
             if(from.equals("farmers")) {
                 member.setVisibility(View.VISIBLE);
 
-
+                cateogry.setVisibility(View.GONE);
                 distance.setVisibility(View.GONE);
                 time.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
 
             }
             else if(from.equals("editfarmer")) {
-
+                cateogry.setVisibility(View.GONE);
                 member.setVisibility(View.VISIBLE);
                 distance.setVisibility(View.GONE);
 
@@ -62,6 +63,7 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
             }
             else if(from.equals("subordinate"))
             {
+                cateogry.setVisibility(View.GONE);
 
 
                 member.setVisibility(View.GONE);
@@ -71,6 +73,7 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
             }
             else
             {
+                cateogry.setVisibility(View.VISIBLE);
 
                 member.setVisibility(View.VISIBLE);
                 distance.setVisibility(View.VISIBLE);
@@ -121,6 +124,18 @@ public class AllPlanAdapter extends RecyclerView.Adapter<AllPlanAdapter.MyViewHo
             {
                 holder.member.setBackgroundColor(Color.GRAY);
                 holder.member.setText(movie.getMemebrship());
+            }
+            if (movie.getCustomercategory().equals("A")) {
+                holder.cateogry.setBackgroundColor(Color.GREEN);
+                holder.cateogry.setText("Category : "+movie.getCustomercategory());
+            } else if(movie.getMemebrship().equals("B")) {
+                holder.cateogry.setBackgroundColor(Color.BLUE);
+                holder.cateogry.setText("Category : "+movie.getCustomercategory());
+            }
+            else
+            {
+                holder.cateogry.setBackgroundColor(Color.YELLOW);
+                holder.cateogry.setText("Category : "+movie.getCustomercategory());
             }
         }
         holder.salespoint.setText(movie.getSalespoint());

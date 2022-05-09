@@ -28,6 +28,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.tallymarks.ffmapp.R;
+import com.tallymarks.ffmapp.activities.DealersInsightActivity;
 import com.tallymarks.ffmapp.activities.FarmersStartActivity;
 import com.tallymarks.ffmapp.activities.StartActivity;
 import com.tallymarks.ffmapp.adapters.AllPlanAdapter;
@@ -363,7 +364,7 @@ public class AllPlans extends Fragment implements ItemClickListener {
                             sHelper.setString(Constants.CUSTOMER_DAY_ID, plan.getCustomerDayID());
                             sHelper.setString(Constants.CUSTOMER_JOURNEYPLAN_ID, plan.getCustomerJourneyPlanID());
                             sHelper.setString(Constants.CUSTOMER_SALES_POINT_NAME, plan.getSalespoint());
-                            Intent i = new Intent(getActivity(), StartActivity.class);
+                            Intent i = new Intent(getActivity(), DealersInsightActivity.class);
                             startActivity(i);
                         } else {
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
