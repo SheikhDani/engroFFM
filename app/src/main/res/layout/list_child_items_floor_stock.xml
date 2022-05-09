@@ -23,7 +23,7 @@
             android:src="@drawable/ic_launcher_foreground"
             android:textColor="@color/black" />
 
-        <com.tallymarks.ffmapp.utils.MyExpandableListView
+        <com.tallymarks.engroffm.utils.MyExpandableListView
             android:id="@+id/gridview"
             android:layout_width="wrap_content"
             android:nestedScrollingEnabled="true"
