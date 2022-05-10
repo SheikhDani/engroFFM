@@ -52,7 +52,7 @@ public class Information  extends Fragment {
         @Override
         public int getCount() {
             // Show 4 total pages.
-            return 2;
+            return 3;
         }
 
         @Override

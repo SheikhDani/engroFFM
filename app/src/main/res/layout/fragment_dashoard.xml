@@ -83,13 +83,14 @@
             android:text="START"
             android:textColor="@color/white"></Button>
     </RelativeLayout>
+
     <View
 
+        android:id="@+id/sep1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/rel_field_sales"
         android:layout_marginTop="@dimen/p10"
-        android:id="@+id/sep1"
         android:background="@color/grey" />
 
     <RelativeLayout

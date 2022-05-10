@@ -17,6 +17,9 @@ import com.tallymarks.ffmapp.fragments.Relationship;
 public class DealersInsightActivity extends AppCompatActivity {
    private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +27,7 @@ public class DealersInsightActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dealer_insight);
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = (ViewPager) findViewById(R.id.viewPager_dealers_insight);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs_dealers_insight);
