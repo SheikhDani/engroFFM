@@ -81,6 +81,7 @@
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"></TextView>
+
             <TextView
                 android:id="@+id/txt_last_visit_view"
                 android:layout_width="wrap_content"
@@ -180,6 +181,7 @@
 
 
         </RelativeLayout>
+
         <View
 
             android:id="@+id/sep4"
