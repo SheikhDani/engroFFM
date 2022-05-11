@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tallymarks.ffmapp">
+    package="com.tallymarks.engroffm">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -22,7 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <receiver
-            android:name=".utils.GeofenceBroadcastReceiver"
+            android:name="com.tallymarks.engroffm.utils.GeofenceBroadcastReceiver"
             android:enabled="true"
             android:exported="true"></receiver>
         <meta-data
@@ -34,7 +34,7 @@
 
 
         <activity
-            android:name=".activities.SpalshScreenActivity"
+            android:name="com.tallymarks.engroffm.activities.SpalshScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden">
@@ -46,221 +46,221 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.LoginActivity"
+            android:name="com.tallymarks.engroffm.activities.LoginActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.MainActivity"
+            android:name="com.tallymarks.engroffm.activities.MainActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.DownloadFarmersDataActivity"
+            android:name="com.tallymarks.engroffm.activities.DownloadFarmersDataActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.StartActivity"
+            android:name="com.tallymarks.engroffm.activities.StartActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.VisitCustomerActivity"
+            android:name="com.tallymarks.engroffm.activities.VisitCustomerActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.AddNewFarmerActivity"
+            android:name="com.tallymarks.engroffm.activities.AddNewFarmerActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.FarmerMeetingActivity"
+            android:name="com.tallymarks.engroffm.activities.FarmerMeetingActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.CustomerSnapShotActivity"
+            android:name="com.tallymarks.engroffm.activities.CustomerSnapShotActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:taskAffinity=""
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.MarketPricesActivity"
+            android:name="com.tallymarks.engroffm.activities.MarketPricesActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.FloorStockActivity"
+            android:name="com.tallymarks.engroffm.activities.FloorStockActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
-            android:name=".activities.FarmVisitActivity"
+            android:name="com.tallymarks.engroffm.activities.FarmVisitActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.QualityofSalesCallActivity"
+            android:name="com.tallymarks.engroffm.activities.QualityofSalesCallActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.FarmerDemoActivity"
+            android:name="com.tallymarks.engroffm.activities.FarmerDemoActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.SoilAnalysis"
+            android:name="com.tallymarks.engroffm.activities.SoilAnalysis"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.SoilSamplingActivity"
+            android:name="com.tallymarks.engroffm.activities.SoilSamplingActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.VisitFarmerActivity"
+            android:name="com.tallymarks.engroffm.activities.VisitFarmerActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.SalesOrderMarketPriceActivity"
+            android:name="com.tallymarks.engroffm.activities.SalesOrderMarketPriceActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.MapActivity"
+            android:name="com.tallymarks.engroffm.activities.MapActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.FarmersStartActivity"
+            android:name="com.tallymarks.engroffm.activities.FarmersStartActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.CustomerLocationActivity"
+            android:name="com.tallymarks.engroffm.activities.CustomerLocationActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.SubOrdinatesActivity"
+            android:name="com.tallymarks.engroffm.activities.SubOrdinatesActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.SOILSamplinLogsActivity"
+            android:name="com.tallymarks.engroffm.activities.SOILSamplinLogsActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.CustomMap"
+            android:name="com.tallymarks.engroffm.activities.CustomMap"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.SubordinatListActivity"
+            android:name="com.tallymarks.engroffm.activities.SubordinatListActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.SuperVisorSnapShotActivity"
+            android:name="com.tallymarks.engroffm.activities.SuperVisorSnapShotActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.StockSellingSummaryActivity"
+            android:name="com.tallymarks.engroffm.activities.StockSellingSummaryActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
 
         <activity
-            android:name=".activities.DealersActivity"
+            android:name="com.tallymarks.engroffm.activities.DealersActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
-            android:name=".activities.EditFarmerActivity"
+            android:name="com.tallymarks.engroffm.activities.EditFarmerActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.EditFarmerDetailActivity"
+            android:name="com.tallymarks.engroffm.activities.EditFarmerDetailActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activities.ConversionRetentionActivity"
+        <activity android:name="com.tallymarks.engroffm.activities.ConversionRetentionActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
-        <activity android:name=".activities.ConverionRetentionFormActivity"
+        <activity android:name="com.tallymarks.engroffm.activities.ConverionRetentionFormActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
-        <activity android:name=".activities.FarmVisitRoleWiseActivity"
+        <activity android:name="com.tallymarks.engroffm.activities.FarmVisitRoleWiseActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
-        <activity android:name=".activities.ChangeCustomerLocationListActivity"
+        <activity android:name="com.tallymarks.engroffm.activities.ChangeCustomerLocationListActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
-        <activity android:name=".activities.SupervisorLocationApprovalListActivity"
+        <activity android:name="com.tallymarks.engroffm.activities.SupervisorLocationApprovalListActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
-        <activity android:name=".activities.ChangeCoordinatesMapActivity"
+        <activity android:name="com.tallymarks.engroffm.activities.ChangeCoordinatesMapActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
-        <activity android:name=".activities.NotificationActivity"
+        <activity android:name="com.tallymarks.engroffm.activities.NotificationActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
-        <activity android:name=".activities.LocationChangeRequestActivity"
+        <activity android:name="com.tallymarks.engroffm.activities.LocationChangeRequestActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"></activity>
-        <activity android:name=".activities.TodayCustomerMap"
+        <activity android:name="com.tallymarks.engroffm.activities.TodayCustomerMap"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"
@@ -268,7 +268,7 @@
 
 
         <service
-            android:name="com.tallymarks.ffmapp.utils.MyFirebaseMessagingService"
+            android:name="com.tallymarks.engroffm.utils.MyFirebaseMessagingService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
