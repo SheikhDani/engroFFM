@@ -104,7 +104,337 @@
             android:layout_below="@+id/rel_last_visit"
 
             android:background="@color/grey" />
+        <View
 
+            android:id="@+id/sep10"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/linear_td_3"
+
+            android:background="@color/grey" />
+
+        <RelativeLayout
+            android:id="@+id/linear_td_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linear_td">
+
+            <TextView
+                android:id="@+id/txt_average_time_value"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/p20"
+                android:gravity="center_vertical"
+                android:padding="@dimen/p10"
+                android:text="30 Mins"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+
+                />
+
+            <TextView
+                android:id="@+id/txt_average_time"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_average_time_value"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/p20"
+
+
+                android:text="AvgTime to Spend on Dealer"
+
+                android:textStyle="bold"
+
+                />
+
+
+            <View
+
+                android:id="@+id/sep5"
+                android:layout_width="1dp"
+                android:layout_height="100dp"
+                android:layout_toRightOf="@+id/txt_average_time"
+                android:background="@color/grey" />
+
+            <TextView
+                android:id="@+id/txt_ytd_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+
+                android:layout_toRightOf="@+id/sep5"
+                android:gravity="center_vertical"
+                android:padding="@dimen/p10"
+                android:text="YTD NO : 2000"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+
+                />
+
+            <TextView
+                android:id="@+id/txt_outach"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_ytd_value"
+                android:layout_gravity="center_horizontal"
+
+                android:layout_marginLeft="@dimen/p20"
+                android:layout_toRightOf="@+id/sep5"
+                android:gravity="center_vertical"
+
+                android:text="Outlook vs  Achievement"
+
+
+                />
+
+            <TextView
+                android:id="@+id/txt_details"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_outach"
+                android:layout_gravity="center_horizontal"
+
+                android:layout_marginLeft="@dimen/p20"
+                android:layout_toRightOf="@+id/sep5"
+                android:gravity="center_vertical"
+
+                android:text="Details"
+                android:textColor="@color/green"
+
+                android:textStyle="bold"
+
+                />
+            <View
+
+                android:id="@+id/sep6"
+                android:layout_width="1dp"
+                android:layout_height="100dp"
+                android:layout_toRightOf="@+id/txt_ytd_value"
+                android:background="@color/grey" />
+
+            <TextView
+                android:id="@+id/txt_mtd_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+
+                android:layout_toRightOf="@+id/sep6"
+                android:gravity="center_vertical"
+                android:padding="@dimen/p10"
+                android:text="MTD NO : 2000"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+
+                />
+
+            <TextView
+                android:id="@+id/txt_outach_mtd"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_ytd_value"
+                android:layout_gravity="center_horizontal"
+
+                android:layout_marginLeft="@dimen/p20"
+                android:layout_toRightOf="@+id/sep6"
+                android:gravity="center_vertical"
+
+                android:text="Outlook vs  Achievement"
+
+
+                />
+
+            <TextView
+                android:id="@+id/txt_details_mtd"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_outach_mtd"
+                android:layout_gravity="center_horizontal"
+
+                android:layout_marginLeft="@dimen/p20"
+                android:layout_toRightOf="@+id/sep6"
+                android:gravity="center_vertical"
+
+                android:text="Details"
+                android:textColor="@color/green"
+
+                android:textStyle="bold"
+
+                />
+        </RelativeLayout>
+
+        <View
+
+            android:id="@+id/sep7"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/linear_td_2"
+
+            android:background="@color/grey" />
+        <RelativeLayout
+            android:id="@+id/linear_td_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linear_td_2">
+
+            <TextView
+                android:id="@+id/txt_last_order_date"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/p10"
+                android:gravity="center_vertical"
+                android:padding="@dimen/p10"
+                android:text="Apr 22, 2022"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+
+                />
+
+            <TextView
+                android:id="@+id/txt_last_order_details"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_last_order_date"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/p20"
+
+
+                android:text="Last Order Details"
+                android:textColor="@color/green"
+
+                android:textStyle="bold"
+
+                />
+
+
+            <View
+
+                android:id="@+id/sep8"
+                android:layout_width="1dp"
+                android:layout_height="120dp"
+                android:layout_toRightOf="@+id/txt_last_order_date"
+                android:background="@color/grey" />
+
+            <TextView
+                android:id="@+id/txt_cash_to_credit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+
+                android:layout_toRightOf="@+id/sep8"
+                android:gravity="center_vertical"
+                android:padding="@dimen/p10"
+                android:text="Cash to Credit ratio"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold"
+
+                />
+
+            <TextView
+                android:id="@+id/txt_ratio_value"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_cash_to_credit"
+                android:layout_gravity="center_horizontal"
+
+                android:layout_marginLeft="@dimen/p20"
+                android:layout_toRightOf="@+id/sep8"
+                android:gravity="center_vertical"
+
+
+                android:text="24/7"
+
+
+                />
+
+
+            <View
+
+                android:id="@+id/sep9"
+                android:layout_width="1dp"
+                android:layout_height="120dp"
+                android:layout_toRightOf="@+id/txt_cash_to_credit"
+                android:background="@color/grey" />
+
+            <TextView
+                android:id="@+id/txt_out_vs_ach"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+
+                android:layout_toRightOf="@+id/sep9"
+                android:gravity="center_vertical"
+                android:padding="@dimen/p10"
+                android:text="OutLook vs Achievement"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold"
+
+                />
+
+            <TextView
+                android:id="@+id/txt_last_same_month"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_out_vs_ach"
+                android:layout_gravity="center_horizontal"
+
+                android:layout_marginStart="@dimen/p10"
+
+
+                android:layout_marginEnd="@dimen/p10"
+                android:layout_marginRight="@dimen/p10"
+
+
+
+
+                android:layout_toRightOf="@+id/sep9"
+                android:gravity="center_vertical"
+                android:text="Last Year Same Month" />
+
+            <TextView
+                android:id="@+id/txt_last_same_month_mtd"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_last_same_month"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="@dimen/p10"
+                android:layout_marginEnd="@dimen/p10"
+                android:layout_marginRight="@dimen/p10"
+                android:layout_toRightOf="@+id/sep9"
+                android:gravity="center_vertical"
+                android:text="MTD NO : 200" />
+            <TextView
+                android:id="@+id/txt_last_same_month_ytd"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_last_same_month_mtd"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="@dimen/p10"
+                android:layout_marginEnd="@dimen/p10"
+                android:layout_marginRight="@dimen/p10"
+
+                android:layout_toRightOf="@+id/sep9"
+                android:gravity="center_vertical"
+                android:text="YTD NO : 200" />
+
+
+        </RelativeLayout>
+
+        <View
+
+            android:id="@+id/sep4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/linear_td"
+
+            android:background="@color/grey" />
         <RelativeLayout
             android:id="@+id/linear_td"
             android:layout_width="match_parent"
@@ -181,15 +511,6 @@
 
 
         </RelativeLayout>
-
-        <View
-
-            android:id="@+id/sep4"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/linear_td"
-
-            android:background="@color/grey" />
 
 
     </RelativeLayout>

@@ -11,13 +11,66 @@
         android:id="@+id/inc_common_header_colletion"
         layout="@layout/common_header" />
 
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/p10"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/inc_common_header_colletion">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageView"
+            android:layout_width="@dimen/p50"
+            android:layout_height="@dimen/p50"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:contentDescription="Icon"
+            android:src="@drawable/engrologo" />
+
+        <TextView
+            android:id="@+id/txt_trader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_horizontal"
+
+
+            android:padding="@dimen/p10"
+            android:text="786 Trader"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+
+            />
+
+
+        <Button
+            android:id="@+id/btn_checkin"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/p10"
+            android:background="@drawable/eidttext_boader"
+            android:layout_marginRight="@dimen/p10"
+
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:text="Check In"
+
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs_dealers_insight"
         style="@style/MyStyle"
+        android:layout_marginTop="@dimen/p10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/inc_common_header_colletion"
+        android:layout_below="@+id/relativeLayout"
         android:background="@color/white"
         app:tabGravity="fill"
         app:tabInlineLabel="true"
