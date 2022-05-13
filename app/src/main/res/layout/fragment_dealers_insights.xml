@@ -316,7 +316,7 @@
 
                 android:id="@+id/sep8"
                 android:layout_width="1dp"
-                android:layout_height="120dp"
+                android:layout_height="130dp"
                 android:layout_toRightOf="@+id/txt_last_order_date"
                 android:background="@color/grey" />
 
@@ -358,7 +358,7 @@
 
                 android:id="@+id/sep9"
                 android:layout_width="1dp"
-                android:layout_height="120dp"
+                android:layout_height="130dp"
                 android:layout_toRightOf="@+id/txt_cash_to_credit"
                 android:background="@color/grey" />
 
