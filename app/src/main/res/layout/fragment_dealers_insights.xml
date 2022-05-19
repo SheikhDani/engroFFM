@@ -512,6 +512,31 @@
 
         </RelativeLayout>
 
+        <ImageView
+            android:id="@+id/img_commitment_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linear_td_3"
+
+            android:padding="@dimen/p10"
+            android:src="@drawable/ic_baseline_shopping_basket_24" />
+
+        <TextView
+            android:id="@+id/commitment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linear_td_3"
+            android:padding="@dimen/p10"
+            android:layout_toRightOf="@+id/img_commitment_2"
+            android:text="Commitments"
+            android:visibility="visible" />
+
+        <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/img_commitment_2" />
+
 
     </RelativeLayout>
 </ScrollView>
