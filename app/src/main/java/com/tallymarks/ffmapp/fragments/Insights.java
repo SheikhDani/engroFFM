@@ -62,6 +62,7 @@ public class Insights extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        planList.clear();
         prepareMovieData();
 
        CommitmentHistoryAdapter adapter = new CommitmentHistoryAdapter(planList);

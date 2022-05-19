@@ -90,7 +90,7 @@ public class StartActivity extends AppCompatActivity {
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(StartActivity.this, VisitCustomerActivity.class);
+                Intent i = new Intent(StartActivity.this, DealersInsightActivity.class);
                 startActivity(i);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
@@ -99,7 +99,7 @@ public class StartActivity extends AppCompatActivity {
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(StartActivity.this, VisitCustomerActivity.class);
+                Intent i = new Intent(StartActivity.this, DealersInsightActivity.class);
                 startActivity(i);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }

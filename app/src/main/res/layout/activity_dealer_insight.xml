@@ -52,8 +52,8 @@
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
             android:layout_marginTop="@dimen/p10"
-            android:background="@drawable/eidttext_boader"
             android:layout_marginRight="@dimen/p10"
+            android:background="@drawable/eidttext_boader"
 
             android:backgroundTint="@color/colorPrimaryDark"
             android:gravity="center"
