@@ -8,27 +8,18 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="@dimen/p50"
-        android:layout_marginTop="@dimen/p20"
-        android:layout_height="@dimen/p50"
+        android:layout_width="@dimen/p60"
+        android:layout_height="@dimen/p60"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/p40"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:contentDescription="Icon"
         android:src="@mipmap/ic_launcher_round" />
 
-    <ImageView
-        android:id="@+id/forward_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:contentDescription="Icon"
-        android:src="@drawable/ic_baseline_arrow_forward_ios_24" />
+
 
     <LinearLayout
         android:id="@+id/layout_member"
@@ -43,39 +34,89 @@
         <TextView
             android:id="@+id/textView_name"
             android:layout_width="0dp"
-            android:textStyle="bold"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/imageView"
             android:layout_toRightOf="@id/imageView"
             android:layout_weight="1.2"
-            android:text="Pervaz Mughal"
-            android:textSize="16sp" />
+            android:text="Engro"
+
+            android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/textView_subcription"
+            android:id="@+id/textView_date_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
 
             android:layout_toRightOf="@id/textView_name"
             android:layout_weight="1"
-            android:background="@drawable/textview_boarder"
+
             android:gravity="center"
-            android:text="FOLLOW UP DUE"
-            android:textColor="@color/white" />
+            android:text="on"
+            android:textColor="@color/black" />
     </LinearLayout>
 
-
-    <TextView
-        android:id="@+id/update_status"
+    <LinearLayout
+        android:id="@+id/layout_member_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
 
         android:layout_below="@+id/layout_member"
         android:layout_toEndOf="@id/imageView"
         android:layout_toRightOf="@id/imageView"
-        android:gravity="center_vertical"
-        android:text="Customer Code: 8103214"
-        android:textSize="16sp" />
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/tv_product"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+
+            android:text="DAP"
+            android:textSize="16sp"
+
+
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_date_value"
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_member"
+            android:layout_toRightOf="@id/tv_product"
+            android:layout_weight="1"
+            android:text="15-Nov-2019"
+            android:textColor="@color/green" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_weight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/layout_member_2"
+
+
+        android:layout_toEndOf="@id/imageView"
+        android:layout_toRightOf="@id/imageView"
+
+        android:text="50 KG  | 100 Bags" />
+
+    <TextView
+        android:id="@+id/tv_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/tv_weight"
+
+
+        android:layout_toEndOf="@id/imageView"
+        android:layout_toRightOf="@id/imageView"
+
+        android:text="Rs 2400 / Bag" />
+
 
     <View
         android:layout_width="match_parent"
